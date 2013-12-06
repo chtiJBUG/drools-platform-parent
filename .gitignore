@@ -3,3 +3,7 @@ target
 .idea
 *.log
 .java-version
+.tmp
+dist
+node_modules
+components

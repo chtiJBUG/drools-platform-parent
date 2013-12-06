@@ -1,0 +1,11 @@
+<div id="login" class="container" ng-show="loginRequired" ng-controller="loginController">
+    <form class="form-signin" ng-submit="submit()">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <div class="alert alert-error" ng-show="authFailure">
+            Authentication failure, please check your credentials
+        </div>
+        <input type="text" focus-on="login.focus" class="input-block-level" placeholder="Login" ng-model="username" autofocus="true">
+        <input type="password" class="input-block-level" placeholder="Password" ng-model="password">
+        <button class="btn btn-large" type="submit">Sign in</button>
+    </form>
+</div>

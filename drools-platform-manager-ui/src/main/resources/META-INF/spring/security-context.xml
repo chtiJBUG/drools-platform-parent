@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-override order="2" ignore-resource-not-found="true" ignore-unresolvable="true"
+                               location="file:${aa-configuration-root}/alads/alads-dashboard.properties"/>
+
+    <import resource="classpath*:META-INF/spring/authentication-manager.xml"/>
+
+    <security:http use-expressions="true" entry-point-ref="authEntryPoint" create-session="never">
+        <security:intercept-url pattern="/*" access="permitAll()"/>
+        <security:intercept-url pattern="/server/**" access="isAuthenticated()"/>
+        <security:form-login
+                authentication-success-handler-ref="http200AuthSuccessHandler"
+                authentication-failure-handler-ref="http403AuthFailureHandler"
+                login-processing-url="/server/login"
+                username-parameter="username"
+                password-parameter="password"/>
+        <security:logout logout-url="/server/logout" success-handler-ref="http200LogoutSuccessHandler"/>
+        <security:remember-me services-ref="rememberMeServices" key="myRememberKey"/>
+    </security:http>
+    <bean id="authEntryPoint" class="org.chtijbug.drools.platform.web.security.Http401UnauthorizedEntryPoint"/>
+    <bean id="http200AuthSuccessHandler"
+          class="org.chtijbug.drools.platform.web.security.Http200AuthenticationSuccessHandler"/>
+    <bean id="http403AuthFailureHandler"
+          class="org.chtijbug.drools.platform.web.security.Http403AuthenticationFailureHandler"/>
+    <bean id="http200LogoutSuccessHandler"
+          class="org.chtijbug.drools.platform.web.security.Http200LogoutSuccessHandler"/>
+    <bean id="rememberMeServices"
+          class="org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices">
+        <constructor-arg name="key" value="myRememberKey"/>
+        <constructor-arg name="userDetailsService" ref="userDetailsService"/>
+        <property name="alwaysRemember" value="true"/>
+        <property name="cookieName" value="AUTH_TOKEN"/>
+        <property name="tokenValiditySeconds" value="-1"/>
+    </bean>
+
+</beans>
