@@ -2,12 +2,10 @@ package org.chtijbug.drools.platform.runtime.utils;
 
 import com.google.common.base.Throwables;
 import com.sun.tools.internal.xjc.Driver;
-import com.sun.tools.internal.xjc.XJCListener;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.xml.sax.SAXParseException;
 
 import javax.tools.*;
 import java.io.File;
@@ -62,7 +60,7 @@ public final class Xsd2JarTransformer {
 
     protected void compileTarget(File targetDir) throws IOException {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
+        DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
         StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
         Collection allFiles = FileUtils.listFiles(targetDir, new String[]{"java"}, true);
         Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromFiles(allFiles);
@@ -104,7 +102,7 @@ public final class Xsd2JarTransformer {
 
     private ArrayList<String> getXJCArgs(File xsdFile, String packageName, File outputDirectory)
             throws RuntimeException {
-        ArrayList<String> args = new ArrayList<String>();
+        ArrayList<String> args = new ArrayList<>();
 
         args.add("-p");
         args.add(packageName);
