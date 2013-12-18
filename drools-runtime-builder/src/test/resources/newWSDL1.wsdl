@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="newWSDL1" targetNamespace="http://j2ee.netbeans.org/wsdl/BpelModule1/src/newWSDL1"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:tns="http://j2ee.netbeans.org/wsdl/BpelModule1/src/newWSDL1"
+             xmlns:ns="http://xml.netbeans.org/schema/newXMLDocument"
+             xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+    <types>
+        <xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/BpelModule1/src/newWSDL1">
+            <xsd:import namespace="http://xml.netbeans.org/schema/newXMLDocument" schemaLocation="model.xsd"/>
+        </xsd:schema>
+    </types>
+    <message name="newWSDL1OperationRequest">
+        <part name="part1" element="ns:input"/>
+    </message>
+    <message name="newWSDL1OperationResponse">
+        <part name="part1" element="ns:output"/>
+    </message>
+    <portType name="newWSDL1PortType">
+        <operation name="newWSDL1Operation">
+            <input name="input1" message="tns:newWSDL1OperationRequest"/>
+            <output name="output1" message="tns:newWSDL1OperationResponse"/>
+        </operation>
+    </portType>
+    <binding name="newWSDL1PortTypeBinding" type="tns:newWSDL1PortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="newWSDL1Operation">
+            <soap:operation/>
+            <input name="input1">
+                <soap:body use="literal"/>
+            </input>
+            <output name="output1">
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="newWSDL1Service">
+        <port name="newWSDL1PortTypeBindingPort" binding="tns:newWSDL1PortTypeBinding">
+            <soap:address location="http://localhost:${HttpDefaultPort}/service"/>
+        </port>
+    </service>
+    <plnk:partnerLinkType name="newWSDL1">
+        <!-- A partner link type is automatically generated when a new port type is added. Partner link types are used by BPEL processes. 
+In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.-->
+        <plnk:role name="newWSDL1PortTypeRole" portType="tns:newWSDL1PortType"/>
+    </plnk:partnerLinkType>
+</definitions>

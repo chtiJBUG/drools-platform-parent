@@ -15,6 +15,10 @@
     <packaging>war</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>org.chtijbug.drools</groupId>
+            <artifactId>drools-runtime-builder</artifactId>
+        </dependency>
         <!-- Rest Plumb -->
         <dependency>
             <groupId>org.springframework</groupId>

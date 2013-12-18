@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://xml.netbeans.org/schema/newXMLDocument"
+            xmlns:tns="http://xml.netbeans.org/schema/newXMLDocument"
+            elementFormDefault="qualified">
+    <xsd:complexType name="Person">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string"/>
+            <xsd:element name="surname" type="xsd:string"></xsd:element>
+            <xsd:element name="birthDate" type="xsd:date"></xsd:element>
+            <xsd:element name="sexe" type="xsd:string"></xsd:element>
+            <xsd:element name="newElement" type="tns:Adress"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="Adress">
+        <xsd:sequence>
+            <xsd:element name="streetNumber" type="xsd:string"/>
+            <xsd:element name="streetName" type="xsd:string"></xsd:element>
+            <xsd:element name="zipCode" type="xsd:string"></xsd:element>
+            <xsd:element name="cityName" type="xsd:string"></xsd:element>
+            <xsd:element name="countryName" type="xsd:string"></xsd:element>
+
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="input" type="tns:Person"/>
+    <xsd:element name="output" type="tns:Person"/>
+</xsd:schema>

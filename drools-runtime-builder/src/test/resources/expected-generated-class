@@ -1,0 +1,63 @@
+
+package com.pymma.drools.runtime;
+
+import com.pymma.drools.config.RuleEngineConfig;
+import org.chtijbug.drools.runtime.RuleBaseBuilder;
+import org.chtijbug.drools.runtime.RuleBasePackage;
+import org.chtijbug.drools.runtime.RuleBaseSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import java.util.logging.Logger;
+
+@javax.jws.WebService(
+                      serviceName = "newWSDL1Service",
+                      portName = "newWSDL1PortTypeBindingPort",
+                      targetNamespace = "http://j2ee.netbeans.org/wsdl/BpelModule1/src/newWSDL1",
+                      endpointInterface = "com.pymma.drools.runtime.NewWSDL1PortType")
+@Service("executionService")
+public class ExecutionServiceImpl implements com.pymma.drools.runtime.NewWSDL1PortType {
+
+    private static final Logger LOG = Logger.getLogger(ExecutionServiceImpl.class.getName());
+
+    /** ChtiJBug Rule base package */
+    private RuleBasePackage ruleBasePackage = null;
+    /** The Rule Engine configuration, which contains connexion data to guvnor app */
+    @Autowired
+    private RuleEngineConfig config;
+
+    public Output mainProcess(Input input) {
+        LOG.info("Executing operation mainProcess");
+        try {
+            fireAllRules(input, "mainProcess");
+            return input;
+        } catch (java.lang.Exception ex) {
+            ex.printStackTrace();
+            throw new RuntimeException(ex);
+        }
+    }
+
+
+
+    @PostConstruct
+    public void afterPropertiesSet() throws Exception {
+        ruleBasePackage = RuleBaseBuilder.createGuvnorRuleBasePackage(
+                config.getHost(),
+                config.getApp(),
+                config.getPackageName(),
+                config.getVersion(),
+                config.getUser(),
+                config.getPassword());
+    }
+
+    private void fireAllRules(Object input, String processName) throws Exception {
+        RuleBaseSession session = this.ruleBasePackage.createRuleBaseSession();
+        session.insertByReflection(input);
+        if (processName != null) {
+            session.startProcess(processName);
+        }
+        session.fireAllRules();
+    }
+
+}

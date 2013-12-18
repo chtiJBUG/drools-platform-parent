@@ -1,0 +1,10 @@
+<package>
+    <title>%s</title>
+    <author>pymma</author>
+    <description></description>
+    <metadata>
+        <archived>false</archived>
+        <checkinComment>Remote creation of the package</checkinComment>
+        <state>Draft</state>
+    </metadata>
+</package>

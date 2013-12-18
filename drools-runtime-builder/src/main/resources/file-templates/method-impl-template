@@ -1,0 +1,10 @@
+    public #outputClass# #methodName#(#inputClass# input) {
+        LOG.info("Executing operation #methodName#");
+        try {
+            fireAllRules(input, "#methodName#");
+            return input;
+        } catch (java.lang.Exception ex) {
+            ex.printStackTrace();
+            throw new RuntimeException(ex);
+        }
+    }
