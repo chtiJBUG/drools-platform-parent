@@ -19,8 +19,8 @@
     </properties>
 
     <modules>
-        <module>drools-platform-manager-ui</module>
         <module>drools-runtime-builder</module>
+        <module>drools-platform-manager-ui</module>
     </modules>
 
 
@@ -166,12 +166,6 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>15.0</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jaxb2-maven-plugin</artifactId>
-                <version>1.5</version>
             </dependency>
 
         </dependencies>

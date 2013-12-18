@@ -87,9 +87,9 @@ public final class Xsd2JarTransformer {
             Thread.currentThread().setContextClassLoader(cl);
             try {
                 ArrayList<String> args = getXJCArgs(xsdFile, packageName, outputDir);
-                MojoXjcListener xjcListener = new MojoXjcListener();
+               // MojoXjcListener xjcListener = new MojoXjcListener();
                 // Run XJC
-                if (0 != Driver.run(args.toArray(new String[args.size()]), xjcListener)) {
+                if (0 != Driver.run(args.toArray(new String[args.size()]), System.out, System.out)) {
                     String msg = "Could not process schema";
                     throw new RuntimeException(msg);
                 }
@@ -160,7 +160,7 @@ public final class Xsd2JarTransformer {
     /**
      * Class to tap into Maven's logging facility
      */
-    class MojoXjcListener
+    /**class MojoXjcListener
             extends XJCListener {
 
         private String location(SAXParseException e) {
@@ -188,6 +188,6 @@ public final class Xsd2JarTransformer {
             logger.info(arg0);
         }
 
-    }
+    } */
 
 }
