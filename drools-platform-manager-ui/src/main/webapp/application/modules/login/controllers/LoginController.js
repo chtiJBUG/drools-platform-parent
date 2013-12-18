@@ -1,6 +1,6 @@
 
 
-DroolsPlatformControllers.controller('LoginController', ['authService', 'LoginService', function ($scope, $rootScope, authService, LoginService) {
+DroolsPlatformControllers.controller('loginController', ['$scope', '$rootScope','authService', 'LoginService', function ($scope, $rootScope, authService, LoginService) {
     $scope.submit = function () {
         var success = function (username) {
             authService.loginConfirmed();
@@ -9,7 +9,7 @@ DroolsPlatformControllers.controller('LoginController', ['authService', 'LoginSe
             $rootScope.username = username;
         };
         var failure = function () {
-            $scope.authFailure = false;
+            $scope.authFailure = true;
         };
         LoginService.login($scope.username, $scope.password).then(success, failure);
     };

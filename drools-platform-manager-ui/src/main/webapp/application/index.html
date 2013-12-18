@@ -8,9 +8,11 @@
         <link rel="icon" href="favicon.ico">
 
         <meta name="viewport" content="width=device-width">
+
         <!-- build:css(.tmp) styles/less.css -->
         <link rel="stylesheet" href="styles/application.css">
         <!-- endbuild -->
+
     </head>
 
     <body ng-controller="MainCtrl" ng-cloak>
@@ -34,7 +36,7 @@
         <!-- endbuild -->
 
         <div id="wrap">
-
+            <div ng-include="'modules/home/navbar.html'"></div>
             <div id="main">
                 <div ng-include="'modules/login/login.html'"></div>
                 <div ng-hide="loginRequired" ng-view></div>
@@ -42,8 +44,9 @@
         </div>
         <div id="footer">
             <p class="muted credit pull-left">
-
+                <span>Built by </span><img src="images/pymma-logo-mini.png" alt="Pymma"/>
             </p>
+            <p class="muted version pull-right">v {{version}}</p>
         </div>
 
     </body>

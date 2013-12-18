@@ -15,32 +15,35 @@ droolsPlatformApp.config(function ($routeProvider, $httpProvider) {
     //___ Defines the routes
     $routeProvider
         .when('/home', {
-            templateUrl: 'home/home.html',
+            templateUrl: 'modules/home/home.html',
             controller: HomeController
         }).
         otherwise({
             redirectTo: '/home'
         });
-    //____ Intercepts the possibly error from the server
-    var interceptor = function ($rootScope, $q) {
-        var success = function (response) {
-            response;
-        };
-        var error = function (response) {
-            var errorId;
-            if (response.status != 404 && response.status != 401 && response.status != 403)
-                errorId = null;
-            if (response.status == 500)
-                errorId = response.headers('x-exception-id');
-            $rootScope.$broadcast('event:serverError', errorId)
-            $q.reject(response)
-        };
-        return function(promise){
-            promise.then(success, error);
-        };
-    };
-    $httpProvider.responseInterceptors.push(interceptor);
 });
+
+droolsPlatformApp.factory('httpInterceptor', ['$q', '$rootScope', function ($q, $rootScope) {
+
+    function success(response) {
+        return response;
+    }
+
+    function error(response) {
+        var errorId;
+        if (response.status != 404 && response.status != 401 && response.status != 403)
+            errorId = null;
+        if (response.status == 500)
+            errorId = response.headers('x-exception-id');
+        $rootScope.$broadcast('event:serverError', errorId)
+        $q.reject(response)
+    }
+
+    return function (promise) {
+        return promise.then(success, error);
+    };
+
+}]);
 
 droolsPlatformApp.run(function ($rootScope, $log) {
 
@@ -56,7 +59,7 @@ droolsPlatformApp.run(function ($rootScope, $log) {
     });
 });
 
-var DroolsPlatformControllers = angular.module('drools-platform.controllers', ['drools-platform.services']);
+var DroolsPlatformControllers = angular.module('drools-platform.controllers', []);
 
 var ServicesModule = angular.module('drools-platform.services', []);
 
@@ -72,18 +75,20 @@ DroolsPlatformControllers.controller('MainCtrl', ['$rootScope', '$scope', '$wind
             var content = "";
             if (errorId != null)
                 content = "<p>Error #" + errorId + "</p>";
-            $scope.alerts = [{
+            $scope.alerts = [
+                {
                     type: "error",
                     title: "Oups, server error occurred ",
                     content: content
-            }];
+                }
+            ];
         });
         $http.get('./server/username')
             .success(function (data) {
                 $rootScope.username = data
             })
-            .error(function(cause) {
-                $log.log("Error. Caused by : "+cause);
+            .error(function (cause) {
+                $log.log("Error. Caused by : " + cause);
             });
     }
 ]);
