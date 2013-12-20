@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+    >
+
+  <context:annotation-config/>
+  <context:component-scan base-package="org.chtijbug.drools.platform.core"/>
+
+  <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+ 		<property name="brokerURL">
+ 			<value>tcp://localhost:61616</value>
+ 			<!--value>vm://localhost</value-->
+ 		</property>
+ 	</bean>
+
+ 	<bean id="pooledJmsConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
+ 		destroy-method="stop">
+ 		<property name="connectionFactory" ref="jmsConnectionFactory" />
+ 	</bean>
+
+ 	<bean id="destination" class="org.apache.activemq.command.ActiveMQQueue">
+ 		<constructor-arg value="historyEventQueue" />
+ 	</bean>
+
+ 	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+ 		<property name="connectionFactory" ref="pooledJmsConnectionFactory" />
+
+ 	</bean>
+
+
+</beans>
