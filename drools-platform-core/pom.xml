@@ -22,10 +22,6 @@
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
-        <artifactId>spring-core</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
         <artifactId>spring-jms</artifactId>
       </dependency>
       <dependency>
@@ -34,16 +30,9 @@
       </dependency>
       <dependency>
         <groupId>org.apache.activemq</groupId>
-        <artifactId>activemq-core</artifactId>
+        <artifactId>activemq-all</artifactId>
       </dependency>
-      <dependency>
-        <groupId>org.apache.activemq</groupId>
-        <artifactId>activemq-camel</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.activemq</groupId>
-        <artifactId>activemq-ra</artifactId>
-      </dependency>
+
       <dependency>
         <groupId>org.apache.xbean</groupId>
         <artifactId>xbean-spring</artifactId>

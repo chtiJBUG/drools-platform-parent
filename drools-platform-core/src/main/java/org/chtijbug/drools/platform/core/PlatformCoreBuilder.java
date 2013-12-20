@@ -7,6 +7,7 @@ import org.chtijbug.drools.runtime.impl.RuleBaseSingleton;
 import org.chtijbug.drools.runtime.resource.GuvnorDroolsResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,18 +22,23 @@ public class PlatformCoreBuilder {
      * Class Logger
      */
     private static Logger logger = LoggerFactory.getLogger(PlatformCoreBuilder.class);
-
+    @Value( "${guvnor.url}" )
     private String guvnor_url;
+    @Value( "${guvnor.appName}" )
     private String guvnor_appName;
+    @Value( "${guvnor.packageName}" )
     private String guvnor_packageName;
+    @Value( "${guvnor.packageVersion}" )
     private String guvnor_packageVersion;
+    @Value( "${guvnor.username}" )
     private String guvnor_username;
+    @Value( "${guvnor.password}" )
     private String guvnor_password;
 
     private RuleBasePackage ruleBasePackage;
 
     public void getGuvnorRuleBasePackage() throws DroolsChtijbugException {
-        logger.debug(">>createGuvnorRuleBasePackage", guvnor_url, guvnor_appName, guvnor_packageName, guvnor_packageVersion, guvnor_username, guvnor_password);
+        logger.debug(">>createGuvnorRuleBasePackage",this.toString());
         JmsStorageHistoryListener jmsStorageHistoryListener = new JmsStorageHistoryListener();
         RuleBasePackage newRuleBasePackage = new RuleBaseSingleton(RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, jmsStorageHistoryListener);
         GuvnorDroolsResource gdr = new GuvnorDroolsResource(guvnor_url, guvnor_appName, guvnor_packageName, guvnor_packageVersion, guvnor_username, guvnor_password);
@@ -91,5 +97,19 @@ public class PlatformCoreBuilder {
 
     public void setGuvnor_password(String guvnor_password) {
         this.guvnor_password = guvnor_password;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("PlatformCoreBuilder{");
+        sb.append("guvnor_url='").append(guvnor_url).append('\'');
+        sb.append(", guvnor_appName='").append(guvnor_appName).append('\'');
+        sb.append(", guvnor_packageName='").append(guvnor_packageName).append('\'');
+        sb.append(", guvnor_packageVersion='").append(guvnor_packageVersion).append('\'');
+        sb.append(", guvnor_username='").append(guvnor_username).append('\'');
+        sb.append(", guvnor_password='").append(guvnor_password).append('\'');
+        sb.append(", ruleBasePackage=").append(ruleBasePackage);
+        sb.append('}');
+        return sb.toString();
     }
 }

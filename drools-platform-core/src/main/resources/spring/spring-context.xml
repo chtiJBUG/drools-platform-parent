@@ -6,6 +6,7 @@
     >
 
   <context:annotation-config/>
+  <context:property-placeholder location="classpath:spring/guvnor.properties" />
   <context:component-scan base-package="org.chtijbug.drools.platform.core"/>
 
   <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
