@@ -4,9 +4,17 @@
   <display-name>Drools Platform - Administration UI</display-name>
 
   <!-- Spring root context -->
-  <servlet>
-    <servlet-name>LoadActiveMQ</servlet-name>
-    <servlet-class>org.chtijbug.drools.platform.logger.server.LoadActiveMQ</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
+  <context-param>
+            <param-name>contextConfigLocation</param-name>
+             <param-value>
+                  /WEB-INF/spring/spring-context.xml
+             </param-value>
+        </context-param>
+
+        <!--
+             Loads the Spring web application context using the config file defined above.
+        -->
+        <listener>
+           <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+        </listener>
 </web-app>

@@ -1,0 +1,47 @@
+<beans
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:amq="http://activemq.apache.org/schema/core"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jms="http://www.springframework.org/schema/jms"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+  http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd">
+   
+  <!--  lets create an embedded ActiveMQ Broker -->
+  <amq:broker useJmx="true" xmlns="http://activemq.apache.org/schema/core">
+
+    <persistenceAdapter>
+      <mKahaDB directory="${basedir}/target/data/kahadb">
+        <filteredPersistenceAdapters>
+          <!-- kahaDB per destinations -->
+          <filteredKahaDB perDestination="true" >
+            <persistenceAdapter>
+              <kahaDB journalMaxFileLength="32mb" />
+            </persistenceAdapter>
+          </filteredKahaDB>
+        </filteredPersistenceAdapters>
+      </mKahaDB>
+     </persistenceAdapter>
+
+
+    <transportConnectors>
+      <transportConnector uri="tcp://localhost:61616" />
+    </transportConnectors>
+
+  </amq:broker>
+ 
+
+  <!-- A JMS connection factory for ActiveMQ -->
+    <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory"
+       p:brokerURL="tcp://localhost:61616" />
+   <!-- A POJO that implements the JMS message listener -->
+    <bean id="simpleMessageListener" class="org.chtijbug.drools.platform.logger.server.jms.JMSHistoryEventListener"/>
+
+    <!-- The Spring message listener container configuration -->
+    <jms:listener-container
+        container-type="default"
+        connection-factory="connectionFactory"
+        acknowledge="auto">
+      <jms:listener destination="historyEventQueue" ref="simpleMessageListener"  />
+    </jms:listener-container>
+
+</beans>

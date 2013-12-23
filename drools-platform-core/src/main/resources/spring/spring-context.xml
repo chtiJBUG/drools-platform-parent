@@ -16,8 +16,8 @@
  		</property>
  	</bean>
 
- 	<bean id="pooledJmsConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
- 		destroy-method="stop">
+ 	<bean id="pooledJmsConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactoryBean"
+ 		destroy-method="destroy">
  		<property name="connectionFactory" ref="jmsConnectionFactory" />
  	</bean>
 
