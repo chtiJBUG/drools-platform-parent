@@ -28,6 +28,7 @@
     <module>drools-platform-manager-ui</module>
     <module>drools-platform-core</module>
     <module>drools-platform-event-logger-server</module>
+    <module>drools-platform-persistance</module>
   </modules>
 
 

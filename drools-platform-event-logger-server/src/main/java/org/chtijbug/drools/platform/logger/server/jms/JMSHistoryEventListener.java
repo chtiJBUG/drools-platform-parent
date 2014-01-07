@@ -2,8 +2,9 @@ package org.chtijbug.drools.platform.logger.server.jms;
 
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.platform.logger.server.OrientDBConnector;
+import org.chtijbug.drools.platform.persistence.OrientDBConnector;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.jms.Message;
 import javax.jms.MessageListener;
@@ -16,6 +17,7 @@ import javax.jms.ObjectMessage;
  * Time: 15:20
  * To change this template use File | Settings | File Templates.
  */
+@Component
 public class JMSHistoryEventListener implements MessageListener {
 
     private static final Logger LOG = Logger.getLogger(JMSHistoryEventListener.class);
