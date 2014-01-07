@@ -2,12 +2,12 @@ package org.chtijbug.drools.platform.persistence;
 
 import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import org.chtijbug.drools.platform.persistence.impl.db.OrientDBConnector;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.annotation.Resource;
 import java.io.File;

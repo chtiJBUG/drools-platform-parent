@@ -10,10 +10,10 @@
   <packaging>pom</packaging>
 
   <parent>
-      <groupId>org.sonatype.oss</groupId>
-      <artifactId>oss-parent</artifactId>
-      <version>7</version>
-    </parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
 
 
   <properties>
@@ -31,35 +31,34 @@
   </properties>
 
   <licenses>
-      <license>
-        <name>The Apache Software License, Version 2.0</name>
-        <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        <distribution>repo</distribution>
-      </license>
-    </licenses>
-    <developers>
-      <developer>
-        <id>nheron</id>
-        <name>Nicolas Héron</name>
-        <email>nicolas.heron@chtijbug.org</email>
-      </developer>
-      <developer>
-        <id>smangot</id>
-        <name>Samuel Mangot</name>
-        <email>samuel.mangot@pymma.com</email>
-      </developer>
-    </developers>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>nheron</id>
+      <name>Nicolas Héron</name>
+      <email>nicolas.heron@chtijbug.org</email>
+    </developer>
+    <developer>
+      <id>smangot</id>
+      <name>Samuel Mangot</name>
+      <email>samuel.mangot@pymma.com</email>
+    </developer>
+  </developers>
 
-    <scm>
-      <connection>scm:git:git@bitbucket.org:pymma/drools-platform-parent.git</connection>
-      <url>scm:git:git@bitbucket.org:pymma/drools-platform-parent.git</url>
-      <developerConnection>scm:git:git@bitbucket.org:pymma/drools-platform-parent.git</developerConnection>
-    </scm>
-    <issueManagement>
-      <system>Jira</system>
-      <url>https://chtijbug.atlassian.net/</url>
-    </issueManagement>
-
+  <scm>
+    <connection>scm:git:git@bitbucket.org:pymma/drools-platform-parent.git</connection>
+    <url>scm:git:git@bitbucket.org:pymma/drools-platform-parent.git</url>
+    <developerConnection>scm:git:git@bitbucket.org:pymma/drools-platform-parent.git</developerConnection>
+  </scm>
+  <issueManagement>
+    <system>Jira</system>
+    <url>https://chtijbug.atlassian.net/</url>
+  </issueManagement>
 
 
   <modules>
@@ -230,6 +229,11 @@
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>15.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.chtijbug.drools</groupId>
+        <artifactId>drools-framework-runtime-entity</artifactId>
+        <version>${chtijbug.framework.version}</version>
       </dependency>
       <dependency>
         <groupId>org.chtijbug.drools</groupId>

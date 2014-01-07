@@ -14,7 +14,7 @@ public class XpathQueryRunnerTest {
     protected static final String XPATH_PROCESSES_NAMES = "//wsdl:portType/wsdl:operation/@name";
     protected static final String XPATH_XSD_NAME = "//wsdl:types/xsd:schema/xsd:import/@schemaLocation";
     protected static final String XPATH_TARGET_NAMESPACE = "//wsdl:definitions/@targetNamespace";
-    protected static final String XPATH_EXECUTION_SERVICE = "//wsdl:service/@name";
+    protected static final String XPATH_EXECUTION_SERVICE = "//wsdl:impl/@name";
 
     @Test
     public void should_get_package_name_equals_to_name1() throws Exception {

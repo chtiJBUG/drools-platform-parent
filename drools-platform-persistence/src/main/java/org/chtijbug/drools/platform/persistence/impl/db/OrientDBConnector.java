@@ -1,4 +1,4 @@
-package org.chtijbug.drools.platform.persistence;
+package org.chtijbug.drools.platform.persistence.impl.db;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocument;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentPool;

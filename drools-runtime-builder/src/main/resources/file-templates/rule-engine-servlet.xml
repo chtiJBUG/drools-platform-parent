@@ -15,7 +15,7 @@
     <import resource="classpath:spring/chtijbug-spring.xml"/>
 
 
-    <!-- Web service endpoint definition -->
+    <!-- Web impl endpoint definition -->
     <jaxws:endpoint
             id="ruleRunner"
             xmlns:service="#targetNamespace#"

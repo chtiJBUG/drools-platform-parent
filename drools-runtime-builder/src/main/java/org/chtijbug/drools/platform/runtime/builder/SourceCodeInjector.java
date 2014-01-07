@@ -93,8 +93,8 @@ public class SourceCodeInjector {
     protected enum Keyword {
         PACKAGE_NAME(null, "#packageName#"),
         TARGET_NAMESPACE("//wsdl:definitions/@targetNamespace", "#targetNamespace#"),
-        SERVICE_NAME("//wsdl:service/@name", "#serviceName#"),
-        SERVICE_PORT_BINDING_NAME("//wsdl:service/wsdl:port/@name", "#portName#"),
+        SERVICE_NAME("//wsdl:impl/@name", "#serviceName#"),
+        SERVICE_PORT_BINDING_NAME("//wsdl:impl/wsdl:port/@name", "#portName#"),
         PORT_TYPE("//wsdl:portType/@name", "#portType#"),
         ENDPOINT_INTERFACE_CLASSNAME(null, "#endpointInterface#");
 

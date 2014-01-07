@@ -2,7 +2,7 @@ package org.chtijbug.drools.platform.logger.server.jms;
 
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.platform.persistence.OrientDBConnector;
+import org.chtijbug.drools.platform.persistence.impl.db.OrientDBConnector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
