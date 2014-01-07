@@ -1,10 +1,9 @@
 package org.chtijbug.drools.platform.logger.server.jms;
 
-import com.orientechnologies.orient.core.db.document.ODatabaseDocument;
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentPool;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
+import org.chtijbug.drools.platform.logger.server.OrientDBConnector;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.jms.Message;
 import javax.jms.MessageListener;
@@ -21,24 +20,12 @@ public class JMSHistoryEventListener implements MessageListener {
 
     private static final Logger LOG = Logger.getLogger(JMSHistoryEventListener.class);
 
-
-    @Value("${orientdb.url}")
-    private String orientdb_url;
-    @Value("${guvnor.dbname}")
-    private String orientdb_dbName;
-
-    @Value("${orientdb.username}")
-    private String orientdb_username;
-    @Value("${orientdb.password}")
-    private String orientdb_password;
-
-    ODatabaseDocument database=null;
+    @Autowired
+    OrientDBConnector orientDBConnector ;
 
     public void onMessage(Message message) {
         try {
-            if (database== null){
-                database = ODatabaseDocumentPool.global().acquire(orientdb_url+orientdb_dbName,orientdb_username,orientdb_password);
-            }
+
             ODocument toto = new ODocument("historyEvent");
             toto.save();
             //toto.
