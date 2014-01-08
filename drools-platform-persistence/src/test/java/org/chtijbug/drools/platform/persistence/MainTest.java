@@ -21,10 +21,11 @@ import java.io.IOException;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 
-@ContextConfiguration("file:src/main/resources/spring/spring-persistence-context.xml" )
+@ContextConfiguration("file:src/test/resources/spring/spring-test-persistence-config.xml" )
 public class MainTest {
     @Resource
     OrientDBConnector orientDBConnector;
+
     @BeforeClass
     public static void BeforeClass() throws IOException {
         File toto = File.createTempFile("orientdbCacheFolder", "");
@@ -35,12 +36,12 @@ public class MainTest {
 
     @Test
     public void pipo(){
-         this.orientDBConnector.toString();
+
        ODatabaseRecordThreadLocal.INSTANCE.set(this.orientDBConnector.getDatabase());
-        this.orientDBConnector.beginTransaction();
+
         ODocument toto = new ODocument("historyEvent");
         toto.field("name","putain de nombisdsdssdssd");
-
+        this.orientDBConnector.beginTransaction();
         toto.save();
         orientDBConnector.commitTransaction();
         ODocument result = this.orientDBConnector.getDocument(toto.getIdentity());

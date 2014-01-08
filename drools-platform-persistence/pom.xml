@@ -41,5 +41,22 @@
       <artifactId>orientdb-client</artifactId>
       <type>bundle</type>
     </dependency>
+
+    <dependency>
+      <groupId>com.orientechnologies</groupId>
+      <artifactId>orientdb-enterprise</artifactId>
+      <scope>test</scope>
+      <type>bundle</type>
+    </dependency>
+    <dependency>
+      <groupId>com.orientechnologies</groupId>
+      <artifactId>orientdb-server</artifactId>
+      <scope>test</scope>
+      <type>bundle</type>
+    </dependency>
+
+
+
+
   </dependencies>
 </project>
