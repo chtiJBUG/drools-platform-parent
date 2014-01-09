@@ -9,56 +9,19 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>drools-platform-event-logger-server</artifactId>
-  <packaging>war</packaging>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>2.4</version>
-        <configuration>
-          <webResources>
-            <resource>
-              <directory>src/main/webapp</directory>
-            </resource>
-          </webResources>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+  <artifactId>drools-platform-persistence</artifactId>
   <dependencies>
     <dependency>
-      <groupId>org.chtijbug.drools</groupId>
-      <artifactId>drools-platform-persistence</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-all</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.springframework</groupId>
-      <artifactId>spring-jms</artifactId>
+      <artifactId>spring-context</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-web</artifactId>
-    </dependency>
-    <dependency>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-context</artifactId>
-        </dependency>
     <dependency>
       <groupId>org.apache.xbean</groupId>
       <artifactId>xbean-spring</artifactId>
     </dependency>
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.5</version>
-      <scope>provided</scope>
+      <groupId>org.chtijbug.drools</groupId>
+      <artifactId>drools-framework-runtime-entity</artifactId>
     </dependency>
     <dependency>
       <groupId>com.orientechnologies</groupId>
@@ -78,7 +41,22 @@
       <artifactId>orientdb-client</artifactId>
       <type>bundle</type>
     </dependency>
+
+    <dependency>
+      <groupId>com.orientechnologies</groupId>
+      <artifactId>orientdb-enterprise</artifactId>
+      <scope>test</scope>
+      <type>bundle</type>
+    </dependency>
+    <dependency>
+      <groupId>com.orientechnologies</groupId>
+      <artifactId>orientdb-server</artifactId>
+      <scope>test</scope>
+      <type>bundle</type>
+    </dependency>
+
+
+
+
   </dependencies>
-
-
 </project>

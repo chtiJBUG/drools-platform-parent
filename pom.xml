@@ -9,6 +9,13 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
+
+
   <properties>
     <jdkVersion>1.7</jdkVersion>
     <encoding>UTF-8</encoding>
@@ -20,13 +27,46 @@
     <activemq-version>5.8.0</activemq-version>
     <xbean-spring-version>3.7</xbean-spring-version>
     <log4j-version>1.2.14</log4j-version>
+    <orientdb.version>1.6.3</orientdb.version>
   </properties>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>nheron</id>
+      <name>Nicolas Héron</name>
+      <email>nicolas.heron@chtijbug.org</email>
+    </developer>
+    <developer>
+      <id>smangot</id>
+      <name>Samuel Mangot</name>
+      <email>samuel.mangot@pymma.com</email>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git@bitbucket.org:pymma/drools-platform-parent.git</connection>
+    <url>scm:git:git@bitbucket.org:pymma/drools-platform-parent.git</url>
+    <developerConnection>scm:git:git@bitbucket.org:pymma/drools-platform-parent.git</developerConnection>
+  </scm>
+  <issueManagement>
+    <system>Jira</system>
+    <url>https://chtijbug.atlassian.net/</url>
+  </issueManagement>
+
 
   <modules>
     <module>drools-runtime-builder</module>
     <module>drools-platform-manager-ui</module>
     <module>drools-platform-core</module>
     <module>drools-platform-event-logger-server</module>
+    <module>drools-platform-persistence</module>
   </modules>
 
 
@@ -42,6 +82,12 @@
           <encoding>${encoding}</encoding>
           <showDeprecation>true</showDeprecation>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>2.3.6</version>
+        <extensions>true</extensions>
       </plugin>
     </plugins>
   </build>
@@ -140,6 +186,11 @@
           <artifactId>spring-web</artifactId>
           <version>${org.springframework.version}</version>
         </dependency>
+      <dependency>
+        <groupId>org.apache.xbean</groupId>
+        <artifactId>xbean-spring</artifactId>
+        <version>3.7</version>
+      </dependency>
       <!-- Logging deps -->
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -185,6 +236,11 @@
       </dependency>
       <dependency>
         <groupId>org.chtijbug.drools</groupId>
+        <artifactId>drools-framework-runtime-entity</artifactId>
+        <version>${chtijbug.framework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.chtijbug.drools</groupId>
         <artifactId>drools-framework-runtime-base</artifactId>
         <version>${chtijbug.framework.version}</version>
       </dependency>
@@ -209,6 +265,45 @@
         <artifactId>jencks</artifactId>
         <version>2.1</version>
       </dependency>
+      <dependency>
+        <groupId>com.orientechnologies</groupId>
+        <artifactId>orient-commons</artifactId>
+        <version>${orientdb.version}</version>
+        <type>bundle</type>
+      </dependency>
+
+      <dependency>
+        <groupId>com.orientechnologies</groupId>
+        <artifactId>orientdb-core</artifactId>
+        <version>${orientdb.version}</version>
+        <type>bundle</type>
+      </dependency>
+
+      <!-- INCLUDE THIS IF YOU'RE CONNECTING TO THE SERVER THROUGH THE REMOTE ENGINE -->
+      <dependency>
+        <groupId>com.orientechnologies</groupId>
+        <artifactId>orientdb-client</artifactId>
+        <version>${orientdb.version}</version>
+        <type>bundle</type>
+      </dependency>
+      <!-- For test -->
+      <dependency>
+        <groupId>com.orientechnologies</groupId>
+        <artifactId>orientdb-enterprise</artifactId>
+        <version>${orientdb.version}</version>
+        <scope>test</scope>
+        <type>bundle</type>
+      </dependency>
+      <dependency>
+        <groupId>com.orientechnologies</groupId>
+        <artifactId>orientdb-server</artifactId>
+        <version>${orientdb.version}</version>
+        <scope>test</scope>
+        <type>bundle</type>
+      </dependency>
+
+
+      <!-- END REMOTE ENGINE DEPENDENCY -->
     </dependencies>
   </dependencyManagement>
 
