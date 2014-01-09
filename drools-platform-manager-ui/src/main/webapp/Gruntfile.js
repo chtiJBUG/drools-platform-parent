@@ -2,6 +2,8 @@
 var mountFolder = function (connect, dir) {
     return connect.static(require('path').resolve(dir));
 };
+var modRewrite = require('connect-modrewrite');
+var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
 
 module.exports = function (grunt) {
     // load all grunt tasks
@@ -22,20 +24,30 @@ module.exports = function (grunt) {
         yeoman: yeomanConfig,
         watch: {
             less: {
-                options: { livereload: true },
+                options: {
+                    livereload: {
+                        port: 9000,
+                        hostname: 'localhost'
+                    }
+                },
                 files: [ '<%= yeoman.app %>/styles/*.less' ],
                 tasks: ['less']
             },
             all: {
-                options: { livereload: true },
+                options: {
+                    livereload: {
+                        port: 9000,
+                        hostname: 'localhost'
+                    }
+                },
                 files: [
                     '<%= yeoman.app %>/{,*/}*.html',
                     '<%= yeoman.app %>/modules{,*/}*.html',
                     '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
-                    '{.tmp,<%= yeoman.app %>}/modules/{,*/}*.js',
+                    '<%= yeoman.app %>/modules/{,*/}*.js',
                     '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
                 ],
-                tasks: ['default']
+                tasks: ['livereload']
             }
         },
         connect: {
@@ -48,6 +60,21 @@ module.exports = function (grunt) {
                     changeOrigin: false
                 }
             ],
+            livereload: {
+                options: {
+                    middleware: function (connect) {
+                        return [
+                            proxySnippet,
+                            lrSnippet,
+                            modRewrite([
+                                '!^/components(.*)|^/images(.*)|^/scripts(.*)|^/styles(.*)|^/views(.*)|\\.ico /index.html'
+                            ]),
+                            mountFolder(connect, '.tmp'),
+                            mountFolder(connect, yeomanConfig.app)
+                        ];
+                    }
+                }
+            },
             options: {
                 port: 9000,
                 // Change this to '0.0.0.0' to access the server from outside.
@@ -197,8 +224,9 @@ module.exports = function (grunt) {
         'clean:server',
         'less',
         'configureProxies',
-        'watch',
-        'livereload-start'
+        'connect:livereload',
+        'open',
+        'watch'
     ]);
 
     grunt.registerTask('test', [

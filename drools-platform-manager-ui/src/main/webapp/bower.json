@@ -7,7 +7,7 @@
     "bootstrap": "3.0.2",
     "angular-http-auth": "1.2.0",
     "moment": "2.0.0",
-    "font-awesome": "3.0.2",
+    "font-awesome": "4.0.3",
     "underscore": "1.4.4"
   },
   "devDependencies": {}

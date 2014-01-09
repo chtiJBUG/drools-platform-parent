@@ -1,0 +1,38 @@
+<div class="row row-offcanvas row-offcanvas-right" ng-show="runtimeGenerationModule" ng-controller="runtimeBuilderController">
+    <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
+        <div class="well sidebar-nav">
+            <ul class="nav nav-pills nav-stacked">
+                <li ng-class="{true:'active', false:'disabled'}[isSettingsEnabled]">
+                    <a href="#/guvnorSettings">
+                        <span class="badge pull-left">1 </span>
+                        Guvnor settings
+                    </a>
+                </li>
+                <li ng-class="{true:'active', false:'disabled'}[isArtifactsEnabled]">
+                    <a href="#">
+                        <span class="badge pull-left">2 </span>
+                        Artifacts Definitions
+                    </a>
+                </li>
+                <li ng-class="{true:'active', false:'disabled'}[isGenerationsEnabled]">
+                    <a href="#">
+                        <span class="badge pull-left">3 </span>
+                        Runtime Generation
+                    </a>
+                </li>
+                <li ng-class="{true:'active', false:'disabled'}[isDeploymentEnabled]">
+                    <a href="#">
+                        <span class="badge pull-left">4 </span>
+                        Runtime Deployment
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!--/.well -->
+    </div>
+    <!--/span-->
+
+    <div class="col-xs-12 col-sm-9">
+
+    </div>
+</div><!--/row-->

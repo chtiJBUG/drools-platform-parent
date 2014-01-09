@@ -32,6 +32,7 @@
         <script src="modules/login/services/LoginService.js"></script>
         <script src="modules/login/controllers/LoginController.js"></script>
         <script src="modules/home/controllers/HomeController.js"></script>
+        <script src="modules/runtime-builder/controllers/RuntimeBuilderController.js"></script>
 
         <!-- endbuild -->
 
@@ -39,6 +40,7 @@
             <div ng-include="'modules/home/navbar.html'"></div>
             <div id="main">
                 <div ng-include="'modules/login/login.html'"></div>
+                <div ng-include="'modules/runtime-builder/runtime-builder.html'"></div>
                 <div ng-hide="loginRequired" ng-view></div>
             </div>
         </div>

@@ -8,7 +8,17 @@
 @headerLogoWidth: 180px;
 
 /* font-awesome overrides */
-@FontAwesomePath: "../components/font-awesome/font";
+@FontAwesomePath: "../components/font-awesome/fonts";
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('@{FontAwesomePath}/fontawesome-webfont.eot');
+  src: url('@{FontAwesomePath}/fontawesome-webfont.eot?#iefix') format('embedded-opentype'),
+       url('@{FontAwesomePath}/fontawesome-webfont.woff') format('woff'),
+       url('@{FontAwesomePath}/fontawesome-webfont.ttf') format('truetype'),
+       url('@{FontAwesomePath}/fontawesome-webfont.svg#FontAwesome') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
 
 /* boostrap overrides */
 
@@ -21,13 +31,13 @@
 @footer-height: 30px;
 @headerLogoWidth: 180px;
 
-
 html, body {
   height: 100%;
   color: @drools-platform-grey;
 }
+
 a {
-  color:@drools-platform-blue;
+  color: @drools-platform-blue;
 }
 
 .navbar-inner {
@@ -45,7 +55,7 @@ a {
   .user-space {
     float: right;
   }
-  .nav>li>a {
+  .nav > li > a {
     padding-left: 5px;
     padding-right: 5px;
   }
@@ -79,10 +89,10 @@ a {
   border: 1px solid #e5e5e5;
   border-radius: 5px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
-  .form-signin-heading,.checkbox {
+  .form-signin-heading, .checkbox {
     margin-bottom: 10px;
   }
-  input[type="text"],input[type="password"] {
+  input[type="text"], input[type="password"] {
     font-size: 16px;
     height: auto;
     margin-bottom: 15px;

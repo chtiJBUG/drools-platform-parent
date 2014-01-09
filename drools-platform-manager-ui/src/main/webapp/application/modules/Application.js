@@ -16,7 +16,11 @@ droolsPlatformApp.config(function ($routeProvider, $httpProvider) {
     $routeProvider
         .when('/home', {
             templateUrl: 'modules/home/home.html',
-            controller: HomeController
+            controller: 'homeController'
+        }).
+        when('/guvnorSettings', {
+            templateUrl: 'modules/runtime-builder/guvnor-settings.html',
+            controller: 'runtimeBuilderController'
         }).
         otherwise({
             redirectTo: '/home'
