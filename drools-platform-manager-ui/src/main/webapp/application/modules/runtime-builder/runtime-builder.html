@@ -4,25 +4,25 @@
             <ul class="nav nav-pills nav-stacked">
                 <li ng-class="{true:'active', false:'disabled'}[isSettingsEnabled]">
                     <a href="#/runtimeBuilder/guvnorSettings">
-                        <span class="badge pull-left">1 </span>
+                        <span class="badge pull-right"> 1 </span>
                         Guvnor settings
                     </a>
                 </li>
                 <li ng-class="{true:'active', false:'disabled'}[isArtifactsEnabled]">
                     <a href="#/runtimeBuilder/runtimeDefinition">
-                        <span class="badge pull-left">2 </span>
+                        <span class="badge pull-right"> 2 </span>
                         Artifacts Definitions
                     </a>
                 </li>
                 <li ng-class="{true:'active', false:'disabled'}[isGenerationsEnabled]">
                     <a href="#/runtimeBuilder/runtimeBuilding">
-                        <span class="badge pull-left">3 </span>
+                        <span class="badge pull-right"> 3 </span>
                         Runtime Generation
                     </a>
                 </li>
                 <li ng-class="{true:'active', false:'disabled'}[isDeploymentEnabled]">
                     <a href="#/runtimeBuilder/runtimeDeployment">
-                        <span class="badge pull-left">4 </span>
+                        <span class="badge pull-right"> 4 </span>
                         Runtime Deployment
                     </a>
                 </li>
@@ -44,7 +44,7 @@
                  <div ng-include="'modules/runtime-builder/runtime-building/runtime-building.html'"></div>
             </div>
             <div ng-switch-when="deployment">
-                 <div ng-include="'modules/runtime-builder/runtime-building/runtime-deployment.html'"></div>
+                 <div ng-include="'modules/runtime-builder/runtime-deployment/runtime-deployment.html'"></div>
             </div>
         </div>
     </div>

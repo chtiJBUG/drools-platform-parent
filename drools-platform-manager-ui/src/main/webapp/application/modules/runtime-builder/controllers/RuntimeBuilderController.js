@@ -12,12 +12,12 @@ DroolsPlatformControllers.controller('runtimeBuilderController', function ($root
 
     $scope.subview = subView;
 
-    $scope.$on(
+    $rootScope.$on(
         "routeChangeSuccess",
-        function ($currentRoute, $previousRoute) {
-            if ($currentRoute.action == null)
+        function ($current, $previous) {
+            if ($current.action == null)
                 return;
-            $currentRoute.action.startsWith("runtime.builder.")
+            $scope.subview = $current.action.replace("runtime.builder.", "");
 
         }
     );

@@ -46,8 +46,17 @@ module.exports = function (grunt) {
                     '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
                     '<%= yeoman.app %>/modules/{,*/}*.js',
                     '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+                ]
+            },
+            livereload: {
+                files: [
+                    '<%= yeoman.app %>/{,*/}*.html',
+                    '<%= yeoman.app %>/modules{,*/}*.html',
+                    '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
+                    '<%= yeoman.app %>/modules/{,*/}*.js',
+                    '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
                 ],
-                tasks: ['livereload']
+                options: { livereload: true }
             }
         },
         connect: {
@@ -57,7 +66,8 @@ module.exports = function (grunt) {
                     host: 'localhost',
                     port: 8080,
                     https: false,
-                    changeOrigin: false
+                    changeOrigin: false,
+                    base: '<%= yeoman.app %>'
                 }
             ],
             livereload: {
@@ -65,7 +75,6 @@ module.exports = function (grunt) {
                     middleware: function (connect) {
                         return [
                             proxySnippet,
-                            lrSnippet,
                             modRewrite([
                                 '!^/components(.*)|^/images(.*)|^/scripts(.*)|^/styles(.*)|^/views(.*)|\\.ico /index.html'
                             ]),
