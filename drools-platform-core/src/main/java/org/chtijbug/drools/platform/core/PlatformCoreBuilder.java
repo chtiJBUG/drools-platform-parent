@@ -38,15 +38,18 @@ public class PlatformCoreBuilder {
     private RuleBasePackage ruleBasePackage;
 
     public void getGuvnorRuleBasePackage() throws DroolsChtijbugException {
+
         logger.debug(">>createGuvnorRuleBasePackage",this.toString());
         JmsStorageHistoryListener jmsStorageHistoryListener = new JmsStorageHistoryListener();
-        RuleBasePackage newRuleBasePackage = new RuleBaseSingleton(RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, jmsStorageHistoryListener);
+        RuleBaseSingleton newRuleBasePackage = new RuleBaseSingleton(RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, jmsStorageHistoryListener);
         GuvnorDroolsResource gdr = new GuvnorDroolsResource(guvnor_url, guvnor_appName, guvnor_packageName, guvnor_packageVersion, guvnor_username, guvnor_password);
         newRuleBasePackage.addDroolsResouce(gdr);
         newRuleBasePackage.createKBase();
-        //_____ Returning the result
-        logger.debug("<<createGuvnorRuleBasePackage", newRuleBasePackage);
+        jmsStorageHistoryListener.setMbsRuleBase(newRuleBasePackage.getMbsRuleBase());
+        jmsStorageHistoryListener.setMbsSession(newRuleBasePackage.getMbsSession());
+
         this.ruleBasePackage = newRuleBasePackage;
+        logger.debug("<<createGuvnorRuleBasePackage", newRuleBasePackage);
     }
 
 

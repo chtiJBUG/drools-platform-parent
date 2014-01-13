@@ -29,6 +29,6 @@
  		<property name="connectionFactory" ref="pooledJmsConnectionFactory" />
 
  	</bean>
-
+  <bean id="platformRunner" class="org.chtijbug.drools.platform.core.PlatformCoreBuilder"/>
 
 </beans>

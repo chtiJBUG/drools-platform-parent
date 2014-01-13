@@ -1,11 +1,15 @@
 package org.chtijbug.drools.platform.core.droolslistener;
 
+import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseAddRessourceEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseInitialLoadEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseReloadedEvent;
+import org.chtijbug.drools.entity.history.session.SessionFireAllRulesEndEvent;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.listener.HistoryListener;
+import org.chtijbug.drools.runtime.mbeans.RuleBaseSupervision;
+import org.chtijbug.drools.runtime.mbeans.StatefulSessionSupervision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
@@ -26,13 +30,15 @@ import java.io.Serializable;
 @Component
 public class JmsStorageHistoryListener implements HistoryListener {
 
-    private String guvnor_url;
+    private String guvnor_url = null;
     private String guvnor_appName;
     private String guvnor_packageName;
     private String guvnor_packageVersion;
-    private String guvnor_username;
-    private String guvnor_password;
 
+    private RuleBaseSupervision mbsRuleBase;
+    private StatefulSessionSupervision mbsSession;
+
+    private static final Logger LOG = Logger.getLogger(JmsStorageHistoryListener.class);
 
     @Autowired
     private JmsTemplate jmsTemplate;
@@ -40,16 +46,29 @@ public class JmsStorageHistoryListener implements HistoryListener {
     @Override
     public void fireEvent(HistoryEvent historyEvent) throws DroolsChtijbugException {
 
-        if (historyEvent instanceof KnowledgeBaseAddRessourceEvent)  {
-
-        } else if (historyEvent instanceof KnowledgeBaseInitialLoadEvent){
-
-        }else if (historyEvent instanceof KnowledgeBaseReloadedEvent){
+        if (historyEvent instanceof KnowledgeBaseAddRessourceEvent
+                || historyEvent instanceof KnowledgeBaseInitialLoadEvent
+                || historyEvent instanceof KnowledgeBaseReloadedEvent) {
+            if (historyEvent.getGuvnor_url() != null) {
+                this.guvnor_url = historyEvent.getGuvnor_url();
+                this.guvnor_appName = historyEvent.getGuvnor_appName();
+                this.guvnor_packageName = historyEvent.getGuvnor_packageName();
+                this.guvnor_packageVersion = historyEvent.getGuvnor_packageVersion();
+            }
 
         } else {
+            if (this.guvnor_url != null) {
+                historyEvent.setGuvnor_url(this.guvnor_url);
+                historyEvent.setGuvnor_appName(this.guvnor_appName);
+                historyEvent.setGuvnor_packageName(this.guvnor_packageName);
+                historyEvent.setGuvnor_packageVersion(this.guvnor_packageVersion);
+            }
 
         }
-         final Serializable objectToSend = historyEvent;
+        if (historyEvent instanceof SessionFireAllRulesEndEvent){
+           //TODO send all stats to ws server
+        }
+        final Serializable objectToSend = historyEvent;
         jmsTemplate.send(new MessageCreator() {
 
             public Message createMessage(Session session) throws JMSException {
@@ -68,5 +87,14 @@ public class JmsStorageHistoryListener implements HistoryListener {
 
     public void setJmsTemplate(JmsTemplate jmsTemplate) {
         this.jmsTemplate = jmsTemplate;
+    }
+
+
+    public void setMbsRuleBase(RuleBaseSupervision mbsRuleBase) {
+        this.mbsRuleBase = mbsRuleBase;
+    }
+
+    public void setMbsSession(StatefulSessionSupervision mbsSession) {
+        this.mbsSession = mbsSession;
     }
 }
