@@ -26,6 +26,7 @@ public class BusinessPackageAuthoringManagerTest {
     }
 
     @Test
+    @Ignore
     public void should_get_webservice_project_folder_generated() throws Exception {
         GuvnorRepositoryImpl guvnorRepository = new GuvnorRepositoryImpl("http://192.168.252.218:8080", "/drools-guvnor", "tomcat", "tomcat");
         BusinessPackageAuthoringManager toTest = new BusinessPackageAuthoringManager(guvnorRepository, null, new MavenProjectFactory());

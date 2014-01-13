@@ -296,8 +296,6 @@
                 <scope>test</scope>
                 <type>bundle</type>
             </dependency>
-
-
             <!-- END REMOTE ENGINE DEPENDENCY -->
         </dependencies>
     </dependencyManagement>
