@@ -66,10 +66,10 @@
   <modules>
     <module>drools-runtime-builder</module>
     <module>drools-platform-manager-ui</module>
-    <module>drools-platform-core</module>
+    <module>drools-platform-knowledge</module>
     <module>drools-platform-event-logger-server</module>
     <module>drools-platform-persistence</module>
-    <module>drools-platform-entity</module>
+    <module>drools-platform-pojo</module>
     <module>drools-platform-brms</module>
   </modules>
 

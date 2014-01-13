@@ -15,13 +15,13 @@ import org.springframework.beans.factory.annotation.Value;
  * Time: 14:12
  * To change this template use File | Settings | File Templates.
  */
-public class PlatformCoreBuilder {
-
+public class DroolsPlatformKnowledgeBase {
+      //TODO Rename it PlatformCoreKnowledgeBase
 
     /**
      * Class Logger
      */
-    private static Logger logger = LoggerFactory.getLogger(PlatformCoreBuilder.class);
+    private static Logger logger = LoggerFactory.getLogger(DroolsPlatformKnowledgeBase.class);
     @Value( "${guvnor.url}" )
     private String guvnor_url;
     @Value( "${guvnor.appName}" )
@@ -104,7 +104,7 @@ public class PlatformCoreBuilder {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("PlatformCoreBuilder{");
+        final StringBuffer sb = new StringBuffer("DroolsPlatformKnowledgeBase{");
         sb.append("guvnor_url='").append(guvnor_url).append('\'');
         sb.append(", guvnor_appName='").append(guvnor_appName).append('\'');
         sb.append(", guvnor_packageName='").append(guvnor_packageName).append('\'');

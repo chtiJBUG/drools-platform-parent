@@ -6,7 +6,7 @@
     >
 
   <context:annotation-config/>
-  <context:property-placeholder location="classpath:spring/guvnor.properties" />
+  <context:property-placeholder location="classpath:spring/platform-knowledge.properties" />
   <context:component-scan base-package="org.chtijbug.drools.platform.core"/>
 
   <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
@@ -29,6 +29,6 @@
  		<property name="connectionFactory" ref="pooledJmsConnectionFactory" />
 
  	</bean>
-  <bean id="platformRunner" class="org.chtijbug.drools.platform.core.PlatformCoreBuilder"/>
+  <bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase"/>
 
 </beans>
