@@ -1,7 +1,7 @@
 package org.chtijbug.drools.platform.core.websocket;
 
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.platform.entity.ChtijbugRuleBaseReportBean;
+import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
@@ -9,17 +9,17 @@ import java.io.IOException;
 
 import static java.lang.System.out;  
   
-@ServerEndpoint(value="/echo",  
-                encoders = {ChtijbugRuleBaseReportBean.ChtijbugRuleBaseReportBeanCode.class},
-                decoders = {ChtijbugRuleBaseReportBean.ChtijbugRuleBaseReportBeanCode.class})
-public class RuntimeServerService
+@ServerEndpoint(value="/runtime",
+                encoders = {PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class},
+                decoders = {PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class})
+public class RuntimeWebSocketServerService
 {
 
     private Session peerLoggerServer;
 
-    private static final Logger LOG = Logger.getLogger(RuntimeServerService.class);
+    private static final Logger LOG = Logger.getLogger(RuntimeWebSocketServerService.class);
     @OnMessage  
-    public void echo (ChtijbugRuleBaseReportBean bean, Session peer) throws IOException, EncodeException {
+    public void echo (PlatformManagementKnowledgeBean bean, Session peer) throws IOException, EncodeException {
         //  
        // bean.setReply("Server says " + bean.getMessage());
         this.peerLoggerServer = peer;
@@ -28,7 +28,7 @@ public class RuntimeServerService
 
     }  
 
-    public void sendMessAgeToServer(ChtijbugRuleBaseReportBean bean) throws IOException, EncodeException {
+    public void sendMessAgeToServer(PlatformManagementKnowledgeBean bean) throws IOException, EncodeException {
         this.peerLoggerServer.getBasicRemote().sendObject(bean);
 
     }

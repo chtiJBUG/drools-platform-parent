@@ -8,11 +8,11 @@ import org.chtijbug.drools.platform.entity.coder.JSONCoder;
  * Time: 15:12
  * To change this template use File | Settings | File Templates.
  */
-public class ChtijbugRuleBaseReportBean {
+public class PlatformManagementKnowledgeBean {
 
 
-    public static class ChtijbugRuleBaseReportBeanCode extends
-            JSONCoder<ChtijbugRuleBaseReportBean> {
+    public static class PlatformManagementKnowledgeBeanCode extends
+            JSONCoder<PlatformManagementKnowledgeBean> {
 
      }
 

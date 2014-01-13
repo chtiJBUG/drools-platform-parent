@@ -62,7 +62,7 @@
         <!-- Test libs -->
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
+            <artifactId>json-endPoint</artifactId>
             <version>0.8.1</version>
             <scope>test</scope>
         </dependency>

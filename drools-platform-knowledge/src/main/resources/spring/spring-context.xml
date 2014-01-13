@@ -6,28 +6,28 @@
     >
 
   <context:annotation-config/>
-  <context:property-placeholder location="classpath:spring/platform-knowledge.properties" />
+  <context:property-placeholder location="classpath:spring/platform-knowledge.properties"/>
   <context:component-scan base-package="org.chtijbug.drools.platform.core"/>
 
   <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
- 		<property name="brokerURL">
- 			<value>tcp://${jms.server}:${jms.port}</value>
- 		</property>
- 	</bean>
+    <property name="brokerURL">
+      <value>tcp://${jms.server}:${jms.port}</value>
+    </property>
+  </bean>
 
- 	<bean id="pooledJmsConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactoryBean"
- 		destroy-method="destroy">
- 		<property name="connectionFactory" ref="jmsConnectionFactory" />
- 	</bean>
+  <bean id="pooledJmsConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactoryBean"
+        destroy-method="destroy">
+    <property name="connectionFactory" ref="jmsConnectionFactory"/>
+  </bean>
 
- 	<bean id="destination" class="org.apache.activemq.command.ActiveMQQueue">
- 		<constructor-arg value="${jms.queue}" />
- 	</bean>
+  <bean id="destination" class="org.apache.activemq.command.ActiveMQQueue">
+    <constructor-arg value="${jms.queue}"/>
+  </bean>
 
- 	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
- 		<property name="connectionFactory" ref="pooledJmsConnectionFactory" />
+  <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+    <property name="connectionFactory" ref="pooledJmsConnectionFactory"/>
+  </bean>
 
- 	</bean>
-  <bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase"/>
+  <!--bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase"/-->
 
 </beans>

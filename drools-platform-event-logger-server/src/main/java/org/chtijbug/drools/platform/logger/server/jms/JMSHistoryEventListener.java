@@ -1,8 +1,8 @@
 package org.chtijbug.drools.platform.logger.server.jms;
 
-import com.orientechnologies.orient.core.record.impl.ODocument;
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.platform.persistence.impl.db.OrientDBConnector;
+import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
+import org.chtijbug.drools.platform.logger.server.service.KnowledgeBaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,22 +22,20 @@ public class JMSHistoryEventListener implements MessageListener {
 
     private static final Logger LOG = Logger.getLogger(JMSHistoryEventListener.class);
 
+
+
     @Autowired
-    OrientDBConnector orientDBConnector ;
+    KnowledgeBaseService knowledgeBaseService;
+
+
 
     public void onMessage(Message message) {
         try {
-
-            ODocument toto = new ODocument("historyEvent");
-            toto.save();
-            //toto.
-            /**
-            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>("");
-            List<ODocument> result = database.command(query).execute();
-            for (ODocument oDocument : result)  {
-                oDocument.field
+            if (message instanceof PlatformKnowledgeBaseCreatedEvent) {
+                PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent = (PlatformKnowledgeBaseCreatedEvent)message;
+                knowledgeBaseService.handleMessage(platformKnowledgeBaseCreatedEvent);
             }
-             **/
+
             ObjectMessage msg = (ObjectMessage) message;
             LOG.info("Consumed message: " + msg.toString());
         } catch (Exception e) {
