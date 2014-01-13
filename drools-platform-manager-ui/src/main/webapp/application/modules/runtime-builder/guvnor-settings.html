@@ -1,0 +1,22 @@
+<div ng-show="runtimeGenerationModule">
+    <ol class="breadcrumb" style="margin-bottom: 5px;">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Service Assemblies</a></li>
+        <li class="active">{{assemblyName}}</li>
+    </ol>
+
+    <div class="alert alert-danger" ng-show="error"><strong>Error: </strong> Unable to retrieve information for service
+        assembly <strong>{{assemblyName}}</strong></div>
+
+    <div ng-show="!error">
+        <div class="page-header">
+            <h3>
+                {{assemblyName}}
+            </h3>
+        </div>
+
+        <hr/>
+
+        <div ng-include="tabcontent"></div>
+    </div>
+</div>

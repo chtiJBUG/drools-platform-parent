@@ -16,7 +16,32 @@ droolsPlatformApp.config(function ($routeProvider, $httpProvider) {
     $routeProvider
         .when('/home', {
             templateUrl: 'modules/home/home.html',
-            controller: HomeController
+            controller: 'homeController'
+        }).
+        when('/runtimeBuilder', {
+            templateUrl: 'modules/runtime-builder/runtime-builder.html',
+            controller: 'runtimeBuilderController',
+            action: "runtime.builder.settings"
+        }).
+        when("/runtimeBuilder/guvnorSettings", {
+            templateUrl: 'modules/runtime-builder/runtime-builder.html',
+            controller: 'runtimeBuilderController',
+            action: "runtime.builder.settings"
+        }).
+        when("/runtimeBuilder/runtimeDefinition", {
+            templateUrl: 'modules/runtime-builder/runtime-builder.html',
+            controller: 'runtimeBuilderController',
+            action: "runtime.builder.definition"
+        }).
+        when("/runtimeBuilder/runtimeBuilding", {
+            templateUrl: 'modules/runtime-builder/runtime-builder.html',
+            controller: 'runtimeBuilderController',
+            action: "runtime.builder.building"
+        }).
+        when("/runtimeBuilder/runtimeDeployment", {
+            templateUrl: 'modules/runtime-builder/runtime-builder.html',
+            controller: 'runtimeBuilderController',
+            action: "runtime.builder.deployment"
         }).
         otherwise({
             redirectTo: '/home'

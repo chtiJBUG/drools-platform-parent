@@ -31,7 +31,7 @@ public class BusinessPackageAuthoringManager {
     protected static final String XPATH_PROCESSES_NAMES = "//wsdl:portType/wsdl:operation/@name";
     protected static final String XPATH_XSD_NAME = "//wsdl:types/xsd:schema/xsd:import/@schemaLocation";
     protected static final String XPATH_TARGET_NAMESPACE = "//wsdl:definitions/@targetNamespace";
-    protected static final String XPATH_EXECUTION_SERVICE = "//wsdl:impl/@name";
+    protected static final String XPATH_EXECUTION_SERVICE = "//wsdl:service/@name";
 
     protected static final String METHOD_SIGNATURE_REGEX = "(public).* [a-zA-Z]+ [a-zA-Z, 0-9]+\\([a-zA-Z ,\\t\\n, @,(,=,',\",0-9,:,/,\\.,)]*";
     /**
