@@ -28,6 +28,8 @@
     <xbean-spring-version>3.5</xbean-spring-version>
     <log4j-version>1.2.14</log4j-version>
     <orientdb.version>1.6.3</orientdb.version>
+    <cxf.version>2.4.4</cxf.version>
+    <drools.version>5.6.0-SNAPSHOT</drools.version>
   </properties>
 
   <licenses>
@@ -67,6 +69,8 @@
     <module>drools-platform-core</module>
     <module>drools-platform-event-logger-server</module>
     <module>drools-platform-persistence</module>
+    <module>drools-platform-entity</module>
+    <module>drools-platform-brms</module>
   </modules>
 
 
@@ -231,6 +235,12 @@
         <version>15.0</version>
       </dependency>
       <dependency>
+        <groupId>org.drools</groupId>
+        <artifactId>guvnor-webapp-drools</artifactId>
+        <version>${drools.version}</version>
+        <type>war</type>
+      </dependency>
+      <dependency>
         <groupId>org.chtijbug.drools</groupId>
         <artifactId>drools-framework-runtime-entity</artifactId>
         <version>${chtijbug.framework.version}</version>
@@ -274,8 +284,6 @@
         <version>${orientdb.version}</version>
         <type>bundle</type>
       </dependency>
-
-      <!-- INCLUDE THIS IF YOU'RE CONNECTING TO THE SERVER THROUGH THE REMOTE ENGINE -->
       <dependency>
         <groupId>com.orientechnologies</groupId>
         <artifactId>orientdb-client</artifactId>
@@ -299,7 +307,50 @@
       </dependency>
 
 
-      <!-- END REMOTE ENGINE DEPENDENCY -->
+      <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+            <version>1.0-rc3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.tyrus</groupId>
+            <artifactId>tyrus-client</artifactId>
+            <version>1.0-rc3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.tyrus</groupId>
+            <artifactId>tyrus-server</artifactId>
+            <version>1.0-rc3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.tyrus</groupId>
+            <artifactId>tyrus-container-grizzly</artifactId>
+            <version>1.0-rc3</version>
+        </dependency>
+
+
+        <dependency>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-databind</artifactId>
+          <version>2.2.0</version>
+        </dependency>
+
+        <dependency>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-annotations</artifactId>
+          <version>2.2.0</version>
+        </dependency>
+
+        <dependency>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-core</artifactId>
+          <version>2.2.0</version>
+        </dependency>
+
+
     </dependencies>
   </dependencyManagement>
 
