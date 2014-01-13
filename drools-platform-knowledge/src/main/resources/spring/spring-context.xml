@@ -11,8 +11,7 @@
 
   <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
  		<property name="brokerURL">
- 			<value>tcp://localhost:61616</value>
- 			<!--value>vm://localhost</value-->
+ 			<value>tcp://${jms.server}:${jms.port}</value>
  		</property>
  	</bean>
 
@@ -22,7 +21,7 @@
  	</bean>
 
  	<bean id="destination" class="org.apache.activemq.command.ActiveMQQueue">
- 		<constructor-arg value="historyEventQueue" />
+ 		<constructor-arg value="${jms.queue}" />
  	</bean>
 
  	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">

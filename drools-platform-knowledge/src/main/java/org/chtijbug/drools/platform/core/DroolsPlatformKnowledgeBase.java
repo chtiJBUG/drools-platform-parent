@@ -16,8 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
  * To change this template use File | Settings | File Templates.
  */
 public class DroolsPlatformKnowledgeBase {
-      //TODO Rename it PlatformCoreKnowledgeBase
-
     /**
      * Class Logger
      */

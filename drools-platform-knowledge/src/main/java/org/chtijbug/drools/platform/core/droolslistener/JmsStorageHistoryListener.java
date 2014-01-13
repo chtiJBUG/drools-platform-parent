@@ -66,7 +66,7 @@ public class JmsStorageHistoryListener implements HistoryListener {
 
         }
         if (historyEvent instanceof SessionFireAllRulesEndEvent){
-           //TODO send all stats to ws server
+           //TODO send all stats to ws client
         }
         final Serializable objectToSend = historyEvent;
         jmsTemplate.send(new MessageCreator() {
