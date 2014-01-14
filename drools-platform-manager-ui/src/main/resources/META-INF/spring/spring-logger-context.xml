@@ -18,7 +18,7 @@
   <amq:broker useJmx="true" xmlns="http://activemq.apache.org/schema/core">
 
     <persistenceAdapter>
-      <mKahaDB directory="${basedir}/target/data/kahadb">
+      <mKahaDB directory="${jms.basedir}/target/data/kahadb">
         <filteredPersistenceAdapters>
           <!-- kahaDB per destinations -->
           <filteredKahaDB perDestination="true">
