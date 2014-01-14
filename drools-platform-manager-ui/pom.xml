@@ -60,12 +60,74 @@
         </dependency>
 
         <!-- Test libs -->
-        <dependency>
+        <!--dependency>
             <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
+            <artifactId>json-endPoint</artifactId>
             <version>0.8.1</version>
             <scope>test</scope>
-        </dependency>
+        </dependency-->
+
+      <dependency>
+           <groupId>org.chtijbug.drools</groupId>
+           <artifactId>drools-platform-persistence</artifactId>
+           <version>1.0.0-SNAPSHOT</version>
+         </dependency>
+         <dependency>
+           <groupId>org.chtijbug.drools</groupId>
+           <artifactId>drools-platform-entity</artifactId>
+           <version>1.0.0-SNAPSHOT</version>
+         </dependency>
+         <dependency>
+           <groupId>org.apache.activemq</groupId>
+           <artifactId>activemq-all</artifactId>
+         </dependency>
+         <dependency>
+           <groupId>org.springframework</groupId>
+           <artifactId>spring-jms</artifactId>
+         </dependency>
+         <dependency>
+           <groupId>org.springframework</groupId>
+           <artifactId>spring-web</artifactId>
+         </dependency>
+         <dependency>
+               <groupId>org.springframework</groupId>
+               <artifactId>spring-context</artifactId>
+             </dependency>
+         <dependency>
+           <groupId>org.apache.xbean</groupId>
+           <artifactId>xbean-spring</artifactId>
+         </dependency>
+         <dependency>
+           <groupId>javax.servlet</groupId>
+           <artifactId>servlet-api</artifactId>
+           <version>2.5</version>
+           <scope>provided</scope>
+         </dependency>
+         <dependency>
+           <groupId>com.orientechnologies</groupId>
+           <artifactId>orient-commons</artifactId>
+           <type>bundle</type>
+         </dependency>
+
+         <dependency>
+           <groupId>com.orientechnologies</groupId>
+           <artifactId>orientdb-core</artifactId>
+           <type>bundle</type>
+         </dependency>
+
+         <!-- INCLUDE THIS IF YOU'RE CONNECTING TO THE SERVER THROUGH THE REMOTE ENGINE -->
+         <dependency>
+           <groupId>com.orientechnologies</groupId>
+           <artifactId>orientdb-client</artifactId>
+           <type>bundle</type>
+         </dependency>
+         <dependency>
+             <groupId>org.glassfish.tyrus</groupId>
+             <artifactId>tyrus-client</artifactId>
+         </dependency>
+
+
+
     </dependencies>
 
 

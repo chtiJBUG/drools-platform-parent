@@ -83,6 +83,10 @@
       <artifactId>orientdb-client</artifactId>
       <type>bundle</type>
     </dependency>
+    <dependency>
+        <groupId>org.glassfish.tyrus</groupId>
+        <artifactId>tyrus-client</artifactId>
+    </dependency>
   </dependencies>
 
 

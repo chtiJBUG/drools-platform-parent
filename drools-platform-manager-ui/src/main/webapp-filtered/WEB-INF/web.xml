@@ -67,7 +67,7 @@
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
 
-    <!-- Replace the <base> element with the context path-->
+    <!-- Replace the <base> element with the context endPoint-->
     <filter>
         <filter-name>DynamicBaseFilter</filter-name>
         <filter-class>org.chtijbug.drools.platform.web.filter.DynamicBaseFilter</filter-class>

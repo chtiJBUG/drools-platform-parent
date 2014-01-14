@@ -17,6 +17,9 @@ import org.chtijbug.drools.entity.history.rule.AfterRuleFlowDeactivatedHistoryEv
 import org.chtijbug.drools.entity.history.rule.BeforeRuleFiredHistoryEvent;
 import org.chtijbug.drools.entity.history.session.*;
 import org.chtijbug.drools.platform.persistence.EventStorageManager;
+import org.chtijbug.drools.platform.persistence.impl.db.OrientDBConnector;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,7 +27,13 @@ import org.chtijbug.drools.platform.persistence.EventStorageManager;
  * Time: 16:03
  * To change this template use File | Settings | File Templates.
  */
+@Component
 public class EventStorageManagerImpl implements EventStorageManager{
+
+
+    @Autowired
+    OrientDBConnector orientDBConnector ;
+
     @Override
     public void storeEvent(KnowledgeBaseCreatedEvent event) {
         //To change body of implemented methods use File | Settings | File Templates.
