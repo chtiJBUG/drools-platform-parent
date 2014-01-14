@@ -45,7 +45,6 @@ public class JmsStorageHistoryListener implements HistoryListener {
 
     @Override
     public void fireEvent(HistoryEvent historyEvent) throws DroolsChtijbugException {
-
         if (historyEvent instanceof KnowledgeBaseAddRessourceEvent
                 || historyEvent instanceof KnowledgeBaseInitialLoadEvent
                 || historyEvent instanceof KnowledgeBaseReloadedEvent) {

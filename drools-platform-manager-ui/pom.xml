@@ -89,7 +89,7 @@
                             <directory>src/main/webapp/dist</directory>
                         </resource>
                         <resource>
-                            <directory>src/main/webapp/application</directory>
+                            <directory>src/main/webapp-filtered</directory>
                         </resource>
                     </webResources>
                 </configuration>
