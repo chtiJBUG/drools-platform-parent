@@ -1,8 +1,8 @@
-package org.chtijbug.drools.platform.logger.server.service;
+package org.chtijbug.drools.platform.web.service;
 
 import org.chtijbug.drools.platform.entity.PlatformRuntime;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
-import org.chtijbug.drools.platform.logger.server.wsclient.WebSocketSessionManager;
+import org.chtijbug.drools.platform.web.wsclient.WebSocketSessionManager;
 import org.chtijbug.drools.platform.persistence.RuntimeStorageManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

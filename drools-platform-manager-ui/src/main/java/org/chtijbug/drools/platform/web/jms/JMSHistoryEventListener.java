@@ -1,8 +1,8 @@
-package org.chtijbug.drools.platform.logger.server.jms;
+package org.chtijbug.drools.platform.web.jms;
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
-import org.chtijbug.drools.platform.logger.server.service.KnowledgeBaseService;
+import org.chtijbug.drools.platform.web.service.KnowledgeBaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +17,7 @@ import javax.jms.ObjectMessage;
  * Time: 15:20
  * To change this template use File | Settings | File Templates.
  */
-@Component
+@Component("simpleMessageListener")
 public class JMSHistoryEventListener implements MessageListener {
 
     private static final Logger LOG = Logger.getLogger(JMSHistoryEventListener.class);
