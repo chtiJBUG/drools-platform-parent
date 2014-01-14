@@ -15,11 +15,6 @@ module.exports = function (grunt) {
         dist: 'dist'
     };
 
-    try {
-        yeomanConfig.app = require('./bower.json').appPath || yeomanConfig.app;
-    } catch (e) {
-    }
-
     grunt.initConfig({
         yeoman: yeomanConfig,
         watch: {
@@ -66,8 +61,7 @@ module.exports = function (grunt) {
                     host: 'localhost',
                     port: 8080,
                     https: false,
-                    changeOrigin: false,
-                    base: '<%= yeoman.app %>'
+                    changeOrigin: false
                 }
             ],
             livereload: {
@@ -76,7 +70,7 @@ module.exports = function (grunt) {
                         return [
                             proxySnippet,
                             modRewrite([
-                                '!^/components(.*)|^/images(.*)|^/scripts(.*)|^/styles(.*)|^/views(.*)|\\.ico /index.html'
+                                '!^/components(.*)|^/images(.*)|^/modules(.*)|^/styles(.*)|\\.ico /index.html'
                             ]),
                             mountFolder(connect, '.tmp'),
                             mountFolder(connect, yeomanConfig.app)
