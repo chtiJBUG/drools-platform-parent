@@ -19,20 +19,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrientDBConnector {
     @Value("${orientdb.url}")
-    private String orientdb_url;
+    private String url;
     @Value("${orientdb.dbname}")
-    private String orientdb_dbName;
+    private String dbName;
 
     @Value("${orientdb.username}")
-    private String orientdb_username;
+    private String username;
     @Value("${orientdb.password}")
-    private String orientdb_password;
+    private String password;
 
     ODatabaseDocumentTx database = null;
 
+
     public ODatabaseDocument getDatabase() {
         if (database == null) {
-            database = ODatabaseDocumentPool.global().acquire(orientdb_url + orientdb_dbName, orientdb_username, orientdb_password);
+            database = ODatabaseDocumentPool.global().acquire(url + dbName, username, password);
         }
         //ODatabaseDocumentTx toto = new ODatabaseDocumentTx(orientdb_url + orientdb_dbName).open(orientdb_username,orientdb_password) ;
 
