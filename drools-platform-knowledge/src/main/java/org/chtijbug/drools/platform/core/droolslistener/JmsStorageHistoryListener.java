@@ -3,6 +3,7 @@ package org.chtijbug.drools.platform.core.droolslistener;
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseAddRessourceEvent;
+import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseCreatedEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseInitialLoadEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseReloadedEvent;
 import org.chtijbug.drools.entity.history.session.SessionFireAllRulesEndEvent;
@@ -15,6 +16,7 @@ import org.chtijbug.drools.runtime.listener.HistoryListener;
 import org.chtijbug.drools.runtime.mbeans.RuleBaseSupervision;
 import org.chtijbug.drools.runtime.mbeans.StatefulSessionSupervision;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Component;
@@ -45,6 +47,9 @@ public class JmsStorageHistoryListener implements HistoryListener {
 
     private static final Logger LOG = Logger.getLogger(JmsStorageHistoryListener.class);
 
+    @Value("knowledge.rulebaseid")
+    private int ruleBaseID;
+
     @Autowired
     private JmsTemplate jmsTemplate;
 
@@ -61,7 +66,7 @@ public class JmsStorageHistoryListener implements HistoryListener {
             PlatformRuntime platformRuntime = new PlatformRuntime(webSocketServer.getWs_hostname(),webSocketServer.getWs_port());
             platformRuntime.setStartDate(new Date());
             platformRuntime.setEndDate(null);
-            platformRuntime.setRuleBaseID(historyEvent.getRuleBaseID());
+            platformRuntime.setRuleBaseID(this.ruleBaseID);
             platformRuntime.setEventID(historyEvent.getEventID());
             platformRuntime.setStatus(PlatformRuntimeStatus.STARTED);
             PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent = new PlatformKnowledgeBaseCreatedEvent(historyEvent.getEventID(),historyEvent.getDateEvent(),historyEvent.getRuleBaseID(),platformRuntime);
@@ -77,6 +82,7 @@ public class JmsStorageHistoryListener implements HistoryListener {
             }
 
         } else if (this.guvnor_url != null) {
+            historyEvent.setRuleBaseID(this.ruleBaseID);
             historyEvent.setGuvnor_url(this.guvnor_url);
             historyEvent.setGuvnor_appName(this.guvnor_appName);
             historyEvent.setGuvnor_packageName(this.guvnor_packageName);

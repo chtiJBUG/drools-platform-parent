@@ -19,19 +19,19 @@
     <!--  lets create an embedded ActiveMQ Broker -->
 
 
-    <amq:broker brokerName="test-broker" useJmx="true" xmlns="http://activemq.apache.org/schema/core">
+    <amq:broker brokerName="test-broker" useJmx="false" xmlns="http://activemq.apache.org/schema/core">
         <amq:persistenceAdapter >
             <amq:amqPersistenceAdapter directory="${jms.basedir}" maxFileLength="32mb" />
         </amq:persistenceAdapter>
         <amq:transportConnectors>
-            <amq:transportConnector uri="tcp://localhost:7171" />
+            <amq:transportConnector uri="tcp://${jms.server}:${jms.port}" />
         </amq:transportConnectors>
     </amq:broker>
 
 
     <!-- A JMS connection factory for ActiveMQ -->
     <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory"
-          p:brokerURL="tcp://localhost:61616"/>
+          p:brokerURL="tcp://${jms.server}:${jms.port}"/>
 
     <!-- The Spring message listener container configuration -->
     <jms:listener-container
