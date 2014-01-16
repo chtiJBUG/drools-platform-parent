@@ -9,6 +9,7 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class PlatformRuntime {
+    private String orientdbId;
     private String hostname;
     private int port;
     private String endPoint ="/runtime";
@@ -25,6 +26,14 @@ public class PlatformRuntime {
     public PlatformRuntime(String hostname, int port) {
         this.hostname = hostname;
         this.port = port;
+    }
+
+    public String getOrientdbId() {
+        return orientdbId;
+    }
+
+    public void setOrientdbId(String orientdbId) {
+        this.orientdbId = orientdbId;
     }
 
     public String getHostname() {

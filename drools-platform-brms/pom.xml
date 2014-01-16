@@ -32,7 +32,7 @@
             </execution>
           </executions>
           <configuration>
-            <finalName>guvnor-${project.version}</finalName>
+            <finalName>drools-guvnor</finalName>
             <descriptors>
                <descriptor>src/main/assembly/assembly-guvnor-tomcat-6_0.xml</descriptor>
                </descriptors>

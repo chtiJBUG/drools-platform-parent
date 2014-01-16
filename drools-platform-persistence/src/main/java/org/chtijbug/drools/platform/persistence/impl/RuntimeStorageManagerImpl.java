@@ -10,9 +10,7 @@ import org.chtijbug.drools.platform.persistence.impl.db.OrientDBConnector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,34 +25,50 @@ public class RuntimeStorageManagerImpl implements RuntimeStorageManager {
     OrientDBConnector orientDBConnector;
 
 
-    public List<PlatformRuntime>findRunningPlatformRuntime(String hostname) {
+    public List<PlatformRuntime> findRunningPlatformRuntime(String hostname) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("select from PlatformRuntime where endDate is null and ");
-        stringBuilder.append(" hostname=\"" + hostname + "\"");
+        stringBuilder.append(" hostname=:hostname");
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("hostname", hostname);
         OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(stringBuilder.toString());
-        List<ODocument> result = orientDBConnector.getDatabase().command(query).execute();
+        List<ODocument> result = orientDBConnector.getDatabase().command(query).execute(params);
         return transformFrom(result);
     }
 
     public List<PlatformRuntime> findRunningPlatformRuntime(int ruleBaseID) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("select from PlatformRuntime where endDate is null and ");
-        stringBuilder.append("ruleBaseID=" + ruleBaseID);
+        stringBuilder.append("ruleBaseID:=ruleBaseId");
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("ruleBaseId", ruleBaseID);
         OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(stringBuilder.toString());
-        List<ODocument> result = orientDBConnector.getDatabase().command(query).execute();
+        List<ODocument> result = orientDBConnector.getDatabase().command(query).execute(params);
         return transformFrom(result);
     }
 
     public List<PlatformRuntime> findRunningPlatformRuntime(int ruleBaseID, String hostname) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("select from PlatformRuntime where endDate is null and ");
-        stringBuilder.append("ruleBaseID=" + ruleBaseID);
-        stringBuilder.append(" and hostname=\"" + hostname + "\"");
+        stringBuilder.append("ruleBaseID:=ruleBaseID");
+        stringBuilder.append(" and hostname:=hostname");
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("ruleBaseId", ruleBaseID);
+        params.put("hostname", hostname);
         OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(stringBuilder.toString());
-        List<ODocument> result = orientDBConnector.getDatabase().command(query).execute();
+        List<ODocument> result = orientDBConnector.getDatabase().command(query).execute(params);
         return transformFrom(result);
     }
 
+    public void deletePlatformRuntime(String orientdbID) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("delete from PlatformRuntime  ");
+        stringBuilder.append("where @rid:=orientdbID");
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("orientdbID", orientdbID);
+        OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(stringBuilder.toString());
+        List<ODocument> result = orientDBConnector.getDatabase().command(query).execute(params);
+    }
 
     @Override
     public void save(PlatformRuntime platformRuntime) {
@@ -75,7 +89,7 @@ public class RuntimeStorageManagerImpl implements RuntimeStorageManager {
 
     private List<PlatformRuntime> transformFrom(List<ODocument> inputList) {
         List<PlatformRuntime> outputList = new ArrayList<PlatformRuntime>();
-        for (ODocument oDocument: inputList) {
+        for (ODocument oDocument : inputList) {
             outputList.add(this.getFrom(oDocument));
         }
         return outputList;
@@ -83,6 +97,7 @@ public class RuntimeStorageManagerImpl implements RuntimeStorageManager {
 
     private PlatformRuntime getFrom(ODocument input) {
         PlatformRuntime output = new PlatformRuntime();
+        output.setOrientdbId(input.getIdentity().toString());
         output.setHostname((String) input.field("hostname"));
         output.setPort((Integer) input.field("port"));
         output.setEndPoint((String) input.field("endPoint"));

@@ -29,7 +29,7 @@
     <log4j-version>1.2.14</log4j-version>
     <orientdb.version>1.6.3</orientdb.version>
     <cxf.version>2.4.4</cxf.version>
-    <drools.version>5.6.0-SNAPSHOT</drools.version>
+    <drools.version>5.6.0.Final</drools.version>
   </properties>
 
   <licenses>

@@ -33,6 +33,7 @@ public class KnowledgeBaseService {
          * **/
         platformRuntimeList = runtimeStorageManager.findRunningPlatformRuntime(ruleBaseId,hostname);
         if (platformRuntimeList.size()> 0){
+
                //TODO
         } else {
             /**
