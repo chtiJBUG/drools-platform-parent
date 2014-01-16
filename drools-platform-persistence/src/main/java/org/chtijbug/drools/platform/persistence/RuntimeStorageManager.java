@@ -18,5 +18,7 @@ public interface RuntimeStorageManager {
 
     public List<PlatformRuntime> findRunningPlatformRuntime(int ruleBaseID, String hostname);
 
+    public void deletePlatformRuntime(String orientdbID);
+
     public void save(PlatformRuntime platformRuntime);
 }

@@ -1,7 +1,6 @@
 package org.chtijbug.drools.platform.web.wsclient;
 
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.platform.web.wsclient.WebSocketClient;
 
 import javax.websocket.DeploymentException;
 import java.util.ArrayList;
@@ -20,13 +19,11 @@ public class WebSocketSessionManager {
     private List<WebSocketClient> webSocketClientList = new ArrayList<WebSocketClient>();
 
 
-    public void AddClient(String hostName,int port, String endPoint){
-        try {
-            WebSocketClient webSocketClient = new WebSocketClient(hostName,port,endPoint);
-            this.webSocketClientList.add(webSocketClient);
-        } catch (DeploymentException e) {
-            LOG.error("Connection to host:" + hostName + ":" + port + endPoint + " not possible", e);
-        }
+    public void AddClient(String hostName, int port, String endPoint) throws DeploymentException {
+
+        WebSocketClient webSocketClient = new WebSocketClient(hostName, port, endPoint);
+        this.webSocketClientList.add(webSocketClient);
+
 
     }
 }
