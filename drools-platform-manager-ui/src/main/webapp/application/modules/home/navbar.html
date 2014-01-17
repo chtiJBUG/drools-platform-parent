@@ -14,12 +14,21 @@
     <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav" ng-hide="loginRequired">
             <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown">Administration <b class="caret"></b></a>
+                <a class="dropdown-toggle" data-toggle="dropdown">Runtime Administration <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#"><i class="fa fa-cog"></i> Configure Guvnor Access settings</a></li>
-                    <li><a href="#/runtimeBuilder"><i class="fa fa-cogs"></i> Generate new Runtime</a></li>
+                    <li><a href="#"><i class="fa fa-puzzle-piece"></i> Configure Guvnor Access settings</a></li>
+                    <li><a href="#/runtimeBuilder"><i class="fa fa-cog"></i> Generate new Runtime</a></li>
                     <li class="divider"></li>
-                    <li><a href="#"><i class="fa fa-dashboard"></i> Monitor deployed Runtime</a></li>
+                    <li><a href="#"><i class="fa fa-sitemap"></i> Monitor deployed Runtime</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown">Rule Package Deployment <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#"><i class="fa fa-tags"></i> Change Assets Status</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#"><i class="fa fa-compress"></i> Build new Rule Package</a></li>
+                    <li><a href="#"><i class="fa fa-cloud-download"></i> Deploy Rule Package</a></li>
                 </ul>
             </li>
         </ul>

@@ -10,7 +10,7 @@ droolsPlatformApp.config(function ($locationProvider) {
     $locationProvider.html5Mode(true);
 });
 
-droolsPlatformApp.config(function ($routeProvider, $httpProvider) {
+droolsPlatformApp.config(function ($routeProvider) {
 
     //___ Defines the routes
     $routeProvider
@@ -82,6 +82,7 @@ droolsPlatformApp.run(function ($rootScope, $log) {
         $rootScope.loginRequired = false;
         $log.log('Login confirmed');
     });
+
 });
 
 var DroolsPlatformControllers = angular.module('drools-platform.controllers', []);
