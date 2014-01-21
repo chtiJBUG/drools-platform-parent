@@ -4,9 +4,13 @@ import org.chtijbug.drools.platform.core.droolslistener.JmsStorageHistoryListene
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.RuleBasePackage;
 import org.chtijbug.drools.runtime.impl.RuleBaseSingleton;
+import org.chtijbug.drools.runtime.resource.Bpmn2DroolsRessource;
+import org.chtijbug.drools.runtime.resource.DrlDroolsRessource;
+import org.chtijbug.drools.runtime.resource.DroolsResource;
 import org.chtijbug.drools.runtime.resource.GuvnorDroolsResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
@@ -20,26 +24,27 @@ public class DroolsPlatformKnowledgeBase {
      * Class Logger
      */
     private static Logger logger = LoggerFactory.getLogger(DroolsPlatformKnowledgeBase.class);
-    @Value( "${guvnor.url}" )
+    @Value("${guvnor.url}")
     private String guvnor_url;
-    @Value( "${guvnor.appName}" )
+    @Value("${guvnor.appName}")
     private String guvnor_appName;
-    @Value( "${guvnor.packageName}" )
+    @Value("${guvnor.packageName}")
     private String guvnor_packageName;
-    @Value( "${guvnor.packageVersion}" )
+    @Value("${guvnor.packageVersion}")
     private String guvnor_packageVersion;
-    @Value( "${guvnor.username}" )
+    @Value("${guvnor.username}")
     private String guvnor_username;
-    @Value( "${guvnor.password}" )
+    @Value("${guvnor.password}")
     private String guvnor_password;
 
     private RuleBasePackage ruleBasePackage;
+    @Autowired
+    private  JmsStorageHistoryListener jmsStorageHistoryListener;
 
     public void getGuvnorRuleBasePackage() throws DroolsChtijbugException {
 
-        logger.debug(">>createGuvnorRuleBasePackage",this.toString());
-        JmsStorageHistoryListener jmsStorageHistoryListener = new JmsStorageHistoryListener();
-        RuleBaseSingleton newRuleBasePackage = new RuleBaseSingleton(RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, jmsStorageHistoryListener);
+        logger.debug(">>createGuvnorRuleBasePackage", this.toString());
+        RuleBaseSingleton newRuleBasePackage = new RuleBaseSingleton(RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, this.jmsStorageHistoryListener);
         GuvnorDroolsResource gdr = new GuvnorDroolsResource(guvnor_url, guvnor_appName, guvnor_packageName, guvnor_packageVersion, guvnor_username, guvnor_password);
         newRuleBasePackage.addDroolsResouce(gdr);
         newRuleBasePackage.createKBase();
@@ -50,6 +55,39 @@ public class DroolsPlatformKnowledgeBase {
         logger.debug("<<createGuvnorRuleBasePackage", newRuleBasePackage);
     }
 
+    public RuleBasePackage getRuleBasePackage(String... filenames) throws DroolsChtijbugException {
+        logger.debug(">>createPackageBasePackage");
+        RuleBasePackage ruleBasePackage = new RuleBaseSingleton(RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, this.jmsStorageHistoryListener);
+        try {
+            for (String filename : filenames) {
+                String extensionName = this.getFileExtension(filename);
+                DroolsResource resource = null;
+                if ("DRL".equals(extensionName)) {
+                    resource = DrlDroolsRessource.createClassPathResource(filename);
+                } else if ("BPMN2".equals(extensionName)) {
+                    resource = Bpmn2DroolsRessource.createClassPathResource(filename);
+                }
+                if (resource != null) {
+                    ruleBasePackage.addDroolsResouce(resource);
+                } else {
+                    throw new DroolsChtijbugException(DroolsChtijbugException.UnknowFileExtension, filename, null);
+                }
+            }
+            ruleBasePackage.createKBase();
+            this.ruleBasePackage = ruleBasePackage;
+            //_____ Returning the result
+            return ruleBasePackage;
+        } finally {
+            logger.debug("<<createPackageBasePackage", ruleBasePackage);
+        }
+    }
+
+
+    private String getFileExtension(String ressourceName) {
+        int mid = ressourceName.lastIndexOf(".");
+        String ext = ressourceName.substring(mid + 1, ressourceName.length()).toUpperCase();
+        return ext;
+    }
 
     public String getGuvnor_url() {
 

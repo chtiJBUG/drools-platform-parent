@@ -1,5 +1,6 @@
 package org.chtijbug.drools.platform.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -8,7 +9,7 @@ import java.util.Date;
  * Time: 20:20
  * To change this template use File | Settings | File Templates.
  */
-public class PlatformRuntime {
+public class PlatformRuntime implements Serializable{
     private String orientdbId;
     private String hostname;
     private int port;

@@ -26,8 +26,9 @@
 
   <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
     <property name="connectionFactory" ref="pooledJmsConnectionFactory"/>
+    <property name="defaultDestination" ref="destination"/>
   </bean>
 
-  <!--bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase"/-->
+  <bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase"/>
 
 </beans>

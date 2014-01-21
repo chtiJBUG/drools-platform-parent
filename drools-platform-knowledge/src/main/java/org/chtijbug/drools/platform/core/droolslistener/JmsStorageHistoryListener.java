@@ -47,8 +47,8 @@ public class JmsStorageHistoryListener implements HistoryListener {
 
     private static final Logger LOG = Logger.getLogger(JmsStorageHistoryListener.class);
 
-    @Value("knowledge.rulebaseid")
-    private int ruleBaseID;
+    @Value("${knowledge.rulebaseid}")
+    private String ruleBaseID;
 
     @Autowired
     private JmsTemplate jmsTemplate;
@@ -66,7 +66,7 @@ public class JmsStorageHistoryListener implements HistoryListener {
             PlatformRuntime platformRuntime = new PlatformRuntime(webSocketServer.getWs_hostname(),webSocketServer.getWs_port());
             platformRuntime.setStartDate(new Date());
             platformRuntime.setEndDate(null);
-            platformRuntime.setRuleBaseID(this.ruleBaseID);
+            platformRuntime.setRuleBaseID(Integer.valueOf(this.ruleBaseID).intValue());
             platformRuntime.setEventID(historyEvent.getEventID());
             platformRuntime.setStatus(PlatformRuntimeStatus.STARTED);
             PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent = new PlatformKnowledgeBaseCreatedEvent(historyEvent.getEventID(),historyEvent.getDateEvent(),historyEvent.getRuleBaseID(),platformRuntime);
@@ -82,7 +82,7 @@ public class JmsStorageHistoryListener implements HistoryListener {
             }
 
         } else if (this.guvnor_url != null) {
-            historyEvent.setRuleBaseID(this.ruleBaseID);
+            historyEvent.setRuleBaseID(Integer.valueOf(this.ruleBaseID).intValue());
             historyEvent.setGuvnor_url(this.guvnor_url);
             historyEvent.setGuvnor_appName(this.guvnor_appName);
             historyEvent.setGuvnor_packageName(this.guvnor_packageName);

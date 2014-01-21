@@ -6,6 +6,7 @@ import org.chtijbug.drools.platform.entity.PlatformRuntime;
 import org.glassfish.tyrus.client.ClientManager;
 
 import javax.websocket.*;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
 
@@ -23,12 +24,12 @@ public class WebSocketClient {
     private Session session;
 
 
-    public WebSocketClient(String hostname, int port, String endPoint) throws DeploymentException {
+    public WebSocketClient(String hostname, int port, String endPoint) throws DeploymentException, IOException {
         this.platformRuntime.setHostname(hostname);
         this.platformRuntime.setPort(port);
         this.platformRuntime.setEndPoint(endPoint);
         ClientManager client = ClientManager.createClient();
-        PlatformManagementKnowledgeBean beanClient = new PlatformManagementKnowledgeBean();
+        WebSocketClientBean beanClient = new WebSocketClientBean();
 
         this.session = client.connectToServer(
                 beanClient,

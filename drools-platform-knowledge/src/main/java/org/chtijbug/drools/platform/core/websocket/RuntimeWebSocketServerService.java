@@ -34,7 +34,9 @@ public class RuntimeWebSocketServerService
     }
 
     @OnOpen  
-    public void onOpen(final Session session, EndpointConfig endpointConfig) {  
+    public void onOpen(final Session session, EndpointConfig endpointConfig) {
+        this.peerLoggerServer = session;
+
         out.println("Server connected "  + session + " " + endpointConfig);  
     }  
 }  
