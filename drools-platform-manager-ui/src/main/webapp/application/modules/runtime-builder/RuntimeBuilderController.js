@@ -3,7 +3,6 @@ DroolsPlatformControllers.controller('runtimeBuilderController', function ($root
     $scope.isSettingsEnabled = true;
     $scope.isArtifactsEnabled = false;
     $scope.isGenerationsEnabled = false;
-    $scope.isDeploymentEnabled = false;
 
     var subView = 'settings';
     if ($route.current.action != null) {
