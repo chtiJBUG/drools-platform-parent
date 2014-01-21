@@ -3,6 +3,7 @@ package org.chtijbug.drools.platform.web.wsclient;
 import org.apache.log4j.Logger;
 
 import javax.websocket.DeploymentException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class WebSocketSessionManager {
     private List<WebSocketClient> webSocketClientList = new ArrayList<WebSocketClient>();
 
 
-    public void AddClient(String hostName, int port, String endPoint) throws DeploymentException {
+    public void AddClient(String hostName, int port, String endPoint) throws DeploymentException, IOException {
 
         WebSocketClient webSocketClient = new WebSocketClient(hostName, port, endPoint);
         this.webSocketClientList.add(webSocketClient);

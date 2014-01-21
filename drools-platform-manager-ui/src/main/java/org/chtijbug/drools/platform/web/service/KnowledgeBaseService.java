@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.DeploymentException;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -66,6 +67,9 @@ public class KnowledgeBaseService {
             webSocketSessionManager.AddClient(platformRuntime.getHostname(),platformRuntime.getPort(),platformRuntime.getEndPoint());
 
         } catch (DeploymentException e) {
+            platformRuntime.setStatus(PlatformRuntimeStatus.NOT_JOINGNABLE);
+            LOG.error(" handleMessage(PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent) ", e);
+        } catch (IOException e) {
             platformRuntime.setStatus(PlatformRuntimeStatus.NOT_JOINGNABLE);
             LOG.error(" handleMessage(PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent) ", e);
         }
