@@ -1,9 +1,9 @@
-package org.chtijbug.drools.platform.web.jms;
+package org.chtijbug.drools.platform.backend.jms;
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseInitialLoadEvent;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
-import org.chtijbug.drools.platform.web.service.KnowledgeBaseService;
+import org.chtijbug.drools.platform.backend.service.KnowledgeBaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

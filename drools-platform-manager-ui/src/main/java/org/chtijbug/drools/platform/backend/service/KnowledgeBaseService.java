@@ -1,4 +1,4 @@
-package org.chtijbug.drools.platform.web.service;
+package org.chtijbug.drools.platform.backend.service;
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseInitialLoadEvent;
@@ -6,7 +6,7 @@ import org.chtijbug.drools.platform.entity.PlatformRuntime;
 import org.chtijbug.drools.platform.entity.PlatformRuntimeStatus;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
 import org.chtijbug.drools.platform.persistence.RuntimeStorageManager;
-import org.chtijbug.drools.platform.web.wsclient.WebSocketSessionManager;
+import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

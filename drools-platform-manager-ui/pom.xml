@@ -70,12 +70,10 @@
         <dependency>
             <groupId>org.chtijbug.drools</groupId>
             <artifactId>drools-platform-persistence</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.chtijbug.drools</groupId>
             <artifactId>drools-platform-entity</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.activemq</groupId>
@@ -121,10 +119,10 @@
             <artifactId>tyrus-client</artifactId>
         </dependency>
 
-      <dependency>
-          <groupId>org.glassfish.tyrus</groupId>
-          <artifactId>tyrus-container-grizzly</artifactId>
-            </dependency>
+        <dependency>
+            <groupId>org.glassfish.tyrus</groupId>
+            <artifactId>tyrus-container-grizzly</artifactId>
+        </dependency>
 
     </dependencies>
 

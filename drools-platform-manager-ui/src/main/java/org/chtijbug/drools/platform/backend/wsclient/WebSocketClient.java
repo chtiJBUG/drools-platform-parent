@@ -1,4 +1,4 @@
-package org.chtijbug.drools.platform.web.wsclient;
+package org.chtijbug.drools.platform.backend.wsclient;
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
