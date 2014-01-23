@@ -1,5 +1,6 @@
 package org.chtijbug.drools.platform.core.droolslistener;
 
+
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseAddRessourceEvent;
@@ -11,6 +12,7 @@ import org.chtijbug.drools.platform.core.websocket.WebSocketServer;
 import org.chtijbug.drools.platform.entity.PlatformRuntime;
 import org.chtijbug.drools.platform.entity.PlatformRuntimeStatus;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
+import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEvent;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.listener.HistoryListener;
 import org.chtijbug.drools.runtime.mbeans.RuleBaseSupervision;
@@ -47,6 +49,9 @@ public class JmsStorageHistoryListener implements HistoryListener {
 
     private static final Logger LOG = Logger.getLogger(JmsStorageHistoryListener.class);
 
+    private Date startDate;
+
+
     @Value("${knowledge.rulebaseid}")
     private String ruleBaseID;
 
@@ -63,13 +68,14 @@ public class JmsStorageHistoryListener implements HistoryListener {
             /**
              * Here we have to add all info to allow server-log to connect us
              */
-            PlatformRuntime platformRuntime = new PlatformRuntime(webSocketServer.getWs_hostname(),webSocketServer.getWs_port());
+            PlatformRuntime platformRuntime = new PlatformRuntime(webSocketServer.getWs_hostname(), webSocketServer.getWs_port());
             platformRuntime.setStartDate(new Date());
-            platformRuntime.setEndDate(null);
+            this.startDate = platformRuntime.getStartDate();
+            platformRuntime.setEndDate(platformRuntime.getStartDate());
             platformRuntime.setRuleBaseID(Integer.valueOf(this.ruleBaseID).intValue());
             platformRuntime.setEventID(historyEvent.getEventID());
             platformRuntime.setStatus(PlatformRuntimeStatus.STARTED);
-            PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent = new PlatformKnowledgeBaseCreatedEvent(historyEvent.getEventID(),historyEvent.getDateEvent(),historyEvent.getRuleBaseID(),platformRuntime);
+            PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent = new PlatformKnowledgeBaseCreatedEvent(historyEvent.getEventID(), historyEvent.getDateEvent(), historyEvent.getRuleBaseID(), platformRuntime);
             historyEventToSend = platformKnowledgeBaseCreatedEvent;
         } else if (historyEvent instanceof KnowledgeBaseAddRessourceEvent
                 || historyEvent instanceof KnowledgeBaseInitialLoadEvent
@@ -104,6 +110,30 @@ public class JmsStorageHistoryListener implements HistoryListener {
 
         });
 
+    }
+
+    public void shutdown() {
+        this.webSocketServer.stop();
+        this.webSocketServer = null;
+        final PlatformKnowledgeBaseShutdownEvent platformKnowledgeBaseShutdownEvent = new PlatformKnowledgeBaseShutdownEvent(-1, this.startDate, Integer.valueOf(this.ruleBaseID).intValue(), new Date());
+        jmsTemplate.send(new MessageCreator() {
+
+            public Message createMessage(Session session) throws JMSException {
+                ObjectMessage message = session.createObjectMessage();
+                message.setObject(platformKnowledgeBaseShutdownEvent);
+                return message;
+            }
+
+        });
+
+      // this.activeMQConnectionFactor
+    }
+
+    @Override
+    protected void finalize()
+            throws Throwable {
+        super.finalize();
+        this.webSocketServer.stop();
     }
 
     public JmsTemplate getJmsTemplate() {

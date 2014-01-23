@@ -2,8 +2,9 @@ package org.chtijbug.drools.platform.backend.jms;
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseInitialLoadEvent;
-import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
 import org.chtijbug.drools.platform.backend.service.KnowledgeBaseService;
+import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
+import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +41,9 @@ public class JMSHistoryEventListener implements MessageListener {
                 } else if (messageContent instanceof KnowledgeBaseInitialLoadEvent) {
                     KnowledgeBaseInitialLoadEvent knowledgeBaseInitialLoadEvent = (KnowledgeBaseInitialLoadEvent) messageContent;
                     knowledgeBaseService.handleMessage(knowledgeBaseInitialLoadEvent);
+                }  else if (messageContent instanceof PlatformKnowledgeBaseShutdownEvent){
+                    PlatformKnowledgeBaseShutdownEvent platformKnowledgeBaseShutdownEvent = (PlatformKnowledgeBaseShutdownEvent)messageContent;
+                    knowledgeBaseService.handleMessage(platformKnowledgeBaseShutdownEvent);
                 }
 
                 ObjectMessage msg = (ObjectMessage) message;

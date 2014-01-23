@@ -22,7 +22,8 @@ public class WebSocketServer {
     private String ws_hostname;
     @Value("${ws.port}")
     private int ws_port;
-    @Value("${ws.port}")
+
+    Server localWebSocketServer;
 
     private static final Logger LOG = Logger.getLogger(WebSocketServer.class);
 
@@ -31,14 +32,17 @@ public class WebSocketServer {
     }
 
     public void run() throws UnknownHostException {
-        Server server = new Server(ws_hostname, ws_port, "/", RuntimeWebSocketServerService.class);
+        this.localWebSocketServer = new Server(ws_hostname, ws_port, "/", RuntimeWebSocketServerService.class);
         try {
-            server.start();
+            localWebSocketServer.start();
         } catch (DeploymentException e) {
             LOG.error("WebSocketServer.run", e);
         }
     }
-
+    public  void stop() {
+        this.localWebSocketServer.stop();
+        this.localWebSocketServer=null;
+    }
     public String getWs_hostname() {
         return ws_hostname;
     }

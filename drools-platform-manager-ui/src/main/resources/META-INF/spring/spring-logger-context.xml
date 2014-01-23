@@ -14,6 +14,7 @@
     <context:annotation-config/>
     <!--context:property-placeholder location="/WEB-INF/spring/orientdb.properties"/-->
     <context:component-scan base-package="org.chtijbug.drools.platform.web"/>
+    <context:component-scan base-package="org.chtijbug.drools.platform.backend"/>
 
 
     <!--  lets create an embedded ActiveMQ Broker -->
@@ -42,6 +43,6 @@
     </jms:listener-container>
 
 
-    <bean id="webSocketSessionManager" class="org.chtijbug.drools.platform.web.wsclient.WebSocketSessionManager"/>
+    <bean id="webSocketSessionManager" class="org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager"/>
 
 </beans>

@@ -10,6 +10,16 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class PlatformRuntime implements Serializable{
+    public static String class_name="platformruntime";
+    public static String var_hostname="hostname";
+    public static String var_port="port";
+    public static String var_endpoint="endpoint";
+    public static String var_startdate="startdate";
+    public static String var_enddate="enddate";
+    public static String var_status="status";
+    public static String var_eventid="eventid";
+    public static String var_rulebaseid="rulebaseid";
+
     private String orientdbId;
     private String hostname;
     private int port;

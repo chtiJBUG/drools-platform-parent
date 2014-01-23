@@ -82,6 +82,16 @@ public class DroolsPlatformKnowledgeBase {
         }
     }
 
+    public void shutdown(){
+       this.jmsStorageHistoryListener.shutdown();
+       this.jmsStorageHistoryListener= null;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        this.jmsStorageHistoryListener= null;
+    }
 
     private String getFileExtension(String ressourceName) {
         int mid = ressourceName.lastIndexOf(".");

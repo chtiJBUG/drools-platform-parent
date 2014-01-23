@@ -21,4 +21,8 @@ public interface RuntimeStorageManager {
     public void deletePlatformRuntime(String orientdbID);
 
     public void save(PlatformRuntime platformRuntime);
+
+    public PlatformRuntime getPlatformRuntime(String orientdbID);
+
+    public void updatePlatformRuntime(String orientdbID, PlatformRuntime platformRuntime);
 }

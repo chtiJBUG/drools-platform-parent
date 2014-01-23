@@ -24,11 +24,11 @@ public class RuntimeStorageManagerImpl implements RuntimeStorageManager {
     @Autowired
     OrientDBConnector orientDBConnector;
 
-
+    @Override
     public List<PlatformRuntime> findRunningPlatformRuntime(String hostname) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("select from PlatformRuntime where endDate is null and ");
-        stringBuilder.append(" hostname=:hostname");
+        stringBuilder.append("select from platformruntime where  enddate=startdate and ");
+        stringBuilder.append(" hostname=\":hostname\"");
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("hostname", hostname);
         OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(stringBuilder.toString());
@@ -36,53 +36,98 @@ public class RuntimeStorageManagerImpl implements RuntimeStorageManager {
         return transformFrom(result);
     }
 
+    @Override
     public List<PlatformRuntime> findRunningPlatformRuntime(int ruleBaseID) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("select from PlatformRuntime where endDate is null and ");
-        stringBuilder.append("ruleBaseID:=ruleBaseId");
+        stringBuilder.append("select from platformruntime where enddate=startdate ");
+        stringBuilder.append("and rulebaseid=:rulebaseid");
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("ruleBaseId", ruleBaseID);
+        params.put("rulebaseid", ruleBaseID);
         OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(stringBuilder.toString());
         List<ODocument> result = orientDBConnector.getDatabase().command(query).execute(params);
         return transformFrom(result);
     }
 
+    @Override
     public List<PlatformRuntime> findRunningPlatformRuntime(int ruleBaseID, String hostname) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("select from PlatformRuntime where endDate is null and ");
-        stringBuilder.append("ruleBaseID:=ruleBaseID");
-        stringBuilder.append(" and hostname:=hostname");
+        stringBuilder.append("select from platformruntime where  enddate=startdate and ");
+        stringBuilder.append("rulebaseid=:rulebaseid");
+        stringBuilder.append(" and hostname=\":hostname\"");
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("ruleBaseId", ruleBaseID);
+        params.put("rulebaseid", ruleBaseID);
         params.put("hostname", hostname);
         OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(stringBuilder.toString());
         List<ODocument> result = orientDBConnector.getDatabase().command(query).execute(params);
         return transformFrom(result);
     }
 
+    @Override
     public void deletePlatformRuntime(String orientdbID) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("delete from PlatformRuntime  ");
-        stringBuilder.append("where @rid:=orientdbID");
+        stringBuilder.append("select from platformruntime where @rid=:orientdbid ");
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("orientdbID", orientdbID);
+        params.put("orientdbid", orientdbID);
         OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(stringBuilder.toString());
         List<ODocument> result = orientDBConnector.getDatabase().command(query).execute(params);
+        for (ODocument oDocument : result) {
+            oDocument.delete();
+        }
+    }
+    @Override
+    public PlatformRuntime getPlatformRuntime(String orientdbID) {
+        return getFrom(getPatformRuntime_ODocument(orientdbID));
+    }
+
+    private ODocument getPatformRuntime_ODocument(String orientdbID) {
+        ODocument resultODocument = null;
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("select from platformruntime where @rid=:orientdbid ");
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("orientdbid", orientdbID);
+        OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(stringBuilder.toString());
+        List<ODocument> result = orientDBConnector.getDatabase().command(query).execute(params);
+        for (ODocument oDocument : result) {
+            resultODocument = oDocument;
+        }
+        return resultODocument;
+    }
+
+    @Override
+    public void updatePlatformRuntime(String orientdbID, PlatformRuntime platformRuntime) {
+        ODocument oDocument = this.getPatformRuntime_ODocument(orientdbID);
+        this.save(platformRuntime, oDocument);
     }
 
     @Override
     public void save(PlatformRuntime platformRuntime) {
         //TODO first test if there is a running instance before saving it
         ODatabaseRecordThreadLocal.INSTANCE.set(this.orientDBConnector.getDatabase());
-        ODocument platformRuntimeDocument = new ODocument("PlatformRuntime");
-        platformRuntimeDocument.field("hostname", platformRuntime.getHostname());
-        platformRuntimeDocument.field("port", platformRuntime.getPort());
-        platformRuntimeDocument.field("endPoint", platformRuntime.getEndPoint());
-        platformRuntimeDocument.field("startDate", platformRuntime.getStartDate());
-        platformRuntimeDocument.field("endDate", platformRuntime.getEndDate());
-        platformRuntimeDocument.field("Status", platformRuntime.getStatus());
-        platformRuntimeDocument.field("eventID", platformRuntime.getEventID());
-        platformRuntimeDocument.field("ruleBaseID", platformRuntime.getRuleBaseID());
+        ODocument platformRuntimeDocument = new ODocument(PlatformRuntime.class_name);
+        platformRuntimeDocument.field(PlatformRuntime.var_hostname, platformRuntime.getHostname());
+        platformRuntimeDocument.field(PlatformRuntime.var_port, platformRuntime.getPort());
+        platformRuntimeDocument.field(PlatformRuntime.var_endpoint, platformRuntime.getEndPoint());
+        platformRuntimeDocument.field(PlatformRuntime.var_startdate, platformRuntime.getStartDate());
+        platformRuntimeDocument.field(PlatformRuntime.var_enddate, platformRuntime.getEndDate());
+        platformRuntimeDocument.field(PlatformRuntime.var_status, platformRuntime.getStatus());
+        platformRuntimeDocument.field(PlatformRuntime.var_eventid, platformRuntime.getEventID());
+        platformRuntimeDocument.field(PlatformRuntime.var_rulebaseid, platformRuntime.getRuleBaseID());
+        platformRuntimeDocument.save();
+
+    }
+
+
+    public void save(PlatformRuntime platformRuntime, ODocument platformRuntimeDocument) {
+        //TODO first test if there is a running instance before saving it
+        ODatabaseRecordThreadLocal.INSTANCE.set(this.orientDBConnector.getDatabase());
+        platformRuntimeDocument.field(PlatformRuntime.var_hostname, platformRuntime.getHostname());
+        platformRuntimeDocument.field(PlatformRuntime.var_port, platformRuntime.getPort());
+        platformRuntimeDocument.field(PlatformRuntime.var_endpoint, platformRuntime.getEndPoint());
+        platformRuntimeDocument.field(PlatformRuntime.var_startdate, platformRuntime.getStartDate());
+        platformRuntimeDocument.field(PlatformRuntime.var_enddate, platformRuntime.getEndDate());
+        platformRuntimeDocument.field(PlatformRuntime.var_status, platformRuntime.getStatus());
+        platformRuntimeDocument.field(PlatformRuntime.var_eventid, platformRuntime.getEventID());
+        platformRuntimeDocument.field(PlatformRuntime.var_rulebaseid, platformRuntime.getRuleBaseID());
         platformRuntimeDocument.save();
 
     }
@@ -98,12 +143,22 @@ public class RuntimeStorageManagerImpl implements RuntimeStorageManager {
     private PlatformRuntime getFrom(ODocument input) {
         PlatformRuntime output = new PlatformRuntime();
         output.setOrientdbId(input.getIdentity().toString());
-        output.setHostname((String) input.field("hostname"));
-        output.setPort((Integer) input.field("port"));
-        output.setEndPoint((String) input.field("endPoint"));
-        output.setStartDate((Date) input.field("startDate"));
-        output.setEndDate((Date) input.field("endDate"));
-        String statusString = (String) input.field("Status");
+        if (input.field(PlatformRuntime.var_hostname) != null) {
+            output.setHostname((String) input.field(PlatformRuntime.var_hostname));
+        }
+        if (input.field(PlatformRuntime.var_port) != null) {
+            output.setPort((Integer) input.field(PlatformRuntime.var_port));
+        }
+        if (input.field(PlatformRuntime.var_endpoint) != null) {
+            output.setEndPoint((String) input.field(PlatformRuntime.var_endpoint));
+        }
+        if (input.field(PlatformRuntime.var_startdate) != null) {
+            output.setStartDate((Date) input.field(PlatformRuntime.var_startdate));
+        }
+        if (input.field(PlatformRuntime.var_enddate) != null) {
+            output.setEndDate((Date) input.field(PlatformRuntime.var_enddate));
+        }
+        String statusString = (String) input.field(PlatformRuntime.var_status);
         if (PlatformRuntimeStatus.STARTED.equals(statusString)) {
             output.setStatus(PlatformRuntimeStatus.STARTED);
         } else if (PlatformRuntimeStatus.STOPPED.equals(statusString)) {
@@ -111,8 +166,12 @@ public class RuntimeStorageManagerImpl implements RuntimeStorageManager {
         } else {
             output.setStatus(PlatformRuntimeStatus.NOT_JOINGNABLE);
         }
-        output.setEventID((Integer) input.field("eventID"));
-        output.setRuleBaseID((Integer) input.field("ruleBaseID"));
+        if (input.field(PlatformRuntime.var_eventid) != null) {
+            output.setEventID((Integer) input.field(PlatformRuntime.var_eventid));
+        }
+        if (input.field(PlatformRuntime.var_rulebaseid) != null) {
+            output.setRuleBaseID((Integer) input.field(PlatformRuntime.var_rulebaseid));
+        }
         return output;
     }
 }
