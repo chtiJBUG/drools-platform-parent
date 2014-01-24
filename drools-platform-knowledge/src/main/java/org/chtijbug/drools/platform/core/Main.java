@@ -4,7 +4,6 @@ import org.chtijbug.drools.runtime.RuleBasePackage;
 import org.chtijbug.drools.runtime.RuleBaseSession;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 
@@ -22,8 +21,8 @@ public class Main {
         RuleBasePackage ruleBasePackage=null;
 
         try {
-            ruleResource = ResourceUtils.getFile("classpath:fibonacci.drl");
-            ruleBasePackage = droolsPlatformKnowledgeBase.getRuleBasePackage(ruleResource.getAbsolutePath());
+            //ruleResource = ResourceUtils.getFile("classpath:fibonacci.drl");
+            ruleBasePackage = droolsPlatformKnowledgeBase.getRuleBasePackage("fibonacci.drl");
             RuleBaseSession ruleBaseSession = ruleBasePackage.createRuleBaseSession();
             Fibonacci fibonacci = new Fibonacci(3);
             ruleBaseSession.insertObject(fibonacci);
