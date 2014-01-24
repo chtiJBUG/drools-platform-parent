@@ -1,8 +1,10 @@
 package org.chtijbug.drools.platform.backend.service;
 
 import org.apache.log4j.Logger;
+import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseAddRessourceEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseInitialLoadEvent;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
+import org.chtijbug.drools.platform.entity.DroolsRessource;
 import org.chtijbug.drools.platform.entity.PlatformRuntime;
 import org.chtijbug.drools.platform.entity.PlatformRuntimeStatus;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
@@ -81,5 +83,23 @@ public class KnowledgeBaseService {
 
 
         }
+    }
+
+    public void handleMessage(KnowledgeBaseAddRessourceEvent knowledgeBaseAddRessourceEvent) {
+        List<PlatformRuntime> platformRuntimeList = platformRuntimeList = runtimeStorageManager.findRunningPlatformRuntime(knowledgeBaseAddRessourceEvent.getRuleBaseID());
+        if (platformRuntimeList.size() > 0) {
+            PlatformRuntime platformRuntime = platformRuntimeList.get(0);
+            DroolsRessource droolsRessource=null ;
+             if ( knowledgeBaseAddRessourceEvent.getDrlRessourceFiles().size()==0)   {
+                 droolsRessource = new DroolsRessource(knowledgeBaseAddRessourceEvent.getGuvnor_url(), knowledgeBaseAddRessourceEvent.getGuvnor_appName(), knowledgeBaseAddRessourceEvent.getGuvnor_packageName(), knowledgeBaseAddRessourceEvent.getGuvnor_packageVersion());
+             }else {
+                 droolsRessource = new DroolsRessource(knowledgeBaseAddRessourceEvent.getDrlRessourceFiles().get(0).getFileName(),knowledgeBaseAddRessourceEvent.getDrlRessourceFiles().get(0).getContent());
+             }
+
+
+            runtimeStorageManager.save(platformRuntime.getOrientdbId(), droolsRessource);
+
+        }
+
     }
 }

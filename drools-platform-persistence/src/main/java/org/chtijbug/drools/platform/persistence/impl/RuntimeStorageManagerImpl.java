@@ -2,7 +2,9 @@ package org.chtijbug.drools.platform.persistence.impl;
 
 import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import org.chtijbug.drools.platform.entity.DroolsRessource;
 import org.chtijbug.drools.platform.entity.PlatformRuntime;
 import org.chtijbug.drools.platform.entity.PlatformRuntimeStatus;
 import org.chtijbug.drools.platform.persistence.RuntimeStorageManager;
@@ -64,15 +66,10 @@ public class RuntimeStorageManagerImpl implements RuntimeStorageManager {
 
     @Override
     public void deletePlatformRuntime(String orientdbID) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("select from platformruntime where @rid=:orientdbid ");
+        OCommandSQL oCommandSQL = new OCommandSQL("delete from  platformruntime where @rid=:orientdbid");
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("orientdbid", orientdbID);
-        OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(stringBuilder.toString());
-        List<ODocument> result = orientDBConnector.getDatabase().command(query).execute(params);
-        for (ODocument oDocument : result) {
-            oDocument.delete();
-        }
+        List<ODocument> result = orientDBConnector.getDatabase().command(oCommandSQL).execute(params);
     }
     @Override
     public PlatformRuntime getPlatformRuntime(String orientdbID) {
@@ -101,7 +98,6 @@ public class RuntimeStorageManagerImpl implements RuntimeStorageManager {
 
     @Override
     public void save(PlatformRuntime platformRuntime) {
-        //TODO first test if there is a running instance before saving it
         ODatabaseRecordThreadLocal.INSTANCE.set(this.orientDBConnector.getDatabase());
         ODocument platformRuntimeDocument = new ODocument(PlatformRuntime.class_name);
         platformRuntimeDocument.field(PlatformRuntime.var_hostname, platformRuntime.getHostname());
@@ -116,9 +112,24 @@ public class RuntimeStorageManagerImpl implements RuntimeStorageManager {
 
     }
 
+    @Override
+    public void save(String platformRuntimedbID, DroolsRessource droolsRessource) {
+            ODatabaseRecordThreadLocal.INSTANCE.set(this.orientDBConnector.getDatabase());
+            ODocument droolsResourceDocument = new ODocument(DroolsRessource.class_name);
+            droolsResourceDocument.field(DroolsRessource.var_url, droolsRessource.getGuvnor_url());
+            droolsResourceDocument.field(DroolsRessource.var_appName, droolsRessource.getGuvnor_appName());
+            droolsResourceDocument.field(DroolsRessource.var_packageName, droolsRessource.getGuvnor_packageName());
+            droolsResourceDocument.field(DroolsRessource.var_packageVersion, droolsRessource.getGuvnor_packageVersion());
+            droolsResourceDocument.field(DroolsRessource.var_fileName, droolsRessource.getFileName());
+            droolsResourceDocument.field(DroolsRessource.var_fileContent, droolsRessource.getFileContent());
 
+            ODocument oDocument = this.getPatformRuntime_ODocument(platformRuntimedbID);
+            oDocument.field("droolsressources", droolsResourceDocument);
+            oDocument.save();
+            //oDocument.field()
+    
+        }
     public void save(PlatformRuntime platformRuntime, ODocument platformRuntimeDocument) {
-        //TODO first test if there is a running instance before saving it
         ODatabaseRecordThreadLocal.INSTANCE.set(this.orientDBConnector.getDatabase());
         platformRuntimeDocument.field(PlatformRuntime.var_hostname, platformRuntime.getHostname());
         platformRuntimeDocument.field(PlatformRuntime.var_port, platformRuntime.getPort());

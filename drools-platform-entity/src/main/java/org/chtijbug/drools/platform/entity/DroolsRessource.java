@@ -6,13 +6,13 @@ package org.chtijbug.drools.platform.entity;
  * Time: 16:36
  * To change this template use File | Settings | File Templates.
  */
-public class DrlRessource {
+public class DroolsRessource {
 
-    public static String class_name="drlressource";
-    public static String var_url="url";
-    public static String var_appName="appname";
-    public static String var_packageName="packagename";
-    public static String var_packageVersion="packageversion";
+    public static String class_name="droolsressource";
+    public static String var_url="guvnor_url";
+    public static String var_appName="guvnor_appName";
+    public static String var_packageName="guvnor_packageName";
+    public static String var_packageVersion="guvnor_packageVersion";
     public static String var_fileName="filename";
     public static String var_fileContent="filecontent";
     private String guvnor_url;
@@ -22,17 +22,17 @@ public class DrlRessource {
     private String fileName;
     private String fileContent;
 
-    public DrlRessource() {
+    public DroolsRessource() {
     }
 
-    public DrlRessource(String guvnor_url, String guvnor_appName, String guvnor_packageName, String guvnor_packageVersion) {
+    public DroolsRessource(String guvnor_url, String guvnor_appName, String guvnor_packageName, String guvnor_packageVersion) {
         this.guvnor_url = guvnor_url;
         this.guvnor_appName = guvnor_appName;
         this.guvnor_packageName = guvnor_packageName;
         this.guvnor_packageVersion = guvnor_packageVersion;
     }
 
-    public DrlRessource(String fileName, String fileContent) {
+    public DroolsRessource(String fileName, String fileContent) {
         this.fileName = fileName;
         this.fileContent = fileContent;
     }
@@ -63,7 +63,7 @@ public class DrlRessource {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("DrlRessource{");
+        final StringBuffer sb = new StringBuffer("DroolsRessource{");
         sb.append("guvnor_url='").append(guvnor_url).append('\'');
         sb.append(", guvnor_appName='").append(guvnor_appName).append('\'');
         sb.append(", guvnor_packageName='").append(guvnor_packageName).append('\'');

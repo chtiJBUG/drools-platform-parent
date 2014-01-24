@@ -126,7 +126,7 @@ public class JmsStorageHistoryListener implements HistoryListener {
 
         });
 
-      // this.activeMQConnectionFactor
+        // this.activeMQConnectionFactor
     }
 
     @Override

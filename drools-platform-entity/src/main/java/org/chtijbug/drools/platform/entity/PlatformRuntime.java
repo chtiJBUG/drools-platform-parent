@@ -1,6 +1,7 @@
 package org.chtijbug.drools.platform.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -19,6 +20,7 @@ public class PlatformRuntime implements Serializable{
     public static String var_status="status";
     public static String var_eventid="eventid";
     public static String var_rulebaseid="rulebaseid";
+    public static String var_droolsressources="droolsressources";
 
     private String orientdbId;
     private String hostname;
@@ -29,7 +31,7 @@ public class PlatformRuntime implements Serializable{
     private PlatformRuntimeStatus status;
     private int eventID;
     private int ruleBaseID  ;
-
+    private ArrayList<DroolsRessource> droolsRessources = new ArrayList<DroolsRessource>();
 
     public PlatformRuntime() {
     }
@@ -111,10 +113,19 @@ public class PlatformRuntime implements Serializable{
         this.ruleBaseID = ruleBaseID;
     }
 
+    public ArrayList<DroolsRessource> getDroolsRessources() {
+        return droolsRessources;
+    }
+
+    public void setDroolsRessources(ArrayList<DroolsRessource> droolsRessources) {
+        this.droolsRessources = droolsRessources;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("PlatformRuntime{");
-        sb.append("hostname='").append(hostname).append('\'');
+        sb.append("orientdbId='").append(orientdbId).append('\'');
+        sb.append(", hostname='").append(hostname).append('\'');
         sb.append(", port=").append(port);
         sb.append(", endPoint='").append(endPoint).append('\'');
         sb.append(", startDate=").append(startDate);
@@ -122,6 +133,7 @@ public class PlatformRuntime implements Serializable{
         sb.append(", status=").append(status);
         sb.append(", eventID=").append(eventID);
         sb.append(", ruleBaseID=").append(ruleBaseID);
+        sb.append(", droolsRessources=").append(droolsRessources);
         sb.append('}');
         return sb.toString();
     }

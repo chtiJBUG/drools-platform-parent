@@ -1,5 +1,6 @@
 package org.chtijbug.drools.platform.persistence;
 
+import org.chtijbug.drools.platform.entity.DroolsRessource;
 import org.chtijbug.drools.platform.entity.PlatformRuntime;
 
 import java.util.List;
@@ -25,4 +26,6 @@ public interface RuntimeStorageManager {
     public PlatformRuntime getPlatformRuntime(String orientdbID);
 
     public void updatePlatformRuntime(String orientdbID, PlatformRuntime platformRuntime);
+
+    void save(String platformRuntimedbID, DroolsRessource droolsRessource);
 }
