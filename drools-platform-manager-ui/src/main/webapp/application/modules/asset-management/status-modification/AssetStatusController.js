@@ -48,4 +48,8 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
 
     };
 
+    $scope.demoteAssetsStatus = function () {
+
+    };
+
 });

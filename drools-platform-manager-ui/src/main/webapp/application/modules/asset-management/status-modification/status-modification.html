@@ -27,7 +27,7 @@
             <!-- Search result -->
             <br/>
             <br/>
-            <div ng-hide="assets.length > 0" >
+            <div ng-show="assets.length == 0" >
                 <div class="well well-lg">
                     No Assets have been found
                 </div>
@@ -54,6 +54,7 @@
                             </tr>
                         </tbody>
                     </table>
+                    <button id="btn-demote" class="btn btn-warning pull-left" ng-click="demoteAssetsStatus()">Demote</button>
                     <button id="btn-promote" class="btn btn-success pull-right" ng-click="promoteAssetsStatus()">Promote</button>
                 </div>
             </div>
