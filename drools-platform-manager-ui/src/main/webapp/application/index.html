@@ -11,6 +11,7 @@
 
         <!-- build:css(.tmp) styles/less.css -->
         <link rel="stylesheet" href="styles/application.css">
+        <link rel="stylesheet" href="components/select2/select2.css">
         <!-- endbuild -->
 
     </head>
@@ -23,6 +24,8 @@
         <script src="components/bootstrap/dist/js/bootstrap.min.js"></script>
         <script src="components/angular/angular.js"></script>
         <script src="components/angular-route/angular-route.min.js"></script>
+        <script src="components/select2/select2.min.js"></script>
+        <script src="components/angular-ui-select2/src/select2.js"></script>
         <script src="components/angular-http-auth/src/http-auth-interceptor.js"></script>
         <script src="components/moment/moment.js"></script>
         <!-- endbuild -->
@@ -30,10 +33,14 @@
         <!-- build:js modules/modules.js -->
         <script src="modules/Application.js"></script>
         <script src="modules/home/HomeController.js"></script>
+
         <script src="modules/login/LoginService.js"></script>
         <script src="modules/login/LoginController.js"></script>
+
         <script src="modules/runtime-builder/RuntimeBuilderController.js"></script>
         <script src="modules/runtime-builder/guvnor-settings/GuvnorSettingsController.js"></script>
+
+        <script src="modules/asset-management/status-modification/AssetStatusController.js"></script>
         <!-- endbuild -->
 
         <div id="wrap">

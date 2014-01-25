@@ -66,11 +66,15 @@ a {
   }
 }
 
+#wrap {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto (@footer-height *-1);
+}
+
 #footer {
-  position: absolute;
   height: @footer-height;
-  width: 100%;
-  bottom: 0px;
   background-color: @light-grey;
   p {
     padding-left: 10px;
@@ -78,6 +82,11 @@ a {
     margin: 0px;
     padding-top: 5px;
   }
+}
+
+.table-wrapper-div {
+  overflow: scroll;
+  height: 300px;
 }
 
 /* Login */

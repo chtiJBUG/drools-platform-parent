@@ -2,7 +2,8 @@ var droolsPlatformApp = angular.module('droolsPlatformApp', [
     'ngRoute',
     'http-auth-interceptor',
     'drools-platform.services',
-    'drools-platform.controllers'
+    'drools-platform.controllers',
+    'ui.select2'
 ]);
 
 droolsPlatformApp.config(function ($locationProvider) {
@@ -42,6 +43,10 @@ droolsPlatformApp.config(function ($routeProvider) {
             templateUrl: 'modules/runtime-builder/runtime-builder.html',
             controller: 'runtimeBuilderController',
             action: "runtime.builder.deployment"
+        }).
+        when('/changeAssetStatus', {
+            templateUrl: 'modules/asset-management/status-modification/status-modification.html',
+            controller: 'homeController'
         }).
         otherwise({
             redirectTo: '/home'
