@@ -30,7 +30,7 @@ public class RulesPackageResource {
     @Resource
     private RuntimeManager runtimeManager;
     @Resource
-    RuntimeSiteTopology runtimeSiteTopology;
+    private RuntimeSiteTopology runtimeSiteTopology;
 
     @RequestMapping(value = "/build/{status}/{version:.+}", method = RequestMethod.POST)
     @ResponseBody

@@ -7,16 +7,18 @@ import org.chtijbug.drools.guvnor.rest.model.Asset;
 import org.chtijbug.drools.guvnor.rest.model.AssetPropertyType;
 import org.chtijbug.drools.guvnor.rest.model.Snapshot;
 import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
+import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static ch.lambdaj.Lambda.*;
+import static org.hamcrest.Matchers.equalTo;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,7 +26,7 @@ import static ch.lambdaj.Lambda.*;
  * Time: 11:12
  * To change this template use File | Settings | File Templates.
  */
-@Service
+@Component
 public class RuleManager {
     private static Logger logger = LoggerFactory.getLogger(RuleManager.class);
 
@@ -37,19 +39,21 @@ public class RuleManager {
         guvnorRepositoryConnector = new GuvnorRepositoryConnector(runtimeSiteTopology.buildGuvnorConfiguration());
     }
 
-    public List<String> findAllAssetsByStatus(AssetStatus assetStatus) {
-        List<String> result = new ArrayList<String>();
+    public List<Asset> findAllAssetsByStatus(List<AssetStatus> assetStatuses) {
+        //___ Fetch all assets metadata
         List<Asset> assets = guvnorRepositoryConnector.getAllBusinessAssets();
-
-        //_____ If NONE then return the whole list
-        if (AssetStatus.NONE.equals(assetStatus)) {
-            return result;
+        //___ If no filter provided, then return the whole list
+        if (assetStatuses == null || assetStatuses.isEmpty())
+            return assets;
+        //___ Create the proper matcher with the filters provided
+        List<Matcher<String>> matchers = new ArrayList<>(assetStatuses.size());
+        for (AssetStatus assetStatus : assetStatuses) {
+            matchers.add(equalTo(assetStatus.toString()));
         }
+        Matcher[] mat = new Matcher[matchers.size()];
+        Matcher anyOfFilters = Matchers.anyOf(matchers.toArray(mat));
         //_____ Extract those with the expected status
-        List<Asset> resultAssets =
-                select(assets, having(on(Asset.class).getStatus(), Matchers.equalTo(assetStatus.toString())));
-        result = extract(resultAssets, on(Asset.class).getName());
-        return result;
+        return select(assets, having(on(Asset.class).getStatus(), anyOfFilters));
     }
 
     public void updateAllAssetsWithStatus(List<String> assets, final AssetStatus assetStatus) {

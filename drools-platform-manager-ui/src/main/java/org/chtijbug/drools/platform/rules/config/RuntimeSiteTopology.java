@@ -29,9 +29,9 @@ public class RuntimeSiteTopology {
      */
     private String guvnorUrl = "http://localhost:8080";
     private String guvnorApplicationName = "drools-guvnor";
-    private String guvnorPackageName = "amag";
+    private String guvnorPackageName = null;
     private String guvnorUserName = "admin";
-    private String guvnorPassword = "axon";
+    private String guvnorPassword = "admin";
 
     private Properties allEnvironments = new Properties();
 

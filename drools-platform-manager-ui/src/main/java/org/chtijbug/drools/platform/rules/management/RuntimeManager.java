@@ -3,7 +3,7 @@ package org.chtijbug.drools.platform.rules.management;
 import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.ws.rs.core.MediaType;
@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response;
 
 import static javax.ws.rs.core.Response.Status.OK;
 
-@Service
+@Component
 public class RuntimeManager {
     private static final String REST_SERVICE_PATH = "rest/rule-engine/version";
     private static Logger logger = LoggerFactory.getLogger(RuntimeManager.class);
@@ -29,7 +29,7 @@ public class RuntimeManager {
                 throw new AdministrationBusinessProcessException(BusinessProcessError.ENVIRONMENT_UPDATE_ERROR, "Unable to update Environment status : " + response.getStatus());
             }
         } catch (Exception e) {
-            logger.error("Error occurred while updating setting on {} with version {}.\nCause : {}", envName, version, e);
+            logger.error("Error occurred while updating setting on {} with version {}.", envName, version);
             throw new AdministrationBusinessProcessException(BusinessProcessError.ENVIRONMENT_UPDATE_ERROR, "Unable to update Environment " + envName);
         }
     }

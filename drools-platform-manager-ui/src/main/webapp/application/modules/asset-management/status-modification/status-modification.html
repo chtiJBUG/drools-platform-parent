@@ -38,25 +38,27 @@
                         <thead>
                              <tr>
                                  <th class="bold">Asset name</th>
+                                 <th>Asset Type</th>
                                  <th>Current status</th>
-                                 <th>Next status</th>
                                  <th>Promote ?</th>
                              </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="asset in assets">
+                            <tr ng-repeat="asset in assets" ng-click="changeAssetStatus(asset)">
                                 <td>{{asset.name}}</td>
-                                <td>{{asset.currentStatus}}</td>
-                                <td>{{asset.nextStatus}}</td>
+                                <td>{{asset.type}}</td>
+                                <td>{{asset.status}}</td>
                                 <td>
-                                    <input type="checkbox" data-ng-model="asset.toPromote">
+                                    <input type="checkbox" data-ng-model="asset.selected">
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    <button id="btn-demote" class="btn btn-warning pull-left" ng-click="demoteAssetsStatus()">Demote</button>
-                    <button id="btn-promote" class="btn btn-success pull-right" ng-click="promoteAssetsStatus()">Promote</button>
+
                 </div>
+                <br>
+                <button id="btn-demote" class="btn btn-warning pull-left" ng-click="demoteAssetsStatus()">Demote</button>
+                <button id="btn-promote" class="btn btn-success pull-right" ng-click="promoteAssetsStatus()">Promote</button>
             </div>
         </div>
 

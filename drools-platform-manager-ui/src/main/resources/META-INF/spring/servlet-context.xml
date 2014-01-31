@@ -4,7 +4,15 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="org.chtijbug.drools.platform.web" />
-    <context:component-scan base-package="org.chtijbug.drools.platform.rules" />
+    <import resource="classpath:META-INF/spring/drools-platform-properties-resolver.xml"/>
+    <!-- TODO need to support the externalization of the authentication manager -->
+    <import resource="classpath:META-INF/spring/security-context.xml"/>
+
+
+    <!--import resource="classpath:META-INF/spring/spring-logger-context.xml"/-->
+
+    <context:component-scan
+            base-package="org.chtijbug.drools.platform.rules,
+            org.chtijbug.drools.platform.web"/>
 
 </beans>
