@@ -2,7 +2,7 @@ package org.chtijbug.drools.platform.backend.wsclient;
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
-import org.chtijbug.drools.platform.entity.PlatformRuntime;
+import org.chtijbug.drools.platform.entity.pojo.PlatformRuntime;
 import org.glassfish.tyrus.client.ClientManager;
 
 import javax.websocket.*;

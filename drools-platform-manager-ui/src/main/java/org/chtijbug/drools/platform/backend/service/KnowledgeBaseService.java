@@ -4,8 +4,8 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseAddRessourceEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseInitialLoadEvent;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
-import org.chtijbug.drools.platform.entity.DroolsRessource;
-import org.chtijbug.drools.platform.entity.PlatformRuntime;
+import org.chtijbug.drools.platform.entity.pojo.DroolsRessource;
+import org.chtijbug.drools.platform.entity.pojo.PlatformRuntime;
 import org.chtijbug.drools.platform.entity.PlatformRuntimeStatus;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEvent;
@@ -45,7 +45,7 @@ public class KnowledgeBaseService {
         platformRuntimeList = runtimeStorageManager.findRunningPlatformRuntime(ruleBaseId);
         if (platformRuntimeList.size() > 0) {
             for (PlatformRuntime platformRuntime : platformRuntimeList) {
-                runtimeStorageManager.deletePlatformRuntime(platformRuntime.getOrientdbId());
+                runtimeStorageManager.deletePlatformRuntime(platformRuntime.getId());
             }
         }
 
@@ -79,7 +79,7 @@ public class KnowledgeBaseService {
         for (PlatformRuntime platformRuntime : platformRuntimes) {
             platformRuntime.setEndDate(new Date());
             platformRuntime.setStatus(PlatformRuntimeStatus.STOPPED);
-            runtimeStorageManager.updatePlatformRuntime(platformRuntime.getOrientdbId(), platformRuntime);
+            runtimeStorageManager.updatePlatformRuntime(platformRuntime.getId(), platformRuntime);
 
 
         }
@@ -97,7 +97,7 @@ public class KnowledgeBaseService {
              }
 
 
-            runtimeStorageManager.save(platformRuntime.getOrientdbId(), droolsRessource);
+            runtimeStorageManager.save(platformRuntime.getId(), droolsRessource);
 
         }
 

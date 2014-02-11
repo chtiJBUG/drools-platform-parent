@@ -1,7 +1,7 @@
 package org.chtijbug.drools.platform.entity.event;
 
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseCreatedEvent;
-import org.chtijbug.drools.platform.entity.PlatformRuntime;
+import org.chtijbug.drools.platform.entity.pojo.PlatformRuntime;
 
 import java.util.Date;
 

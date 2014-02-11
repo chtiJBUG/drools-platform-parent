@@ -9,7 +9,7 @@ import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseInitialLoadEven
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseReloadedEvent;
 import org.chtijbug.drools.entity.history.session.SessionFireAllRulesEndEvent;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServer;
-import org.chtijbug.drools.platform.entity.PlatformRuntime;
+import org.chtijbug.drools.platform.entity.pojo.PlatformRuntime;
 import org.chtijbug.drools.platform.entity.PlatformRuntimeStatus;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEvent;

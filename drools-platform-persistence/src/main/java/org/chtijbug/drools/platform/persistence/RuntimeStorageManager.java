@@ -1,7 +1,7 @@
 package org.chtijbug.drools.platform.persistence;
 
-import org.chtijbug.drools.platform.entity.DroolsRessource;
-import org.chtijbug.drools.platform.entity.PlatformRuntime;
+import org.chtijbug.drools.platform.entity.pojo.DroolsRessource;
+import org.chtijbug.drools.platform.entity.pojo.PlatformRuntime;
 
 import java.util.List;
 

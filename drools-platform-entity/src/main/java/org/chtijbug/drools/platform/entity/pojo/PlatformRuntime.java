@@ -1,5 +1,11 @@
-package org.chtijbug.drools.platform.entity;
+package org.chtijbug.drools.platform.entity.pojo;
 
+import org.chtijbug.drools.platform.entity.PlatformRuntimeStatus;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,19 +16,12 @@ import java.util.Date;
  * Time: 20:20
  * To change this template use File | Settings | File Templates.
  */
+@Entity
 public class PlatformRuntime implements Serializable{
-    public static String class_name="platformruntime";
-    public static String var_hostname="hostname";
-    public static String var_port="port";
-    public static String var_endpoint="endpoint";
-    public static String var_startdate="startdate";
-    public static String var_enddate="enddate";
-    public static String var_status="status";
-    public static String var_eventid="eventid";
-    public static String var_rulebaseid="rulebaseid";
-    public static String var_droolsressources="droolsressources";
 
-    private String orientdbId;
+    @GeneratedValue
+    @Id
+    private String id;
     private String hostname;
     private int port;
     private String endPoint ="/runtime";
@@ -31,6 +30,8 @@ public class PlatformRuntime implements Serializable{
     private PlatformRuntimeStatus status;
     private int eventID;
     private int ruleBaseID  ;
+
+    @OneToMany
     private ArrayList<DroolsRessource> droolsRessources = new ArrayList<DroolsRessource>();
 
     public PlatformRuntime() {
@@ -41,12 +42,12 @@ public class PlatformRuntime implements Serializable{
         this.port = port;
     }
 
-    public String getOrientdbId() {
-        return orientdbId;
+    public String getId() {
+        return id;
     }
 
-    public void setOrientdbId(String orientdbId) {
-        this.orientdbId = orientdbId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getHostname() {
@@ -124,7 +125,7 @@ public class PlatformRuntime implements Serializable{
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("PlatformRuntime{");
-        sb.append("orientdbId='").append(orientdbId).append('\'');
+        sb.append("id='").append(id).append('\'');
         sb.append(", hostname='").append(hostname).append('\'');
         sb.append(", port=").append(port);
         sb.append(", endPoint='").append(endPoint).append('\'');

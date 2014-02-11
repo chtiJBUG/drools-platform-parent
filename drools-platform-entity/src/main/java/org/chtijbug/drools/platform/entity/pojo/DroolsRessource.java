@@ -1,4 +1,8 @@
-package org.chtijbug.drools.platform.entity;
+package org.chtijbug.drools.platform.entity.pojo;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  * Created by IntelliJ IDEA.
@@ -6,15 +10,12 @@ package org.chtijbug.drools.platform.entity;
  * Time: 16:36
  * To change this template use File | Settings | File Templates.
  */
+@Entity
 public class DroolsRessource {
 
-    public static String class_name="droolsressource";
-    public static String var_url="guvnor_url";
-    public static String var_appName="guvnor_appName";
-    public static String var_packageName="guvnor_packageName";
-    public static String var_packageVersion="guvnor_packageVersion";
-    public static String var_fileName="filename";
-    public static String var_fileContent="filecontent";
+    @GeneratedValue
+    @Id
+    private String id;
     private String guvnor_url;
     private String guvnor_appName;
     private String guvnor_packageName;
@@ -35,6 +36,14 @@ public class DroolsRessource {
     public DroolsRessource(String fileName, String fileContent) {
         this.fileName = fileName;
         this.fileContent = fileContent;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getGuvnor_url() {
