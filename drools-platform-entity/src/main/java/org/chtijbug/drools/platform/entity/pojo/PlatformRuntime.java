@@ -2,13 +2,11 @@ package org.chtijbug.drools.platform.entity.pojo;
 
 import org.chtijbug.drools.platform.entity.PlatformRuntimeStatus;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,23 +14,42 @@ import java.util.Date;
  * Time: 20:20
  * To change this template use File | Settings | File Templates.
  */
+@NamedQueries({
+        @NamedQuery(name = "PlatformRuntime.findbyActivePlatformByRulebaseID",
+                query = "SELECT platformRuntime " +
+                        "FROM PlatformRuntime platformRuntime " +
+                        "WHERE platformRuntime.ruleBaseID = :ruleBaseId " +
+                        "AND platformRuntime.endDate is null"),
+        @NamedQuery(name = "PlatformRuntime.findByRuleBaseIdAndStartDate",
+                query = "SELECT platformRuntime " +
+                        "FROM PlatformRuntime platformRuntime " +
+                        "WHERE platformRuntime.ruleBaseID=:ruleBaseID " +
+                        "AND platformRuntime.startDate=:startDate"),
+        @NamedQuery(name = "PlatformRuntime.findActiveByHostName",
+                        query = "SELECT platformRuntime " +
+                                "FROM PlatformRuntime platformRuntime " +
+                                "WHERE platformRuntime.hostname=:hostname " )
+})
 @Entity
-public class PlatformRuntime implements Serializable{
+//@Table(uniqueConstraints =
+//@UniqueConstraint(columnNames = {"ruleBaseID", "startDate"}))
+public class PlatformRuntime implements Serializable {
 
     @GeneratedValue
     @Id
-    private String id;
+    private long id;
     private String hostname;
     private int port;
-    private String endPoint ="/runtime";
+    private String endPoint = "/runtime";
+    @Column(nullable = false)
     private Date startDate;
     private Date endDate;
     private PlatformRuntimeStatus status;
     private int eventID;
-    private int ruleBaseID  ;
+    private int ruleBaseID;
 
     @OneToMany
-    private ArrayList<DroolsRessource> droolsRessources = new ArrayList<DroolsRessource>();
+    private List<DroolsRessource> droolsRessources = new ArrayList<DroolsRessource>();
 
     public PlatformRuntime() {
     }
@@ -42,11 +59,11 @@ public class PlatformRuntime implements Serializable{
         this.port = port;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -114,11 +131,11 @@ public class PlatformRuntime implements Serializable{
         this.ruleBaseID = ruleBaseID;
     }
 
-    public ArrayList<DroolsRessource> getDroolsRessources() {
+    public List<DroolsRessource> getDroolsRessources() {
         return droolsRessources;
     }
 
-    public void setDroolsRessources(ArrayList<DroolsRessource> droolsRessources) {
+    public void setDroolsRessources(List<DroolsRessource> droolsRessources) {
         this.droolsRessources = droolsRessources;
     }
 
@@ -137,5 +154,25 @@ public class PlatformRuntime implements Serializable{
         sb.append(", droolsRessources=").append(droolsRessources);
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PlatformRuntime that = (PlatformRuntime) o;
+
+        if (ruleBaseID != that.ruleBaseID) return false;
+        if (!startDate.equals(that.startDate)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = startDate.hashCode();
+        result = 31 * result + ruleBaseID;
+        return result;
     }
 }

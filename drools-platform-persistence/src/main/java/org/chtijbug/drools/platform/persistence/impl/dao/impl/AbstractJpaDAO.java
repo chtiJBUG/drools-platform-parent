@@ -1,4 +1,4 @@
-package org.chtijbug.drools.platform.persistence.impl.db;
+package org.chtijbug.drools.platform.persistence.impl.dao.impl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

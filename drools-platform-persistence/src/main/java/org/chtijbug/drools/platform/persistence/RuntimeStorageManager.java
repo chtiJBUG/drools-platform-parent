@@ -1,8 +1,8 @@
 package org.chtijbug.drools.platform.persistence;
 
-import org.chtijbug.drools.platform.entity.pojo.DroolsRessource;
 import org.chtijbug.drools.platform.entity.pojo.PlatformRuntime;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,17 +15,19 @@ public interface RuntimeStorageManager {
 
     public List<PlatformRuntime> findRunningPlatformRuntime(String hostname);
 
-    public List<PlatformRuntime> findRunningPlatformRuntime(int ruleBaseID);
+    public PlatformRuntime findRunningPlatformRuntime(int ruleBaseID);
 
-    public List<PlatformRuntime> findRunningPlatformRuntime(int ruleBaseID, String hostname);
+    public PlatformRuntime findRunningPlatformRuntime(int ruleBaseID, Date startDate);
 
-    public void deletePlatformRuntime(String orientdbID);
+    public void deletePlatformRuntime(PlatformRuntime platformRuntime);
 
     public void save(PlatformRuntime platformRuntime);
 
-    public PlatformRuntime getPlatformRuntime(String orientdbID);
+    public void update(PlatformRuntime platformRuntime);
 
-    public void updatePlatformRuntime(String orientdbID, PlatformRuntime platformRuntime);
+    public PlatformRuntime findPlatformRuntime(long id);
 
-    void save(String platformRuntimedbID, DroolsRessource droolsRessource);
+
+
+
 }

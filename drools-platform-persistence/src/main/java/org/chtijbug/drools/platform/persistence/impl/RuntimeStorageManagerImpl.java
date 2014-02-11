@@ -1,17 +1,15 @@
 package org.chtijbug.drools.platform.persistence.impl;
 
 
-import org.chtijbug.drools.platform.entity.PlatformRuntimeStatus;
-import org.chtijbug.drools.platform.entity.pojo.DroolsRessource;
 import org.chtijbug.drools.platform.entity.pojo.PlatformRuntime;
 import org.chtijbug.drools.platform.persistence.RuntimeStorageManager;
 import org.chtijbug.drools.platform.persistence.impl.dao.IPlatformRuntimeDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,44 +26,39 @@ public class RuntimeStorageManagerImpl implements RuntimeStorageManager {
 
     @Override
     public List<PlatformRuntime> findRunningPlatformRuntime(String hostname) {
-    return null;
+     return this.platformRuntimeDao.findActiveByHostName(hostname);
     }
 
     @Override
-    public List<PlatformRuntime> findRunningPlatformRuntime(int ruleBaseID) {
-        return null;
+    public PlatformRuntime findRunningPlatformRuntime(int ruleBaseID) {
+        return this.platformRuntimeDao.findbyActivePlatformByRulebaseID(ruleBaseID);
     }
 
     @Override
-    public List<PlatformRuntime> findRunningPlatformRuntime(int ruleBaseID, String hostname) {
-      return null;
+    public PlatformRuntime findRunningPlatformRuntime(int ruleBaseID, Date startDate) {
+        return this.platformRuntimeDao.findByRuleBaseIdAndStartDate(ruleBaseID,startDate);
     }
 
     @Override
-    public void deletePlatformRuntime(String orientdbID) {
+    public void deletePlatformRuntime(PlatformRuntime platformRuntime) {
+        this.platformRuntimeDao.delete(platformRuntime);
 
     }
-    @Override
-    public PlatformRuntime getPlatformRuntime(String orientdbID) {
-        return null;
-    }
 
-
-    @Override
-    public void updatePlatformRuntime(String orientdbID, PlatformRuntime platformRuntime) {
-
-    }
 
     @Override
     public void save(PlatformRuntime platformRuntime) {
-
-
+        this.platformRuntimeDao.save(platformRuntime);
     }
 
     @Override
-    public void save(String platformRuntimedbID, DroolsRessource droolsRessource) {
+    public void update(PlatformRuntime platformRuntime) {
+        this.platformRuntimeDao.update(platformRuntime);
+    }
 
-    
-        }
+    @Override
+    public PlatformRuntime findPlatformRuntime(long id) {
+        return this.platformRuntimeDao.findOne(id);
 
+    }
 }

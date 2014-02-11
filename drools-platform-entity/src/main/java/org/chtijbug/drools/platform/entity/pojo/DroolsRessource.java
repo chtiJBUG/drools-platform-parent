@@ -15,7 +15,8 @@ public class DroolsRessource {
 
     @GeneratedValue
     @Id
-    private String id;
+    private long id;
+
     private String guvnor_url;
     private String guvnor_appName;
     private String guvnor_packageName;
@@ -38,11 +39,11 @@ public class DroolsRessource {
         this.fileContent = fileContent;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -68,6 +69,30 @@ public class DroolsRessource {
 
     public String getFileContent() {
         return fileContent;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DroolsRessource that = (DroolsRessource) o;
+
+        if (!guvnor_appName.equals(that.guvnor_appName)) return false;
+        if (!guvnor_packageName.equals(that.guvnor_packageName)) return false;
+        if (!guvnor_packageVersion.equals(that.guvnor_packageVersion)) return false;
+        if (!guvnor_url.equals(that.guvnor_url)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = guvnor_url.hashCode();
+        result = 31 * result + guvnor_appName.hashCode();
+        result = 31 * result + guvnor_packageName.hashCode();
+        result = 31 * result + guvnor_packageVersion.hashCode();
+        return result;
     }
 
     @Override
