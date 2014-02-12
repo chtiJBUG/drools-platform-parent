@@ -31,13 +31,14 @@ import java.util.List;
                                 "WHERE platformRuntime.hostname=:hostname " )
 })
 @Entity
-//@Table(uniqueConstraints =
-//@UniqueConstraint(columnNames = {"ruleBaseID", "startDate"}))
+@Table(name = "platform_runtime")
 public class PlatformRuntime implements Serializable {
 
-    @GeneratedValue
+
     @Id
-    private long id;
+    @SequenceGenerator(name="platform_id_seq", sequenceName="drools_platform_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "platform_id_seq")
+    private Long id;
     @Column
     private String hostname;
     @Column

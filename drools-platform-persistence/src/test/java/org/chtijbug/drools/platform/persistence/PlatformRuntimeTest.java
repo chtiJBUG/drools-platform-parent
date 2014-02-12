@@ -49,7 +49,7 @@ public class PlatformRuntimeTest {
     }
 
     @Test
-    public void  should_get_platform_runtime_object_persisted(){
+    public void should_get_platform_runtime_object_persisted(){
         PlatformRuntime platformRuntime = new PlatformRuntime("MyPc",123);
         platformRuntime.setStartDate(new Date());
         runtimeStorageManager.save(platformRuntime);

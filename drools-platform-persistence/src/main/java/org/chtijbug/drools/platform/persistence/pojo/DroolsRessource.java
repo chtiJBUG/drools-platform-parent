@@ -1,8 +1,6 @@
 package org.chtijbug.drools.platform.persistence.pojo;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,11 +9,13 @@ import javax.persistence.Id;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
+@Table(name = "drools_resource")
 public class DroolsRessource {
 
-    @GeneratedValue
     @Id
-    private long id;
+    @SequenceGenerator(name="resource_id_seq", sequenceName="drools_platform_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "resource_id_seq")
+    private Long id;
 
     private String guvnor_url;
     private String guvnor_appName;
@@ -39,11 +39,11 @@ public class DroolsRessource {
         this.fileContent = fileContent;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
