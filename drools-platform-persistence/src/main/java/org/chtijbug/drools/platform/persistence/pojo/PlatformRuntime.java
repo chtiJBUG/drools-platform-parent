@@ -38,14 +38,21 @@ public class PlatformRuntime implements Serializable {
     @GeneratedValue
     @Id
     private long id;
+    @Column
     private String hostname;
+    @Column
     private int port;
+    @Column
     private String endPoint = "/runtime";
     @Column(nullable = false)
     private Date startDate;
+    @Column
     private Date endDate;
+    @Column
     private PlatformRuntimeStatus status;
+    @Column
     private int eventID;
+    @Column
     private int ruleBaseID;
 
     @OneToMany

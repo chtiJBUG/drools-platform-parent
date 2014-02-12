@@ -13,6 +13,8 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Date;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * Created by IntelliJ IDEA.
  * Date: 07/01/14
@@ -21,7 +23,8 @@ import java.util.Date;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 
-@ContextConfiguration("classpath:/spring/spring-test-persistence-config.xml" )
+@ContextConfiguration(locations = {"classpath:/spring/spring-test-persistence-config.xml",
+        "classpath:spring/spring-persistence-context.xml"} )
 public class PlatformRuntimeTest {
     @Resource
     RuntimeStorageManager runtimeStorageManager ;
@@ -46,11 +49,11 @@ public class PlatformRuntimeTest {
     }
 
     @Test
-    public void  updateNormal(){
+    public void  should_get_platform_runtime_object_persisted(){
         PlatformRuntime platformRuntime = new PlatformRuntime("MyPc",123);
         platformRuntime.setStartDate(new Date());
         runtimeStorageManager.save(platformRuntime);
-        Assert.assertTrue(true);
+        assertThat(platformRuntime.getId()).isNotNull();
     }
 
 }

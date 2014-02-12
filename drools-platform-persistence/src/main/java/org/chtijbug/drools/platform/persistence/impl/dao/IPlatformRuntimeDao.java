@@ -1,6 +1,7 @@
 package org.chtijbug.drools.platform.persistence.impl.dao;
 
-import org.chtijbug.drools.platform.entity.pojo.PlatformRuntime;
+
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
 
 import java.util.Date;
 import java.util.List;

@@ -6,12 +6,12 @@
        xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
 
-
     <context:component-scan base-package="org.chtijbug.drools.platform.persistence"/>
+    <tx:annotation-driven />
 
     <bean id="myEmf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="packagesToScan" value="org.chtijbug.drools.platform.entity.pojo"/>
+        <property name="packagesToScan" value="org.chtijbug.drools.platform.persistence.pojo"/>
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
                 <property name="showSql" value="${hibernate.show_sql}"/>
@@ -40,5 +40,4 @@
           class="org.springframework.cache.ehcache.EhCacheCacheManager"
           p:cacheManager-ref="ehCacheManager" />
 
-    <tx:annotation-driven />
 </beans>
