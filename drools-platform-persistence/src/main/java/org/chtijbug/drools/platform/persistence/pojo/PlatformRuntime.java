@@ -34,11 +34,17 @@ import java.util.List;
 @Table(name = "platform_runtime")
 public class PlatformRuntime implements Serializable {
 
+<<<<<<< HEAD
 
     @Id
     @SequenceGenerator(name="platform_id_seq", sequenceName="drools_platform_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "platform_id_seq")
     private Long id;
+=======
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+>>>>>>> 39fbc169b72e17bdaf7d7f92c61b01f89ab7c3a6
     @Column
     private String hostname;
     @Column
