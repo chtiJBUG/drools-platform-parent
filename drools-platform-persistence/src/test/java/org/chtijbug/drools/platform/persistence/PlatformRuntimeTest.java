@@ -1,7 +1,7 @@
 package org.chtijbug.drools.platform.persistence;
 
 
-import org.chtijbug.drools.platform.entity.pojo.PlatformRuntime;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

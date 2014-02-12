@@ -4,19 +4,18 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseAddRessourceEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseInitialLoadEvent;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
-import org.chtijbug.drools.platform.entity.pojo.DroolsRessource;
-import org.chtijbug.drools.platform.entity.pojo.PlatformRuntime;
 import org.chtijbug.drools.platform.entity.PlatformRuntimeStatus;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEvent;
 import org.chtijbug.drools.platform.persistence.RuntimeStorageManager;
+import org.chtijbug.drools.platform.persistence.pojo.DroolsRessource;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.DeploymentException;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -37,17 +36,18 @@ public class KnowledgeBaseService {
 
     public void handleMessage(PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent) {
         int ruleBaseId = platformKnowledgeBaseCreatedEvent.getRuleBaseID();
-        String hostname = platformKnowledgeBaseCreatedEvent.getPlatformRuntime().getHostname();
-        List<PlatformRuntime> platformRuntimeList = null;
+        String hostname = platformKnowledgeBaseCreatedEvent.getHostname();
+        PlatformRuntime existingPlatformRuntime = null;
         /**
          * then look if exists somewhere else
          */
-        platformRuntimeList = runtimeStorageManager.findRunningPlatformRuntime(ruleBaseId);
-        if (platformRuntimeList.size() > 0) {
-            for (PlatformRuntime platformRuntime : platformRuntimeList) {
-                runtimeStorageManager.deletePlatformRuntime(platformRuntime.getId());
-            }
+        try {
+            existingPlatformRuntime = runtimeStorageManager.findRunningPlatformRuntime(ruleBaseId);
+            runtimeStorageManager.deletePlatformRuntime(existingPlatformRuntime);
+        } catch (Exception e) {
+            //Nothing to do
         }
+
 
         PlatformRuntime platformRuntime = new PlatformRuntime();
         platformRuntime.setRuleBaseID(platformKnowledgeBaseCreatedEvent.getRuleBaseID());
@@ -55,8 +55,8 @@ public class KnowledgeBaseService {
         platformRuntime.setEventID(platformKnowledgeBaseCreatedEvent.getEventID());
         platformRuntime.setStartDate(new Date());
         platformRuntime.setEndDate(platformRuntime.getStartDate());
-        platformRuntime.setHostname(platformKnowledgeBaseCreatedEvent.getPlatformRuntime().getHostname());
-        platformRuntime.setPort(platformKnowledgeBaseCreatedEvent.getPlatformRuntime().getPort());
+        platformRuntime.setHostname(platformKnowledgeBaseCreatedEvent.getHostname());
+        platformRuntime.setPort(platformKnowledgeBaseCreatedEvent.getPort());
         try {
             webSocketSessionManager.AddClient(platformRuntime.getHostname(), platformRuntime.getPort(), platformRuntime.getEndPoint());
 
@@ -75,31 +75,31 @@ public class KnowledgeBaseService {
     }
 
     public void handleMessage(PlatformKnowledgeBaseShutdownEvent platformKnowledgeBaseShutdownEvent) {
-        List<PlatformRuntime> platformRuntimes = runtimeStorageManager.findRunningPlatformRuntime(platformKnowledgeBaseShutdownEvent.getRuleBaseID());
-        for (PlatformRuntime platformRuntime : platformRuntimes) {
-            platformRuntime.setEndDate(new Date());
-            platformRuntime.setStatus(PlatformRuntimeStatus.STOPPED);
-            runtimeStorageManager.updatePlatformRuntime(platformRuntime.getId(), platformRuntime);
-
-
+        PlatformRuntime existingPlatformRuntime = null;
+        try {
+            existingPlatformRuntime = runtimeStorageManager.findRunningPlatformRuntime(platformKnowledgeBaseShutdownEvent.getRuleBaseID());
+            existingPlatformRuntime.setEndDate(new Date());
+            runtimeStorageManager.update(existingPlatformRuntime);
+        } catch (Exception e) {
+            //Nothing to do
         }
+
     }
 
     public void handleMessage(KnowledgeBaseAddRessourceEvent knowledgeBaseAddRessourceEvent) {
-        List<PlatformRuntime> platformRuntimeList = platformRuntimeList = runtimeStorageManager.findRunningPlatformRuntime(knowledgeBaseAddRessourceEvent.getRuleBaseID());
-        if (platformRuntimeList.size() > 0) {
-            PlatformRuntime platformRuntime = platformRuntimeList.get(0);
-            DroolsRessource droolsRessource=null ;
-             if ( knowledgeBaseAddRessourceEvent.getDrlRessourceFiles().size()==0)   {
-                 droolsRessource = new DroolsRessource(knowledgeBaseAddRessourceEvent.getGuvnor_url(), knowledgeBaseAddRessourceEvent.getGuvnor_appName(), knowledgeBaseAddRessourceEvent.getGuvnor_packageName(), knowledgeBaseAddRessourceEvent.getGuvnor_packageVersion());
-             }else {
-                 droolsRessource = new DroolsRessource(knowledgeBaseAddRessourceEvent.getDrlRessourceFiles().get(0).getFileName(),knowledgeBaseAddRessourceEvent.getDrlRessourceFiles().get(0).getContent());
-             }
+        PlatformRuntime existingPlatformRuntime = runtimeStorageManager.findRunningPlatformRuntime(knowledgeBaseAddRessourceEvent.getRuleBaseID());
 
-
-            runtimeStorageManager.save(platformRuntime.getId(), droolsRessource);
-
+        DroolsRessource droolsRessource = null;
+        if (knowledgeBaseAddRessourceEvent.getDrlRessourceFiles().size() == 0) {
+            droolsRessource = new DroolsRessource(knowledgeBaseAddRessourceEvent.getGuvnor_url(), knowledgeBaseAddRessourceEvent.getGuvnor_appName(), knowledgeBaseAddRessourceEvent.getGuvnor_packageName(), knowledgeBaseAddRessourceEvent.getGuvnor_packageVersion());
+        } else {
+            droolsRessource = new DroolsRessource(knowledgeBaseAddRessourceEvent.getDrlRessourceFiles().get(0).getFileName(), knowledgeBaseAddRessourceEvent.getDrlRessourceFiles().get(0).getContent());
         }
+        existingPlatformRuntime.getDroolsRessources().add(droolsRessource);
+
+        runtimeStorageManager.save(existingPlatformRuntime);
 
     }
+
+}
 }

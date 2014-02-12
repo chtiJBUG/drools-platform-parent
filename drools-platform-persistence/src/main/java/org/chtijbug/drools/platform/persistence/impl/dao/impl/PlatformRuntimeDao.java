@@ -1,9 +1,8 @@
 package org.chtijbug.drools.platform.persistence.impl.dao.impl;
 
-import org.chtijbug.drools.platform.entity.pojo.PlatformRuntime;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
 import org.chtijbug.drools.platform.persistence.impl.dao.IPlatformRuntimeDao;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
