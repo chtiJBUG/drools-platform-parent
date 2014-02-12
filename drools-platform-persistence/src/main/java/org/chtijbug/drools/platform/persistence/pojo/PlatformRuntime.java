@@ -35,8 +35,8 @@ import java.util.List;
 //@UniqueConstraint(columnNames = {"ruleBaseID", "startDate"}))
 public class PlatformRuntime implements Serializable {
 
-    @GeneratedValue
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @Column
     private String hostname;

@@ -22,8 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * To change this template use File | Settings | File Templates.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-
-@ContextConfiguration(locations = {"classpath:/spring/spring-test-persistence-config.xml",
+ @ContextConfiguration(locations = {"classpath:/spring/spring-test-persistence-config.xml",
         "classpath:spring/spring-persistence-context.xml"} )
 public class PlatformRuntimeTest {
     @Resource
@@ -39,7 +38,6 @@ public class PlatformRuntimeTest {
         PlatformRuntime platformRuntime = new PlatformRuntime("127.0.0.1",8080);
         platformRuntime.setStartDate(new Date());
         platformRuntime.setRuleBaseID(1);
-
         runtimeStorageManager.save(platformRuntime);
 
         PlatformRuntime platformRuntime1 = runtimeStorageManager.findRunningPlatformRuntime(1);
