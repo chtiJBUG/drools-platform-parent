@@ -1,5 +1,7 @@
 package org.chtijbug.drools.platform.persistence.impl.dao.impl;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
@@ -23,18 +25,19 @@ public abstract class AbstractJpaDAO< T extends Serializable> {
       return this.entityManager.createQuery( "from " + this.clazz.getName() )
        .getResultList();
    }
-
+   @Transactional
    public void save( T entity ){
-      this.entityManager.persist( entity );
+      this.entityManager.persist(entity);
    }
-
+    @Transactional
    public void update( T entity ){
       this.entityManager.merge( entity );
    }
-
+   @Transactional
    public void delete( T entity ){
       this.entityManager.remove( entity );
    }
+   @Transactional
    public void deleteById( Long entityId ){
       T entity = this.findOne(entityId);
 

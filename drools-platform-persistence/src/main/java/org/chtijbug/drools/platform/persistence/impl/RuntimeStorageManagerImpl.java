@@ -6,6 +6,7 @@ import org.chtijbug.drools.platform.persistence.RuntimeStorageManager;
 import org.chtijbug.drools.platform.persistence.impl.dao.IPlatformRuntimeDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
