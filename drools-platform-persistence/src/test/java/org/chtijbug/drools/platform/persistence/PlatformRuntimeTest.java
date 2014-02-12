@@ -33,11 +33,12 @@ public class PlatformRuntimeTest {
 
     @Test
     public void createNormal(){
-        PlatformRuntime platformRuntime = new PlatformRuntime("MyPc",123);
+        PlatformRuntime platformRuntime = new PlatformRuntime("127.0.0.1",8080);
         platformRuntime.setStartDate(new Date());
         platformRuntime.setRuleBaseID(1);
-        platformRuntime.setHostname("mine");
+
         runtimeStorageManager.save(platformRuntime);
+
         PlatformRuntime platformRuntime1 = runtimeStorageManager.findRunningPlatformRuntime(1);
         Assert.assertTrue(platformRuntime1.getRuleBaseID()==platformRuntime.getRuleBaseID());
         Assert.assertTrue(platformRuntime1.getStartDate().equals(platformRuntime.getStartDate()));
@@ -45,7 +46,7 @@ public class PlatformRuntimeTest {
     }
 
     @Test
-    public void updateNormal(){
+    public void  updateNormal(){
         PlatformRuntime platformRuntime = new PlatformRuntime("MyPc",123);
         platformRuntime.setStartDate(new Date());
         runtimeStorageManager.save(platformRuntime);

@@ -27,25 +27,18 @@
         </property>
     </bean>
 
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${jdbc.driverClassName}"/>
-        <property name="url" value="${jdbc.url}"/>
-        <property name="username" value="${jdbc.username}"/>
-        <property name="password" value="${jdbc.password}"/>
-    </bean>
-
     <bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="myEmf"/>
     </bean>
 
-    <!--bean id="ehCacheManager"
+    <bean id="ehCacheManager"
           class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
-          p:configLocation="classpath:spring/ehcache.xml"
-          p:shared="false"/>
+          p:configLocation="classpath:META-INF/ehcache.xml"
+          p:shared="false" />
 
     <bean id="cacheManager"
           class="org.springframework.cache.ehcache.EhCacheCacheManager"
-          p:cacheManager-ref="ehCacheManager"/-->
+          p:cacheManager-ref="ehCacheManager" />
 
     <tx:annotation-driven />
 </beans>
