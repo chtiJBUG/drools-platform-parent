@@ -1,0 +1,5 @@
+
+<dataset>
+    <platform_runtime id="1100000" ruleBaseID="31" hostname="192.168.1.18" port="8080" startDate="2014-02-12" />
+    <platform_runtime id="1100022" ruleBaseID="44" hostname="192.168.1.92" port="8080" startDate="2014-02-12" />
+</dataset>

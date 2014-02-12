@@ -1,5 +1,6 @@
 package org.chtijbug.drools.platform.persistence.pojo;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.chtijbug.drools.platform.entity.PlatformRuntimeStatus;
 
 import javax.persistence.*;
@@ -34,21 +35,14 @@ import java.util.List;
 @Table(name = "platform_runtime")
 public class PlatformRuntime implements Serializable {
 
-<<<<<<< HEAD
-
     @Id
     @SequenceGenerator(name="platform_id_seq", sequenceName="drools_platform_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "platform_id_seq")
     private Long id;
-=======
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
->>>>>>> 39fbc169b72e17bdaf7d7f92c61b01f89ab7c3a6
     @Column
     private String hostname;
     @Column
-    private int port;
+    private Integer port;
     @Column
     private String endPoint = "/runtime";
     @Column(nullable = false)
@@ -58,9 +52,9 @@ public class PlatformRuntime implements Serializable {
     @Column
     private PlatformRuntimeStatus status;
     @Column
-    private int eventID;
+    private Integer eventID;
     @Column
-    private int ruleBaseID;
+    private Integer ruleBaseID;
 
     @OneToMany
     private List<DroolsRessource> droolsRessources = new ArrayList<DroolsRessource>();
@@ -73,11 +67,11 @@ public class PlatformRuntime implements Serializable {
         this.port = port;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -89,11 +83,11 @@ public class PlatformRuntime implements Serializable {
         this.hostname = hostname;
     }
 
-    public int getPort() {
+    public Integer getPort() {
         return port;
     }
 
-    public void setPort(int port) {
+    public void setPort(Integer port) {
         this.port = port;
     }
 
@@ -129,19 +123,19 @@ public class PlatformRuntime implements Serializable {
         this.status = status;
     }
 
-    public int getEventID() {
+    public Integer getEventID() {
         return eventID;
     }
 
-    public void setEventID(int eventID) {
+    public void setEventID(Integer eventID) {
         this.eventID = eventID;
     }
 
-    public int getRuleBaseID() {
+    public Integer getRuleBaseID() {
         return ruleBaseID;
     }
 
-    public void setRuleBaseID(int ruleBaseID) {
+    public void setRuleBaseID(Integer ruleBaseID) {
         this.ruleBaseID = ruleBaseID;
     }
 
@@ -154,30 +148,16 @@ public class PlatformRuntime implements Serializable {
     }
 
     @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("PlatformRuntime{");
-        sb.append("id='").append(id).append('\'');
-        sb.append(", hostname='").append(hostname).append('\'');
-        sb.append(", port=").append(port);
-        sb.append(", endPoint='").append(endPoint).append('\'');
-        sb.append(", startDate=").append(startDate);
-        sb.append(", endDate=").append(endDate);
-        sb.append(", status=").append(status);
-        sb.append(", eventID=").append(eventID);
-        sb.append(", ruleBaseID=").append(ruleBaseID);
-        sb.append(", droolsRessources=").append(droolsRessources);
-        sb.append('}');
-        return sb.toString();
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof PlatformRuntime)) return false;
 
         PlatformRuntime that = (PlatformRuntime) o;
 
-        if (ruleBaseID != that.ruleBaseID) return false;
+        if (!eventID.equals(that.eventID)) return false;
+        if (!hostname.equals(that.hostname)) return false;
+        if (!port.equals(that.port)) return false;
+        if (!ruleBaseID.equals(that.ruleBaseID)) return false;
         if (!startDate.equals(that.startDate)) return false;
 
         return true;
@@ -185,8 +165,27 @@ public class PlatformRuntime implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = startDate.hashCode();
-        result = 31 * result + ruleBaseID;
+        int result = hostname.hashCode();
+        result = 31 * result + port.hashCode();
+        result = 31 * result + startDate.hashCode();
+        result = 31 * result + eventID.hashCode();
+        result = 31 * result + ruleBaseID.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).
+                append("id", id).
+                append("hostname", hostname).
+                append("port", port).
+                append("endPoint", endPoint).
+                append("startDate", startDate).
+                append("endDate", endDate).
+                append("status", status).
+                append("eventID", eventID).
+                append("ruleBaseID", ruleBaseID).
+                append("droolsRessources", droolsRessources).
+                toString();
     }
 }

@@ -45,15 +45,9 @@ public class RuntimeStorageManagerImpl implements RuntimeStorageManager {
 
     }
 
-
     @Override
     public void save(PlatformRuntime platformRuntime) {
         this.platformRuntimeDao.save(platformRuntime);
-    }
-
-    @Override
-    public void update(PlatformRuntime platformRuntime) {
-        this.platformRuntimeDao.update(platformRuntime);
     }
 
     @Override

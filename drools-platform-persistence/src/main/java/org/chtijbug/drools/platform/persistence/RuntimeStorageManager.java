@@ -23,8 +23,6 @@ public interface RuntimeStorageManager {
 
     public void save(PlatformRuntime platformRuntime);
 
-    public void update(PlatformRuntime platformRuntime);
-
     public PlatformRuntime findPlatformRuntime(long id);
 
 
