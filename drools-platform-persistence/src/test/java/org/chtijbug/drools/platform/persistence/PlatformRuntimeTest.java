@@ -3,6 +3,7 @@ package org.chtijbug.drools.platform.persistence;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import org.chtijbug.drools.platform.persistence.impl.dao.IPlatformRuntimeDao;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,29 +29,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:/spring/spring-test-persistence-config.xml",
         "classpath:spring/spring-persistence-context.xml"})
-@TestExecutionListeners({ DependencyInjectionTestExecutionListener.class,
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class,
-        DbUnitTestExecutionListener.class })
+        DbUnitTestExecutionListener.class})
 @DatabaseSetup("classpath:dataset/dataset.xml")
 public class PlatformRuntimeTest {
     @Resource
-    RuntimeStorageManager runtimeStorageManager;
-    private PlatformRuntime platformRuntime;
+    private IPlatformRuntimeDao platformRuntimeDao;
+
 
     @Before
-    public void before(){
-        this.platformRuntime = new PlatformRuntime("127.0.0.1", 8080);
-        platformRuntime.setStartDate(new Date());
-        platformRuntime.setRuleBaseID(18);
-        runtimeStorageManager.save(platformRuntime);
+    public void before() {
+
     }
 
 
     @Test
     public void createNormal() {
-        PlatformRuntime platformRuntime = runtimeStorageManager.findRunningPlatformRuntime(31);
-        assertThat(platformRuntime).isNotNull();
+        PlatformRuntime platformRuntime = new PlatformRuntime("pipohost", 8080);
+        platformRuntime.setStartDate(new Date());
+        platformRuntime.setRuleBaseID(18);
+        platformRuntimeDao.save(platformRuntime);
+        PlatformRuntime platformRuntime1 = platformRuntimeDao.findbyActivePlatformByRulebaseID(18);
+        assertThat(platformRuntime1.getStartDate()).isEqualTo(platformRuntime.getStartDate());
+        assertThat(platformRuntime1).isNotNull();
 
     }
 
@@ -58,7 +61,7 @@ public class PlatformRuntimeTest {
     public void should_get_platform_runtime_object_persisted() {
         PlatformRuntime platformRuntime = new PlatformRuntime("MyPc", 123);
         platformRuntime.setStartDate(new Date());
-        runtimeStorageManager.save(platformRuntime);
+        platformRuntimeDao.save(platformRuntime);
         assertThat(platformRuntime.getId()).isNotNull();
     }
 

@@ -7,7 +7,7 @@ import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
 import org.chtijbug.drools.platform.entity.PlatformRuntimeStatus;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEvent;
-import org.chtijbug.drools.platform.persistence.RuntimeStorageManager;
+import org.chtijbug.drools.platform.persistence.impl.dao.IPlatformRuntimeDao;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsRessource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class KnowledgeBaseService {
     WebSocketSessionManager webSocketSessionManager;
 
     @Autowired
-    RuntimeStorageManager runtimeStorageManager;
+    IPlatformRuntimeDao platformRuntimeDao;
 
     public void handleMessage(PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent) {
         int ruleBaseId = platformKnowledgeBaseCreatedEvent.getRuleBaseID();
@@ -42,8 +42,8 @@ public class KnowledgeBaseService {
          * then look if exists somewhere else
          */
         try {
-            existingPlatformRuntime = runtimeStorageManager.findRunningPlatformRuntime(ruleBaseId);
-            runtimeStorageManager.deletePlatformRuntime(existingPlatformRuntime);
+            existingPlatformRuntime = platformRuntimeDao.findbyActivePlatformByRulebaseID(ruleBaseId);
+            platformRuntimeDao.delete(existingPlatformRuntime);
         } catch (Exception e) {
             //Nothing to do
         }
@@ -67,7 +67,7 @@ public class KnowledgeBaseService {
             platformRuntime.setStatus(PlatformRuntimeStatus.NOT_JOINGNABLE);
             LOG.error(" handleMessage(PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent) ", e);
         }
-        runtimeStorageManager.save(platformRuntime);
+        platformRuntimeDao.save(platformRuntime);
 
     }
 
@@ -77,9 +77,9 @@ public class KnowledgeBaseService {
     public void handleMessage(PlatformKnowledgeBaseShutdownEvent platformKnowledgeBaseShutdownEvent) {
         PlatformRuntime existingPlatformRuntime = null;
         try {
-            existingPlatformRuntime = runtimeStorageManager.findRunningPlatformRuntime(platformKnowledgeBaseShutdownEvent.getRuleBaseID());
+            existingPlatformRuntime = platformRuntimeDao.findbyActivePlatformByRulebaseID(platformKnowledgeBaseShutdownEvent.getRuleBaseID());
             existingPlatformRuntime.setEndDate(new Date());
-            runtimeStorageManager.update(existingPlatformRuntime);
+            platformRuntimeDao.update(existingPlatformRuntime);
         } catch (Exception e) {
             //Nothing to do
         }
@@ -87,7 +87,7 @@ public class KnowledgeBaseService {
     }
 
     public void handleMessage(KnowledgeBaseAddRessourceEvent knowledgeBaseAddRessourceEvent) {
-        PlatformRuntime existingPlatformRuntime = runtimeStorageManager.findRunningPlatformRuntime(knowledgeBaseAddRessourceEvent.getRuleBaseID());
+        PlatformRuntime existingPlatformRuntime = platformRuntimeDao.findbyActivePlatformByRulebaseID(knowledgeBaseAddRessourceEvent.getRuleBaseID());
 
         DroolsRessource droolsRessource = null;
         if (knowledgeBaseAddRessourceEvent.getDrlRessourceFiles().size() == 0) {
@@ -97,7 +97,7 @@ public class KnowledgeBaseService {
         }
         existingPlatformRuntime.getDroolsRessources().add(droolsRessource);
 
-        runtimeStorageManager.save(existingPlatformRuntime);
+        platformRuntimeDao.save(existingPlatformRuntime);
 
     }
 
