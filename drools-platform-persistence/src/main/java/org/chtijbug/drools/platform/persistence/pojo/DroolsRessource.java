@@ -1,4 +1,4 @@
-package org.chtijbug.drools.platform.entity.pojo;
+package org.chtijbug.drools.platform.persistence.pojo;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

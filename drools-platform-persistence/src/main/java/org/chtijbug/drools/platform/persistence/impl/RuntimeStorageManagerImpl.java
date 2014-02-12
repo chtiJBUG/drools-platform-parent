@@ -1,7 +1,7 @@
 package org.chtijbug.drools.platform.persistence.impl;
 
 
-import org.chtijbug.drools.platform.entity.pojo.PlatformRuntime;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
 import org.chtijbug.drools.platform.persistence.RuntimeStorageManager;
 import org.chtijbug.drools.platform.persistence.impl.dao.IPlatformRuntimeDao;
 import org.springframework.beans.factory.annotation.Autowired;

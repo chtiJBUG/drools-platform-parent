@@ -9,8 +9,6 @@ import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseInitialLoadEven
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseReloadedEvent;
 import org.chtijbug.drools.entity.history.session.SessionFireAllRulesEndEvent;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServer;
-import org.chtijbug.drools.platform.entity.pojo.PlatformRuntime;
-import org.chtijbug.drools.platform.entity.PlatformRuntimeStatus;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEvent;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
@@ -68,14 +66,8 @@ public class JmsStorageHistoryListener implements HistoryListener {
             /**
              * Here we have to add all info to allow server-log to connect us
              */
-            PlatformRuntime platformRuntime = new PlatformRuntime(webSocketServer.getWs_hostname(), webSocketServer.getWs_port());
-            platformRuntime.setStartDate(new Date());
-            this.startDate = platformRuntime.getStartDate();
-            platformRuntime.setEndDate(platformRuntime.getStartDate());
-            platformRuntime.setRuleBaseID(Integer.valueOf(this.ruleBaseID).intValue());
-            platformRuntime.setEventID(historyEvent.getEventID());
-            platformRuntime.setStatus(PlatformRuntimeStatus.STARTED);
-            PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent = new PlatformKnowledgeBaseCreatedEvent(historyEvent.getEventID(), historyEvent.getDateEvent(), historyEvent.getRuleBaseID(), platformRuntime);
+
+            PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent = new PlatformKnowledgeBaseCreatedEvent(historyEvent.getEventID(), historyEvent.getDateEvent(), historyEvent.getRuleBaseID(), webSocketServer.getWs_hostname(), webSocketServer.getWs_port(),new Date());
             historyEventToSend = platformKnowledgeBaseCreatedEvent;
         } else if (historyEvent instanceof KnowledgeBaseAddRessourceEvent
                 || historyEvent instanceof KnowledgeBaseInitialLoadEvent

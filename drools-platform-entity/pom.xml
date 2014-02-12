@@ -28,10 +28,6 @@
       <groupId>org.chtijbug.drools</groupId>
       <artifactId>drools-framework-runtime-entity</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.hibernate.java-persistence</groupId>
-      <artifactId>jpa-api</artifactId>
-    </dependency>
 
   </dependencies>
 
