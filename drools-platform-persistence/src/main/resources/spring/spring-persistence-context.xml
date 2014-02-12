@@ -7,48 +7,45 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
 
 
-  <context:component-scan base-package="org.chtijbug.drools.platform.persistence"/>
-  <bean id="myEmf"
-   class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-     <property name="dataSource" ref="dataSource" />
-     <property name="packagesToScan" value="org.chtijbug.drools.platform.entity.pojo" />
-     <property name="jpaVendorAdapter">
-        <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-           <property name="showSql" value="${hibernate.show_sql}" />
-           <property name="generateDdl" value="${jpa.generateDdl}" />
-           <property name="databasePlatform" value="${persistence.dialect}" />
-        </bean>
-     </property>
-    <property name="jpaProperties">
-                <props>
-                    <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
-                    <prop key="hibernate.dialect">${hibernate.dialect}</prop>
-                </props>
-            </property>
-  </bean>
+    <context:component-scan base-package="org.chtijbug.drools.platform.persistence"/>
 
-  <bean id="dataSource"
-   class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-     <property name="driverClassName" value="${jdbc.driverClassName}" />
-     <property name="url" value="${jdbc.url}" />
-     <property name="username" value="${jdbc.username}" />
-     <property name="password" value="${jdbc.password}" />
-  </bean>
+    <bean id="myEmf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="org.chtijbug.drools.platform.entity.pojo"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="showSql" value="${hibernate.show_sql}"/>
+                <property name="generateDdl" value="${jpa.generateDdl}"/>
+                <property name="databasePlatform" value="${persistence.dialect}"/>
+            </bean>
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+            </props>
+        </property>
+    </bean>
 
-  <bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-     <property name="entityManagerFactory" ref="myEmf" />
-  </bean>
-  <tx:annotation-driven/>
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
 
-  <bean id="ehCacheManager"
+    <bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="myEmf"/>
+    </bean>
+
+    <!--bean id="ehCacheManager"
           class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
           p:configLocation="classpath:spring/ehcache.xml"
-          p:shared="false" />
+          p:shared="false"/>
 
-      <bean id="cacheManager"
+    <bean id="cacheManager"
           class="org.springframework.cache.ehcache.EhCacheCacheManager"
-          p:cacheManager-ref="ehCacheManager" />
+          p:cacheManager-ref="ehCacheManager"/-->
 
-      <tx:annotation-driven cache-manager="cacheManager" />
-
+    <tx:annotation-driven />
 </beans>

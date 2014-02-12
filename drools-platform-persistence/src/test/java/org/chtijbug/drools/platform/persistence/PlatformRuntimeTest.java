@@ -25,6 +25,7 @@ import java.util.Date;
 public class PlatformRuntimeTest {
     @Resource
     RuntimeStorageManager runtimeStorageManager ;
+
     @BeforeClass
     public static void BeforeClass() throws IOException {
 
@@ -42,12 +43,13 @@ public class PlatformRuntimeTest {
         Assert.assertTrue(platformRuntime1.getStartDate().equals(platformRuntime.getStartDate()));
         Assert.assertTrue(platformRuntime1.getEndDate() == null) ;
     }
+
     @Test
-        public void updateNormal(){
-            PlatformRuntime platformRuntime = new PlatformRuntime("MyPc",123);
-            platformRuntime.setStartDate(new Date());
-            runtimeStorageManager.save(platformRuntime);
-            Assert.assertTrue(true);
-        }
+    public void updateNormal(){
+        PlatformRuntime platformRuntime = new PlatformRuntime("MyPc",123);
+        platformRuntime.setStartDate(new Date());
+        runtimeStorageManager.save(platformRuntime);
+        Assert.assertTrue(true);
+    }
 
 }
