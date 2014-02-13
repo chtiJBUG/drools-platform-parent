@@ -24,12 +24,14 @@ import java.util.List;
         @NamedQuery(name = "PlatformRuntime.findByRuleBaseIdAndStartDate",
                 query = "SELECT platformRuntime " +
                         "FROM PlatformRuntime platformRuntime " +
-                        "WHERE platformRuntime.ruleBaseID=:ruleBaseID " +
-                        "AND platformRuntime.startDate=:startDate"),
+                        "WHERE platformRuntime.ruleBaseID=:ruleBaseId " +
+                        "AND platformRuntime.startDate=:startDate " +
+                        "AND platformRuntime.endDate is null"),
         @NamedQuery(name = "PlatformRuntime.findActiveByHostName",
                         query = "SELECT platformRuntime " +
                                 "FROM PlatformRuntime platformRuntime " +
-                                "WHERE platformRuntime.hostname=:hostname " )
+                                "WHERE platformRuntime.hostname=:hostname "  +
+                                "AND platformRuntime.endDate is null")
 })
 @Entity
 @Table(name = "platform_runtime")
@@ -56,7 +58,7 @@ public class PlatformRuntime implements Serializable {
     @Column
     private Integer ruleBaseID;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<DroolsRessource> droolsRessources = new ArrayList<DroolsRessource>();
 
     public PlatformRuntime() {

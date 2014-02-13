@@ -16,12 +16,17 @@ public class DroolsRessource {
     @SequenceGenerator(name="resource_id_seq", sequenceName="drools_platform_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "resource_id_seq")
     private Long id;
-
+    @Column
     private String guvnor_url;
+    @Column
     private String guvnor_appName;
+    @Column
     private String guvnor_packageName;
+    @Column
     private String guvnor_packageVersion;
+    @Column
     private String fileName;
+    @Column
     private String fileContent;
 
     public DroolsRessource() {

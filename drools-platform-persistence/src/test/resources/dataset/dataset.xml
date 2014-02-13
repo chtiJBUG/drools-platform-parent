@@ -1,5 +1,13 @@
-
 <dataset>
-    <platform_runtime id="1100000" ruleBaseID="31" hostname="192.168.1.18" port="8080" startDate="2014-02-12" />
-    <platform_runtime id="1100022" ruleBaseID="44" hostname="192.168.1.92" port="8080" startDate="2014-02-12" />
+  <platform_runtime id="1100000" ruleBaseID="31" hostname="192.168.1.18" port="8080" startDate="2014-02-12"
+                    eventID="1"/>
+  <platform_runtime id="1100022" ruleBaseID="44" hostname="192.168.1.92" port="8080" startDate="2014-02-12"
+                    eventID="1"/>
+  <platform_runtime id="1100033" ruleBaseID="33" hostname="192.168.1.18" port="8080" startDate="2014-02-12"
+                    eventID="1"/>
+  <platform_runtime id="1100042" ruleBaseID="44" hostname="192.168.1.92" port="8080" startDate="2014-02-12"
+                    eventID="1"/>
+  <platform_runtime id="1100066" ruleBaseID="34" hostname="192.168.1.18" port="8080" startDate="2014-02-12"
+                    endDate="2014-02-22" eventID="1"/>
+
 </dataset>

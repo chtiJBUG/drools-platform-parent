@@ -72,6 +72,7 @@ public class KnowledgeBaseService {
     }
 
     public void handleMessage(KnowledgeBaseInitialLoadEvent knowledgeBaseInitialLoadEvent) {
+
     }
 
     public void handleMessage(PlatformKnowledgeBaseShutdownEvent platformKnowledgeBaseShutdownEvent) {
