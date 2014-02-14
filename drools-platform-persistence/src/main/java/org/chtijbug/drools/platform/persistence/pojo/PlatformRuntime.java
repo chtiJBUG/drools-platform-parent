@@ -40,22 +40,15 @@ public class PlatformRuntime implements Serializable {
     @SequenceGenerator(name = "platform_id_seq", sequenceName = "drools_platform_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "platform_id_seq")
     private Long id;
-    @Column
     private String hostname;
-    @Column
     private Integer port;
-    @Column
     private String endPoint = "/runtime";
     @Column(nullable = false)
     private Date startDate;
-    @Column
     private Date endDate;
-    private Date otherDate;
     @Enumerated(EnumType.STRING)
     private PlatformRuntimeStatus status;
-    @Column
     private Integer eventID;
-    @Column
     private Integer ruleBaseID;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -115,14 +108,6 @@ public class PlatformRuntime implements Serializable {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
-    }
-
-    public Date getOtherDate() {
-        return otherDate;
-    }
-
-    public void setOtherDate(Date otherDate) {
-        this.otherDate = otherDate;
     }
 
     public PlatformRuntimeStatus getStatus() {
