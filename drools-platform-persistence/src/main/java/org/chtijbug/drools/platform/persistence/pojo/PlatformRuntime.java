@@ -28,17 +28,16 @@ import java.util.List;
                         "AND platformRuntime.startDate=:startDate " +
                         "AND platformRuntime.endDate is null"),
         @NamedQuery(name = "PlatformRuntime.findActiveByHostName",
-                        query = "SELECT platformRuntime " +
-                                "FROM PlatformRuntime platformRuntime " +
-                                "WHERE platformRuntime.hostname=:hostname "  +
-                                "AND platformRuntime.endDate is null")
+                query = "SELECT platformRuntime " +
+                        "FROM PlatformRuntime platformRuntime " +
+                        "WHERE platformRuntime.hostname=:hostname and platformRuntime.endDate is null")
 })
 @Entity
 @Table(name = "platform_runtime")
 public class PlatformRuntime implements Serializable {
 
     @Id
-    @SequenceGenerator(name="platform_id_seq", sequenceName="drools_platform_seq")
+    @SequenceGenerator(name = "platform_id_seq", sequenceName = "drools_platform_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "platform_id_seq")
     private Long id;
     @Column
@@ -51,15 +50,16 @@ public class PlatformRuntime implements Serializable {
     private Date startDate;
     @Column
     private Date endDate;
-    @Column
+    private Date otherDate;
+    @Enumerated(EnumType.STRING)
     private PlatformRuntimeStatus status;
     @Column
     private Integer eventID;
     @Column
     private Integer ruleBaseID;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<DroolsRessource> droolsRessources = new ArrayList<DroolsRessource>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<DroolsRessource> droolsRessources = new ArrayList<>();
 
     public PlatformRuntime() {
     }
@@ -115,6 +115,14 @@ public class PlatformRuntime implements Serializable {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public Date getOtherDate() {
+        return otherDate;
+    }
+
+    public void setOtherDate(Date otherDate) {
+        this.otherDate = otherDate;
     }
 
     public PlatformRuntimeStatus getStatus() {

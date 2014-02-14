@@ -1,13 +1,46 @@
 <dataset>
-  <platform_runtime id="1100000" ruleBaseID="31" hostname="192.168.1.18" port="8080" startDate="2014-02-12"
-                    eventID="1"/>
-  <platform_runtime id="1100022" ruleBaseID="44" hostname="192.168.1.92" port="8080" startDate="2014-02-12"
-                    eventID="1"/>
-  <platform_runtime id="1100033" ruleBaseID="33" hostname="192.168.1.18" port="8080" startDate="2014-02-12"
-                    eventID="1"/>
-  <platform_runtime id="1100042" ruleBaseID="44" hostname="192.168.1.92" port="8080" startDate="2014-02-12"
-                    eventID="1"/>
-  <platform_runtime id="1100066" ruleBaseID="34" hostname="192.168.1.18" port="8080" startDate="2014-02-12"
-                    endDate="2014-02-22" eventID="1"/>
+    <platform_runtime id="1100000"
+                      hostname="192.168.1.18" port="8080"
+                      startDate="2014-02-12"
+                      endDate="2014-02-14"
+                      status="STOPPED"
+                      eventID="1"
+                      ruleBaseID="1">
+    </platform_runtime>
+    <platform_runtime id="1100022"
+                      hostname="192.168.1.19" port="8080"
+                      startDate="2014-02-12"
+                      status="STARTED"
+                      eventID="1"
+                      ruleBaseID="2">
+    </platform_runtime>
+    <platform_runtime id="1100055"
+                      hostname="192.168.1.20" port="8080"
+                      startDate="2014-02-12"
+                      status="STARTED"
+                      eventID="1"
+                      ruleBaseID="3">
+    </platform_runtime>
+    <platform_runtime id="1100033"
+                      hostname="192.168.1.21" port="8080"
+                      startDate="2014-02-12"
+                      status="STARTED"
+                      eventID="1"
+                      ruleBaseID="4">
+    </platform_runtime>
+    <platform_runtime id="1100042"
+                      hostname="192.168.1.18" port="8080"
+                      startDate="2014-02-12"
+                      status="STARTED"
+                      eventID="3"
+                      ruleBaseID="5">
+    </platform_runtime>
+    <platform_runtime id="1100043"
+                      hostname="192.168.1.18" port="8080"
+                      startDate="2014-02-12"
+                      status="STARTED"
+                      eventID="3"
+                      ruleBaseID="5">
+    </platform_runtime>
 
 </dataset>

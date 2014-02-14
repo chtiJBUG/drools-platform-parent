@@ -45,23 +45,26 @@ public class PlatformRuntimeTest {
         platformRuntime.setStartDate(new Date());
         platformRuntimeDao.save(platformRuntime);
         assertThat(platformRuntime.getId()).isNotNull();
+        assertThat(platformRuntime.getId()).isGreaterThan(0l);
     }
 
     @Test
     public void TestSearchForRuleBaseID() {
-        PlatformRuntime platformRuntime = platformRuntimeDao.findbyActivePlatformByRulebaseID(31);
+        PlatformRuntime platformRuntime = platformRuntimeDao.findbyActivePlatformByRulebaseID(5);
         assertThat("192.168.1.18").isEqualTo(platformRuntime.getHostname());
         assertThat(platformRuntime.getEndDate()).isNull();
-     }
+    }
+
     @Test
     public void TestSearchForRuleBaseIDAndStartDate() throws Exception {
-        PlatformRuntime platformRuntime = platformRuntimeDao.findByRuleBaseIdAndStartDate(31, DateHelper.getDate("2014-02-12"));
+        PlatformRuntime platformRuntime = platformRuntimeDao.findByRuleBaseIdAndStartDate(5, DateHelper.getDate("2014-02-12"));
         assertThat("192.168.1.18").isEqualTo(platformRuntime.getHostname());
         assertThat(platformRuntime.getEndDate()).isNull();
-     }
+    }
+
     @Test
-      public void TestSearchForHost() throws Exception {
-          List<PlatformRuntime> platformRuntimelist = platformRuntimeDao.findActiveByHostName("192.168.1.18");
-          assertThat(platformRuntimelist.size()==2).isTrue();
-       }
+    public void TestSearchForHost() throws Exception {
+        List<PlatformRuntime> platformRuntimelist = platformRuntimeDao.findActiveByHostName("192.168.1.18");
+        assertThat(platformRuntimelist).hasSize(2);
+    }
 }
