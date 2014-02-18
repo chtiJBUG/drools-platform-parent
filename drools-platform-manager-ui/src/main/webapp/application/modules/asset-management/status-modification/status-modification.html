@@ -19,7 +19,7 @@
                             class="control-group "
                             ng-model="filters"
                             data-placeholder="Select Status filters">
-                        <option ng-repeat="status in statuses" value="{{status.id}}">{{status.name}}</option>
+                        <option ng-repeat="stat in statuses" value="{{stat.assetStatus}}">{{stat.description}}</option>
                     </select>
                      <button id="btn-search" class="btn btn-default" ng-click="search()">Search</button>
                 </div>

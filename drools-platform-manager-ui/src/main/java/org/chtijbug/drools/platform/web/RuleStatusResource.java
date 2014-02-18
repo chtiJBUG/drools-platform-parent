@@ -8,14 +8,16 @@ import org.chtijbug.drools.platform.rules.management.RuleManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Nullable;
 import javax.annotation.Resource;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,19 +34,17 @@ public class RuleStatusResource {
     public List<AssetStatusObject> getAllStatuses() {
         AssetStatusObject dev = new AssetStatusObject(AssetStatus.DEV, "Development");
         AssetStatusObject integration = new AssetStatusObject(AssetStatus.INT, "Integration");
-        AssetStatusObject prod = new AssetStatusObject(AssetStatus.DEV, "Production");
+        AssetStatusObject prod = new AssetStatusObject(AssetStatus.PROD, "Production");
         return Arrays.asList(dev, integration, prod);
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.POST)
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
-    public List<AssetObject> searchAllAssetsWithStatus(@RequestBody ArrayList<AssetStatus> assetStatuses) {
+    public List<AssetObject> searchAllAssetsWithStatus(@RequestBody List<AssetStatus> assetStatuses) {
         logger.debug(">> searchAllAssetsWithStatus(assetStatuses={})", assetStatuses);
         try {
-            //for each assetStatus, look up the related assets
-            // Convert them into something readable on the front end (JSON
             List<Asset> allAssets = ruleManager.findAllAssetsByStatus(assetStatuses);
             return Lists.transform(allAssets, new Function<Asset, AssetObject>() {
                 @Nullable
@@ -64,6 +64,5 @@ public class RuleStatusResource {
             logger.debug("<< searchAllAssetsWithStatus()");
         }
     }
-
 
 }
