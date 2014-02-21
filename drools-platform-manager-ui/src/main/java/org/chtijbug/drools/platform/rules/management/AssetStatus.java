@@ -10,7 +10,7 @@ public enum AssetStatus {
     NONE;
 
     public static AssetStatus getEnum(String assetStatus) {
-        for(AssetStatus status : AssetStatus.values()) {
+        for (AssetStatus status : AssetStatus.values()) {
             if (status.name().equals(assetStatus))
                 return status;
         }
@@ -18,7 +18,7 @@ public enum AssetStatus {
     }
 
     public AssetStatus getNextStatus() {
-        AssetStatus result;
+        AssetStatus result = null;
         switch (this) {
             case DEV:
                 result = INT;
@@ -26,22 +26,21 @@ public enum AssetStatus {
             case INT:
                 result = PROD;
                 break;
-            default:
-                result = null;
         }
         return result;
     }
-    public List<AssetStatus> getPreviousStatus() {
-        List<AssetStatus> result = new ArrayList<AssetStatus>();
-            switch (this) {
-                case INT:
-                    result.add(DEV);
-                    break;
-                case PROD:
-                    result.add(INT);
-                    break;
-            }
-            return result;
+
+    public AssetStatus getPreviousStatus() {
+        AssetStatus result = null;
+        switch (this) {
+            case INT:
+                result = DEV;
+                break;
+            case PROD:
+                result = INT;
+                break;
         }
+        return result;
+    }
 
 }

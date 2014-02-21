@@ -49,7 +49,7 @@
                                 <td>{{asset.type}}</td>
                                 <td>{{asset.status}}</td>
                                 <td>
-                                    <input type="checkbox" data-ng-model="asset.selected">
+                                    <input type="checkbox" data-ng-model="asset.selected" ng-click="changeAssetStatus(asset)"/>
                                 </td>
                             </tr>
                         </tbody>

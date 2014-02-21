@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import org.chtijbug.drools.guvnor.rest.model.Asset;
 import org.chtijbug.drools.platform.rules.management.AssetStatus;
 import org.chtijbug.drools.platform.rules.management.RuleManager;
+import org.chtijbug.drools.platform.web.annotation.JsonArg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.chtijbug.drools.platform.rules.management.AssetStatus.DEV;
+import static org.chtijbug.drools.platform.rules.management.AssetStatus.PROD;
+import static org.chtijbug.drools.platform.rules.management.AssetStatus.getEnum;
 
 @Controller
 @RequestMapping(value = "/rule_status")
@@ -57,11 +62,47 @@ public class RuleStatusResource {
                     output.setStatus(input.getStatus());
                     return output;
                 }
-
             });
-
         } finally {
             logger.debug("<< searchAllAssetsWithStatus()");
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/promote")
+    @Consumes(value = MediaType.APPLICATION_JSON)
+    @Produces(value = MediaType.APPLICATION_JSON)
+    @ResponseBody
+    public List<AssetObject> promoteAllAssets(@JsonArg(value = "assetsToPromote") List<AssetObject> assetsToPromote, @JsonArg(value = "assetStatuses") List<AssetStatus> assetStatuses) {
+        logger.debug(">> promoteAllAssets(assetStatuses={})", assetsToPromote);
+        try {
+            for(AssetObject assetObject : assetsToPromote) {
+                AssetStatus currentStatus = getEnum(assetObject.getStatus());
+                if (PROD.equals(currentStatus))
+                    continue;
+                this.ruleManager.updateAssetStatus(assetObject.getName(), currentStatus.getNextStatus());
+            }
+            return this.searchAllAssetsWithStatus(assetStatuses);
+        } finally {
+            logger.debug("<< promoteAllAssets()");
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/demote")
+    @Consumes(value = MediaType.APPLICATION_JSON)
+    @Produces(value = MediaType.APPLICATION_JSON)
+    @ResponseBody
+    public List<AssetObject> demoteAllAssets(@JsonArg(value = "assetsToDemote") List<AssetObject> assetsToDemote, @JsonArg(value = "assetStatuses") List<AssetStatus> assetStatuses) {
+        logger.debug(">> demoteAllAssets(assetStatuses={})", assetsToDemote);
+        try {
+            for(AssetObject assetObject : assetsToDemote) {
+                AssetStatus currentStatus = getEnum(assetObject.getStatus());
+                    if (DEV.equals(currentStatus))
+                    continue;
+                this.ruleManager.updateAssetStatus(assetObject.getName(), currentStatus.getPreviousStatus());
+            }
+            return this.searchAllAssetsWithStatus(assetStatuses);
+        } finally {
+            logger.debug("<< demoteAllAssets()");
         }
     }
 

@@ -5,8 +5,8 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
         .success(function (data) {
             $scope.statuses = data;
         })
-        .error(function () {
-            // TODO show error panel
+        .error(function (error) {
+             console.log(error);
         });
 
     $scope.filtersOptions = {
@@ -22,19 +22,34 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
             .success(function (data) {
                 $scope.assets = data;
             })
-            .error(function () {
-                // TODO show error panel
+            .error(function (error) {
+                console.log(error);
             });
     };
 
     $scope.promoteAssetsStatus = function () {
         var assetsToPromote = _.where($scope.assets, {selected: true});
-        // TODO Call REST Resource for the list of selected assets
+        $http.post('./server/rule_status/promote', {assetsToPromote:assetsToPromote, assetStatuses:$scope.filters})
+            .success(function (data) {
+                // TODO refresh the displayed list
+                $scope.assets = data;
+            })
+            .error(function (error) {
+                console.log(error);
+            });
     };
 
     $scope.demoteAssetsStatus = function () {
-        var assetsToDemote = _.where($scope.assets, {selected: false});
-        // TODO Call REST Resource for the list of selected assets
+        var assetsToDemote = _.where($scope.assets, {selected: true});
+        console.log(assetsToDemote);
+        $http.post('./server/rule_status/demote', {assetsToDemote:assetsToDemote, assetStatuses:$scope.filters})
+            .success(function (data) {
+                // TODO refresh the displayed list
+                $scope.assets = data;
+            })
+            .error(function (error) {
+                console.log(error);
+            });
     };
 
     $scope.changeAssetStatus = function(asset) {

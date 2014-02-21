@@ -9,7 +9,6 @@
     <!-- TODO need to support the externalization of the authentication manager -->
     <import resource="classpath:META-INF/spring/security-context.xml"/>
 
-
     <!--import resource="classpath:META-INF/spring/spring-logger-context.xml"/-->
     <context:annotation-config/>
     <context:component-scan
@@ -19,6 +18,9 @@
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
         </mvc:message-converters>
+        <mvc:argument-resolvers>
+            <bean class="org.chtijbug.drools.platform.web.annotation.JsonPathArgumentResolver"/>
+        </mvc:argument-resolvers>
     </mvc:annotation-driven>
 
 </beans>
