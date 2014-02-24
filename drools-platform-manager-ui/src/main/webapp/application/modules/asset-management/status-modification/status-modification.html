@@ -44,12 +44,14 @@
                              </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="asset in assets" ng-click="changeAssetStatus(asset)">
+                            <tr ng-repeat="asset in assets" >
                                 <td>{{asset.name}}</td>
                                 <td>{{asset.type}}</td>
                                 <td>{{asset.status}}</td>
                                 <td>
-                                    <input type="checkbox" data-ng-model="asset.selected" ng-click="changeAssetStatus(asset)"/>
+                                    <label>
+                                        <input type="checkbox" data-ng-model="asset.selected"/>
+                                    </label>
                                 </td>
                             </tr>
                         </tbody>

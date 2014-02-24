@@ -6,7 +6,7 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
             $scope.statuses = data;
         })
         .error(function (error) {
-             console.log(error);
+            console.log(error);
         });
 
     $scope.filtersOptions = {
@@ -18,7 +18,7 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
         var filters = $scope.filters;
         if (filters == undefined || filters.length == 0)
             return;
-        $http.post('./server/rule_status', JSON.stringify(filters), {headers: {'Content-Type': 'application/json', 'Accept':'application/json'}})
+        $http.post('./server/rule_status', JSON.stringify(filters))
             .success(function (data) {
                 $scope.assets = data;
             })
@@ -29,9 +29,9 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
 
     $scope.promoteAssetsStatus = function () {
         var assetsToPromote = _.where($scope.assets, {selected: true});
-        $http.post('./server/rule_status/promote', {assetsToPromote:assetsToPromote, assetStatuses:$scope.filters})
+        var data = {assetsToPromote: assetsToPromote, assetStatuses: $scope.filters};
+        $http.post('./server/rule_status/promote', data)
             .success(function (data) {
-                // TODO refresh the displayed list
                 $scope.assets = data;
             })
             .error(function (error) {
@@ -41,19 +41,14 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
 
     $scope.demoteAssetsStatus = function () {
         var assetsToDemote = _.where($scope.assets, {selected: true});
-        console.log(assetsToDemote);
-        $http.post('./server/rule_status/demote', {assetsToDemote:assetsToDemote, assetStatuses:$scope.filters})
+        var data = {assetsToDemote: assetsToDemote, assetStatuses: $scope.filters};
+        $http.post('./server/rule_status/demote', data)
             .success(function (data) {
-                // TODO refresh the displayed list
                 $scope.assets = data;
             })
             .error(function (error) {
                 console.log(error);
             });
-    };
-
-    $scope.changeAssetStatus = function(asset) {
-        asset.selected = !asset.selected;
     };
 
 });
