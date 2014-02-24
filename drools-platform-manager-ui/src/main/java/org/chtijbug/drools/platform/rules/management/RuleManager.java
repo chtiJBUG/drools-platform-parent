@@ -56,17 +56,8 @@ public class RuleManager {
         return select(assets, having(on(Asset.class).getStatus(), anyOfFilters));
     }
 
-    public void updateAllAssetsWithStatus(List<String> assets, final AssetStatus assetStatus) {
-        AssetStatus nextStatus;
-        if (assetStatus == null)
-            nextStatus = AssetStatus.DEV;
-        else
-            nextStatus = assetStatus.getNextStatus();
-
-        for (String assetName : assets) {
-            guvnorRepositoryConnector.changeAssetPropertyValue(assetName, AssetPropertyType.STATE, nextStatus.toString());
-
-        }
+    public void updateAssetStatus(String assetName, AssetStatus assetStatus) {
+        guvnorRepositoryConnector.changeAssetPropertyValue(assetName, AssetPropertyType.STATE, assetStatus.toString());
     }
 
     public void buildAndTakeSnapshot(AssetStatus status, String version) throws Exception {
@@ -85,12 +76,6 @@ public class RuleManager {
         }
         String filter = StringUtils.join(buildScope, ",");
         this.guvnorRepositoryConnector.buildRulePackageByStatus(version, filter);
-    }
-
-    public void revertAllAssetsToStatus(List<String> assets, AssetStatus assetStatus) {
-        for (String assetName : assets) {
-            guvnorRepositoryConnector.changeAssetPropertyValue(assetName, AssetPropertyType.STATE, assetStatus.toString());
-        }
     }
 
     public List<Snapshot> getAvailableSnapshots() throws Exception {
