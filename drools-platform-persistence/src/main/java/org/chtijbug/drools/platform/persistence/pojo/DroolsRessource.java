@@ -1,4 +1,6 @@
-package org.chtijbug.drools.platform.entity;
+package org.chtijbug.drools.platform.persistence.pojo;
+
+import javax.persistence.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -6,20 +8,25 @@ package org.chtijbug.drools.platform.entity;
  * Time: 16:36
  * To change this template use File | Settings | File Templates.
  */
+@Entity
+@Table(name = "drools_resource")
 public class DroolsRessource {
 
-    public static String class_name="droolsressource";
-    public static String var_url="guvnor_url";
-    public static String var_appName="guvnor_appName";
-    public static String var_packageName="guvnor_packageName";
-    public static String var_packageVersion="guvnor_packageVersion";
-    public static String var_fileName="filename";
-    public static String var_fileContent="filecontent";
+    @Id
+    @SequenceGenerator(name="resource_id_seq", sequenceName="drools_platform_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "resource_id_seq")
+    private Long id;
+    @Column
     private String guvnor_url;
+    @Column
     private String guvnor_appName;
+    @Column
     private String guvnor_packageName;
+    @Column
     private String guvnor_packageVersion;
+    @Column
     private String fileName;
+    @Column
     private String fileContent;
 
     public DroolsRessource() {
@@ -35,6 +42,14 @@ public class DroolsRessource {
     public DroolsRessource(String fileName, String fileContent) {
         this.fileName = fileName;
         this.fileContent = fileContent;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getGuvnor_url() {
@@ -59,6 +74,30 @@ public class DroolsRessource {
 
     public String getFileContent() {
         return fileContent;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DroolsRessource that = (DroolsRessource) o;
+
+        if (!guvnor_appName.equals(that.guvnor_appName)) return false;
+        if (!guvnor_packageName.equals(that.guvnor_packageName)) return false;
+        if (!guvnor_packageVersion.equals(that.guvnor_packageVersion)) return false;
+        if (!guvnor_url.equals(that.guvnor_url)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = guvnor_url.hashCode();
+        result = 31 * result + guvnor_appName.hashCode();
+        result = 31 * result + guvnor_packageName.hashCode();
+        result = 31 * result + guvnor_packageVersion.hashCode();
+        return result;
     }
 
     @Override

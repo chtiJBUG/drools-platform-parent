@@ -29,7 +29,6 @@
       <artifactId>drools-framework-runtime-entity</artifactId>
     </dependency>
 
-
   </dependencies>
 
 </project>
