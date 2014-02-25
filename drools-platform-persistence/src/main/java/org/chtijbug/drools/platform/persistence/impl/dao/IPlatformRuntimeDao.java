@@ -12,6 +12,7 @@ import java.util.List;
  * Time: 15:15                                                                           eID
  * To change this template use File | Settings | File Templates.
  */
+
 public interface IPlatformRuntimeDao extends IAbstractJpaDAO<PlatformRuntime>{
     PlatformRuntime findbyActivePlatformByRulebaseID(int ruleBaseId);
     PlatformRuntime findByRuleBaseIdAndStartDate(int ruleBaseId, Date startDate) ;

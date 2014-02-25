@@ -35,7 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         TransactionalTestExecutionListener.class,
         DbUnitTestExecutionListener.class})
 @DatabaseSetup("classpath:dataset/dataset.xml")
-public class PlatformRuntimeTest {
+public class PlatformRuntimeDaoTest {
     @Resource
     private IPlatformRuntimeDao platformRuntimeDao;
 

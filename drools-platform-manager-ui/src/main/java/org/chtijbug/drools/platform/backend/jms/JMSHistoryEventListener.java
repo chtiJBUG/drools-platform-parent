@@ -1,11 +1,8 @@
 package org.chtijbug.drools.platform.backend.jms;
 
+import com.google.common.base.Throwables;
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseAddRessourceEvent;
-import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseInitialLoadEvent;
 import org.chtijbug.drools.platform.backend.service.KnowledgeBaseService;
-import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
-import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,21 +33,11 @@ public class JMSHistoryEventListener implements MessageListener {
             if (message instanceof ObjectMessage) {
                 ObjectMessage objectMessage = (ObjectMessage) message;
                 Object messageContent = objectMessage.getObject();
-                if (messageContent instanceof PlatformKnowledgeBaseCreatedEvent) {
-                    PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent = (PlatformKnowledgeBaseCreatedEvent) messageContent;
-                    knowledgeBaseService.handleMessage(platformKnowledgeBaseCreatedEvent);
-                } else if (messageContent instanceof KnowledgeBaseInitialLoadEvent) {
-                    KnowledgeBaseInitialLoadEvent knowledgeBaseInitialLoadEvent = (KnowledgeBaseInitialLoadEvent) messageContent;
-                    knowledgeBaseService.handleMessage(knowledgeBaseInitialLoadEvent);
-                }  else if (messageContent instanceof PlatformKnowledgeBaseShutdownEvent){
-                    PlatformKnowledgeBaseShutdownEvent platformKnowledgeBaseShutdownEvent = (PlatformKnowledgeBaseShutdownEvent)messageContent;
-                    knowledgeBaseService.handleMessage(platformKnowledgeBaseShutdownEvent);
-                }  else if (messageContent instanceof KnowledgeBaseAddRessourceEvent){
-                    KnowledgeBaseAddRessourceEvent knowledgeBaseAddRessourceEvent = (KnowledgeBaseAddRessourceEvent)messageContent;
-                    knowledgeBaseService.handleMessage(knowledgeBaseAddRessourceEvent);
-
-                }
-
+                try {
+                      knowledgeBaseService.getClass().getMethod("handleMessage",messageContent.getClass()).invoke(knowledgeBaseService,messageContent) ;
+                  } catch (Throwable e) {
+                      throw Throwables.propagate(e);
+                  }
                 ObjectMessage msg = (ObjectMessage) message;
                 LOG.info("Consumed message: " + msg.toString());
             }

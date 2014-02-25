@@ -8,12 +8,13 @@
     <import resource="classpath:META-INF/spring/drools-platform-properties-resolver.xml"/>
     <!-- TODO need to support the externalization of the authentication manager -->
     <import resource="classpath:META-INF/spring/security-context.xml"/>
+  <import resource="classpath:spring/spring-persistence-context.xml"/>
 
     <!--import resource="classpath:META-INF/spring/spring-logger-context.xml"/-->
     <context:annotation-config/>
     <context:component-scan
             base-package="org.chtijbug.drools.platform.rules,
-            org.chtijbug.drools.platform.web"/>
+            org.chtijbug.drools.platform.web,org.chtijbug.drools.platform.backend"/>
     <mvc:annotation-driven>
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>

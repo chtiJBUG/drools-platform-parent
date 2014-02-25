@@ -13,6 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * Date: 19/12/13
@@ -46,8 +49,7 @@ public class DroolsPlatformKnowledgeBase {
         logger.debug(">>createGuvnorRuleBasePackage", this.toString());
         RuleBaseSingleton newRuleBasePackage = new RuleBaseSingleton(RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, this.jmsStorageHistoryListener);
         GuvnorDroolsResource gdr = new GuvnorDroolsResource(guvnor_url, guvnor_appName, guvnor_packageName, guvnor_packageVersion, guvnor_username, guvnor_password);
-        newRuleBasePackage.addDroolsResouce(gdr);
-        newRuleBasePackage.createKBase();
+        newRuleBasePackage.createKBase(gdr);
         jmsStorageHistoryListener.setMbsRuleBase(newRuleBasePackage.getMbsRuleBase());
         jmsStorageHistoryListener.setMbsSession(newRuleBasePackage.getMbsSession());
 
@@ -59,6 +61,7 @@ public class DroolsPlatformKnowledgeBase {
         logger.debug(">>createPackageBasePackage");
         RuleBasePackage ruleBasePackage = new RuleBaseSingleton(RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, this.jmsStorageHistoryListener);
         try {
+            List<DroolsResource> droolsResources = new ArrayList<DroolsResource>();
             for (String filename : filenames) {
                 String extensionName = this.getFileExtension(filename);
                 DroolsResource resource = null;
@@ -68,12 +71,13 @@ public class DroolsPlatformKnowledgeBase {
                     resource = Bpmn2DroolsRessource.createClassPathResource(filename);
                 }
                 if (resource != null) {
-                    ruleBasePackage.addDroolsResouce(resource);
+                    ruleBasePackage.createKBase(resource);
                 } else {
                     throw new DroolsChtijbugException(DroolsChtijbugException.UnknowFileExtension, filename, null);
                 }
+                droolsResources.add(resource);
             }
-            ruleBasePackage.createKBase();
+            ruleBasePackage.createKBase(droolsResources);
             this.ruleBasePackage = ruleBasePackage;
             //_____ Returning the result
             return ruleBasePackage;

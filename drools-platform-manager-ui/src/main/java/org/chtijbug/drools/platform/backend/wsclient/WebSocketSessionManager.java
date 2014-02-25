@@ -1,6 +1,7 @@
 package org.chtijbug.drools.platform.backend.wsclient;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import javax.websocket.DeploymentException;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.util.List;
  * Time: 20:37
  * To change this template use File | Settings | File Templates.
  */
+@Component
 public class WebSocketSessionManager {
 
     private static final Logger LOG = Logger.getLogger(WebSocketSessionManager.class);
