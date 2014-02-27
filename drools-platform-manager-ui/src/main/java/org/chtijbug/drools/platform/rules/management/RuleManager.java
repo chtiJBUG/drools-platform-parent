@@ -60,19 +60,13 @@ public class RuleManager {
         guvnorRepositoryConnector.changeAssetPropertyValue(assetName, AssetPropertyType.STATE, assetStatus.toString());
     }
 
-    public void buildAndTakeSnapshot(AssetStatus status, String version) throws Exception {
+    public void buildAndTakeSnapshot(List<AssetStatus> buildScope, String version) throws Exception {
         List<Snapshot> listSnapshots = this.guvnorRepositoryConnector.getListSnapshots();
         for (Snapshot snapshot : listSnapshots) {
             if (snapshot.getName().equals(version)) {
                 logger.warn("Cannot take a RulePackage Snapshot. Version already exists");
                 throw new AdministrationBusinessProcessException(BusinessProcessError.VERSION_ALREADY_EXISTS, "Snapshot already existing");
             }
-        }
-        AssetStatus toEvaluate = status;
-        List<AssetStatus> buildScope = new ArrayList<AssetStatus>();
-        while (toEvaluate != null) {
-            buildScope.add(toEvaluate);
-            toEvaluate = toEvaluate.getNextStatus();
         }
         String filter = StringUtils.join(buildScope, ",");
         this.guvnorRepositoryConnector.buildRulePackageByStatus(version, filter);

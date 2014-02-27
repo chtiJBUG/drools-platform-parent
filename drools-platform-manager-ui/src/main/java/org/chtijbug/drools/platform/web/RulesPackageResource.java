@@ -9,10 +9,7 @@ import org.chtijbug.drools.platform.rules.management.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Nullable;
 import javax.annotation.Resource;
@@ -32,11 +29,11 @@ public class RulesPackageResource {
     @Resource
     private RuntimeSiteTopology runtimeSiteTopology;
 
-    @RequestMapping(value = "/build/{status}/{version:.+}", method = RequestMethod.POST)
+    @RequestMapping(value = "/build", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<String> createRulePackageVersion(@PathVariable String status, @PathVariable String version) throws Exception {
+    public ResponseEntity<String> createRulePackageVersion(@RequestBody PackageSnapshotRequest packageSnapshotRequest) throws Exception {
         try {
-            this.ruleManager.buildAndTakeSnapshot(AssetStatus.getEnum(status), version);
+            this.ruleManager.buildAndTakeSnapshot(packageSnapshotRequest.getAssetStatuses(), packageSnapshotRequest.constructVersionName());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (AdministrationBusinessProcessException e) {
             if(BusinessProcessError.VERSION_ALREADY_EXISTS.equals(e.getError())) {

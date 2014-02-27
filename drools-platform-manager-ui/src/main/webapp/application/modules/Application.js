@@ -48,6 +48,10 @@ droolsPlatformApp.config(function ($routeProvider) {
             templateUrl: 'modules/asset-management/status-modification/status-modification.html',
             controller: 'homeController'
         }).
+        when('/buildAssetPackage', {
+            templateUrl: 'modules/asset-management/package-building/package-building.html',
+            controller: 'assetPackagingController'
+        }).
         otherwise({
             redirectTo: '/home'
         });
@@ -94,8 +98,8 @@ var DroolsPlatformControllers = angular.module('drools-platform.controllers', []
 
 var ServicesModule = angular.module('drools-platform.services', []);
 
-DroolsPlatformControllers.controller('MainCtrl', ['$rootScope', '$scope', '$window', '$http', 'LoginService',
-    function ($rootScope, $scope, $window, $http, LoginService) {
+DroolsPlatformControllers.controller('MainCtrl', ['$rootScope', '$scope', '$window', '$http', 'LoginService','$log',
+    function ($rootScope, $scope, $window, $http, LoginService, $log) {
         $scope.logout = function () {
             var loginRequired = function () {
                 $rootScope.loginRequired = true;

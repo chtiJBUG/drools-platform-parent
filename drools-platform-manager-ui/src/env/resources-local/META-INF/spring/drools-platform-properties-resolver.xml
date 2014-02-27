@@ -7,6 +7,6 @@
 
     <context:property-override order="1" ignore-resource-not-found="true" location="classpath:runtime-topology.properties"/>
 
-    <context:property-placeholder location="classpath:platform-server.properties, classpath:orientdb.properties" />
+    <context:property-placeholder location="classpath:platform-server.properties" />
 
 </beans>
