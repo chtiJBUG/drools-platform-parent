@@ -47,7 +47,7 @@
         <plugin name="ORYX.Plugins.PatternCreator"/>
         <plugin name="ORYX.Plugins.LocalHistory"/>
         <externalloadurl protocol="http" host="localhost:8080"
-                         subdomain="drools-guvnor/org.drools.guvnor.Guvnor/oryxeditor" usr="admin" pwd="axon"/>
+                         subdomain="drools-guvnor/org.drools.guvnor.Guvnor/oryxeditor" usr="tomcat" pwd="tomcat"/>
         <localhostory enabled="true" timeout="60000"/>
     </profile>
 </profiles>
