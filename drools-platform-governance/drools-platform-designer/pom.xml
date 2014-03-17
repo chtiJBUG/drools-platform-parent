@@ -7,8 +7,8 @@
   </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>drools-platformm-designer</artifactId>
-    <name>designer</name>
+    <artifactId>drools-platform-designer</artifactId>
+    <name>drools platform designer</name>
     <packaging>war</packaging>
     <build>
          <finalName>designer</finalName>
