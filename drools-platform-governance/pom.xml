@@ -12,6 +12,7 @@
   <artifactId>drools-platform-governance</artifactId>
   <modules>
       <module>drools-platform-brms</module>
+      <module>drools-platform-designer</module>
   </modules>
 
 
