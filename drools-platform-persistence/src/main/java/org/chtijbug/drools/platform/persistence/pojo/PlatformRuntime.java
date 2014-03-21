@@ -15,23 +15,6 @@ import java.util.List;
  * Time: 20:20
  * To change this template use File | Settings | File Templates.
  */
-@NamedQueries({
-        @NamedQuery(name = "PlatformRuntime.findbyActivePlatformByRulebaseID",
-                query = "SELECT platformRuntime " +
-                        "FROM PlatformRuntime platformRuntime " +
-                        "WHERE platformRuntime.ruleBaseID = :ruleBaseId " +
-                        "AND platformRuntime.endDate is null"),
-        @NamedQuery(name = "PlatformRuntime.findByRuleBaseIdAndStartDate",
-                query = "SELECT platformRuntime " +
-                        "FROM PlatformRuntime platformRuntime " +
-                        "WHERE platformRuntime.ruleBaseID=:ruleBaseId " +
-                        "AND platformRuntime.startDate=:startDate " +
-                        "AND platformRuntime.endDate is null"),
-        @NamedQuery(name = "PlatformRuntime.findActiveByHostName",
-                query = "SELECT platformRuntime " +
-                        "FROM PlatformRuntime platformRuntime " +
-                        "WHERE platformRuntime.hostname=:hostname and platformRuntime.endDate is null")
-})
 @Entity
 @Table(name = "platform_runtime")
 public class PlatformRuntime implements Serializable {

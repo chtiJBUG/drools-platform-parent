@@ -61,6 +61,10 @@ public class RuleManager {
     }
 
     public void buildAndTakeSnapshot(List<AssetStatus> buildScope, String version) throws Exception {
+        if (isSnapshotVersion(version)) {
+            this.guvnorRepositoryConnector.deletePackageSnapshot(version);
+        }
+
         List<Snapshot> listSnapshots = this.guvnorRepositoryConnector.getListSnapshots();
         for (Snapshot snapshot : listSnapshots) {
             if (snapshot.getName().equals(version)) {
@@ -70,6 +74,10 @@ public class RuleManager {
         }
         String filter = StringUtils.join(buildScope, ",");
         this.guvnorRepositoryConnector.buildRulePackageByStatus(version, filter);
+    }
+
+    private boolean isSnapshotVersion(String version) {
+        return version.endsWith("-SNAPSHOT");
     }
 
     public List<Snapshot> getAvailableSnapshots() throws Exception {

@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>drools-platform-parent</artifactId>
+        <artifactId>drools-platform-governance</artifactId>
         <groupId>org.chtijbug.drools</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
@@ -13,7 +13,7 @@
 
     <packaging>war</packaging>
 
-    <name>Drools platform brms</name>
+    <name>drools platform brms</name>
     <description>
         TODO
     </description>
@@ -49,6 +49,7 @@
     </dependencies>
 
     <build>
+        <finalName>drools-guvnor</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
@@ -59,7 +60,7 @@
                         WEB-INF/lib/antlr-2.7.7.jar,
                         WEB-INF/lib/commons-lang-2.4.jar,
                         WEB-INF/lib/commons-logging-1.0.4.jar,
-                        WEB-INF/lib/hibernate-core-3.3.1.GA.jar;
+                        WEB-INF/lib/hibernate-core-3.3.1.GA.jar,
                         WEB-INF/lib/javassist-3.12.1.GA.jar,
                         WEB-INF/lib/jaxb-impl-2.1.13.jar,
                         WEB-INF/lib/jaxb-impl-2.2.4-1.jar,

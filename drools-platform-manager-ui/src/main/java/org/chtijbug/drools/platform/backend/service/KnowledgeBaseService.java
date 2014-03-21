@@ -2,12 +2,14 @@ package org.chtijbug.drools.platform.backend.service;
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseAddRessourceEvent;
+import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseCreateSessionEvent;
+import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseDisposeEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseInitialLoadEvent;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
 import org.chtijbug.drools.platform.entity.PlatformRuntimeStatus;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEvent;
-import org.chtijbug.drools.platform.persistence.impl.dao.IPlatformRuntimeDao;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsRessource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,7 @@ public class KnowledgeBaseService {
     WebSocketSessionManager webSocketSessionManager;
 
     @Autowired
-    IPlatformRuntimeDao platformRuntimeDao;
+    PlatformRuntimeRepository platformRuntimeDao;
 
     public void handleMessage(PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent) {
         int ruleBaseId = platformKnowledgeBaseCreatedEvent.getRuleBaseID();
@@ -54,16 +56,13 @@ public class KnowledgeBaseService {
         platformRuntime.setStatus(PlatformRuntimeStatus.STARTED);
         platformRuntime.setEventID(platformKnowledgeBaseCreatedEvent.getEventID());
         platformRuntime.setStartDate(new Date());
-        platformRuntime.setEndDate(platformRuntime.getStartDate());
+        //platformRuntime.setEndDate(platformRuntime.getStartDate());
         platformRuntime.setHostname(platformKnowledgeBaseCreatedEvent.getHostname());
         platformRuntime.setPort(platformKnowledgeBaseCreatedEvent.getPort());
         try {
             webSocketSessionManager.AddClient(platformRuntime.getHostname(), platformRuntime.getPort(), platformRuntime.getEndPoint());
 
-        } catch (DeploymentException e) {
-            platformRuntime.setStatus(PlatformRuntimeStatus.NOT_JOINGNABLE);
-            LOG.error(" handleMessage(PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent) ", e);
-        } catch (IOException e) {
+        } catch (DeploymentException | IOException e) {
             platformRuntime.setStatus(PlatformRuntimeStatus.NOT_JOINGNABLE);
             LOG.error(" handleMessage(PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent) ", e);
         }
@@ -72,6 +71,10 @@ public class KnowledgeBaseService {
     }
 
     public void handleMessage(KnowledgeBaseInitialLoadEvent knowledgeBaseInitialLoadEvent) {
+
+    }
+
+    public void handleMessage(KnowledgeBaseCreateSessionEvent knowledgeBaseCreateSessionEvent){
 
     }
 
@@ -100,6 +103,12 @@ public class KnowledgeBaseService {
 
         platformRuntimeDao.save(existingPlatformRuntime);
 
+    }
+
+    public void handleMessage(KnowledgeBaseDisposeEvent knowledgeBaseDisposeEvent){
+        PlatformRuntime existingPlatformRuntime = platformRuntimeDao.findbyActivePlatformByRulebaseID(knowledgeBaseDisposeEvent.getRuleBaseID());
+        existingPlatformRuntime.setEndDate(new Date());
+        platformRuntimeDao.save(existingPlatformRuntime);
     }
 
 }
