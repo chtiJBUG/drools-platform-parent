@@ -34,7 +34,7 @@ public class KnowledgeBaseService {
     WebSocketSessionManager webSocketSessionManager;
 
     @Autowired
-    PlatformRuntimeRepository platformRuntimeDao;
+    PlatformRuntimeRepository platformRuntimeRepository;
 
     public void handleMessage(PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent) {
         int ruleBaseId = platformKnowledgeBaseCreatedEvent.getRuleBaseID();
@@ -44,8 +44,8 @@ public class KnowledgeBaseService {
          * then look if exists somewhere else
          */
         try {
-            existingPlatformRuntime = platformRuntimeDao.findbyActivePlatformByRulebaseID(ruleBaseId);
-            platformRuntimeDao.delete(existingPlatformRuntime);
+            existingPlatformRuntime = platformRuntimeRepository.findByRuleBaseID(ruleBaseId);
+            platformRuntimeRepository.delete(existingPlatformRuntime);
         } catch (Exception e) {
             //Nothing to do
         }
@@ -66,7 +66,7 @@ public class KnowledgeBaseService {
             platformRuntime.setStatus(PlatformRuntimeStatus.NOT_JOINGNABLE);
             LOG.error(" handleMessage(PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent) ", e);
         }
-        platformRuntimeDao.save(platformRuntime);
+        platformRuntimeRepository.save(platformRuntime);
 
     }
 
@@ -81,9 +81,9 @@ public class KnowledgeBaseService {
     public void handleMessage(PlatformKnowledgeBaseShutdownEvent platformKnowledgeBaseShutdownEvent) {
         PlatformRuntime existingPlatformRuntime = null;
         try {
-            existingPlatformRuntime = platformRuntimeDao.findbyActivePlatformByRulebaseID(platformKnowledgeBaseShutdownEvent.getRuleBaseID());
+            existingPlatformRuntime = platformRuntimeRepository.findByRuleBaseID(platformKnowledgeBaseShutdownEvent.getRuleBaseID());
             existingPlatformRuntime.setEndDate(new Date());
-            platformRuntimeDao.update(existingPlatformRuntime);
+            platformRuntimeRepository.save(existingPlatformRuntime);
         } catch (Exception e) {
             //Nothing to do
         }
@@ -91,7 +91,7 @@ public class KnowledgeBaseService {
     }
 
     public void handleMessage(KnowledgeBaseAddRessourceEvent knowledgeBaseAddRessourceEvent) {
-        PlatformRuntime existingPlatformRuntime = platformRuntimeDao.findbyActivePlatformByRulebaseID(knowledgeBaseAddRessourceEvent.getRuleBaseID());
+        PlatformRuntime existingPlatformRuntime = platformRuntimeRepository.findByRuleBaseID(knowledgeBaseAddRessourceEvent.getRuleBaseID());
 
         DroolsRessource droolsRessource = null;
         if (knowledgeBaseAddRessourceEvent.getDrlRessourceFiles().size() == 0) {
@@ -101,14 +101,14 @@ public class KnowledgeBaseService {
         }
         existingPlatformRuntime.getDroolsRessources().add(droolsRessource);
 
-        platformRuntimeDao.save(existingPlatformRuntime);
+        platformRuntimeRepository.save(existingPlatformRuntime);
 
     }
 
     public void handleMessage(KnowledgeBaseDisposeEvent knowledgeBaseDisposeEvent){
-        PlatformRuntime existingPlatformRuntime = platformRuntimeDao.findbyActivePlatformByRulebaseID(knowledgeBaseDisposeEvent.getRuleBaseID());
+        PlatformRuntime existingPlatformRuntime = platformRuntimeRepository.findByRuleBaseID(knowledgeBaseDisposeEvent.getRuleBaseID());
         existingPlatformRuntime.setEndDate(new Date());
-        platformRuntimeDao.save(existingPlatformRuntime);
+        platformRuntimeRepository.save(existingPlatformRuntime);
     }
 
 }

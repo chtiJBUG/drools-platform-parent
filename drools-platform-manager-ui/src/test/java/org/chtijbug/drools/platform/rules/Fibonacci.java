@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.chtijbug.drools.platform.web;
+package org.chtijbug.drools.platform.rules;
 
 /**
  * @author Bertrand Gressier

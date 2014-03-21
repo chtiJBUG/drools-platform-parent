@@ -30,7 +30,7 @@
         <xbean-spring-version>3.5</xbean-spring-version>
 
         <hibernate.version>4.3.4.Final</hibernate.version>
-        <tyrus.client>1.4</tyrus.client>
+        <tyrus.version>1.5</tyrus.version>
         <cxf.version>2.4.4</cxf.version>
         <activemq-version>5.8.0</activemq-version>
 
@@ -146,6 +146,11 @@
             <dependency>
                 <groupId>org.chtijbug.drools</groupId>
                 <artifactId>drools-runtime-builder</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.chtijbug.drools</groupId>
+                <artifactId>drools-platform-knowledge</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -372,7 +377,7 @@
 
             <dependency>
                 <groupId>org.glassfish.tyrus</groupId>
-                <artifactId>tyrus-container-grizzly</artifactId>
+                <artifactId>tyrus-container-grizzly-server</artifactId>
                 <version>${tyrus.version}</version>
             </dependency>
 

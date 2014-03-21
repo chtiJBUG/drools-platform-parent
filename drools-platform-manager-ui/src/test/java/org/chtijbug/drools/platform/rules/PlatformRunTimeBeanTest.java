@@ -1,4 +1,4 @@
-package org.chtijbug.drools.platform.web;
+package org.chtijbug.drools.platform.rules;
 
 import org.chtijbug.drools.entity.DroolsRuleObject;
 import org.chtijbug.drools.entity.history.HistoryEvent;
@@ -8,7 +8,7 @@ import org.chtijbug.drools.entity.history.rule.AfterRuleFlowDeactivatedHistoryEv
 import org.chtijbug.drools.platform.backend.service.KnowledgeBaseService;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServer;
 import org.chtijbug.drools.platform.entity.PlatformRuntimeStatus;
-import org.chtijbug.drools.platform.persistence.impl.dao.IPlatformRuntimeDao;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsRessource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
@@ -48,7 +48,7 @@ public class PlatformRunTimeBeanTest {
     HistoryListener historyListener;
 
     @Autowired
-    IPlatformRuntimeDao platformRuntimeDao;
+    PlatformRuntimeRepository platformRuntimeRepository;
 
     @Before
     public void setup() throws UnknownHostException {
@@ -60,7 +60,7 @@ public class PlatformRunTimeBeanTest {
 
         final List<HistoryEvent> historyEvents = new ArrayList<HistoryEvent>();
         RuleBasePackage ruleBasePackage = RuleBaseBuilder.createPackageBasePackageWithListener(historyListener, "ruleflow2.drl", "RuleFlowProcess2.bpmn2");
-        List<PlatformRuntime> platform1 = platformRuntimeDao.findActiveByHostName("localhost");
+        List<PlatformRuntime> platform1 = platformRuntimeRepository.findByHostnameAndEndDateNull("localhost");
         Assert.assertTrue(platform1.size() == 1);
         PlatformRuntime platforRuntime = platform1.get(0);
         Assert.assertTrue(platforRuntime.getEndDate() == null);
@@ -75,7 +75,7 @@ public class PlatformRunTimeBeanTest {
         Assert.assertTrue(resource2.getId() != null);
         Assert.assertTrue(resource2.getFileName().equals("RuleFlowProcess2.bpmn2"));
         ruleBasePackage.dispose();
-  //      List<PlatformRuntime> platform2 = platformRuntimeDao.findActiveByHostName("localhost");
+  //      List<PlatformRuntime> platform2 = platformRuntimeRepository.findActiveByHostName("localhost");
   //      Assert.assertTrue(platform2.size() == 1);
   //      PlatformRuntime platforRuntime2 = platform2.get(0);
   //      Assert.assertTrue(platforRuntime2.getEndDate() != null);

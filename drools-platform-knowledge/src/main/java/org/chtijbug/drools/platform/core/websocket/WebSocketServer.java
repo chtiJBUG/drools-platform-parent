@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import javax.websocket.DeploymentException;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,7 +33,8 @@ public class WebSocketServer {
     }
 
     public void run() throws UnknownHostException {
-        this.localWebSocketServer = new Server(ws_hostname, ws_port, "/", RuntimeWebSocketServerService.class);
+
+        this.localWebSocketServer = new Server(ws_hostname, ws_port, "/", new HashMap<String,Object>(), RuntimeWebSocketServerService.class);
         try {
             localWebSocketServer.start();
         } catch (DeploymentException e) {

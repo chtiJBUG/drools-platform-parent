@@ -1,4 +1,4 @@
-package org.chtijbug.drools.platform.web;
+package org.chtijbug.drools.platform.rules;
 
 import com.google.common.base.Throwables;
 import org.chtijbug.drools.entity.history.HistoryEvent;
