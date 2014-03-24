@@ -1,6 +1,7 @@
 package org.chtijbug.drools.platform.entity;
 
 import org.chtijbug.drools.platform.entity.coder.JSONCoder;
+import org.chtijbug.drools.runtime.DroolsChtijbugException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,116 +14,88 @@ public class PlatformManagementKnowledgeBean {
 
     public static class PlatformManagementKnowledgeBeanCode extends
             JSONCoder<PlatformManagementKnowledgeBean> {
-
      }
 
+    private boolean isAlive=false;
 
-    private long averageTimeExecution;
-    private long minTimeExecution = 1000000;
-    private long maxTimeExecution = 0;
-    private long totalTimeExecution;
-    private long totalNumberRulesExecuted;
-    private long averageRulesExecuted;
-    private long minRulesExecuted = 10000000;
-    private long maxRulesExecuted = 0;
-    private long numberFireAllRulesExecuted;
-    private double averageRuleThroughout;
-    private double minRuleThroughout = 1000000;
-    private double maxRuleThroughout = 0;
-
-    public long getAverageTimeExecution() {
-        return averageTimeExecution;
+    public boolean isAlive() {
+        return isAlive;
     }
 
-    public void setAverageTimeExecution(long averageTimeExecution) {
-        this.averageTimeExecution = averageTimeExecution;
+    public void setAlive(boolean isAlive) {
+        this.isAlive = isAlive;
     }
 
-    public long getMinTimeExecution() {
-        return minTimeExecution;
+    private RequestRuntimePlarform requestRuntimePlarform;
+
+    private MessageRuntimePlatform messageRuntimePlatform;
+
+    private RequestStatus requestStatus;
+
+    private JMXInfo jmxInfo;
+
+    private GuvnorVersion guvnorVersion=null;
+
+    private DroolsChtijbugException droolsChtijbugException;
+
+    public RequestRuntimePlarform getRequestRuntimePlarform() {
+        return requestRuntimePlarform;
     }
 
-    public void setMinTimeExecution(long minTimeExecution) {
-        this.minTimeExecution = minTimeExecution;
+    public void setRequestRuntimePlarform(RequestRuntimePlarform requestRuntimePlarform) {
+        this.requestRuntimePlarform = requestRuntimePlarform;
     }
 
-    public long getMaxTimeExecution() {
-        return maxTimeExecution;
+    public MessageRuntimePlatform getMessageRuntimePlatform() {
+        return messageRuntimePlatform;
     }
 
-    public void setMaxTimeExecution(long maxTimeExecution) {
-        this.maxTimeExecution = maxTimeExecution;
+    public void setMessageRuntimePlatform(MessageRuntimePlatform messageRuntimePlatform) {
+        this.messageRuntimePlatform = messageRuntimePlatform;
     }
 
-    public long getTotalTimeExecution() {
-        return totalTimeExecution;
+    public RequestStatus getRequestStatus() {
+        return requestStatus;
     }
 
-    public void setTotalTimeExecution(long totalTimeExecution) {
-        this.totalTimeExecution = totalTimeExecution;
+    public void setRequestStatus(RequestStatus requestStatus) {
+        this.requestStatus = requestStatus;
     }
 
-    public long getTotalNumberRulesExecuted() {
-        return totalNumberRulesExecuted;
+    public JMXInfo getJmxInfo() {
+        return jmxInfo;
     }
 
-    public void setTotalNumberRulesExecuted(long totalNumberRulesExecuted) {
-        this.totalNumberRulesExecuted = totalNumberRulesExecuted;
+    public void setJmxInfo(JMXInfo jmxInfo) {
+        this.jmxInfo = jmxInfo;
     }
 
-    public long getAverageRulesExecuted() {
-        return averageRulesExecuted;
+    public GuvnorVersion getGuvnorVersion() {
+        return guvnorVersion;
     }
 
-    public void setAverageRulesExecuted(long averageRulesExecuted) {
-        this.averageRulesExecuted = averageRulesExecuted;
+    public void setGuvnorVersion(GuvnorVersion guvnorVersion) {
+        this.guvnorVersion = guvnorVersion;
     }
 
-    public long getMinRulesExecuted() {
-        return minRulesExecuted;
+    public DroolsChtijbugException getDroolsChtijbugException() {
+        return droolsChtijbugException;
     }
 
-    public void setMinRulesExecuted(long minRulesExecuted) {
-        this.minRulesExecuted = minRulesExecuted;
+    public void setDroolsChtijbugException(DroolsChtijbugException droolsChtijbugException) {
+        this.droolsChtijbugException = droolsChtijbugException;
     }
 
-    public long getMaxRulesExecuted() {
-        return maxRulesExecuted;
-    }
-
-    public void setMaxRulesExecuted(long maxRulesExecuted) {
-        this.maxRulesExecuted = maxRulesExecuted;
-    }
-
-    public long getNumberFireAllRulesExecuted() {
-        return numberFireAllRulesExecuted;
-    }
-
-    public void setNumberFireAllRulesExecuted(long numberFireAllRulesExecuted) {
-        this.numberFireAllRulesExecuted = numberFireAllRulesExecuted;
-    }
-
-    public double getAverageRuleThroughout() {
-        return averageRuleThroughout;
-    }
-
-    public void setAverageRuleThroughout(double averageRuleThroughout) {
-        this.averageRuleThroughout = averageRuleThroughout;
-    }
-
-    public double getMinRuleThroughout() {
-        return minRuleThroughout;
-    }
-
-    public void setMinRuleThroughout(double minRuleThroughout) {
-        this.minRuleThroughout = minRuleThroughout;
-    }
-
-    public double getMaxRuleThroughout() {
-        return maxRuleThroughout;
-    }
-
-    public void setMaxRuleThroughout(double maxRuleThroughout) {
-        this.maxRuleThroughout = maxRuleThroughout;
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("PlatformManagementKnowledgeBean{");
+        sb.append("isAlive=").append(isAlive);
+        sb.append(", requestRuntimePlarform=").append(requestRuntimePlarform);
+        sb.append(", messageRuntimePlatform=").append(messageRuntimePlatform);
+        sb.append(", requestStatus=").append(requestStatus);
+        sb.append(", jmxInfo=").append(jmxInfo);
+        sb.append(", guvnorVersion=").append(guvnorVersion);
+        sb.append('}');
+        return sb.toString();
     }
 }
