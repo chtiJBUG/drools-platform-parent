@@ -60,7 +60,7 @@ public class KnowledgeBaseService {
         platformRuntime.setHostname(platformKnowledgeBaseCreatedEvent.getHostname());
         platformRuntime.setPort(platformKnowledgeBaseCreatedEvent.getPort());
         try {
-            webSocketSessionManager.AddClient(platformRuntime.getHostname(), platformRuntime.getPort(), platformRuntime.getEndPoint());
+            webSocketSessionManager.AddClient(platformRuntime);
 
         } catch (DeploymentException | IOException e) {
             platformRuntime.setStatus(PlatformRuntimeStatus.NOT_JOINGNABLE);

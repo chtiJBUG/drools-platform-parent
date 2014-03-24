@@ -28,7 +28,6 @@ public class PlatformManagementKnowledgeBean {
 
     private RequestRuntimePlarform requestRuntimePlarform;
 
-    private MessageRuntimePlatform messageRuntimePlatform;
 
     private RequestStatus requestStatus;
 
@@ -44,14 +43,6 @@ public class PlatformManagementKnowledgeBean {
 
     public void setRequestRuntimePlarform(RequestRuntimePlarform requestRuntimePlarform) {
         this.requestRuntimePlarform = requestRuntimePlarform;
-    }
-
-    public MessageRuntimePlatform getMessageRuntimePlatform() {
-        return messageRuntimePlatform;
-    }
-
-    public void setMessageRuntimePlatform(MessageRuntimePlatform messageRuntimePlatform) {
-        this.messageRuntimePlatform = messageRuntimePlatform;
     }
 
     public RequestStatus getRequestStatus() {
@@ -91,7 +82,6 @@ public class PlatformManagementKnowledgeBean {
         final StringBuffer sb = new StringBuffer("PlatformManagementKnowledgeBean{");
         sb.append("isAlive=").append(isAlive);
         sb.append(", requestRuntimePlarform=").append(requestRuntimePlarform);
-        sb.append(", messageRuntimePlatform=").append(messageRuntimePlatform);
         sb.append(", requestStatus=").append(requestStatus);
         sb.append(", jmxInfo=").append(jmxInfo);
         sb.append(", guvnorVersion=").append(guvnorVersion);
