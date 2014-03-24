@@ -35,7 +35,7 @@
     <bean id="ehCacheManager"
           class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
           p:configLocation="classpath:META-INF/ehcache.xml"
-          p:shared="false" />
+          p:shared="true" />
 
     <bean id="cacheManager"
           class="org.springframework.cache.ehcache.EhCacheCacheManager"
