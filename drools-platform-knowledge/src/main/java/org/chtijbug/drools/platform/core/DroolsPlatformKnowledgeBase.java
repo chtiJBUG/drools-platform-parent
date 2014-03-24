@@ -1,9 +1,13 @@
 package org.chtijbug.drools.platform.core;
 
 import org.chtijbug.drools.platform.core.droolslistener.JmsStorageHistoryListener;
+import org.chtijbug.drools.platform.core.websocket.RuntimeWebSocketServerService;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.RuleBasePackage;
+import org.chtijbug.drools.runtime.RuleBaseSession;
 import org.chtijbug.drools.runtime.impl.RuleBaseSingleton;
+import org.chtijbug.drools.runtime.impl.RuleBaseStatefulSession;
+import org.chtijbug.drools.runtime.listener.HistoryListener;
 import org.chtijbug.drools.runtime.resource.Bpmn2DroolsRessource;
 import org.chtijbug.drools.runtime.resource.DrlDroolsRessource;
 import org.chtijbug.drools.runtime.resource.DroolsResource;
@@ -12,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +27,8 @@ import java.util.List;
  * Time: 14:12
  * To change this template use File | Settings | File Templates.
  */
-public class DroolsPlatformKnowledgeBase {
+@Component
+public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
     /**
      * Class Logger
      */
@@ -42,7 +48,10 @@ public class DroolsPlatformKnowledgeBase {
 
     private RuleBasePackage ruleBasePackage;
     @Autowired
-    private  JmsStorageHistoryListener jmsStorageHistoryListener;
+    private JmsStorageHistoryListener jmsStorageHistoryListener;
+
+    private RuntimeWebSocketServerService runtimeWebSocketServerService;
+
 
     public void getGuvnorRuleBasePackage() throws DroolsChtijbugException {
 
@@ -86,15 +95,15 @@ public class DroolsPlatformKnowledgeBase {
         }
     }
 
-    public void shutdown(){
-       this.jmsStorageHistoryListener.shutdown();
-       this.jmsStorageHistoryListener= null;
+    public void shutdown() {
+        this.jmsStorageHistoryListener.shutdown();
+        this.jmsStorageHistoryListener = null;
     }
 
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        this.jmsStorageHistoryListener= null;
+        this.jmsStorageHistoryListener = null;
     }
 
     private String getFileExtension(String ressourceName) {
@@ -150,6 +159,69 @@ public class DroolsPlatformKnowledgeBase {
 
     public void setGuvnor_password(String guvnor_password) {
         this.guvnor_password = guvnor_password;
+    }
+
+    public void setRuntimeWebSocketServerService(RuntimeWebSocketServerService runtimeWebSocketServerService) {
+        this.runtimeWebSocketServerService = runtimeWebSocketServerService;
+    }
+
+
+    @Override
+    public RuleBaseSession createRuleBaseSession() throws DroolsChtijbugException {
+        RuleBaseStatefulSession created = (RuleBaseStatefulSession)this.ruleBasePackage.createRuleBaseSession();
+        DroolsPlatformSession droolsPlatformSession = new DroolsPlatformSession();
+        droolsPlatformSession.setRuntimeWebSocketServerService(this.runtimeWebSocketServerService);
+        droolsPlatformSession.setRuleBaseStatefulSession(created);
+        return droolsPlatformSession;
+    }
+
+    @Override
+    public RuleBaseSession createRuleBaseSession(int maxNumberRulesToExecute) throws DroolsChtijbugException {
+        RuleBaseStatefulSession created = (RuleBaseStatefulSession)this.ruleBasePackage.createRuleBaseSession(maxNumberRulesToExecute);
+        DroolsPlatformSession droolsPlatformSession = new DroolsPlatformSession();
+        droolsPlatformSession.setRuntimeWebSocketServerService(this.runtimeWebSocketServerService);
+        droolsPlatformSession.setRuleBaseStatefulSession(created);
+        return droolsPlatformSession;
+    }
+
+    @Override
+    public void createKBase(DroolsResource... res) throws DroolsChtijbugException {
+        this.ruleBasePackage.createKBase(res);
+    }
+
+    @Override
+    public void createKBase(List<DroolsResource> res) throws DroolsChtijbugException {
+        this.ruleBasePackage.createKBase(res);
+    }
+
+    @Override
+    public void RecreateKBaseWithNewRessources(DroolsResource... res) throws DroolsChtijbugException {
+        this.ruleBasePackage.RecreateKBaseWithNewRessources(res);
+    }
+
+    @Override
+    public void RecreateKBaseWithNewRessources(List<DroolsResource> res) throws DroolsChtijbugException {
+        this.ruleBasePackage.RecreateKBaseWithNewRessources(res);
+    }
+
+    @Override
+    public HistoryListener getHistoryListener() {
+        return this.ruleBasePackage.getHistoryListener();
+    }
+
+    @Override
+    public int getRuleBaseID() {
+        return this.ruleBasePackage.getRuleBaseID();
+    }
+
+    @Override
+    public void dispose() {
+        this.ruleBasePackage.dispose();
+    }
+
+    @Override
+    public void cleanup() {
+        this.ruleBasePackage.cleanup();
     }
 
     @Override

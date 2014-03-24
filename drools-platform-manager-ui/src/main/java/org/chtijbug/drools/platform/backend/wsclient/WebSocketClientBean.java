@@ -14,27 +14,25 @@ import static java.lang.System.out;
  */
 
 @ClientEndpoint(encoders = {PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class},
-                decoders = {PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class})
+        decoders = {PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class})
 public class WebSocketClientBean
-  extends Endpoint{
+        extends Endpoint {
 
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
         session.addMessageHandler(new MessageHandler.Whole<PlatformManagementKnowledgeBean>() {
 
-                    @Override
-                    public void onMessage(PlatformManagementKnowledgeBean bean) {
-                        out.println("Message from server : " + bean.toString());
+            @Override
+            public void onMessage(PlatformManagementKnowledgeBean bean) {
+                out.println("Message from server : " + bean.toString());
+                switch (bean.getMessageRuntimePlatform()) {
+                    case jmxInfos:
+                        break;
+                    case versionInfos:
+                        break;
+                }
 
-                      //  out.println("Closing connection");
-                        /**
-                        try {
-                            session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "All fine"));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                         **/
-                    }
-                });
+            }
+        });
     }
 }
