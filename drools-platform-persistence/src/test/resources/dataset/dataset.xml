@@ -43,4 +43,9 @@
                       ruleBaseID="5">
     </platform_runtime>
 
+  <session_runtime id="1100043"
+                   sessionId="1"
+                   eventID="7"
+                    startDate="2014-02-12">
+  </session_runtime>
 </dataset>

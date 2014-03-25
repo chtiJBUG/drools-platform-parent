@@ -19,6 +19,9 @@ public class RealTimeParameters {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "realtimeparams_id_seq")
     private Long id;
 
+   @ManyToOne
+    private PlatformRuntime platformRuntime;
+
     private Date eventDate;
 
     private long averageTimeExecution;
@@ -147,5 +150,13 @@ public class RealTimeParameters {
 
     public void setMaxRuleThroughout(double maxRuleThroughout) {
         this.maxRuleThroughout = maxRuleThroughout;
+    }
+
+    public PlatformRuntime getPlatformRuntime() {
+        return platformRuntime;
+    }
+
+    public void setPlatformRuntime(PlatformRuntime platformRuntime) {
+        this.platformRuntime = platformRuntime;
     }
 }

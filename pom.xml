@@ -70,7 +70,7 @@
 
 
     <modules>
-        <module>drools-runtime-builder</module>
+        <!--module>drools-runtime-builder</module-->
         <module>drools-platform-knowledge</module>
         <module>drools-platform-entity</module>
         <module>drools-platform-persistence</module>

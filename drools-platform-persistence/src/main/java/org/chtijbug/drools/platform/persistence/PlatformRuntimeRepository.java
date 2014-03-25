@@ -14,6 +14,10 @@ import java.util.List;
 @Component
 public interface PlatformRuntimeRepository extends JpaRepository<PlatformRuntime, Long> {
 
+    PlatformRuntime findByRuleBaseIDAndEndDateNull(Integer ruleBaseId);
+
+    PlatformRuntime findByRuleBaseIDAndShutdowDateNull(Integer ruleBaseId);
+
     PlatformRuntime findByRuleBaseID(Integer ruleBaseId);
 
     PlatformRuntime findByRuleBaseIDAndStartDateAndEndDateNull(Integer ruleBaseId, Date startDate);
