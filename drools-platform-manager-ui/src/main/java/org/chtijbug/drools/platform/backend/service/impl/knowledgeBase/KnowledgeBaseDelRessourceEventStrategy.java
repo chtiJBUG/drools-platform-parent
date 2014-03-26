@@ -8,6 +8,7 @@ import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsRessource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -21,6 +22,7 @@ import java.util.Date;
 @Component
 public class KnowledgeBaseDelRessourceEventStrategy extends AbstractEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(KnowledgeBaseDelRessourceEventStrategy.class);
+
 
 
     @Autowired
@@ -39,7 +41,7 @@ public class KnowledgeBaseDelRessourceEventStrategy extends AbstractEventHandler
               }
               for (DroolsRessource toto : existingPlatformRuntime.getDroolsRessources()) {
                   if (toto.equals(droolsRessource)) {
-                      toto.setEndDate(new Date());
+                      toto.setEndDate(knowledgeBaseDelRessourceEvent.getDateEvent());
                   }
               }
               platformRuntimeRepository.save(existingPlatformRuntime);

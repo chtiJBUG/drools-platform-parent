@@ -29,7 +29,7 @@ public class KnowledgeBaseDisposeEventStrategy extends AbstractEventHandlerStrat
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         KnowledgeBaseDisposeEvent knowledgeBaseDisposeEvent = (KnowledgeBaseDisposeEvent) historyEvent;
         PlatformRuntime existingPlatformRuntime = platformRuntimeRepository.findByRuleBaseIDAndEndDateNull(knowledgeBaseDisposeEvent.getRuleBaseID());
-        existingPlatformRuntime.setEndDate(new Date());
+        existingPlatformRuntime.setEndDate(knowledgeBaseDisposeEvent.getDateEvent());
         platformRuntimeRepository.save(existingPlatformRuntime);
     }
 

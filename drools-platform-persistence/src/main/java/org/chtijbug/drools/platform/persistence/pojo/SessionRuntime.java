@@ -1,5 +1,7 @@
 package org.chtijbug.drools.platform.persistence.pojo;
 
+import org.chtijbug.drools.platform.entity.SessionRuntimeStatus;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -27,6 +29,9 @@ public class SessionRuntime {
     private Date endDate;
 
     private Integer eventID;
+
+    @Enumerated(EnumType.STRING)
+    private SessionRuntimeStatus sessionRuntimeStatus;
 
     public SessionRuntime() {
     }
@@ -77,5 +82,13 @@ public class SessionRuntime {
 
     public void setEventID(Integer eventID) {
         this.eventID = eventID;
+    }
+
+    public SessionRuntimeStatus getSessionRuntimeStatus() {
+        return sessionRuntimeStatus;
+    }
+
+    public void setSessionRuntimeStatus(SessionRuntimeStatus sessionRuntimeStatus) {
+        this.sessionRuntimeStatus = sessionRuntimeStatus;
     }
 }

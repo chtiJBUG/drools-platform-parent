@@ -38,7 +38,7 @@ public class KnowledgeBaseAddRessourceEventStrategy extends AbstractEventHandler
          } else {
              droolsRessource = new DroolsRessource(knowledgeBaseAddRessourceEvent.getDrlRessourceFiles().get(0).getFileName(), knowledgeBaseAddRessourceEvent.getDrlRessourceFiles().get(0).getContent());
          }
-         droolsRessource.setStartDate(new Date());
+         droolsRessource.setStartDate(knowledgeBaseAddRessourceEvent.getDateEvent());
          existingPlatformRuntime.getDroolsRessources().add(droolsRessource);
 
          platformRuntimeRepository.save(existingPlatformRuntime);

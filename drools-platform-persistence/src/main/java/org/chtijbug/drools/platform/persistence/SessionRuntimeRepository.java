@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 public interface SessionRuntimeRepository extends JpaRepository<SessionRuntime, Long> {
 
     SessionRuntime findBySessionId(Integer sessionId);
+    SessionRuntime findBySessionIdAndStartDateIsNull(Integer sessionId);
 
 
 }

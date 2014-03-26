@@ -55,7 +55,7 @@ public class PlatformKnowledgeBaseCreatedEventStrategy extends AbstractEventHand
         platformRuntime.setRuleBaseID(platformKnowledgeBaseCreatedEvent.getRuleBaseID());
         platformRuntime.setStatus(PlatformRuntimeStatus.STARTED);
         platformRuntime.setEventID(platformKnowledgeBaseCreatedEvent.getEventID());
-        platformRuntime.setStartDate(new Date());
+        platformRuntime.setStartDate(platformKnowledgeBaseCreatedEvent.getStartDate());
         platformRuntime.setHostname(platformKnowledgeBaseCreatedEvent.getHostname());
         platformRuntime.setPort(platformKnowledgeBaseCreatedEvent.getPort());
         try {

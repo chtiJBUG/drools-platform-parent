@@ -31,7 +31,7 @@ public class PlatformKnowledgeBaseShutdownEventStrategy extends AbstractEventHan
         PlatformRuntime existingPlatformRuntime = null;
         try {
             existingPlatformRuntime = platformRuntimeRepository.findByRuleBaseIDAndShutdowDateNull(platformKnowledgeBaseShutdownEvent.getRuleBaseID());
-            existingPlatformRuntime.setShutdowDate(new Date());
+            existingPlatformRuntime.setShutdowDate(platformKnowledgeBaseShutdownEvent.getDateEvent());
             platformRuntimeRepository.save(existingPlatformRuntime);
         } catch (Exception e) {
             LOG.error(platformKnowledgeBaseShutdownEvent, e);

@@ -184,8 +184,7 @@ public class PlatformRuntime implements Serializable {
                 append("status", status).
                 append("eventID", eventID).
                 append("ruleBaseID", ruleBaseID).
-                append("droolsRessources", droolsRessources).
-                append("sessionRuntimes", sessionRuntimes).
+
                 toString();
     }
 }
