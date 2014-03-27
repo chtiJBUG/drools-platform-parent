@@ -5,10 +5,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Collection;
 
 import static org.apache.commons.io.FileUtils.copyFileToDirectory;
@@ -42,33 +39,31 @@ public class MavenProject {
     }
 
     public void generateSources() {
-        try {
-            ProcessBuilder builder = new ProcessBuilder("mvn", "-f", this.pomFile.getAbsolutePath(), "generate-sources");
-            Process process = builder.start();
-            int exitStatus = process.waitFor();
-            if (exitStatus != 0)
-                throw new RuntimeException("Error while running mvn generate-sources command");
-        } catch (IOException e) {
-            logger.error("Error while running mvn clean command");
-            throw Throwables.propagate(e);
-        } catch (InterruptedException e) {
-            throw Throwables.propagate(e);
-        }
+        launchMavenCommand("generate-sources");
     }
 
     public InputStream buildUpPackage() {
+        launchMavenCommand("package");
+        //___ TODO Look up for the generated war file and open an input stream on it.
+        return null; // TODO
+
+    }
+
+    private void launchMavenCommand(String lifeCycle) {
         try {
-            ProcessBuilder builder = new ProcessBuilder("mvn", "-f", this.pomFile.getAbsolutePath(), "package");
+            ProcessBuilder builder = new ProcessBuilder("mvn", "-f", this.pomFile.getAbsolutePath(), lifeCycle);
             Process process = builder.start();
+            BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                logger.debug(line);
+            }
             int exitStatus = process.waitFor();
             if (exitStatus != 0)
-                throw new RuntimeException("Error while running mvn package command");
-            //___ TODO Look up for the generated war file and open an input stream on it.
-            return null; // TODO
-        } catch (IOException e) {
+                throw new RuntimeException("Error while running mvn "+lifeCycle+" command");
+        } catch (IOException | InterruptedException e) {
             logger.error("Error while running mvn clean command");
-            throw Throwables.propagate(e);
-        } catch (InterruptedException e) {
             throw Throwables.propagate(e);
         }
     }
