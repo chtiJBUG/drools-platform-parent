@@ -2,10 +2,10 @@ package org.chtijbug.drools.platform.entity;
 
 /**
  * Created by IntelliJ IDEA.
- * Date: 24/03/14
- * Time: 10:17
+ * Date: 26/03/14
+ * Time: 09:28
  * To change this template use File | Settings | File Templates.
  */
-public enum RequestRuntimePlarform {
-    isAlive,ruleVersionInfos, loadNewRuleVersion,jmxInfos,versionInfos;
+public enum SessionRuntimeStatus {
+    STARTED,DISPOSED, CRASHED
 }

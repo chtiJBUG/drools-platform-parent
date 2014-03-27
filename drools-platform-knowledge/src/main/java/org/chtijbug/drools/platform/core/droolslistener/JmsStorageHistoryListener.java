@@ -7,7 +7,6 @@ import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseAddRessourceEve
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseCreatedEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseInitialLoadEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseReloadedEvent;
-import org.chtijbug.drools.entity.history.session.SessionFireAllRulesEndEvent;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServer;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEvent;
@@ -87,10 +86,6 @@ public class JmsStorageHistoryListener implements HistoryListener {
             historyEvent.setGuvnor_packageVersion(this.guvnor_packageVersion);
         }
 
-
-        if (historyEvent instanceof SessionFireAllRulesEndEvent) {
-            //TODO send all stats to ws client
-        }
         final Serializable objectToSend = historyEventToSend;
         jmsTemplate.send(new MessageCreator() {
 

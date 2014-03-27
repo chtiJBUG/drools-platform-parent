@@ -1,6 +1,7 @@
 package org.chtijbug.drools.platform.backend.wsclient;
 
 import org.apache.log4j.Logger;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.DeploymentException;
@@ -22,9 +23,9 @@ public class WebSocketSessionManager {
     private List<WebSocketClient> webSocketClientList = new ArrayList<WebSocketClient>();
 
 
-    public void AddClient(String hostName, int port, String endPoint) throws DeploymentException, IOException {
+    public void AddClient(PlatformRuntime  platformRuntime) throws DeploymentException, IOException {
 
-        WebSocketClient webSocketClient = new WebSocketClient(hostName, port, endPoint);
+        WebSocketClient webSocketClient = new WebSocketClient(platformRuntime);
         this.webSocketClientList.add(webSocketClient);
 
 

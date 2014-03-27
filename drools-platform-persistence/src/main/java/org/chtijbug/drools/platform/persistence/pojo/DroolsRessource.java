@@ -1,6 +1,7 @@
 package org.chtijbug.drools.platform.persistence.pojo;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,6 +29,10 @@ public class DroolsRessource {
     private String fileName;
     @Column
     private String fileContent;
+    @Column
+    private Date startDate;
+    @Column
+    private Date endDate;
 
     public DroolsRessource() {
     }
@@ -74,6 +79,22 @@ public class DroolsRessource {
 
     public String getFileContent() {
         return fileContent;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     @Override

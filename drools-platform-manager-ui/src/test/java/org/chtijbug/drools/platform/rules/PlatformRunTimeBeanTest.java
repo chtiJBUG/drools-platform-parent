@@ -5,7 +5,6 @@ import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFiredHistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFlowActivatedHistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFlowDeactivatedHistoryEvent;
-import org.chtijbug.drools.platform.backend.service.KnowledgeBaseService;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServer;
 import org.chtijbug.drools.platform.entity.PlatformRuntimeStatus;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
@@ -41,8 +40,7 @@ public class PlatformRunTimeBeanTest {
     private WebSocketServer webSocketServer;
 
 
-    @Autowired
-    private KnowledgeBaseService knowledgeBaseService;
+
 
     @Autowired
     HistoryListener historyListener;

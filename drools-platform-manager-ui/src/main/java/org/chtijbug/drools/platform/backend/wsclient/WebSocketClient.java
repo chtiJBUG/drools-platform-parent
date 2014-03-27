@@ -20,30 +20,22 @@ public class WebSocketClient {
 
     private static final Logger LOG = Logger.getLogger(WebSocketClient.class);
 
-    private PlatformRuntime platformRuntime = new PlatformRuntime();
     private Session session;
 
 
-    public WebSocketClient(String hostname, int port, String endPoint) throws DeploymentException, IOException {
-        this.platformRuntime.setHostname(hostname);
-        this.platformRuntime.setPort(port);
-        this.platformRuntime.setEndPoint(endPoint);
+    public WebSocketClient(PlatformRuntime platformRuntime) throws DeploymentException, IOException {
         ClientManager client = ClientManager.createClient();
-        WebSocketClientBean beanClient = new WebSocketClientBean();
-
-        this.session = client.connectToServer(
+         WebSocketClientBean beanClient = new WebSocketClientBean(platformRuntime);
+         this.session = client.connectToServer(
                 beanClient,
                 ClientEndpointConfig.Builder.create()
                         .encoders(Arrays.<Class<? extends Encoder>>asList(PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class))
                         .decoders(Arrays.<Class<? extends Decoder>>asList(PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class))
                         .build(),
-                URI.create("ws://" + hostname + ":" + port + endPoint));
+                URI.create("ws://" + platformRuntime.getHostname() + ":" + platformRuntime.getPort() + platformRuntime.getEndPoint()));
+     }
 
-    }
 
-    public PlatformRuntime getPlatformRuntime() {
-        return platformRuntime;
-    }
 
     public Session getSession() {
         return session;

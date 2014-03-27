@@ -2,7 +2,9 @@ package org.chtijbug.drools.platform.backend.jms;
 
 import com.google.common.base.Throwables;
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.platform.backend.service.KnowledgeBaseService;
+import org.chtijbug.drools.entity.history.HistoryEvent;
+import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.MessageHandlerResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,10 +24,8 @@ public class JMSHistoryEventListener implements MessageListener {
 
     private static final Logger LOG = Logger.getLogger(JMSHistoryEventListener.class);
 
-
     @Autowired
-    KnowledgeBaseService knowledgeBaseService;
-
+    MessageHandlerResolver messageHandlerResolver;
 
     public void onMessage(Message message) {
 
@@ -33,8 +33,11 @@ public class JMSHistoryEventListener implements MessageListener {
             if (message instanceof ObjectMessage) {
                 ObjectMessage objectMessage = (ObjectMessage) message;
                 Object messageContent = objectMessage.getObject();
+                HistoryEvent historyEvent=(HistoryEvent)messageContent;
                 try {
-                      knowledgeBaseService.getClass().getMethod("handleMessage",messageContent.getClass()).invoke(knowledgeBaseService,messageContent) ;
+                    AbstractEventHandlerStrategy strategy = messageHandlerResolver.resolveMessageHandler(historyEvent);
+                    strategy.handleMessage(historyEvent);
+                   // handleKnowledgeEventService.getClass().getMethod("handleMessage",messageContent.getClass()).invoke(handleKnowledgeEventService,messageContent) ;
                   } catch (Throwable e) {
                       throw Throwables.propagate(e);
                   }

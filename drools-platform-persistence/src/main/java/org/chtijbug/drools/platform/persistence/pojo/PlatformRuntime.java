@@ -29,6 +29,7 @@ public class PlatformRuntime implements Serializable {
     @Column(nullable = false)
     private Date startDate;
     private Date endDate;
+    private Date shutdowDate;
     @Enumerated(EnumType.STRING)
     private PlatformRuntimeStatus status;
     private Integer eventID;
@@ -36,6 +37,10 @@ public class PlatformRuntime implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<DroolsRessource> droolsRessources = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<SessionRuntime> sessionRuntimes = new ArrayList<SessionRuntime>();
+
 
     public PlatformRuntime() {
     }
@@ -93,6 +98,14 @@ public class PlatformRuntime implements Serializable {
         this.endDate = endDate;
     }
 
+    public Date getShutdowDate() {
+        return shutdowDate;
+    }
+
+    public void setShutdowDate(Date shutdowDate) {
+        this.shutdowDate = shutdowDate;
+    }
+
     public PlatformRuntimeStatus getStatus() {
         return status;
     }
@@ -123,6 +136,14 @@ public class PlatformRuntime implements Serializable {
 
     public void setDroolsRessources(List<DroolsRessource> droolsRessources) {
         this.droolsRessources = droolsRessources;
+    }
+
+    public List<SessionRuntime> getSessionRuntimes() {
+        return sessionRuntimes;
+    }
+
+    public void setSessionRuntimes(List<SessionRuntime> sessionRuntimes) {
+        this.sessionRuntimes = sessionRuntimes;
     }
 
     @Override
@@ -163,7 +184,7 @@ public class PlatformRuntime implements Serializable {
                 append("status", status).
                 append("eventID", eventID).
                 append("ruleBaseID", ruleBaseID).
-                append("droolsRessources", droolsRessources).
+
                 toString();
     }
 }

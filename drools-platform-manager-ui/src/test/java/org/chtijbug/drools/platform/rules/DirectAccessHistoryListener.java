@@ -3,7 +3,8 @@ package org.chtijbug.drools.platform.rules;
 import com.google.common.base.Throwables;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseCreatedEvent;
-import org.chtijbug.drools.platform.backend.service.KnowledgeBaseService;
+import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.MessageHandlerResolver;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.listener.HistoryListener;
@@ -21,8 +22,7 @@ import java.util.Date;
 @Component
 public class DirectAccessHistoryListener implements HistoryListener {
     @Autowired
-    KnowledgeBaseService knowledgeBaseService;
-
+    MessageHandlerResolver messageHandlerResolver;
 
     @Override
     public void fireEvent(HistoryEvent newHistoryEvent) throws DroolsChtijbugException {
@@ -33,7 +33,8 @@ public class DirectAccessHistoryListener implements HistoryListener {
             historyEventToSend = platformKnowledgeBaseCreatedEvent;
         }
         try {
-            knowledgeBaseService.getClass().getMethod("handleMessage", historyEventToSend.getClass()).invoke(knowledgeBaseService, historyEventToSend);
+            AbstractEventHandlerStrategy strategy = messageHandlerResolver.resolveMessageHandler(historyEventToSend);
+            strategy.handleMessage(historyEventToSend);
         } catch (Throwable e) {
             throw Throwables.propagate(e);
         }

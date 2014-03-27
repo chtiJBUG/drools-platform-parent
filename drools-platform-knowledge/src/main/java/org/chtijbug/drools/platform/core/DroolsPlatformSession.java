@@ -5,8 +5,8 @@ import org.chtijbug.drools.entity.DroolsRuleObject;
 import org.chtijbug.drools.entity.history.HistoryContainer;
 import org.chtijbug.drools.platform.core.websocket.RuntimeWebSocketServerService;
 import org.chtijbug.drools.platform.entity.JMXInfo;
-import org.chtijbug.drools.platform.entity.MessageRuntimePlatform;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
+import org.chtijbug.drools.platform.entity.RequestRuntimePlarform;
 import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.RuleBaseSession;
@@ -60,7 +60,7 @@ public class DroolsPlatformSession implements RuleBaseSession {
 
     @Override
     public void updateObject(Object updatedObject) {
-        this.updateObject(updatedObject);
+        this.ruleBaseStatefulSession.updateObject(updatedObject);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class DroolsPlatformSession implements RuleBaseSession {
     public void fireAllRules() throws DroolsChtijbugException {
         this.ruleBaseStatefulSession.fireAllRules();
         PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
-        platformManagementKnowledgeBean.setMessageRuntimePlatform(MessageRuntimePlatform.jmxInfos);
+        platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.jmxInfos);
         platformManagementKnowledgeBean.setAlive(true);
         platformManagementKnowledgeBean.setRequestStatus(RequestStatus.SUCCESS);
         JMXInfo jmxInfo = new JMXInfo();

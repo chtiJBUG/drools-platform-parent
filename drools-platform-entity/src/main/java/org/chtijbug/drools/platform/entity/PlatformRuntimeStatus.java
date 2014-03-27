@@ -7,6 +7,6 @@ package org.chtijbug.drools.platform.entity;
  * To change this template use File | Settings | File Templates.
  */
 public enum PlatformRuntimeStatus {
-    STARTED,NOT_JOINGNABLE, STOPPED   ;
+    STARTED,NOT_JOINGNABLE, STOPPED, CRASHED;
 
 }
