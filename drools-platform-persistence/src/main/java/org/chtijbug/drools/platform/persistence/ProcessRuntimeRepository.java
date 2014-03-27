@@ -15,9 +15,9 @@ import java.util.List;
 @Component
 public interface ProcessRuntimeRepository extends JpaRepository<ProcessRuntime, Long> {
 
-    @Query("select r from ProcessRuntime r,SessionRuntime s where r.sessionRuntime = s and r.endDate is null and s.sessionId = :sessionID and r.processName = :processName")
-    List<ProcessRuntime> findAllStartedFireAllRulesBySessionIDAndProcessName(@Param("sessionID") Integer sessionID,@Param("processName") String processName);
+    @Query("select r from ProcessRuntime r,SessionRuntime s where r.sessionRuntime = s and r.endDate is null and s.sessionId = :sessionID and r.ProcessInstanceId = :processInstanceId")
+    List<ProcessRuntime> findAllStartedProcessBySessionIDAndProcessInstanceId(@Param("sessionID") Integer sessionID, @Param("processInstanceId") String processInstanceId);
 
-    @Query("select r from ProcessRuntime r,SessionRuntime s where r.sessionRuntime = s and r.endDate is null and s.sessionId = :sessionID  and r.processName = :processName")
-    ProcessRuntime findStartedFireAllRulesBySessionIDAndProcessName(@Param("sessionID") Integer sessionID,@Param("processName") String processName);
+    @Query("select r from ProcessRuntime r,SessionRuntime s where r.sessionRuntime = s and r.endDate is null and s.sessionId = :sessionID  and r.ProcessInstanceId = :processInstanceId")
+    ProcessRuntime findStartedProcessBySessionIDAndProcessInstanceId(@Param("sessionID") Integer sessionID, @Param("processInstanceId") String processInstanceId);
 }

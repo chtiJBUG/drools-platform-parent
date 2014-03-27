@@ -1,7 +1,6 @@
 package org.chtijbug.drools.platform.persistence.pojo;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.chtijbug.drools.platform.entity.PlatformRuntimeStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;

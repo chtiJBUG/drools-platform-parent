@@ -1,7 +1,5 @@
 package org.chtijbug.drools.platform.persistence.pojo;
 
-import org.chtijbug.drools.platform.entity.SessionRuntimeStatus;
-
 import javax.persistence.*;
 import java.util.Date;
 

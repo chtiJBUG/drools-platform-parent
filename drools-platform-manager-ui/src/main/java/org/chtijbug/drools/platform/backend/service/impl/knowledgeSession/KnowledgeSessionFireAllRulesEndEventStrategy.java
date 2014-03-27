@@ -4,11 +4,10 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionFireAllRulesEndEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.entity.FireRulesRuntimeStatus;
+import org.chtijbug.drools.platform.persistence.pojo.FireRulesRuntimeStatus;
 import org.chtijbug.drools.platform.persistence.FireRulesRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.FireRulesRuntime;
-import org.chtijbug.drools.platform.persistence.pojo.SessionRuntime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

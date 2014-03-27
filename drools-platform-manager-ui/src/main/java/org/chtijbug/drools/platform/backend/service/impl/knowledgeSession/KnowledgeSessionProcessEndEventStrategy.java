@@ -2,10 +2,9 @@ package org.chtijbug.drools.platform.backend.service.impl.knowledgeSession;
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
-import org.chtijbug.drools.entity.history.session.SessionStartProcessBeginEvent;
 import org.chtijbug.drools.entity.history.session.SessionStartProcessEndEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.entity.ProcessRuntimeStatus;
+import org.chtijbug.drools.platform.persistence.pojo.ProcessRuntimeStatus;
 import org.chtijbug.drools.platform.persistence.ProcessRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.ProcessRuntime;
@@ -37,7 +36,7 @@ public class KnowledgeSessionProcessEndEventStrategy extends AbstractEventHandle
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         SessionStartProcessEndEvent sessionStartProcessEndEvent = (SessionStartProcessEndEvent) historyEvent;
 
-        List<ProcessRuntime> processRuntimes = processRuntimeRepository.findAllStartedFireAllRulesBySessionIDAndProcessName(sessionStartProcessEndEvent.getSessionId(), sessionStartProcessEndEvent.getProcessName());
+        List<ProcessRuntime> processRuntimes = processRuntimeRepository.findAllStartedProcessBySessionIDAndProcessInstanceId(sessionStartProcessEndEvent.getSessionId(), sessionStartProcessEndEvent.getProcessInstanceId());
         for (ProcessRuntime runningProcessRuntime : processRuntimes){
             runningProcessRuntime.setEndDate(new Date());
             runningProcessRuntime.setProcessRuntimeStatus(ProcessRuntimeStatus.CRASHED);
@@ -47,10 +46,11 @@ public class KnowledgeSessionProcessEndEventStrategy extends AbstractEventHandle
 
         ProcessRuntime processRuntime = new ProcessRuntime();
         processRuntime.setSessionRuntime(existingSessionRutime);
+        processRuntime.setProcessInstanceId(sessionStartProcessEndEvent.getProcessInstanceId());
         processRuntime.setProcessName(sessionStartProcessEndEvent.getProcessName());
         processRuntime.setEventID(sessionStartProcessEndEvent.getEventID());
         processRuntime.setStartDate(sessionStartProcessEndEvent.getDateEvent());
-        processRuntime.setProcessRuntimeStatus(ProcessRuntimeStatus.STARTED);
+        processRuntime.setProcessRuntimeStatus(ProcessRuntimeStatus.SESSIONSTARTED);
         processRuntimeRepository.save(processRuntime);
         LOG.info("SessionStartProcessEndEvent " + historyEvent.toString());
     }

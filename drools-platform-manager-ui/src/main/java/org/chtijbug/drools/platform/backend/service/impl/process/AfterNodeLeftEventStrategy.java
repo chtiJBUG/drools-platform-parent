@@ -1,4 +1,4 @@
-package org.chtijbug.drools.platform.backend.service.impl.knowledgeSession;
+package org.chtijbug.drools.platform.backend.service.impl.process;
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
@@ -22,8 +22,8 @@ import java.util.Date;
  */
 
 @Component
-public class KnowledgeSessionCreateEventStrategy extends AbstractEventHandlerStrategy {
-    private static final Logger LOG = Logger.getLogger(KnowledgeSessionCreateEventStrategy.class);
+public class AfterNodeLeftEventStrategy extends AbstractEventHandlerStrategy {
+    private static final Logger LOG = Logger.getLogger(AfterNodeLeftEventStrategy.class);
 
     @Autowired
     PlatformRuntimeRepository platformRuntimeRepository;

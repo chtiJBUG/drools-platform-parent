@@ -1,7 +1,5 @@
 package org.chtijbug.drools.platform.persistence.pojo;
 
-import org.chtijbug.drools.platform.entity.ProcessRuntimeStatus;
-
 import javax.persistence.*;
 import java.util.Date;
 
@@ -34,6 +32,16 @@ public class ProcessRuntime {
 
     @ManyToOne
     private SessionRuntime sessionRuntime;
+
+    private String ProcessInstanceId;
+
+    private String processPackageName;
+
+    private String processVersion;
+
+    private String processType;
+
+    private String processId;
 
     public Long getId() {
         return id;
@@ -91,6 +99,46 @@ public class ProcessRuntime {
         this.processRuntimeStatus = processRuntimeStatus;
     }
 
+    public String getProcessInstanceId() {
+        return ProcessInstanceId;
+    }
+
+    public void setProcessInstanceId(String processInstanceId) {
+        ProcessInstanceId = processInstanceId;
+    }
+
+    public String getProcessPackageName() {
+        return processPackageName;
+    }
+
+    public void setProcessPackageName(String processPackageName) {
+        this.processPackageName = processPackageName;
+    }
+
+    public String getProcessVersion() {
+        return processVersion;
+    }
+
+    public void setProcessVersion(String processVersion) {
+        this.processVersion = processVersion;
+    }
+
+    public String getProcessType() {
+        return processType;
+    }
+
+    public void setProcessType(String processType) {
+        this.processType = processType;
+    }
+
+    public String getProcessId() {
+        return processId;
+    }
+
+    public void setProcessId(String processId) {
+        this.processId = processId;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("ProcessRuntime{");
@@ -100,6 +148,11 @@ public class ProcessRuntime {
         sb.append(", endDate=").append(endDate);
         sb.append(", processRuntimeStatus=").append(processRuntimeStatus);
         sb.append(", eventID=").append(eventID);
+        sb.append(", ProcessInstanceId='").append(ProcessInstanceId).append('\'');
+        sb.append(", processPackageName='").append(processPackageName).append('\'');
+        sb.append(", processVersion='").append(processVersion).append('\'');
+        sb.append(", processType='").append(processType).append('\'');
+        sb.append(", processId='").append(processId).append('\'');
         sb.append('}');
         return sb.toString();
     }

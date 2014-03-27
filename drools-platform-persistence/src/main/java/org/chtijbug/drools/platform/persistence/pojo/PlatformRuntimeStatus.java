@@ -1,4 +1,4 @@
-package org.chtijbug.drools.platform.entity;
+package org.chtijbug.drools.platform.persistence.pojo;
 
 /**
  * Created by IntelliJ IDEA.

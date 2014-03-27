@@ -1,8 +1,5 @@
 package org.chtijbug.drools.platform.persistence.pojo;
 
-import org.chtijbug.drools.platform.entity.FireRulesRuntimeStatus;
-import org.chtijbug.drools.platform.entity.ProcessRuntimeStatus;
-
 import javax.persistence.*;
 import java.util.Date;
 

@@ -1,4 +1,4 @@
-package org.chtijbug.drools.platform.entity;
+package org.chtijbug.drools.platform.persistence.pojo;
 
 /**
  * Created by IntelliJ IDEA.
@@ -7,5 +7,5 @@ package org.chtijbug.drools.platform.entity;
  * To change this template use File | Settings | File Templates.
  */
 public enum ProcessRuntimeStatus {
-    STARTED,STOPPED, CRASHED
+    SESSIONSTARTED,JBPMSTARTED, JBPMSTOPPED, CRASHED
 }

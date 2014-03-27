@@ -6,7 +6,7 @@ import org.chtijbug.drools.entity.history.rule.AfterRuleFiredHistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFlowActivatedHistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFlowDeactivatedHistoryEvent;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServer;
-import org.chtijbug.drools.platform.entity.PlatformRuntimeStatus;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeStatus;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsRessource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;

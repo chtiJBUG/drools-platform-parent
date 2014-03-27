@@ -1,14 +1,15 @@
-package org.chtijbug.drools.platform.backend.service.impl.knowledgeSession;
+package org.chtijbug.drools.platform.backend.service.impl.process;
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
+import org.chtijbug.drools.entity.history.process.AfterNodeInstanceTriggeredHistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionCreatedEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.pojo.SessionRuntimeStatus;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
 import org.chtijbug.drools.platform.persistence.pojo.SessionRuntime;
+import org.chtijbug.drools.platform.persistence.pojo.SessionRuntimeStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +23,8 @@ import java.util.Date;
  */
 
 @Component
-public class KnowledgeSessionCreateEventStrategy extends AbstractEventHandlerStrategy {
-    private static final Logger LOG = Logger.getLogger(KnowledgeSessionCreateEventStrategy.class);
+public class AfterNodeInstanceTriggeredEventStrategy extends AbstractEventHandlerStrategy {
+    private static final Logger LOG = Logger.getLogger(AfterNodeInstanceTriggeredEventStrategy.class);
 
     @Autowired
     PlatformRuntimeRepository platformRuntimeRepository;
@@ -33,7 +34,8 @@ public class KnowledgeSessionCreateEventStrategy extends AbstractEventHandlerStr
 
     @Override
     protected void handleMessageInternally(HistoryEvent historyEvent) {
-        SessionCreatedEvent sessionCreatedEvent = (SessionCreatedEvent) historyEvent;
+        AfterNodeInstanceTriggeredHistoryEvent afterNodeInstanceTriggeredHistoryEvent = (AfterNodeInstanceTriggeredHistoryEvent) historyEvent;
+        /**
         SessionRuntime existingSessionRutime = sessionRuntimeRepository.findBySessionIdAndStartDateIsNull(historyEvent.getSessionId());
         if (existingSessionRutime != null) {
             existingSessionRutime.setEndDate(new Date());
@@ -48,12 +50,13 @@ public class KnowledgeSessionCreateEventStrategy extends AbstractEventHandlerStr
         sessionRuntime.setEventID(sessionCreatedEvent.getEventID());
         existingSessionRutime.setSessionRuntimeStatus(SessionRuntimeStatus.STARTED);
         sessionRuntimeRepository.save(sessionRuntime);
-        LOG.info("SessionCreatedEvent " + historyEvent.toString());
+         **/
+        LOG.info("AfterNodeInstanceTriggeredHistoryEvent " + historyEvent.toString());
     }
 
     @Override
     public boolean isEventSupported(HistoryEvent historyEvent) {
 
-        return historyEvent instanceof SessionCreatedEvent;
+        return historyEvent instanceof AfterNodeInstanceTriggeredHistoryEvent;
     }
 }

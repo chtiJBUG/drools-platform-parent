@@ -1,4 +1,4 @@
-package org.chtijbug.drools.platform.entity;
+package org.chtijbug.drools.platform.persistence.pojo;
 
 /**
  * Created by IntelliJ IDEA.
@@ -6,6 +6,6 @@ package org.chtijbug.drools.platform.entity;
  * Time: 09:28
  * To change this template use File | Settings | File Templates.
  */
-public enum SessionRuntimeStatus {
-    STARTED,DISPOSED, CRASHED
+public enum FireRulesRuntimeStatus {
+    STARTED,STOPPED, CRASHED,MAXNBRULES
 }

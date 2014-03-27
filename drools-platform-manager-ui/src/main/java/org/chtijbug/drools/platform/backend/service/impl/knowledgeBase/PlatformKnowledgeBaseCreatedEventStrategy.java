@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
-import org.chtijbug.drools.platform.entity.PlatformRuntimeStatus;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeStatus;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;

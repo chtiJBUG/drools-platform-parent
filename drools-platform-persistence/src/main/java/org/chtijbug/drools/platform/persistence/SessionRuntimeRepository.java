@@ -15,4 +15,5 @@ public interface SessionRuntimeRepository extends JpaRepository<SessionRuntime, 
     SessionRuntime findBySessionIdAndStartDateIsNull(Integer sessionId);
 
 
+
 }
