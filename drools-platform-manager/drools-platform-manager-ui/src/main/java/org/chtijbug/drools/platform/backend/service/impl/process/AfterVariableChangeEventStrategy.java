@@ -2,7 +2,7 @@ package org.chtijbug.drools.platform.backend.service.impl.process;
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
-import org.chtijbug.drools.entity.history.process.AfterNodeLeftHistoryEvent;
+import org.chtijbug.drools.entity.history.process.AfterVariableChangeChangedHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
 import org.springframework.stereotype.Component;
 
@@ -14,18 +14,19 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class AfterNodeLeftEventStrategy extends AbstractEventHandlerStrategy {
-    private static final Logger LOG = Logger.getLogger(AfterNodeLeftEventStrategy.class);
+public class AfterVariableChangeEventStrategy extends AbstractEventHandlerStrategy {
+    private static final Logger LOG = Logger.getLogger(AfterVariableChangeEventStrategy.class);
 
 
     @Override
     protected void handleMessageInternally(HistoryEvent historyEvent) {
-        LOG.info("AfterNodeLeftHistoryEvent " + historyEvent.toString());
+
+        LOG.info("AfterVariableChangeChangedHistoryEvent " + historyEvent.toString());
     }
 
     @Override
     public boolean isEventSupported(HistoryEvent historyEvent) {
 
-        return historyEvent instanceof AfterNodeLeftHistoryEvent;
+        return historyEvent instanceof AfterVariableChangeChangedHistoryEvent;
     }
 }
