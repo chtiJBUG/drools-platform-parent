@@ -65,17 +65,16 @@
     </scm>
     <issueManagement>
         <system>Jira</system>
-        <url>https://pymma-dev.atlassian.net/</url>
+        <url>https://chtijbug.atlassian.net/</url>
     </issueManagement>
 
 
     <modules>
-        <module>drools-platform-governance</module>
+        <!--module>drools-runtime-builder</module-->
         <module>drools-platform-knowledge</module>
         <module>drools-platform-entity</module>
-        <module>drools-platform-persistence</module>
-        <module>drools-runtime-builder</module>
-        <module>drools-platform-manager-ui</module>
+        <module>drools-platform-governance</module>
+      <module>drools-platform-manager</module>
     </modules>
 
 
