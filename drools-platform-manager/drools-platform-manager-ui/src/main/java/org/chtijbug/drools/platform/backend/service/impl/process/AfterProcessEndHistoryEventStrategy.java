@@ -29,7 +29,7 @@ public class AfterProcessEndHistoryEventStrategy extends AbstractEventHandlerStr
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         AfterProcessEndHistoryEvent afterProcessEndHistoryEvent = (AfterProcessEndHistoryEvent) historyEvent;
 
-        ProcessRuntime processRuntime = processRuntimeRepository.findStartedProcessBySessionIDAndProcessInstanceId(afterProcessEndHistoryEvent.getSessionId(), afterProcessEndHistoryEvent.getProcessInstance().getId());
+        ProcessRuntime processRuntime = processRuntimeRepository.findStartedProcessByRuleBaseIDBySessionIDAndProcessInstanceId(afterProcessEndHistoryEvent.getRuleBaseID(),afterProcessEndHistoryEvent.getSessionId(), afterProcessEndHistoryEvent.getProcessInstance().getId());
         processRuntime.setEndDate(afterProcessEndHistoryEvent.getDateEvent());
         processRuntime.setProcessRuntimeStatus(ProcessRuntimeStatus.JBPMSTOPPED);
         processRuntimeRepository.save(processRuntime);

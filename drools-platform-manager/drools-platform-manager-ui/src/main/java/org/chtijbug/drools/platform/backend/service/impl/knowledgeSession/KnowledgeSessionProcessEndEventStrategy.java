@@ -36,7 +36,7 @@ public class KnowledgeSessionProcessEndEventStrategy extends AbstractEventHandle
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         SessionStartProcessEndEvent sessionStartProcessEndEvent = (SessionStartProcessEndEvent) historyEvent;
 
-        List<ProcessRuntime> processRuntimes = processRuntimeRepository.findAllStartedProcessBySessionIDAndProcessInstanceId(sessionStartProcessEndEvent.getSessionId(), sessionStartProcessEndEvent.getProcessInstanceId());
+        List<ProcessRuntime> processRuntimes = processRuntimeRepository.findAllStartedProcessByRuleBaseIDAndSessionIDAndProcessInstanceId(sessionStartProcessEndEvent.getRuleBaseID(),sessionStartProcessEndEvent.getSessionId(), sessionStartProcessEndEvent.getProcessInstanceId());
         for (ProcessRuntime runningProcessRuntime : processRuntimes){
             runningProcessRuntime.setEndDate(new Date());
             runningProcessRuntime.setProcessRuntimeStatus(ProcessRuntimeStatus.CRASHED);

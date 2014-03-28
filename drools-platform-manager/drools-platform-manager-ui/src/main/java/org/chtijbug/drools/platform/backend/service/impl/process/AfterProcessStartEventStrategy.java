@@ -27,7 +27,7 @@ public class AfterProcessStartEventStrategy extends AbstractEventHandlerStrategy
     @Override
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         AfterProcessStartHistoryEvent afterProcessStartHistoryEvent = (AfterProcessStartHistoryEvent) historyEvent;
-        ProcessRuntime processRuntime = processRuntimeRepository.findStartedProcessBySessionIDAndProcessInstanceId(afterProcessStartHistoryEvent.getSessionId(), afterProcessStartHistoryEvent.getProcessInstance().getId());
+        ProcessRuntime processRuntime = processRuntimeRepository.findStartedProcessByRuleBaseIDBySessionIDAndProcessInstanceId(afterProcessStartHistoryEvent.getRuleBaseID(),afterProcessStartHistoryEvent.getSessionId(), afterProcessStartHistoryEvent.getProcessInstance().getId());
         processRuntime.setStartDate(afterProcessStartHistoryEvent.getDateEvent());
         processRuntime.setProcessRuntimeStatus(ProcessRuntimeStatus.JBPMSTARTED);
         processRuntimeRepository.save(processRuntime);

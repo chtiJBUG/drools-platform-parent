@@ -1,7 +1,9 @@
 package org.chtijbug.drools.platform.persistence.pojo;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -42,6 +44,12 @@ public class ProcessRuntime {
     private String processType;
 
     private String processId;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<RuleflowGroupRuntime> ruleflowGroupRuntimes = new ArrayList<RuleflowGroupRuntime>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<RuleRuntime> ruleRuntimeList  = new ArrayList<RuleRuntime>();
 
     public Long getId() {
         return id;
@@ -137,6 +145,22 @@ public class ProcessRuntime {
 
     public void setProcessId(String processId) {
         this.processId = processId;
+    }
+
+    public List<RuleflowGroupRuntime> getRuleflowGroupRuntimes() {
+        return ruleflowGroupRuntimes;
+    }
+
+    public void setRuleflowGroupRuntimes(List<RuleflowGroupRuntime> ruleflowGroupRuntimes) {
+        this.ruleflowGroupRuntimes = ruleflowGroupRuntimes;
+    }
+
+    public List<RuleRuntime> getRuleRuntimeList() {
+        return ruleRuntimeList;
+    }
+
+    public void setRuleRuntimeList(List<RuleRuntime> ruleRuntimeList) {
+        this.ruleRuntimeList = ruleRuntimeList;
     }
 
     @Override
