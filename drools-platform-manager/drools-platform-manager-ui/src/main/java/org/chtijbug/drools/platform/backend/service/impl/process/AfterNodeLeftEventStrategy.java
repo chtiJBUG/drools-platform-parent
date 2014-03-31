@@ -5,16 +5,11 @@ import org.chtijbug.drools.entity.DroolsNodeType;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.process.AfterNodeLeftHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.ProcessRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.RuleflowGroupRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.pojo.ProcessRuntime;
 import org.chtijbug.drools.platform.persistence.pojo.RuleflowGroupRuntime;
 import org.chtijbug.drools.platform.persistence.pojo.RuleflowGroupRuntimeStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,7 +30,7 @@ public class AfterNodeLeftEventStrategy extends AbstractEventHandlerStrategy {
         AfterNodeLeftHistoryEvent afterNodeLeftHistoryEvent = (AfterNodeLeftHistoryEvent) historyEvent;
         if (afterNodeLeftHistoryEvent.getNodeInstance().getNode().getNodeType() == DroolsNodeType.RuleNode) {
 
-            RuleflowGroupRuntime ruleflowGroupRuntime = ruleflowGroupRuntimeRepository.findAStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(afterNodeLeftHistoryEvent.getRuleBaseID(),afterNodeLeftHistoryEvent.getSessionId(),afterNodeLeftHistoryEvent.getProcessInstance().getId(),afterNodeLeftHistoryEvent.getNodeInstance().getNode().getRuleflowGroupName());
+            RuleflowGroupRuntime ruleflowGroupRuntime = ruleflowGroupRuntimeRepository.findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(afterNodeLeftHistoryEvent.getRuleBaseID(), afterNodeLeftHistoryEvent.getSessionId(), afterNodeLeftHistoryEvent.getProcessInstance().getId(), afterNodeLeftHistoryEvent.getNodeInstance().getNode().getRuleflowGroupName());
              ruleflowGroupRuntime.setEndDate(afterNodeLeftHistoryEvent.getDateEvent());
             ruleflowGroupRuntime.setRuleflowGroupRuntimeStatus(RuleflowGroupRuntimeStatus.STOPPED);
             ruleflowGroupRuntimeRepository.save(ruleflowGroupRuntime);

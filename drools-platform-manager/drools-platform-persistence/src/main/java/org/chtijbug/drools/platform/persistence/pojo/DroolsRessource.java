@@ -14,7 +14,7 @@ import java.util.Date;
 public class DroolsRessource {
 
     @Id
-    @SequenceGenerator(name="resource_id_seq", sequenceName="drools_platform_seq")
+    @SequenceGenerator(name = "resource_id_seq", sequenceName = "drools_platform_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "resource_id_seq")
     private Long id;
     @Column
@@ -27,7 +27,8 @@ public class DroolsRessource {
     private String guvnor_packageVersion;
     @Column
     private String fileName;
-    @Column
+    @Lob
+    @Column(length = 10000)
     private String fileContent;
     @Column
     private Date startDate;

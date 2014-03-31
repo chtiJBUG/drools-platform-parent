@@ -1,8 +1,8 @@
-package org.chtijbug.drools.platform.backend.service.impl.knowledgeSession;
+package org.chtijbug.drools.platform.backend.service.impl.fact;
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
-import org.chtijbug.drools.entity.history.session.SessionStartProcessEndEvent;
+import org.chtijbug.drools.entity.history.fact.InsertedByReflectionFactStartHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
 import org.springframework.stereotype.Component;
 
@@ -14,20 +14,19 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class KnowledgeSessionProcessEndEventStrategy extends AbstractEventHandlerStrategy {
-    private static final Logger LOG = Logger.getLogger(KnowledgeSessionProcessEndEventStrategy.class);
+public class InsertedByRelectionFactStartEventStrategy extends AbstractEventHandlerStrategy {
+    private static final Logger LOG = Logger.getLogger(InsertedByRelectionFactStartEventStrategy.class);
 
 
     @Override
     protected void handleMessageInternally(HistoryEvent historyEvent) {
 
-
-        LOG.info("SessionStartProcessEndEvent " + historyEvent.toString());
+        LOG.info("InsertedByReflectionFactStartHistoryEvent " + historyEvent.toString());
     }
 
     @Override
     public boolean isEventSupported(HistoryEvent historyEvent) {
 
-        return historyEvent instanceof SessionStartProcessEndEvent;
+        return historyEvent instanceof InsertedByReflectionFactStartHistoryEvent;
     }
 }

@@ -80,7 +80,7 @@ public class PlatformRunTimeBeanTest {
     }
 
 
-    //@Test
+    @Test
     public void testBPMN2WorkFlowGroup() throws DroolsChtijbugException {
 
         final List<HistoryEvent> historyEvents = new ArrayList<HistoryEvent>();

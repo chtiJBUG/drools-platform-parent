@@ -3,6 +3,8 @@ package org.chtijbug.drools.platform.persistence;
 
 import org.chtijbug.drools.platform.persistence.pojo.SessionRuntime;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,8 +13,12 @@ import org.springframework.stereotype.Component;
 @Component
 public interface SessionRuntimeRepository extends JpaRepository<SessionRuntime, Long> {
 
-    SessionRuntime findBySessionId(Integer sessionId);
-    SessionRuntime findBySessionIdAndStartDateIsNull(Integer sessionId);
+
+    @Query("select s from PlatformRuntime pp,SessionRuntime s " +
+             "where s.platformRuntime=pp " +
+             "and  pp.ruleBaseID= :ruleBaseID and s.sessionId = :sessionID  " +
+             "and s.endDate is null ")
+    SessionRuntime findByRuleBaseIDAndSessionIdAndStartDateIsNull(@Param("ruleBaseID") Integer ruleBaseID , @Param("sessionID") Integer sessionId);
 
 
 

@@ -20,4 +20,8 @@ public interface FireRulesRuntimeRepository extends JpaRepository<FireRulesRunti
 
     @Query("select r from FireRulesRuntime r,SessionRuntime s where r.sessionRuntime = s and r.endDate is null and s.sessionId = :sessionID")
     FireRulesRuntime findStartedFireAllRulesBySessionID(@Param("sessionID") Integer sessionID);
+
+
+
+
 }

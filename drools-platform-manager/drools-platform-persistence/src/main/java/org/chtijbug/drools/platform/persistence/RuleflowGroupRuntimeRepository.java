@@ -17,11 +17,20 @@ public interface RuleflowGroupRuntimeRepository extends JpaRepository<RuleflowGr
 
 
     @Query("select r from PlatformRuntime pp,SessionRuntime s,ProcessRuntime p,RuleflowGroupRuntime r where s.platformRuntime=pp and p.sessionRuntime=s and  r.processRuntime=p and pp.ruleBaseID= :ruleBaseID and s.sessionId =:sessionID  and p.ProcessInstanceId = :processInstanceID and r.endDate is null and r.ruleflowGroup = :ruleFlowGroupName")
-    List<RuleflowGroupRuntime> findAllStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(@Param("ruleBaseID") Integer ruleBaseID,@Param("sessionID") Integer sessionID,@Param("processInstanceID") String processInstanceID, @Param("ruleFlowGroupName") String ruleFlowGroupName);
+    List<RuleflowGroupRuntime> findAllStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionID") Integer sessionID, @Param("processInstanceID") String processInstanceID, @Param("ruleFlowGroupName") String ruleFlowGroupName);
 
-    @Query("select r from PlatformRuntime pp,SessionRuntime s,ProcessRuntime p,RuleflowGroupRuntime r where s.platformRuntime=pp and p.sessionRuntime=s and  r.processRuntime=p and pp.ruleBaseID= :ruleBaseID and s.sessionId =:sessionID  and p.ProcessInstanceId = :processInstanceID and r.endDate is null and r.ruleflowGroup = :ruleFlowGroupName")
-     RuleflowGroupRuntime findAStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(@Param("ruleBaseID") Integer ruleBaseID,@Param("sessionID") Integer sessionID,@Param("processInstanceID") String processInstanceID, @Param("ruleFlowGroupName") String ruleFlowGroupName);
+    @Query("select r from PlatformRuntime pp,SessionRuntime s,ProcessRuntime p,RuleflowGroupRuntime r " +
+            "where s.platformRuntime=pp and p.sessionRuntime=s and  r.processRuntime=p " +
+            "and pp.ruleBaseID= :ruleBaseID and s.sessionId =:sessionID  and p.ProcessInstanceId = :processInstanceID and r.endDate is null " +
+            "and r.ruleflowGroup = :ruleFlowGroupName")
+    RuleflowGroupRuntime findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionID") Integer sessionID, @Param("processInstanceID") String processInstanceID, @Param("ruleFlowGroupName") String ruleFlowGroupName);
 
+
+    @Query("select r from PlatformRuntime pp,SessionRuntime s,ProcessRuntime p,RuleflowGroupRuntime r where s.platformRuntime=pp and p.sessionRuntime=s and  r.processRuntime=p and pp.ruleBaseID= :ruleBaseID and s.sessionId =:sessionID  and r.endDate is null and r.ruleflowGroup = :ruleFlowGroupName")
+    List<RuleflowGroupRuntime> findAllStartedRuleFlowGroupByRuleBaseIDAndSessionAndRuleflowgroupName(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionID") Integer sessionID, @Param("ruleFlowGroupName") String ruleFlowGroupName);
+
+    @Query("select r from PlatformRuntime pp,SessionRuntime s,ProcessRuntime p,RuleflowGroupRuntime r where s.platformRuntime=pp and p.sessionRuntime=s and  r.processRuntime=p and pp.ruleBaseID= :ruleBaseID and s.sessionId =:sessionID  and r.endDate is null and r.ruleflowGroup = :ruleFlowGroupName")
+    RuleflowGroupRuntime findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndRuleflowgroupName(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionID") Integer sessionID, @Param("ruleFlowGroupName") String ruleFlowGroupName);
 
 
 }

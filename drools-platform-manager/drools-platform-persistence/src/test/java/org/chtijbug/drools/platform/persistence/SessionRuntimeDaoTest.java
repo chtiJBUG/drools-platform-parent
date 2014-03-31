@@ -51,11 +51,7 @@ public class SessionRuntimeDaoTest {
         assertThat(sessionRuntime.getId()).isGreaterThan(0l);
     }
 
-    @Test
-    public void FindSessionID() {
-        SessionRuntime sessionRuntime = sessionRuntimeRepository.findBySessionId(1);
-        assertThat(7).isEqualTo(sessionRuntime.getEventID());
-    }
+
 
 
 }

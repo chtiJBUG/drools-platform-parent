@@ -42,7 +42,7 @@ public class KnowledgeSessionFireAllRulesBeginEventStrategy extends AbstractEven
             runningFireRulesRuntime.setFireRulesRuntimeStatus(FireRulesRuntimeStatus.CRASHED);
             fireRulesRuntimeRepository.save(runningFireRulesRuntime);
         }
-        SessionRuntime existingSessionRutime = sessionRuntimeRepository.findBySessionIdAndStartDateIsNull(historyEvent.getSessionId());
+        SessionRuntime existingSessionRutime = sessionRuntimeRepository.findByRuleBaseIDAndSessionIdAndStartDateIsNull(historyEvent.getRuleBaseID(),historyEvent.getSessionId());
 
         FireRulesRuntime fireRulesRuntime = new FireRulesRuntime();
         fireRulesRuntime.setSessionRuntime(existingSessionRutime);
