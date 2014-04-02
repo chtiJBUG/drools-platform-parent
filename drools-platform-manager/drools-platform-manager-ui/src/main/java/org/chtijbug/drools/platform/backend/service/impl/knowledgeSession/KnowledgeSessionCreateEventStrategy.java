@@ -34,7 +34,7 @@ public class KnowledgeSessionCreateEventStrategy extends AbstractEventHandlerStr
     @Override
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         SessionCreatedEvent sessionCreatedEvent = (SessionCreatedEvent) historyEvent;
-        SessionRuntime existingSessionRutime = sessionRuntimeRepository.findByRuleBaseIDAndSessionIdAndStartDateIsNull(historyEvent.getRuleBaseID(),historyEvent.getSessionId());
+        SessionRuntime existingSessionRutime = sessionRuntimeRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
         if (existingSessionRutime != null) {
             existingSessionRutime.setEndDate(new Date());
             existingSessionRutime.setSessionRuntimeStatus(SessionRuntimeStatus.CRASHED);

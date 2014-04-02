@@ -6,6 +6,7 @@ import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,19 +16,24 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "fact_runtime")
-@TypeDefs({@TypeDef(name = "StringJsonObject", typeClass = StringJsonUserType.class)})
+@TypeDefs({@TypeDef(name = "json", typeClass = StringJsonUserType.class)})
 public class FactRuntime {
     @Id
     @SequenceGenerator(name = "fact_id_seq", sequenceName = "fact_platform_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fact_id_seq")
     private Long id;
 
-    @Type(type = "org.chtijbug.drools.platform.persistence.utility.StringJsonUserType")
+    @Type(type = "json")
     private String jsonFact;
 
     private Integer objectVersion;
 
     private String fullClassName;
+
+    private Date modificationDate;
+
+    @Enumerated(EnumType.STRING)
+    private FactRuntimeType factRuntimeType;
 
     public FactRuntime() {
     }
@@ -64,11 +70,31 @@ public class FactRuntime {
         this.fullClassName = fullClassName;
     }
 
+    public FactRuntimeType getFactRuntimeType() {
+        return factRuntimeType;
+    }
+
+    public void setFactRuntimeType(FactRuntimeType factRuntimeType) {
+        this.factRuntimeType = factRuntimeType;
+    }
+
+    public Date getModificationDate() {
+        return modificationDate;
+    }
+
+    public void setModificationDate(Date modificationDate) {
+        this.modificationDate = modificationDate;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("FactRuntime{");
         sb.append("id=").append(id);
         sb.append(", jsonFact='").append(jsonFact).append('\'');
+        sb.append(", objectVersion=").append(objectVersion);
+        sb.append(", fullClassName='").append(fullClassName).append('\'');
+        sb.append(", modificationDate=").append(modificationDate);
+        sb.append(", factRuntimeType=").append(factRuntimeType);
         sb.append('}');
         return sb.toString();
     }

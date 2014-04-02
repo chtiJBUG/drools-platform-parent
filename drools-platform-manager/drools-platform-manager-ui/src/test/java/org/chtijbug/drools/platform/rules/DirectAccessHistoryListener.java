@@ -11,7 +11,9 @@ import org.chtijbug.drools.runtime.listener.HistoryListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,6 +26,12 @@ public class DirectAccessHistoryListener implements HistoryListener {
     @Autowired
     MessageHandlerResolver messageHandlerResolver;
 
+    private List<HistoryEvent> historyEvents = new ArrayList<HistoryEvent>();
+
+    public List<HistoryEvent> getHistoryEvents() {
+        return historyEvents;
+    }
+
     @Override
     public void fireEvent(HistoryEvent newHistoryEvent) throws DroolsChtijbugException {
         HistoryEvent historyEventToSend = newHistoryEvent;
@@ -32,6 +40,7 @@ public class DirectAccessHistoryListener implements HistoryListener {
             PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent = new PlatformKnowledgeBaseCreatedEvent(newHistoryEvent.getEventID(), newHistoryEvent.getDateEvent(), newHistoryEvent.getRuleBaseID(), "localhost", 8025, new Date());
             historyEventToSend = platformKnowledgeBaseCreatedEvent;
         }
+        historyEvents.add(historyEventToSend);
         try {
             AbstractEventHandlerStrategy strategy = messageHandlerResolver.resolveMessageHandler(historyEventToSend);
             strategy.handleMessage(historyEventToSend);

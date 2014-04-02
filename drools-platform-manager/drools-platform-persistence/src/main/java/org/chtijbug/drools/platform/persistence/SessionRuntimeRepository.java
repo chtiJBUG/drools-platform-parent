@@ -18,7 +18,7 @@ public interface SessionRuntimeRepository extends JpaRepository<SessionRuntime, 
              "where s.platformRuntime=pp " +
              "and  pp.ruleBaseID= :ruleBaseID and s.sessionId = :sessionID  " +
              "and s.endDate is null ")
-    SessionRuntime findByRuleBaseIDAndSessionIdAndStartDateIsNull(@Param("ruleBaseID") Integer ruleBaseID , @Param("sessionID") Integer sessionId);
+    SessionRuntime findByRuleBaseIDAndSessionIdAndEndDateIsNull(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionID") Integer sessionId);
 
 
 

@@ -1,7 +1,9 @@
 package org.chtijbug.drools.platform.persistence.pojo;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,6 +32,12 @@ public class SessionRuntime {
 
     @Enumerated(EnumType.STRING)
     private SessionRuntimeStatus sessionRuntimeStatus;
+
+    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<RuleRuntime> ruleRuntimes = new ArrayList<RuleRuntime>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<FactRuntime> facts = new ArrayList<FactRuntime>() ;
 
     public SessionRuntime() {
     }
@@ -88,5 +96,21 @@ public class SessionRuntime {
 
     public void setSessionRuntimeStatus(SessionRuntimeStatus sessionRuntimeStatus) {
         this.sessionRuntimeStatus = sessionRuntimeStatus;
+    }
+
+    public List<RuleRuntime> getRuleRuntimes() {
+        return ruleRuntimes;
+    }
+
+    public void setRuleRuntimes(List<RuleRuntime> ruleRuntimes) {
+        this.ruleRuntimes = ruleRuntimes;
+    }
+
+    public List<FactRuntime> getFacts() {
+        return facts;
+    }
+
+    public void setFacts(List<FactRuntime> facts) {
+        this.facts = facts;
     }
 }

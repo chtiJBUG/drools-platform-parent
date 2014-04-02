@@ -2,7 +2,6 @@ package org.chtijbug.drools.platform.backend.service.impl.process;
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
-import org.chtijbug.drools.entity.history.process.AfterProcessStartHistoryEvent;
 import org.chtijbug.drools.entity.history.process.BeforeProcessStartHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.ProcessRuntimeRepository;
@@ -41,7 +40,7 @@ public class BeforeProcessStartEventStrategy extends AbstractEventHandlerStrateg
                  runningProcessRuntime.setProcessRuntimeStatus(ProcessRuntimeStatus.CRASHED);
                  processRuntimeRepository.save(runningProcessRuntime);
              }
-             SessionRuntime existingSessionRutime = sessionRuntimeRepository.findByRuleBaseIDAndSessionIdAndStartDateIsNull(historyEvent.getRuleBaseID(),historyEvent.getSessionId());
+             SessionRuntime existingSessionRutime = sessionRuntimeRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
 
              ProcessRuntime processRuntime = new ProcessRuntime();
              processRuntime.setSessionRuntime(existingSessionRutime);

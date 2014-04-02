@@ -7,9 +7,8 @@ import org.chtijbug.drools.entity.history.rule.BeforeRuleFiredHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.RuleflowGroupRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.RulesRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.pojo.FactRuntime;
-import org.chtijbug.drools.platform.persistence.pojo.RuleRuntime;
-import org.chtijbug.drools.platform.persistence.pojo.RuleflowGroupRuntime;
+import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
+import org.chtijbug.drools.platform.persistence.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,21 +28,28 @@ public class BeforeRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
     @Autowired
     private RulesRuntimeRepository rulesRuntimeRepository;
 
+    @Autowired
+    private SessionRuntimeRepository sessionRuntimeRepository;
+
     @Override
     protected void handleMessageInternally(HistoryEvent historyEvent) {
-
-
         BeforeRuleFiredHistoryEvent beforeRuleFiredHistoryEvent = (BeforeRuleFiredHistoryEvent) historyEvent;
-
-        RuleflowGroupRuntime ruleflowGroupRuntime = ruleflowGroupRuntimeRepository.findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndRuleflowgroupName(beforeRuleFiredHistoryEvent.getRuleBaseID(), beforeRuleFiredHistoryEvent.getSessionId(), beforeRuleFiredHistoryEvent.getRule().getRuleFlowGroup());
         RuleRuntime ruleRuntime = new RuleRuntime();
-        ruleRuntime.setRuleflowGroupRuntime(ruleflowGroupRuntime);
+        if (beforeRuleFiredHistoryEvent.getRule().getRuleFlowGroup() != null && beforeRuleFiredHistoryEvent.getRule().getRuleFlowGroup().length() > 0) {
+            RuleflowGroupRuntime ruleflowGroupRuntime = ruleflowGroupRuntimeRepository.findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndRuleflowgroupName(beforeRuleFiredHistoryEvent.getRuleBaseID(), beforeRuleFiredHistoryEvent.getSessionId(), beforeRuleFiredHistoryEvent.getRule().getRuleFlowGroup());
+            ruleRuntime.setRuleflowGroupRuntime(ruleflowGroupRuntime);
+        } else {
+            SessionRuntime sessionRuntime = sessionRuntimeRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(beforeRuleFiredHistoryEvent.getRuleBaseID(), beforeRuleFiredHistoryEvent.getSessionId());
+            ruleRuntime.setSessionRuntime(sessionRuntime);
+        }
         ruleRuntime.setStartDate(beforeRuleFiredHistoryEvent.getDateEvent());
         ruleRuntime.setRuleName(beforeRuleFiredHistoryEvent.getRule().getRuleName());
-        ruleRuntime.setPackageName(beforeRuleFiredHistoryEvent.getRule().getRulePackageName()) ;
-        for (DroolsFactObject droolsFactObject : beforeRuleFiredHistoryEvent.getWhenObjects()){
+        ruleRuntime.setPackageName(beforeRuleFiredHistoryEvent.getRule().getRulePackageName());
+        for (DroolsFactObject droolsFactObject : beforeRuleFiredHistoryEvent.getWhenObjects()) {
             FactRuntime factRuntime = new FactRuntime();
+
             factRuntime.setJsonFact(droolsFactObject.getRealObject_JSON());
+            factRuntime.setFactRuntimeType(FactRuntimeType.WHEN);
             factRuntime.setObjectVersion(droolsFactObject.getObjectVersion());
             factRuntime.setFullClassName(droolsFactObject.getFullClassName());
             ruleRuntime.getWhenFacts().add(factRuntime);

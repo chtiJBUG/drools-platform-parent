@@ -31,7 +31,7 @@ public class KnowledgeSessionDisposeEventStrategy extends AbstractEventHandlerSt
     @Override
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         SessionDisposedEvent sessionDisposedEvent = (SessionDisposedEvent) historyEvent;
-        SessionRuntime existingSessionRutime = sessionRuntimeRepository.findByRuleBaseIDAndSessionIdAndStartDateIsNull(historyEvent.getRuleBaseID(),historyEvent.getSessionId());
+        SessionRuntime existingSessionRutime = sessionRuntimeRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
 
         existingSessionRutime.setEndDate(sessionDisposedEvent.getDateEvent());
         existingSessionRutime.setSessionRuntimeStatus(SessionRuntimeStatus.DISPOSED);

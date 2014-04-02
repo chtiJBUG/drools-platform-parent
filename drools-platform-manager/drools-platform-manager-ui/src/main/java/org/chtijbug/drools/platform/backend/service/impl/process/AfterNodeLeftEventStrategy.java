@@ -11,6 +11,8 @@ import org.chtijbug.drools.platform.persistence.pojo.RuleflowGroupRuntimeStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * Date: 25/03/14

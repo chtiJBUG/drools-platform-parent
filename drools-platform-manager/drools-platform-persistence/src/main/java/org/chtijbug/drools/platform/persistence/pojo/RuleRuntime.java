@@ -16,8 +16,8 @@ import java.util.List;
 public class RuleRuntime {
 
     @Id
-    @SequenceGenerator(name = "rule_id_seq", sequenceName = "rule_platform_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rule_id_seq")
+    @SequenceGenerator(name = "rules_id_seq", sequenceName = "rules_platform_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rules_id_seq")
     private Long id;
 
     private String ruleName;
@@ -25,13 +25,19 @@ public class RuleRuntime {
     private Date startDate;
     private Date endDate;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "rule_whenFacts")
     private List<FactRuntime> whenFacts = new ArrayList<FactRuntime>() ;
 
-
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "rule_thenFacts")
+    private List<FactRuntime> thenFacts = new ArrayList<FactRuntime>() ;
 
     @ManyToOne
     private RuleflowGroupRuntime ruleflowGroupRuntime;
+
+    @ManyToOne
+    private SessionRuntime sessionRuntime;
 
     public String getRuleName() {
         return ruleName;
@@ -87,5 +93,21 @@ public class RuleRuntime {
 
     public void setWhenFacts(List<FactRuntime> whenFacts) {
         this.whenFacts = whenFacts;
+    }
+
+    public void setSessionRuntime(SessionRuntime sessionRuntime) {
+        this.sessionRuntime = sessionRuntime;
+    }
+
+    public SessionRuntime getSessionRuntime() {
+        return sessionRuntime;
+    }
+
+    public List<FactRuntime> getThenFacts() {
+        return thenFacts;
+    }
+
+    public void setThenFacts(List<FactRuntime> thenFacts) {
+        this.thenFacts = thenFacts;
     }
 }
