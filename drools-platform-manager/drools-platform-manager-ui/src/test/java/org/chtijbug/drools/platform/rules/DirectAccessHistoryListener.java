@@ -35,7 +35,6 @@ public class DirectAccessHistoryListener implements HistoryListener {
     @Override
     public void fireEvent(HistoryEvent newHistoryEvent) throws DroolsChtijbugException {
         HistoryEvent historyEventToSend = newHistoryEvent;
-        historyEventToSend.setRuleBaseID(1);
         if (newHistoryEvent instanceof KnowledgeBaseCreatedEvent) {
             PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent = new PlatformKnowledgeBaseCreatedEvent(newHistoryEvent.getEventID(), newHistoryEvent.getDateEvent(), newHistoryEvent.getRuleBaseID(), "localhost", 8025, new Date());
             historyEventToSend = platformKnowledgeBaseCreatedEvent;

@@ -6,18 +6,15 @@ import org.chtijbug.drools.entity.history.rule.AfterRuleFiredHistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFlowActivatedHistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFlowDeactivatedHistoryEvent;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServer;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeStatus;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsRessource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeStatus;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.RuleBaseBuilder;
 import org.chtijbug.drools.runtime.RuleBasePackage;
 import org.chtijbug.drools.runtime.RuleBaseSession;
-import org.chtijbug.drools.runtime.listener.HistoryListener;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,7 +23,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -36,10 +32,7 @@ import java.util.List;
 @Transactional
 public class PlatformRunTimeBeanTest {
 
-    @Autowired
-    private WebSocketServer webSocketServer;
-
-
+    private static WebSocketServer webSocketServer;
 
 
     @Autowired
@@ -48,9 +41,21 @@ public class PlatformRunTimeBeanTest {
     @Autowired
     PlatformRuntimeRepository platformRuntimeRepository;
 
-    @Before
-    public void setup() throws UnknownHostException {
+    @BeforeClass
+    public static void BeforeClass() throws UnknownHostException {
+        webSocketServer = new WebSocketServer();
         webSocketServer.run();
+    }
+
+    @AfterClass
+    public static void AfterClass() throws UnknownHostException {
+        webSocketServer.stop();
+        webSocketServer = null;
+    }
+
+    @Before
+    public void BeforeTest() {
+        historyListener.getHistoryEvents().clear();
     }
 
     @Test
@@ -62,7 +67,7 @@ public class PlatformRunTimeBeanTest {
         Assert.assertTrue(platform1.size() == 1);
         PlatformRuntime platforRuntime = platform1.get(0);
         Assert.assertTrue(platforRuntime.getEndDate() == null);
-       // Assert.assertTrue(platforRuntime.getStatus() == PlatformRuntimeStatus.STARTED);
+        Assert.assertTrue(platforRuntime.getStatus() == PlatformRuntimeStatus.STARTED);
         Assert.assertTrue(platforRuntime.getRuleBaseID() == 1l);
         List<DroolsRessource> listResources = platforRuntime.getDroolsRessources();
         Assert.assertTrue(listResources.size() == 2);
@@ -73,10 +78,10 @@ public class PlatformRunTimeBeanTest {
         Assert.assertTrue(resource2.getId() != null);
         Assert.assertTrue(resource2.getFileName().equals("RuleFlowProcess2.bpmn2"));
         ruleBasePackage.dispose();
-  //      List<PlatformRuntime> platform2 = platformRuntimeRepository.findActiveByHostName("localhost");
-  //      Assert.assertTrue(platform2.size() == 1);
-  //      PlatformRuntime platforRuntime2 = platform2.get(0);
-  //      Assert.assertTrue(platforRuntime2.getEndDate() != null);
+        //      List<PlatformRuntime> platform2 = platformRuntimeRepository.findActiveByHostName("localhost");
+        //      Assert.assertTrue(platform2.size() == 1);
+        //      PlatformRuntime platforRuntime2 = platform2.get(0);
+        //      Assert.assertTrue(platforRuntime2.getEndDate() != null);
     }
 
 
@@ -92,7 +97,12 @@ public class PlatformRunTimeBeanTest {
         ruleBaseSession1.insertObject(fibonacci);
         ruleBaseSession1.startProcess("P1");
         ruleBaseSession1.fireAllRules();
+
         Assert.assertTrue(historyEvents.size() == 41);
+        System.out.println("nbEvents=" + historyEvents.size());
+        for (HistoryEvent h : historyEvents) {
+            System.out.println("event=" + h.toString());
+        }
         Assert.assertTrue(historyEvents.get(12) instanceof AfterRuleFlowActivatedHistoryEvent);
         AfterRuleFlowActivatedHistoryEvent afterRuleFlowActivatedHistoryEvent = (AfterRuleFlowActivatedHistoryEvent) historyEvents.get(12);
         Assert.assertEquals(afterRuleFlowActivatedHistoryEvent.getRuleBaseID(), rulePackageID);
