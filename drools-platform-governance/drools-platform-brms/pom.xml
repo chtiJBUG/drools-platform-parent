@@ -2,78 +2,92 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>drools-platform-governance</artifactId>
-        <groupId>org.chtijbug.drools</groupId>
-        <version>1.0.0-SNAPSHOT</version>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>drools-platform-governance</artifactId>
+    <groupId>org.chtijbug.drools</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>drools-platform-brms</artifactId>
+  <artifactId>drools-platform-brms</artifactId>
 
-    <packaging>war</packaging>
+  <packaging>war</packaging>
 
-    <name>drools platform brms</name>
-    <description>
-        TODO
-    </description>
+  <name>drools platform brms</name>
+  <description>
+    TODO
+  </description>
+  <properties>
+    <warFile>drools-guvnor.war</warFile>
+  </properties>
 
+  <dependencies>
+    <!-- Internal dependencies -->
+    <dependency>
+      <groupId>org.jboss.weld.servlet</groupId>
+      <artifactId>weld-servlet</artifactId>
+      <version>1.1.6.Final</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-search</artifactId>
+      <version>3.1.0.GA</version>
+    </dependency>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>guvnor-webapp-drools</artifactId>
+      <type>war</type>
+    </dependency>
+    <dependency><!-- Only used by JBoss AS 5.1: Avoids ClassCastException on JBoss AS 5.1 for EAP with CXF extension -->
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-transports-jms</artifactId>
+      <version>${cxf.version}</version>
+    </dependency>
+    <dependency><!-- Only used by JBoss AS 5.1: Avoids ClassCastException on JBoss AS 5.1 for EAP with CXF extension -->
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-bindings-corba</artifactId>
+      <version>${cxf.version}</version>
+    </dependency>
+  </dependencies>
 
-    <dependencies>
-        <!-- Internal dependencies -->
-        <dependency>
-            <groupId>org.jboss.weld.servlet</groupId>
-            <artifactId>weld-servlet</artifactId>
-            <version>1.1.6.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-search</artifactId>
-            <version>3.1.0.GA</version>
-        </dependency>
-        <dependency>
-            <groupId>org.drools</groupId>
-            <artifactId>guvnor-webapp-drools</artifactId>
-            <type>war</type>
-        </dependency>
-        <dependency><!-- Only used by JBoss AS 5.1: Avoids ClassCastException on JBoss AS 5.1 for EAP with CXF extension -->
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-transports-jms</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-        <dependency><!-- Only used by JBoss AS 5.1: Avoids ClassCastException on JBoss AS 5.1 for EAP with CXF extension -->
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-bindings-corba</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-    </dependencies>
+  <build>
+    <finalName>drools-guvnor</finalName>
+    <plugins>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <packagingExcludes>
+            WEB-INF/lib/antlr-2.7.6.jar,
+            WEB-INF/lib/antlr-2.7.7.jar,
+            WEB-INF/lib/commons-lang-2.4.jar,
+            WEB-INF/lib/commons-logging-1.0.4.jar,
+            WEB-INF/lib/hibernate-core-3.3.1.GA.jar,
+            WEB-INF/lib/javassist-3.12.1.GA.jar,
+            WEB-INF/lib/jaxb-impl-2.1.13.jar,
+            WEB-INF/lib/jaxb-impl-2.2.4-1.jar,
+            WEB-INF/lib/jaxb-impl-2.1.13.jar,
+            WEB-INF/lib/jaxb-xjc-2.2.4-1.jar,
+            WEB-INF/lib/lucene-core-2.4.0.jar,
+            WEB-INF/lib/log4j-1.2.12.jar,
+            WEB-INF/lib/jboss-servlet-api_3.0_spec-1.0.0.Final.jar,
+            WEB-INF/lib/slf4j-log4j12-1.6.4.jar,
+            WEB-INF/lib/stax-api-1.0-2.jar
+          </packagingExcludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.tomcat.maven</groupId>
+        <artifactId>tomcat7-maven-plugin</artifactId>
+        <configuration>
 
-    <build>
-        <finalName>drools-guvnor</finalName>
-        <plugins>
-            <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <packagingExcludes>
-                        WEB-INF/lib/antlr-2.7.6.jar,
-                        WEB-INF/lib/antlr-2.7.7.jar,
-                        WEB-INF/lib/commons-lang-2.4.jar,
-                        WEB-INF/lib/commons-logging-1.0.4.jar,
-                        WEB-INF/lib/hibernate-core-3.3.1.GA.jar,
-                        WEB-INF/lib/javassist-3.12.1.GA.jar,
-                        WEB-INF/lib/jaxb-impl-2.1.13.jar,
-                        WEB-INF/lib/jaxb-impl-2.2.4-1.jar,
-                        WEB-INF/lib/jaxb-impl-2.1.13.jar,
-                        WEB-INF/lib/jaxb-xjc-2.2.4-1.jar,
-                        WEB-INF/lib/lucene-core-2.4.0.jar,
-                        WEB-INF/lib/log4j-1.2.12.jar,
-                        WEB-INF/lib/jboss-servlet-api_3.0_spec-1.0.0.Final.jar,
-                        WEB-INF/lib/slf4j-log4j12-1.6.4.jar,
-                        WEB-INF/lib/stax-api-1.0-2.jar
-                    </packagingExcludes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+          <url>http://dpf1:8080/manager/text</url>
+         <!-- Refer to the server settings in your ~/.m2/settings.xml -->
+          <server>dev-tomcat-dpf1</server>
+          <path>/drools-guvnor</path>
+
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

@@ -209,6 +209,19 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.tomcat.maven</groupId>
+        <artifactId>tomcat7-maven-plugin</artifactId>
+        <configuration>
+
+          <url>http://dpf1:8080/manager/text</url>
+          <!-- Refer to the server settings in your ~/.m2/settings.xml -->
+          <server>dev-tomcat-dpf1</server>
+          <path>/drools-platform-manager-ui</path>
+
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
 
