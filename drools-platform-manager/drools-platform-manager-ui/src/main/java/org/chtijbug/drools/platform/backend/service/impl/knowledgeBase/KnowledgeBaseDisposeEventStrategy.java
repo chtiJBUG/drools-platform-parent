@@ -8,6 +8,7 @@ import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -26,6 +27,7 @@ public class KnowledgeBaseDisposeEventStrategy extends AbstractEventHandlerStrat
     PlatformRuntimeRepository platformRuntimeRepository;
 
     @Override
+    @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         KnowledgeBaseDisposeEvent knowledgeBaseDisposeEvent = (KnowledgeBaseDisposeEvent) historyEvent;
         PlatformRuntime existingPlatformRuntime = platformRuntimeRepository.findByRuleBaseIDAndEndDateNull(knowledgeBaseDisposeEvent.getRuleBaseID());

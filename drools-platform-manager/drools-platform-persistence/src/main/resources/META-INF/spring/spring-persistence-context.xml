@@ -22,6 +22,8 @@
         </property>
         <property name="jpaProperties">
             <props>
+                <prop key="hibernate.connection.autocommit">false</prop>
+              <prop key="hibernate.connection.defaultAutoCommit">false</prop>
                 <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
                 <prop key="hibernate.dialect">${hibernate.dialect}</prop>
             </props>

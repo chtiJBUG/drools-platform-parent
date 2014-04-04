@@ -11,6 +11,7 @@ import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,6 +33,7 @@ public class BeforeRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
     private SessionRuntimeRepository sessionRuntimeRepository;
 
     @Override
+    @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         BeforeRuleFiredHistoryEvent beforeRuleFiredHistoryEvent = (BeforeRuleFiredHistoryEvent) historyEvent;
         RuleRuntime ruleRuntime = new RuleRuntime();

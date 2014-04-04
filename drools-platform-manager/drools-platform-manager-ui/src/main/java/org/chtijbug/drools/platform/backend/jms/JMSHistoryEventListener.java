@@ -7,6 +7,7 @@ import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy
 import org.chtijbug.drools.platform.backend.service.MessageHandlerResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.jms.Message;
 import javax.jms.MessageListener;
@@ -26,7 +27,7 @@ public class JMSHistoryEventListener implements MessageListener {
 
     @Autowired
     MessageHandlerResolver messageHandlerResolver;
-
+    @Transactional
     public void onMessage(Message message) {
 
         try {

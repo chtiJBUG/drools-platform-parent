@@ -10,6 +10,7 @@ import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.FireRulesRuntime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,6 +30,7 @@ public class KnowledgeSessionFireAllRulesMaxRulesEventStrategy extends AbstractE
     SessionRuntimeRepository sessionRuntimeRepository;
 
     @Override
+    @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         SessionFireAllRulesMaxNumberReachedEvent sessionFireAllRulesMaxNumberReachedEvent = (SessionFireAllRulesMaxNumberReachedEvent) historyEvent;
         FireRulesRuntime fireRulesRuntime = fireRulesRuntimeRepository.findStartedFireAllRulesBySessionID(historyEvent.getSessionId());

@@ -1,7 +1,9 @@
 package org.chtijbug.drools.platform.core.websocket;
 
 import org.apache.log4j.Logger;
+import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
 import org.glassfish.tyrus.server.Server;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +26,9 @@ public class WebSocketServer {
     @Value("${ws.port}")
     private int ws_port;
 
+    @Autowired
+    private DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase;
+
     Server localWebSocketServer;
 
     private static final Logger LOG = Logger.getLogger(WebSocketServer.class);
@@ -33,13 +38,15 @@ public class WebSocketServer {
     }
 
     public void run() throws UnknownHostException {
-
-        this.localWebSocketServer = new Server(ws_hostname, ws_port, "/", new HashMap<String,Object>(), RuntimeWebSocketServerService.class);
+        HashMap<String, Object> userProperties = new HashMap<String, Object>();
+        userProperties.put("droolsPlatformKnowledgeBase",droolsPlatformKnowledgeBase);
+        this.localWebSocketServer = new Server(ws_hostname, ws_port, "/", userProperties, RuntimeWebSocketServerService.class);
         try {
             localWebSocketServer.start();
         } catch (DeploymentException e) {
             LOG.error("WebSocketServer.run", e);
         }
+
     }
     public  void stop() {
         this.localWebSocketServer.stop();

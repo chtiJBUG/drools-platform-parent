@@ -8,12 +8,12 @@ import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.resource.DroolsResource;
 import org.chtijbug.drools.runtime.resource.GuvnorDroolsResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.Map;
 
 import static java.lang.System.out;
 
@@ -25,7 +25,7 @@ public class RuntimeWebSocketServerService {
     private Session peerLoggerServer;
 
     private static final Logger LOG = Logger.getLogger(RuntimeWebSocketServerService.class);
-    @Autowired
+
     private DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase;
 
 
@@ -81,6 +81,8 @@ public class RuntimeWebSocketServerService {
 
     @OnOpen
     public void onOpen(final Session session, EndpointConfig endpointConfig) {
+        Map<String, Object> userProperties = endpointConfig.getUserProperties();
+        this.droolsPlatformKnowledgeBase = (DroolsPlatformKnowledgeBase) userProperties.get("droolsPlatformKnowledgeBase");
         this.peerLoggerServer = session;
         this.droolsPlatformKnowledgeBase.setRuntimeWebSocketServerService(this);
         out.println("Server connected " + session + " " + endpointConfig);

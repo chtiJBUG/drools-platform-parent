@@ -11,6 +11,7 @@ import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
 import org.chtijbug.drools.platform.persistence.pojo.SessionRuntime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -32,6 +33,7 @@ public class KnowledgeSessionCreateEventStrategy extends AbstractEventHandlerStr
     SessionRuntimeRepository sessionRuntimeRepository;
 
     @Override
+    @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         SessionCreatedEvent sessionCreatedEvent = (SessionCreatedEvent) historyEvent;
         SessionRuntime existingSessionRutime = sessionRuntimeRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());

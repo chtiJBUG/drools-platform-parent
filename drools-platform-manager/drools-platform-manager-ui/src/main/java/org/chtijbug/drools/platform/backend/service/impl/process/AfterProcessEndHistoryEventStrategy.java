@@ -5,11 +5,11 @@ import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.process.AfterProcessEndHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.ProcessRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.ProcessRuntime;
 import org.chtijbug.drools.platform.persistence.pojo.ProcessRuntimeStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,11 +25,12 @@ public class AfterProcessEndHistoryEventStrategy extends AbstractEventHandlerStr
     @Autowired
     ProcessRuntimeRepository processRuntimeRepository;
 
-        @Override
+    @Override
+    @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         AfterProcessEndHistoryEvent afterProcessEndHistoryEvent = (AfterProcessEndHistoryEvent) historyEvent;
 
-        ProcessRuntime processRuntime = processRuntimeRepository.findStartedProcessByRuleBaseIDBySessionIDAndProcessInstanceId(afterProcessEndHistoryEvent.getRuleBaseID(),afterProcessEndHistoryEvent.getSessionId(), afterProcessEndHistoryEvent.getProcessInstance().getId());
+        ProcessRuntime processRuntime = processRuntimeRepository.findStartedProcessByRuleBaseIDBySessionIDAndProcessInstanceId(afterProcessEndHistoryEvent.getRuleBaseID(), afterProcessEndHistoryEvent.getSessionId(), afterProcessEndHistoryEvent.getProcessInstance().getId());
         processRuntime.setEndDate(afterProcessEndHistoryEvent.getDateEvent());
         processRuntime.setProcessRuntimeStatus(ProcessRuntimeStatus.JBPMSTOPPED);
         processRuntimeRepository.save(processRuntime);

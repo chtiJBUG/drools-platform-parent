@@ -10,6 +10,7 @@ import org.chtijbug.drools.platform.persistence.pojo.DroolsRessource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -28,6 +29,7 @@ public class KnowledgeBaseAddRessourceEventStrategy extends AbstractEventHandler
     PlatformRuntimeRepository platformRuntimeRepository;
 
     @Override
+    @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         KnowledgeBaseAddRessourceEvent knowledgeBaseAddRessourceEvent = (KnowledgeBaseAddRessourceEvent) historyEvent;
         PlatformRuntime existingPlatformRuntime = platformRuntimeRepository.findByRuleBaseIDAndEndDateNull(knowledgeBaseAddRessourceEvent.getRuleBaseID());

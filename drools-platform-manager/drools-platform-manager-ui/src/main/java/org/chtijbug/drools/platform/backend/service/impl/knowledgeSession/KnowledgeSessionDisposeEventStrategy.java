@@ -10,6 +10,7 @@ import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.SessionRuntime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,6 +30,7 @@ public class KnowledgeSessionDisposeEventStrategy extends AbstractEventHandlerSt
     SessionRuntimeRepository sessionRuntimeRepository;
 
     @Override
+    @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         SessionDisposedEvent sessionDisposedEvent = (SessionDisposedEvent) historyEvent;
         SessionRuntime existingSessionRutime = sessionRuntimeRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());

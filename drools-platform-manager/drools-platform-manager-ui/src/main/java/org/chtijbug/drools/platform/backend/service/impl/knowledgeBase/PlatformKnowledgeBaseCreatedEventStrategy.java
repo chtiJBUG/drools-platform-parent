@@ -10,6 +10,7 @@ import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.websocket.DeploymentException;
 import java.io.IOException;
@@ -31,6 +32,7 @@ public class PlatformKnowledgeBaseCreatedEventStrategy extends AbstractEventHand
     PlatformRuntimeRepository platformRuntimeRepository;
 
     @Override
+    @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent = (PlatformKnowledgeBaseCreatedEvent) historyEvent;
         int ruleBaseId = platformKnowledgeBaseCreatedEvent.getRuleBaseID();

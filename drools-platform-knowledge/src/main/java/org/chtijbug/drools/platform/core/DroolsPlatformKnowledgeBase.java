@@ -79,11 +79,11 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
                 } else if ("BPMN2".equals(extensionName)) {
                     resource = Bpmn2DroolsRessource.createClassPathResource(filename);
                 }
-                if (resource != null) {
-                    ruleBasePackage.createKBase(resource);
-                } else {
-                    throw new DroolsChtijbugException(DroolsChtijbugException.UnknowFileExtension, filename, null);
-                }
+               // if (resource != null) {
+               //     ruleBasePackage.createKBase(resource);
+                //} else {
+                //    throw new DroolsChtijbugException(DroolsChtijbugException.UnknowFileExtension, filename, null);
+                //}
                 droolsResources.add(resource);
             }
             ruleBasePackage.createKBase(droolsResources);

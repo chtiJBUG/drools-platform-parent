@@ -10,6 +10,7 @@ import org.chtijbug.drools.platform.persistence.pojo.RuleflowGroupRuntime;
 import org.chtijbug.drools.platform.persistence.pojo.RuleflowGroupRuntimeStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class AfterNodeLeftEventStrategy extends AbstractEventHandlerStrategy {
     RuleflowGroupRuntimeRepository ruleflowGroupRuntimeRepository;
 
     @Override
+    @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         AfterNodeLeftHistoryEvent afterNodeLeftHistoryEvent = (AfterNodeLeftHistoryEvent) historyEvent;
         if (afterNodeLeftHistoryEvent.getNodeInstance().getNode().getNodeType() == DroolsNodeType.RuleNode) {

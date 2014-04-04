@@ -12,6 +12,7 @@ import org.chtijbug.drools.platform.persistence.pojo.RuleRuntime;
 import org.chtijbug.drools.platform.persistence.pojo.SessionRuntime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,6 +32,7 @@ public class InsertedFactEventStrategy extends AbstractEventHandlerStrategy {
     SessionRuntimeRepository sessionRuntimeRepository;
 
     @Override
+    @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         InsertedFactHistoryEvent insertedFactHistoryEvent = (InsertedFactHistoryEvent)historyEvent;
         FactRuntime factRuntime = new FactRuntime();

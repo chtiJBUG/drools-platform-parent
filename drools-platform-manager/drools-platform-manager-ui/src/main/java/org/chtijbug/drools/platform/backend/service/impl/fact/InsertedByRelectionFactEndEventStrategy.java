@@ -5,6 +5,7 @@ import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.fact.InsertedByReflectionFactEndHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,6 +20,7 @@ public class InsertedByRelectionFactEndEventStrategy extends AbstractEventHandle
 
 
     @Override
+    @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
 
         LOG.info("DeletedFactHistoryEvent " + historyEvent.toString());

@@ -23,10 +23,13 @@ public class Main {
         try {
             //ruleResource = ResourceUtils.getFile("classpath:fibonacci.drl");
             ruleBasePackage = droolsPlatformKnowledgeBase.getRuleBasePackage("fibonacci.drl");
-            RuleBaseSession ruleBaseSession = ruleBasePackage.createRuleBaseSession();
-            Fibonacci fibonacci = new Fibonacci(3);
-            ruleBaseSession.insertObject(fibonacci);
-            ruleBaseSession.fireAllRules();
+            for (int i=0;i<100;i++) {
+                RuleBaseSession ruleBaseSession = ruleBasePackage.createRuleBaseSession();
+                Fibonacci fibonacci = new Fibonacci(3);
+                ruleBaseSession.insertObject(fibonacci);
+                ruleBaseSession.fireAllRules();
+                Thread.sleep(10000);
+            }
         } catch (Exception e) {
 
             e.printStackTrace();

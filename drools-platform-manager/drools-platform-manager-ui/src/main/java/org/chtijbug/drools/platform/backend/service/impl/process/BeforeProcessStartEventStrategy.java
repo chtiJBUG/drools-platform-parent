@@ -11,6 +11,7 @@ import org.chtijbug.drools.platform.persistence.pojo.ProcessRuntimeStatus;
 import org.chtijbug.drools.platform.persistence.pojo.SessionRuntime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -32,6 +33,7 @@ public class BeforeProcessStartEventStrategy extends AbstractEventHandlerStrateg
 
 
     @Override
+    @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         BeforeProcessStartHistoryEvent beforeProcessStartHistoryEvent = (BeforeProcessStartHistoryEvent) historyEvent;
              List<ProcessRuntime> processRuntimes = processRuntimeRepository.findAllStartedProcessByRuleBaseIDAndSessionIDAndProcessInstanceId(beforeProcessStartHistoryEvent.getRuleBaseID(), beforeProcessStartHistoryEvent.getSessionId(), beforeProcessStartHistoryEvent.getProcessInstance().getId());

@@ -11,6 +11,7 @@ import org.chtijbug.drools.platform.persistence.pojo.FireRulesRuntime;
 import org.chtijbug.drools.platform.persistence.pojo.SessionRuntime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -33,6 +34,7 @@ public class KnowledgeSessionFireAllRulesBeginEventStrategy extends AbstractEven
     SessionRuntimeRepository sessionRuntimeRepository;
 
     @Override
+    @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         SessionFireAllRulesBeginEvent sessionFireAllRulesBeginEvent = (SessionFireAllRulesBeginEvent) historyEvent;
 

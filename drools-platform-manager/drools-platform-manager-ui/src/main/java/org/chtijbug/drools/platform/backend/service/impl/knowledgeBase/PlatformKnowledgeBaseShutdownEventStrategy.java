@@ -8,6 +8,7 @@ import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -26,6 +27,7 @@ public class PlatformKnowledgeBaseShutdownEventStrategy extends AbstractEventHan
     PlatformRuntimeRepository platformRuntimeRepository;
 
     @Override
+    @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         PlatformKnowledgeBaseShutdownEvent platformKnowledgeBaseShutdownEvent = (PlatformKnowledgeBaseShutdownEvent) historyEvent;
         PlatformRuntime existingPlatformRuntime = null;

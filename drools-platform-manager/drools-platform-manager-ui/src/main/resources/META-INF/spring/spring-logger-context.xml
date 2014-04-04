@@ -8,14 +8,14 @@
   http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 
-    <import resource="classpath*:spring/spring-persistence-context.xml"/>
+    <import resource="classpath*:META-INF/spring/spring-persistence-context.xml"/>
 
     <context:component-scan base-package="org.chtijbug.drools.platform.backend" />
 
     <!--  lets create an embedded ActiveMQ Broker -->
 
 
-    <amq:broker brokerName="test-broker" useJmx="false" xmlns="http://activemq.apache.org/schema/core">
+    <amq:broker brokerName="brokerService" useJmx="false" xmlns="http://activemq.apache.org/schema/core">
         <amq:persistenceAdapter >
             <amq:amqPersistenceAdapter directory="${jms.basedir}" maxFileLength="32mb" />
         </amq:persistenceAdapter>
@@ -33,7 +33,7 @@
     <jms:listener-container
             container-type="default"
             connection-factory="connectionFactory"
-            acknowledge="auto">
+            acknowledge="transacted">
         <jms:listener destination="historyEventQueue" ref="simpleMessageListener"/>
     </jms:listener-container>
 
