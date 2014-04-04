@@ -41,13 +41,13 @@ public class DeleteFactEventStrategy extends AbstractEventHandlerStrategy {
         factRuntime.setJsonFact(deletedFactHistoryEvent.getDeletedObject().getRealObject_JSON());
         factRuntime.setModificationDate(deletedFactHistoryEvent.getDateEvent());
         factRuntime.setFactRuntimeType(FactRuntimeType.INSERTED);
-        RuleRuntime existingInSessionRuleRuntime = rulesRuntimeRepository.findActiveRuleInWorkflowGroupByRuleBaseIDAndSessionIDA(deletedFactHistoryEvent.getRuleBaseID(), deletedFactHistoryEvent.getSessionId());
+        RuleRuntime existingInSessionRuleRuntime = rulesRuntimeRepository.findActiveRuleInSessionByRuleBaseIDAndSessionID(deletedFactHistoryEvent.getRuleBaseID(), deletedFactHistoryEvent.getSessionId());
         if (existingInSessionRuleRuntime != null) {
             existingInSessionRuleRuntime.getThenFacts().add(factRuntime);
             rulesRuntimeRepository.save(existingInSessionRuleRuntime);
 
         } else {
-            existingInSessionRuleRuntime = rulesRuntimeRepository.findActiveRuleInWorkflowGroupByRuleBaseIDAndSessionIDA(deletedFactHistoryEvent.getRuleBaseID(), deletedFactHistoryEvent.getSessionId());
+            existingInSessionRuleRuntime = rulesRuntimeRepository.findActiveRuleInSessionByRuleBaseIDAndSessionID(deletedFactHistoryEvent.getRuleBaseID(), deletedFactHistoryEvent.getSessionId());
             if (existingInSessionRuleRuntime != null) {
                 existingInSessionRuleRuntime.getThenFacts().add(factRuntime);
                 rulesRuntimeRepository.save(existingInSessionRuleRuntime);

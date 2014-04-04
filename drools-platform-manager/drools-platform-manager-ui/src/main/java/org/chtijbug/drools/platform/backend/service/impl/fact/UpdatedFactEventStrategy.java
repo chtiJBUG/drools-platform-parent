@@ -46,14 +46,14 @@ public class UpdatedFactEventStrategy extends AbstractEventHandlerStrategy {
         factRuntimeNewValue.setJsonFact(updatedFactHistoryEvent.getObjectNewValue().getRealObject_JSON());
         factRuntimeNewValue.setModificationDate(updatedFactHistoryEvent.getDateEvent());
         factRuntimeNewValue.setFactRuntimeType(FactRuntimeType.UPDATED_NEWVALUE);
-        RuleRuntime existingInSessionRuleRuntime = rulesRuntimeRepository.findActiveRuleInWorkflowGroupByRuleBaseIDAndSessionIDA(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
+        RuleRuntime existingInSessionRuleRuntime = rulesRuntimeRepository.findActiveRuleInSessionByRuleBaseIDAndSessionID(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
         if (existingInSessionRuleRuntime != null) {
             existingInSessionRuleRuntime.getThenFacts().add(factRuntimeOldValue);
             existingInSessionRuleRuntime.getThenFacts().add(factRuntimeNewValue);
             rulesRuntimeRepository.save(existingInSessionRuleRuntime);
 
         } else {
-            existingInSessionRuleRuntime = rulesRuntimeRepository.findActiveRuleInWorkflowGroupByRuleBaseIDAndSessionIDA(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
+            existingInSessionRuleRuntime = rulesRuntimeRepository.findActiveRuleInSessionByRuleBaseIDAndSessionID(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
             if (existingInSessionRuleRuntime != null) {
                 existingInSessionRuleRuntime.getThenFacts().add(factRuntimeOldValue);
                 existingInSessionRuleRuntime.getThenFacts().add(factRuntimeNewValue);
