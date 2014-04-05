@@ -5,7 +5,6 @@ import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFiredHistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFlowActivatedHistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFlowDeactivatedHistoryEvent;
-import org.chtijbug.drools.platform.core.websocket.WebSocketServer;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsRessource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
@@ -32,7 +31,7 @@ import java.util.List;
 @Transactional
 public class PlatformRunTimeBeanTest {
 
-    private static WebSocketServer webSocketServer;
+    private static TestWebSocketServer testWebSocketServer;
 
 
     @Autowired
@@ -43,14 +42,14 @@ public class PlatformRunTimeBeanTest {
 
     @BeforeClass
     public static void BeforeClass() throws UnknownHostException {
-        webSocketServer = new WebSocketServer();
-        webSocketServer.run();
+        testWebSocketServer = new TestWebSocketServer();
+        testWebSocketServer.run();
     }
 
     @AfterClass
     public static void AfterClass() throws UnknownHostException {
-        webSocketServer.stop();
-        webSocketServer = null;
+        testWebSocketServer.stop();
+        testWebSocketServer = null;
     }
 
     @Before

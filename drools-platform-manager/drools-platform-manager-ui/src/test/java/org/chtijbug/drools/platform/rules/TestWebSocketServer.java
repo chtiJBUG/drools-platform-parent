@@ -1,9 +1,7 @@
-package org.chtijbug.drools.platform.core.websocket;
+package org.chtijbug.drools.platform.rules;
 
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
 import org.glassfish.tyrus.server.Server;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -13,34 +11,29 @@ import java.util.HashMap;
 
 /**
  * Created by IntelliJ IDEA.
- * Date: 10/01/14
- * Time: 17:14
+ * Date: 05/04/14
+ * Time: 14:58
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class WebSocketServer {
-
+public class TestWebSocketServer {
 
     @Value("${ws.hostname}")
     private String ws_hostname;
     @Value("${ws.port}")
     private int ws_port;
 
-    @Autowired
-    private DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase;
-
     Server localWebSocketServer;
 
-    private static final Logger LOG = Logger.getLogger(WebSocketServer.class);
+    private static final Logger LOG = Logger.getLogger(TestWebSocketServer.class);
 
-    public WebSocketServer() throws UnknownHostException {
+    public TestWebSocketServer() throws UnknownHostException {
         run();
     }
 
     public void run() throws UnknownHostException {
         HashMap<String, Object> userProperties = new HashMap<String, Object>();
-        userProperties.put("droolsPlatformKnowledgeBase",droolsPlatformKnowledgeBase);
-        this.localWebSocketServer = new Server(ws_hostname, ws_port, "/", userProperties, RuntimeWebSocketServerService.class);
+        this.localWebSocketServer = new Server(ws_hostname, ws_port, "/", userProperties, TestRuntimeWebSocketServerService.class);
         try {
             localWebSocketServer.start();
         } catch (DeploymentException e) {
@@ -48,9 +41,10 @@ public class WebSocketServer {
         }
 
     }
-    public  void stop() {
+
+    public void stop() {
         this.localWebSocketServer.stop();
-        this.localWebSocketServer=null;
+        this.localWebSocketServer = null;
     }
 
 
@@ -62,3 +56,4 @@ public class WebSocketServer {
         return ws_port;
     }
 }
+

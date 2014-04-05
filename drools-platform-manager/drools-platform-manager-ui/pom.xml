@@ -99,10 +99,6 @@
       <artifactId>drools-framework-runtime-base</artifactId>
       <scope>test</scope>
     </dependency>
-    <!--dependency>
-        <groupId>com.h2database</groupId>
-        <artifactId>h2</artifactId>
-    </dependency-->
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
@@ -119,11 +115,11 @@
       <version>2.4.9</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
+    <!--dependency>
       <groupId>org.chtijbug.drools</groupId>
       <artifactId>drools-platform-knowledge</artifactId>
       <scope>test</scope>
-    </dependency>
+    </dependency-->
 
     <!-- INCLUDE THIS IF YOU'RE CONNECTING TO THE SERVER THROUGH THE REMOTE ENGINE -->
     <dependency>
