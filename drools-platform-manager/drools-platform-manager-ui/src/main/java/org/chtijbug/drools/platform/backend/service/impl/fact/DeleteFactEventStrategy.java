@@ -47,7 +47,7 @@ public class DeleteFactEventStrategy extends AbstractEventHandlerStrategy {
             rulesRuntimeRepository.save(existingInSessionRuleRuntime);
 
         } else {
-            existingInSessionRuleRuntime = rulesRuntimeRepository.findActiveRuleInSessionByRuleBaseIDAndSessionID(deletedFactHistoryEvent.getRuleBaseID(), deletedFactHistoryEvent.getSessionId());
+            existingInSessionRuleRuntime = rulesRuntimeRepository.findActiveRuleInRuleFlowGroupByRuleBaseIDAndSessionID(deletedFactHistoryEvent.getRuleBaseID(), deletedFactHistoryEvent.getSessionId());
             if (existingInSessionRuleRuntime != null) {
                 existingInSessionRuleRuntime.getThenFacts().add(factRuntime);
                 rulesRuntimeRepository.save(existingInSessionRuleRuntime);

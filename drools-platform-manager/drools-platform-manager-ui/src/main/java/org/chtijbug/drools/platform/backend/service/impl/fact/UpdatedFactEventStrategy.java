@@ -53,7 +53,7 @@ public class UpdatedFactEventStrategy extends AbstractEventHandlerStrategy {
             rulesRuntimeRepository.save(existingInSessionRuleRuntime);
 
         } else {
-            existingInSessionRuleRuntime = rulesRuntimeRepository.findActiveRuleInSessionByRuleBaseIDAndSessionID(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
+            existingInSessionRuleRuntime = rulesRuntimeRepository.findActiveRuleInRuleFlowGroupByRuleBaseIDAndSessionID(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
             if (existingInSessionRuleRuntime != null) {
                 existingInSessionRuleRuntime.getThenFacts().add(factRuntimeOldValue);
                 existingInSessionRuleRuntime.getThenFacts().add(factRuntimeNewValue);

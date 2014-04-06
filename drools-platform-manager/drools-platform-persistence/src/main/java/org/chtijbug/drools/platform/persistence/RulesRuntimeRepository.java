@@ -15,7 +15,7 @@ public interface RulesRuntimeRepository extends JpaRepository<RuleRuntime, Long>
 
     @Query("select rrt from PlatformRuntime pp,SessionRuntime s,ProcessRuntime  prt,RuleflowGroupRuntime rfg , RuleRuntime rrt " +
             "where s.platformRuntime=pp  and pp.endDate is null and prt.sessionRuntime = s and rfg.processRuntime=prt and rrt.ruleflowGroupRuntime=rfg  " +
-            "and pp.ruleBaseID= :ruleBaseID and s.sessionId =:sessionID  and rfg.endDate is null and rfg.ruleflowGroup = :ruleFlowGroupName and rrt.ruleName=:ruleName")
+            "and pp.ruleBaseID= :ruleBaseID and s.sessionId =:sessionID  and rfg.endDate is null and rrt.endDate is null and rfg.ruleflowGroup = :ruleFlowGroupName and rrt.ruleName=:ruleName")
     RuleRuntime findByRuleBaseIDAndSessionIDAndRuleFlowNameAndRuleName(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionID") Integer sessionId, @Param("ruleFlowGroupName") String ruleFlowGroup, @Param("ruleName") String ruleName);
 
 
@@ -23,6 +23,15 @@ public interface RulesRuntimeRepository extends JpaRepository<RuleRuntime, Long>
             "where s.platformRuntime=pp  and pp.endDate is null and rrt.sessionRuntime = s   " +
             "and pp.ruleBaseID= :ruleBaseID and s.sessionId =:sessionID  and rrt.endDate is null")
     RuleRuntime findActiveRuleInSessionByRuleBaseIDAndSessionID(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionID") Integer sessionId);
+
+
+    @Query("select rrt from PlatformRuntime pp,SessionRuntime s,ProcessRuntime  prt,RuleflowGroupRuntime rfg , RuleRuntime rrt " +
+            "where s.platformRuntime=pp  and pp.endDate is null and prt.sessionRuntime = s and rfg.processRuntime=prt and rrt.ruleflowGroupRuntime=rfg  " +
+            "and rrt.endDate is null and pp.ruleBaseID= :ruleBaseID and s.sessionId =:sessionID  ")
+    RuleRuntime findActiveRuleInRuleFlowGroupByRuleBaseIDAndSessionID(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionID") Integer sessionId);
+
+
+
 
     @Query("select rrt from PlatformRuntime pp,SessionRuntime s, RuleRuntime rrt " +
             "where s.platformRuntime=pp  and pp.endDate is null and rrt.sessionRuntime=s  " +
