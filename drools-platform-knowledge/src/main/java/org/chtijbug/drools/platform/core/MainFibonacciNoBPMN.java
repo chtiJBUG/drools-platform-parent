@@ -13,7 +13,7 @@ import java.io.File;
  * Time: 18:05
  * To change this template use File | Settings | File Templates.
  */
-public class Main {
+public class MainFibonacciNoBPMN {
     public static void main(String[] args) {
         ApplicationContext context = new ClassPathXmlApplicationContext("classpath:spring/spring-context.xml");
         DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase = (DroolsPlatformKnowledgeBase) context.getBean("platformRunner");
