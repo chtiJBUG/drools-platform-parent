@@ -4,6 +4,7 @@ target
 *.log
 .java-version
 .tmp
-dist
+overlays
+webapp-dist
 node_modules
 components
