@@ -28,7 +28,7 @@
 @headingsColor: @drools-platform-blue;
 @headingsFontWeight: normal;
 
-@footer-height: 30px;
+@footer-height: 40px;
 @headerLogoWidth: 180px;
 
 html, body {
@@ -73,15 +73,22 @@ a {
   margin: 0 auto (@footer-height *-1);
 }
 
-#footer {
+footer {
   height: @footer-height;
-  background-color: @light-grey;
+  background-color: #ffffff;
   p {
     padding-left: 10px;
     padding-right: 10px;
     margin: 0px;
     padding-top: 5px;
   }
+  margin-top:-100px;
+}
+/* Center the separator in the footer div*/
+.separator{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .table-wrapper-div {
@@ -110,3 +117,22 @@ a {
 }
 
 
+/* Modify width and margins of jumbotron */
+.jumbotron{
+  background-color: #ffffff;
+  max-width:1000px;
+  margin:auto;
+}
+.form-signin{
+  background: linear-gradient(to bottom, #DADADA 0%, #B1B1B1 100%) repeat scroll 0% 0% transparent;
+  opacity:0.5;
+}
+/* Modify navbar */
+.navbar{
+  text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.6);
+  background: linear-gradient(to bottom, #DADADA 0%, #B1B1B1 100%) repeat scroll 0% 0% transparent;
+}
+/* Center text in thumbnail in homepage*/
+.thumbnail h2{
+  text-align:center;
+}

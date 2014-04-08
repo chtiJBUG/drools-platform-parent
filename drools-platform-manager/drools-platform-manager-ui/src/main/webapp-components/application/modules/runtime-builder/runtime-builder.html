@@ -8,19 +8,19 @@
             <div class="well sidebar-nav">
                 <ul class="nav nav-pills nav-stacked">
                     <li ng-class="{true:'active', false:'disabled'}[isSettingsEnabled]">
-                        <a href="#/runtimeBuilder/guvnorSettings">
+                        <a ng-href="{{lien1}}" >
                             <span class="badge pull-right"> 1 </span>
                             Guvnor settings
                         </a>
                     </li>
                     <li ng-class="{true:'active', false:'disabled'}[isArtifactsEnabled]">
-                        <a href="#/runtimeBuilder/runtimeDefinition">
+                        <a ng-href="{{lien2}}">
                             <span class="badge pull-right"> 2 </span>
                             Artifacts Definitions
                         </a>
                     </li>
                     <li ng-class="{true:'active', false:'disabled'}[isGenerationsEnabled]">
-                        <a href="#/runtimeBuilder/runtimeBuilding">
+                        <a ng-href="{{lien3}}">
                             <span class="badge pull-right"> 3 </span>
                             Maven Project Generation
                         </a>

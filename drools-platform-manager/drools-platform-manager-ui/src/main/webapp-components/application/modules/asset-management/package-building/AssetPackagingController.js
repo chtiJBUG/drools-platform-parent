@@ -2,7 +2,10 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
     $scope.filters = {};
     $scope.isRelease = false;
     $scope.version = undefined;
-
+    $scope.filtersOptions = {
+        width: '350px',
+        selectOnBlur: true
+    };
     $http.get('./server/rule_status/all')
         .success(function (data) {
             $scope.statuses = data;
