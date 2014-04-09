@@ -1,8 +1,19 @@
-DroolsPlatformControllers.controller('guvnorSettingsController', function ($rootScope, $scope, $route) {
-    $scope.validateSettings = function () {
-        $scope.isSettingsEnabled = false;
-        $scope.isArtifactsEnabled = true;
-        $scope.isGenerationsEnabled = false;
+DroolsPlatformControllers.controller('guvnorSettingsController', function ($rootScope, $scope, $location) {
+
+    $scope.guvnor = {
+        host: 'http://www.google.fr',
+        appName: 'web app context'
+    }
+
+    $scope.validateSettings = function (guvnorSettingsForm) {
+
+
+        if (guvnorSettingsForm.$valid) {
+            // alert("settings");
+            $location.path( "/runtimeBuilder/runtimeDefinition" );
+        }
 
     };
+
+
 });
