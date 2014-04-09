@@ -11,7 +11,7 @@
 
   <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
     <property name="brokerURL">
-      <value>tcp://${jms.server}:${jms.port}</value>
+      <value>tcp://${jms.server}:${jms.port}?wireFormat.maxInactivityDurationInitalDelay=30000</value>
     </property>
   </bean>
 

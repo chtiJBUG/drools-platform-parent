@@ -28,6 +28,7 @@ public class MainFibonacciNoBPMN {
                 Fibonacci fibonacci = new Fibonacci(3);
                 ruleBaseSession.insertObject(fibonacci);
                 ruleBaseSession.fireAllRules();
+                ruleBaseSession.dispose();
                 Thread.sleep(10000);
             }
         } catch (Exception e) {

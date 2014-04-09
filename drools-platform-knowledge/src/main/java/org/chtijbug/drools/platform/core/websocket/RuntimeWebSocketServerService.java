@@ -67,7 +67,7 @@ public class RuntimeWebSocketServerService {
                     bean.setDroolsChtijbugException(droolsChtijbugException);
                     bean.setRequestStatus(RequestStatus.FAILURE);
                     peer.getBasicRemote().sendObject(bean);
-               }
+                }
                 break;
         }
         this.peerLoggerServer = peer;
@@ -81,10 +81,15 @@ public class RuntimeWebSocketServerService {
 
     @OnOpen
     public void onOpen(final Session session, EndpointConfig endpointConfig) {
-        Map<String, Object> userProperties = endpointConfig.getUserProperties();
-        this.droolsPlatformKnowledgeBase = (DroolsPlatformKnowledgeBase) userProperties.get("droolsPlatformKnowledgeBase");
+        Map<String, Object> userProperties = WebSocketServer.userProperties;
+        this.droolsPlatformKnowledgeBase = (DroolsPlatformKnowledgeBase)userProperties.get("droolsPlatformKnowledgeBase");
         this.peerLoggerServer = session;
         this.droolsPlatformKnowledgeBase.setRuntimeWebSocketServerService(this);
         out.println("Server connected " + session + " " + endpointConfig);
+    }
+
+    @OnClose
+    public void onClose(Session session, CloseReason reason) throws IOException {
+        //prepare the endpoint for closing.
     }
 }  

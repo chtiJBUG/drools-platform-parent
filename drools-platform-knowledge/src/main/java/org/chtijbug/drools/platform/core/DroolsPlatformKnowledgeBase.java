@@ -56,6 +56,7 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
     public void getGuvnorRuleBasePackage() throws DroolsChtijbugException {
 
         logger.debug(">>createGuvnorRuleBasePackage", this.toString());
+        jmsStorageHistoryListener.setDroolsPlatformKnowledgeBase(this);
         RuleBaseSingleton newRuleBasePackage = new RuleBaseSingleton(RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, this.jmsStorageHistoryListener);
         GuvnorDroolsResource gdr = new GuvnorDroolsResource(guvnor_url, guvnor_appName, guvnor_packageName, guvnor_packageVersion, guvnor_username, guvnor_password);
         newRuleBasePackage.createKBase(gdr);
@@ -68,6 +69,7 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
 
     public RuleBasePackage getRuleBasePackage(String... filenames) throws DroolsChtijbugException {
         logger.debug(">>createPackageBasePackage");
+        jmsStorageHistoryListener.setDroolsPlatformKnowledgeBase(this);
         RuleBasePackage ruleBasePackage = new RuleBaseSingleton(RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, this.jmsStorageHistoryListener);
         try {
             List<DroolsResource> droolsResources = new ArrayList<DroolsResource>();
@@ -87,6 +89,7 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
                 droolsResources.add(resource);
             }
             ruleBasePackage.createKBase(droolsResources);
+
             this.ruleBasePackage = ruleBasePackage;
             //_____ Returning the result
             return ruleBasePackage;

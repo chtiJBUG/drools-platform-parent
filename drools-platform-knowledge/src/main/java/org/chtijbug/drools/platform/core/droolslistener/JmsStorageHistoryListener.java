@@ -7,6 +7,7 @@ import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseAddRessourceEve
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseCreatedEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseInitialLoadEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseReloadedEvent;
+import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServer;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEvent;
@@ -58,8 +59,11 @@ public class JmsStorageHistoryListener implements HistoryListener {
     @Autowired
     private WebSocketServer webSocketServer;
 
+    private DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase;
+
     @Override
     public void fireEvent(HistoryEvent historyEvent) throws DroolsChtijbugException {
+
         HistoryEvent historyEventToSend = historyEvent;
         if (historyEvent instanceof KnowledgeBaseCreatedEvent) {
             /**
@@ -138,5 +142,10 @@ public class JmsStorageHistoryListener implements HistoryListener {
 
     public void setMbsSession(StatefulSessionSupervision mbsSession) {
         this.mbsSession = mbsSession;
+    }
+
+    public void setDroolsPlatformKnowledgeBase(DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase) {
+        this.droolsPlatformKnowledgeBase = droolsPlatformKnowledgeBase;
+        webSocketServer.setDroolsPlatformKnowledgeBase(droolsPlatformKnowledgeBase);
     }
 }

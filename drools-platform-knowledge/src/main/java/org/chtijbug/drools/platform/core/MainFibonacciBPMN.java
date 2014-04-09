@@ -29,6 +29,7 @@ public class MainFibonacciBPMN {
                 ruleBaseSession.insertObject(fibonacci);
                 ruleBaseSession.startProcess("P1");
                 ruleBaseSession.fireAllRules();
+                ruleBaseSession.dispose();
                 Thread.sleep(10000);
             }
         } catch (Exception e) {
