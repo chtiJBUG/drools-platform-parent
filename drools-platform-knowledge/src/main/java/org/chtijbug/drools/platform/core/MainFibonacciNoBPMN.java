@@ -23,7 +23,7 @@ public class MainFibonacciNoBPMN {
         try {
             //ruleResource = ResourceUtils.getFile("classpath:fibonacci.drl");
             ruleBasePackage = droolsPlatformKnowledgeBase.getRuleBasePackage("fibonacci.drl");
-            for (int i=0;i<100;i++) {
+            for (int i=0;i<2;i++) {
                 RuleBaseSession ruleBaseSession = ruleBasePackage.createRuleBaseSession();
                 Fibonacci fibonacci = new Fibonacci(3);
                 ruleBaseSession.insertObject(fibonacci);

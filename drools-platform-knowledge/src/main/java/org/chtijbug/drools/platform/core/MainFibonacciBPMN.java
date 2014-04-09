@@ -25,7 +25,7 @@ public class MainFibonacciBPMN {
             ruleBasePackage = droolsPlatformKnowledgeBase.getRuleBasePackage("ruleflow2.drl","RuleFlowProcess2.bpmn2");
             for (int i=0;i<100;i++) {
                 RuleBaseSession ruleBaseSession = ruleBasePackage.createRuleBaseSession();
-                Fibonacci fibonacci = new Fibonacci(3);
+                Fibonacci fibonacci = new Fibonacci(0);
                 ruleBaseSession.insertObject(fibonacci);
                 ruleBaseSession.startProcess("P1");
                 ruleBaseSession.fireAllRules();
