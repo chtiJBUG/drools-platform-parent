@@ -215,7 +215,7 @@ module.exports = function (grunt) {
                             'images/{,*/}*.{png,jpg,jpeg}',
                             '{,*/}*.html',
                             'styles/{,*/}*.css',
-                            'modules/{,*/}*.html'
+                            'modules/**/*.html'
                         ]
                     }
                 ]
