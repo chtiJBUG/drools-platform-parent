@@ -114,21 +114,6 @@ module.exports = function (grunt) {
             },
             server: '.tmp'
         },
-        jshint: {
-            options: {
-                jshintrc: '.jshintrc'
-            },
-            all: [
-                'Gruntfile.js',
-                '<%= yeoman.app %>/modules/{,*/}*.js'
-            ]
-        },
-        karma: {
-            unit: {
-                configFile: 'karma.conf.js',
-                singleRun: true
-            }
-        },
         less: {
             dist: {
                 options: {
@@ -144,13 +129,12 @@ module.exports = function (grunt) {
             }
         },
         concat: {
-            dist: {
-                files: {
-                    '<%= yeoman.dist %>/scripts/scripts.js': [
-                        '.tmp/scripts/{,*/}*.js',
-                        '<%= yeoman.app %>/modules/{,*/}*.js'
-                    ]
-                }
+            js: {
+                src: [
+                    '.tmp/scripts/{,*/}*.js',
+                    '<%= yeoman.app %>/modules/{,*/}*.js'
+                ],
+                dest: '<%= yeoman.dist %>/scripts/scripts.js'
             }
         },
         useminPrepare: {
@@ -230,12 +214,6 @@ module.exports = function (grunt) {
         'connect:livereload',
         'open',
         'watch'
-    ]);
-
-    grunt.registerTask('test', [
-        'clean:server',
-        'connect:test',
-        'karma'
     ]);
 
     grunt.registerTask('build', [

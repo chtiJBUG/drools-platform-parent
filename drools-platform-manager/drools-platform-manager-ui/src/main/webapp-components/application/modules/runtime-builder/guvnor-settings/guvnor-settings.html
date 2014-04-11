@@ -4,28 +4,27 @@
         <div class="panel-heading">
             Guvnor Settings
         </div>
-
         <div class="panel-body">
             <form name="guvnorSettingsForm" class="form-horizontal" role="form" ng-submit="validateSettings(guvnorSettingsForm)">
                 <div class="form-group">
-                    <label for="guvnorHost" class="col-sm-2 control-label">Base URL</label>
+                    <label for="guvnorHost" class="col-sm-3 control-label">Base URL</label>
 
-                    <div class="col-sm-10">
+                    <div class="col-sm-9">
                         <input type="url" class="form-control disabled" id="guvnorHost" placeholder="URL"
                                value="{{guvnor.host}}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="guvnorApp" class="col-sm-2 control-label">Root context</label>
+                    <label for="guvnorApp" class="col-sm-3 control-label">Root context</label>
 
-                    <div class="col-sm-10">
+                    <div class="col-sm-9">
                         <input type="text" class="form-control" id="guvnorApp" placeholder="webapp name"
                                value="{{guvnor.appName}}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-default">Next <i class="fa fa-long-arrow-right"></i></button>
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <button type="submit" class="btn btn-info" style="margin-left: 290px" >Next <i class="fa fa-long-arrow-right"></i></button>
                     </div>
                 </div>
             </form>
