@@ -16,30 +16,19 @@ DroolsPlatformControllers.controller('runtimeBuilderController', function ($root
                 $scope.isArtifactsEnabled = false;
                 $scope.isGenerationsEnabled = false;
 
-                /* Define links*/
-                $scope.lien1="#/runtimeBuilder/guvnorSettings"
-                $scope.lien2=""
-                $scope.lien3=""
             }else if(subView=="definition"){
                 /* Define enability of the link */
                 $scope.isSettingsEnabled = false;
                 $scope.isArtifactsEnabled = true;
                 $scope.isGenerationsEnabled = false;
 
-                /* Define links*/
-                $scope.lien1=""
-                $scope.lien2="#/runtimeBuilder/runtimeDefinition"
-                $scope.lien3=""
+
             }else if(subView=="building"){
                 /* Define enability of the link */
                 $scope.isSettingsEnabled = false;
                 $scope.isArtifactsEnabled = false;
                 $scope.isGenerationsEnabled = true;
 
-                /* Define links*/
-                $scope.lien1=""
-                $scope.lien2=""
-                $scope.lien3="#/runtimeBuilder/runtimeBuilding"
             }
     }
 

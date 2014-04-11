@@ -8,27 +8,25 @@
         <div class="panel-body">
             <form name="artifactsDefinitionsForm" class="form-horizontal" role="form" ng-submit="validateDefinitions(artifactsDefinitionsForm)">
                 <div class="form-group">
-                    <label for="artefactHost" class="col-sm-2 control-label">Base URL</label>
+                    <label for="artefactHost" class="col-sm-3 control-label">Base URL</label>
 
-                    <div class="col-sm-10">
+                    <div class="col-sm-9">
                         <input type="url" class="form-control disabled" id="artefactHost" placeholder="URL"
                                value="{{artifact.host}}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="artefactApp" class="col-sm-2 control-label">Root context</label>
+                    <label for="artefactApp" class="col-sm-3 control-label">Root context</label>
 
-                    <div class="col-sm-10">
+                    <div class="col-sm-9">
                         <input type="text" class="form-control" id="artefactApp" placeholder="webapp name"
                                value="{{artifact.appName}}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default" ng-click="gotoPreviousStep()"><i class="fa fa-long-arrow-left"></i> Prev.</button>
-                            <button type="submit" class="btn btn-default">Next <i class="fa fa-long-arrow-right"></i></button>
-                        </div>
+                    <div class="col-sm-offset-3 col-sm-9">
+                            <button type="button" class="btn btn-info" style="margin-left: 0px" ng-click="gotoPreviousStep()"><i class="fa fa-long-arrow-left"></i> Prev.</button>
+                            <button type="submit" class="btn btn-info" style="margin-left: 212px" >Next <i class="fa fa-long-arrow-right"></i></button>
                     </div>
                 </div>
             </form>

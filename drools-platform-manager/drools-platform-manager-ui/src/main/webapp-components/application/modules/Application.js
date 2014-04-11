@@ -79,7 +79,7 @@ droolsPlatformApp.factory('httpInterceptor', ['$q', '$rootScope', function ($q, 
 
 }]);
 
-droolsPlatformApp.run(function ($rootScope, $log) {
+droolsPlatformApp.run(function ($rootScope, $log, $location) {
 
     $rootScope.login = {};
     $rootScope.$on('event:auth-loginRequired', function () {
@@ -89,6 +89,8 @@ droolsPlatformApp.run(function ($rootScope, $log) {
     });
     $rootScope.$on('event:auth-loginConfirmed', function () {
         $rootScope.loginRequired = false;
+        /* When login confirmed : redirect to homepage */
+        $location.path('/home');
         $log.log('Login confirmed');
     });
 
@@ -124,6 +126,7 @@ DroolsPlatformControllers.controller('MainCtrl', ['$rootScope', '$scope', '$wind
             })
             .error(function (cause) {
                 $log.log("Error. Caused by : " + cause);
+                $rootScope.username = "default";
             });
     }
 ]);

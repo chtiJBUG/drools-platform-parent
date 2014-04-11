@@ -9,8 +9,8 @@
         </div>
         <div class="panel-body">
             <!-- Search form -->
-            <div class="row">
-                <div class="input-group col-md-offset-1">
+
+                <div class="input-group col-sm-3">
                     <span class="input-group-addon"><i class="fa fa-tag"></i></span>
                     <select ui-select2="filtersOptions"
                             multiple
@@ -19,9 +19,10 @@
                             data-placeholder="Select Status filters">
                         <option ng-repeat="stat in statuses" value="{{stat.assetStatus}}">{{stat.description}}</option>
                     </select>
-                    <button id="btn-search" class="btn btn-default btn-sm" ng-click="search()">Search</button>
                 </div>
-            </div>
+                <div class="input-group  col-sm-4">
+                    <button id="btn-search" class="btn btn-info" ng-click="search()"><i class="fa fa-search"></i> Search</button>
+                </div>
             <!-- Search result -->
             <br/>
             <br/>
