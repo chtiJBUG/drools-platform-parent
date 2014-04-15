@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -28,6 +29,17 @@ public class RulesPackageResource {
     private RuntimeManager runtimeManager;
     @Resource
     private RuntimeSiteTopology runtimeSiteTopology;
+
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @Produces(value = MediaType.APPLICATION_JSON)
+    @ResponseBody
+    public List<String> getAllPackages() throws Exception {
+        // TODO Need to unmock the following result...
+        // this.ruleManager.findAllPackages();
+        // ruleManager.getAvailableSnapshots()
+        return Arrays.asList("package 1", "package 2", "package 3");
+
+    }
 
     @RequestMapping(value = "/build", method = RequestMethod.POST)
     @ResponseBody

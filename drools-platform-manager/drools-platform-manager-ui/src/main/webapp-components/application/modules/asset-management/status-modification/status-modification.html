@@ -10,12 +10,11 @@
         <div class="panel-body">
             <!-- Search form -->
             <div class="row">
-                <div class="col-sm-2">
-                    <select ui-select2="selectPackage" ng-model="package" data-placeholder="Select a package">
+
+                    <select ui-select2="selectPackage" class="col-sm-2" ng-model="package" data-placeholder="Select a package">
                         <option value=""></option>
-                        <option ng-repeat="p in packagesList" value="{{p.name}}" ng-change="selectAction()" >{{p.name}}</option>
+                        <option ng-repeat="p in packagesList" value="{{p}}" ng-change="selectAction()" >{{p}}</option>
                     </select>
-                </div>
                 <div class="input-group col-sm-2" id="popoverBtn" data-toggle="tooltip" data-placement="bottom">
                     <span class="input-group-addon"><i class="fa fa-tag"></i></span>
                     <select
