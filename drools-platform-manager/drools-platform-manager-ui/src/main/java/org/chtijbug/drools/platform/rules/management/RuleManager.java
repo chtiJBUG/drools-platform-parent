@@ -2,6 +2,7 @@ package org.chtijbug.drools.platform.rules.management;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang.StringUtils;
+import org.chtijbug.drools.guvnor.rest.ChtijbugDroolsRestException;
 import org.chtijbug.drools.guvnor.rest.GuvnorRepositoryConnector;
 import org.chtijbug.drools.guvnor.rest.model.Asset;
 import org.chtijbug.drools.guvnor.rest.model.AssetPropertyType;
@@ -39,7 +40,7 @@ public class RuleManager {
         guvnorRepositoryConnector = new GuvnorRepositoryConnector(runtimeSiteTopology.buildGuvnorConfiguration());
     }
 
-    public List<Asset> findAllAssetsByStatus(List<AssetStatus> assetStatuses) {
+    public List<Asset> findAllAssetsByStatus(List<AssetStatus> assetStatuses) throws ChtijbugDroolsRestException {
         //___ Fetch all assets metadata
         List<Asset> assets = guvnorRepositoryConnector.getAllBusinessAssets();
         //___ If no filter provided, then return the whole list
@@ -56,7 +57,7 @@ public class RuleManager {
         return select(assets, having(on(Asset.class).getStatus(), anyOfFilters));
     }
 
-    public void updateAssetStatus(String assetName, AssetStatus assetStatus) {
+    public void updateAssetStatus(String assetName, AssetStatus assetStatus) throws ChtijbugDroolsRestException {
         guvnorRepositoryConnector.changeAssetPropertyValue(assetName, AssetPropertyType.STATE, assetStatus.toString());
     }
 

@@ -2,6 +2,7 @@ package org.chtijbug.drools.platform.web;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import org.chtijbug.drools.guvnor.rest.ChtijbugDroolsRestException;
 import org.chtijbug.drools.guvnor.rest.model.Asset;
 import org.chtijbug.drools.platform.rules.management.AssetStatus;
 import org.chtijbug.drools.platform.rules.management.RuleManager;
@@ -63,6 +64,9 @@ public class RuleStatusResource {
                     return output;
                 }
             });
+        } catch (ChtijbugDroolsRestException e) {
+            logger.error("<< searchAllAssetsWithStatus()", e);
+            return null;
         } finally {
             logger.debug("<< searchAllAssetsWithStatus()");
         }
@@ -82,6 +86,9 @@ public class RuleStatusResource {
                 this.ruleManager.updateAssetStatus(assetObject.getName(), currentStatus.getNextStatus());
             }
             return this.searchAllAssetsWithStatus(assetStatuses);
+        } catch (ChtijbugDroolsRestException e) {
+            logger.error("<< promoteAllAssets()", e);
+            return null;
         } finally {
             logger.debug("<< promoteAllAssets()");
         }
@@ -101,6 +108,9 @@ public class RuleStatusResource {
                 this.ruleManager.updateAssetStatus(assetObject.getName(), currentStatus.getPreviousStatus());
             }
             return this.searchAllAssetsWithStatus(assetStatuses);
+        } catch (ChtijbugDroolsRestException e) {
+            logger.error("<< demoteAllAssets()",e);
+            return null;
         } finally {
             logger.debug("<< demoteAllAssets()");
         }
