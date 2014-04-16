@@ -9,10 +9,17 @@
         </div>
         <div class="panel-body">
             <!-- Search form -->
-
-                <div class="input-group col-sm-3">
+            <div class="row">
+                <div class="col-sm-2">
+                    <select ui-select2="selectPackage" ng-model="package" data-placeholder="Select a package">
+                        <option value=""></option>
+                        <option ng-repeat="p in packagesList" value="{{p.name}}" ng-change="selectAction()" >{{p.name}}</option>
+                    </select>
+                </div>
+                <div class="input-group col-sm-2" id="popoverBtn" data-toggle="tooltip" data-placement="bottom">
                     <span class="input-group-addon"><i class="fa fa-tag"></i></span>
-                    <select ui-select2="filtersOptions"
+                    <select
+                            ui-select2="filtersOptions"
                             multiple
                             class="control-group"
                             ng-model="filters"
@@ -20,13 +27,16 @@
                         <option ng-repeat="stat in statuses" value="{{stat.assetStatus}}">{{stat.description}}</option>
                     </select>
                 </div>
-                <div class="input-group  col-sm-4">
+                <div class="input-group  col-sm-2">
                     <button id="btn-search" class="btn btn-info" ng-click="search()"><i class="fa fa-search"></i> Search</button>
                 </div>
+            </div>
             <!-- Search result -->
             <br/>
             <br/>
-
+            <div class="alert alert-danger" ng-show="noAssetSent">
+                Error system
+            </div>
             <div ng-show="assets.length == 0">
                 <div class="well well-lg">
                     No Assets have been found
