@@ -208,6 +208,11 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
     }
 
     @Override
+    public void ReloadWithSameRessources() throws DroolsChtijbugException {
+        this.ruleBasePackage.ReloadWithSameRessources();
+    }
+
+    @Override
     public HistoryListener getHistoryListener() {
         return this.ruleBasePackage.getHistoryListener();
     }
