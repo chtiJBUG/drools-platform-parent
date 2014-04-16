@@ -41,11 +41,21 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
 
     $scope.search = function () {
         var filters = $scope.filters;
-        if (filters.length == 0) {
+        var packageSelected=$scope.package;
+        console.log("Package selected : "+packageSelected);
+        console.log("Filter()s selected : "+packageSelected);
+        if(packageSelected == "" && filters.length == 0 ) {
+            $("#popoverPackage").popover('show');
+            $("#popoverBtn").popover('show');
+        }else if (filters.length == 0) {
             /* When mistake happens display the tooltip */
             $("#popoverBtn").popover('show');
             return;
-        } else {
+        }else if (packageSelected == "") {
+            /* When mistake happens display the tooltip */
+            $("#popoverPackage").popover('show');
+            return;
+        }else{
             //$("#popoverBtn").popover('destroy');
             $http.post('./server/rule_status', JSON.stringify(filters))
                 .success(function (data) {

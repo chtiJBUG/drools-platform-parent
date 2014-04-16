@@ -10,15 +10,20 @@
         <div class="panel-body">
             <!-- Search form -->
             <div class="row">
+                <div class="input-group col-sm-1" id="popoverPackage" data-placement="bottom"
+                     data-toggle="popover" data-content="You have to choose a package">
+                    <select ui-select2="selectPackage" ng-model="package"
+                            onchange="$('#popoverPackage').popover('destroy');"
+                            data-placeholder="Select a package">
+                        <option value=""></option>
+                        <option ng-repeat="p in packagesList" value="{{p}}" ng-change="selectAction()">{{p}}</option>
+                    </select>
 
-                <select ui-select2="selectPackage" class="col-sm-2" ng-model="package"
-                        data-placeholder="Select a package">
-                    <option value=""></option>
-                    <option ng-repeat="p in packagesList" value="{{p}}" ng-change="selectAction()">{{p}}</option>
-                </select>
+                </div>
 
-                <div class="input-group col-sm-2" id="popoverBtn" data-toggle="tooltip" data-placement="bottom"
-                     data-dismiss="filters" data-toggle="popover" data-content="You have to choose at least an item ">
+
+                <div class="input-group col-sm-2" id="popoverBtn" data-placement="bottom"
+                     data-toggle="popover" data-content="You have to choose at least an item ">
                     <span class="input-group-addon"><i class="fa fa-tag"></i></span>
                     <select
                             ui-select2="filtersOptions"
