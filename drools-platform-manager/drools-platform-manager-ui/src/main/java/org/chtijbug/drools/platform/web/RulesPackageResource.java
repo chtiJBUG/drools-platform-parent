@@ -5,7 +5,10 @@ import com.google.common.collect.Lists;
 import org.chtijbug.drools.guvnor.rest.model.Snapshot;
 import org.chtijbug.drools.platform.rules.config.Environment;
 import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
-import org.chtijbug.drools.platform.rules.management.*;
+import org.chtijbug.drools.platform.rules.management.AdministrationBusinessProcessException;
+import org.chtijbug.drools.platform.rules.management.BusinessProcessError;
+import org.chtijbug.drools.platform.rules.management.RuleManager;
+import org.chtijbug.drools.platform.rules.management.RuntimeManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,7 +19,6 @@ import javax.annotation.Resource;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -34,11 +36,7 @@ public class RulesPackageResource {
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
     public List<String> getAllPackages() throws Exception {
-        // TODO Need to unmock the following result...
-        // this.ruleManager.findAllPackages();
-        // ruleManager.getAvailableSnapshots()
-        return Arrays.asList("package 1", "package 2", "package 3");
-
+        return this.ruleManager.findAllPackages();
     }
 
     @RequestMapping(value = "/build", method = RequestMethod.POST)
@@ -48,7 +46,7 @@ public class RulesPackageResource {
             this.ruleManager.buildAndTakeSnapshot(packageSnapshotRequest.getAssetStatuses(), packageSnapshotRequest.constructVersionName());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (AdministrationBusinessProcessException e) {
-            if(BusinessProcessError.VERSION_ALREADY_EXISTS.equals(e.getError())) {
+            if (BusinessProcessError.VERSION_ALREADY_EXISTS.equals(e.getError())) {
                 return new ResponseEntity<>("This snapshot name does already exists.", HttpStatus.CONFLICT);
             }
         }

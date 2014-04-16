@@ -1,6 +1,7 @@
 package org.chtijbug.drools.platform.rules.management;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
 import org.apache.commons.lang.StringUtils;
 import org.chtijbug.drools.guvnor.rest.ChtijbugDroolsRestException;
 import org.chtijbug.drools.guvnor.rest.GuvnorRepositoryConnector;
@@ -15,10 +16,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 import static ch.lambdaj.Lambda.*;
+import static com.google.common.collect.Lists.transform;
 import static org.hamcrest.Matchers.equalTo;
 
 /**
@@ -83,5 +86,16 @@ public class RuleManager {
 
     public List<Snapshot> getAvailableSnapshots() throws Exception {
         return guvnorRepositoryConnector.getListSnapshots();
+    }
+
+
+    public List<String> findAllPackages() {
+        return transform(this.guvnorRepositoryConnector.getAllPackagesInGuvnorRepo(), new Function<Asset, String>() {
+            @Nullable
+            @Override
+            public String apply(@Nullable Asset asset) {
+                return asset.getName();
+            }
+        });
     }
 }

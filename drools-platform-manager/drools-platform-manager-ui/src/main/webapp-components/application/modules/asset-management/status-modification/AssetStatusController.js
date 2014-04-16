@@ -1,14 +1,14 @@
 DroolsPlatformControllers.controller('assetStatusController', function ($rootScope, $scope, $http) {
     /* Select package */
     $scope.selectPackage = {
-        allowClear:true
+        allowClear: true
     };
     /*$scope.packagesList = [
-        {name:'package 1'},
-        {name:'package 2'},
-        {name:'package 3'},
-        {name:'package 4'}
-    ];*/
+     {name:'package 1'},
+     {name:'package 2'},
+     {name:'package 3'},
+     {name:'package 4'}
+     ];*/
 
     $http.get('./server/rules_package/list')
         .success(function (data) {
@@ -19,16 +19,10 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
         });
 
 
-    $scope.selectAction = function() {
-        alert("You've selected : "+$scope.package.name);
+    $scope.selectAction = function () {
+        alert("You've selected : " + $scope.package.name);
     };
 
-    /* Tooltip for Select Status filters */
-    $(document).ready(function(){
-        $("#popoverBtn").tooltip({
-            title:'You have to choose at least an item'
-        });
-    });
     /* Input select */
     $scope.filters = {};
     $scope.assets = undefined;
@@ -47,22 +41,21 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
 
     $scope.search = function () {
         var filters = $scope.filters;
-        if (filters == undefined || filters.length == 0){
+        if (filters.length == 0) {
             /* When mistake happens display the tooltip */
-            $(document).ready(function(){
-                $("#popoverBtn").tooltip( 'show');
-            });
+            $("#popoverBtn").popover('show');
             return;
+        } else {
+            //$("#popoverBtn").popover('destroy');
+            $http.post('./server/rule_status', JSON.stringify(filters))
+                .success(function (data) {
+                    $scope.assets = data;
+                })
+                .error(function (error) {
+                    console.log(error);
+                    $scope.noAssetSent = true;
+                });
         }
-
-        $http.post('./server/rule_status', JSON.stringify(filters))
-            .success(function (data) {
-                $scope.assets = data;
-            })
-            .error(function (error) {
-                console.log(error);
-                $scope.noAssetSent = true;
-            });
     };
 
     $scope.promoteAssetsStatus = function () {
