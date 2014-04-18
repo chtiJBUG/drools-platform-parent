@@ -15,7 +15,7 @@ import java.io.File;
  */
 public class MainFibonacciNoBPMN {
     public static void main(String[] args) {
-        ApplicationContext context = new ClassPathXmlApplicationContext("classpath:spring/spring-context.xml");
+        ApplicationContext context = new ClassPathXmlApplicationContext("classpath:spring/spring-drools-platfomr-runtime-context.xml");
         DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase = (DroolsPlatformKnowledgeBase) context.getBean("platformRunner");
         File ruleResource = null;
         RuleBasePackage ruleBasePackage=null;

@@ -53,7 +53,7 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
     private RuntimeWebSocketServerService runtimeWebSocketServerService;
 
 
-    public void getGuvnorRuleBasePackage() throws DroolsChtijbugException {
+    public RuleBasePackage getGuvnorRuleBasePackage() throws DroolsChtijbugException {
 
         logger.debug(">>createGuvnorRuleBasePackage", this.toString());
         jmsStorageHistoryListener.setDroolsPlatformKnowledgeBase(this);
@@ -65,6 +65,7 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
 
         this.ruleBasePackage = newRuleBasePackage;
         logger.debug("<<createGuvnorRuleBasePackage", newRuleBasePackage);
+        return ruleBasePackage;
     }
 
     public RuleBasePackage getRuleBasePackage(String... filenames) throws DroolsChtijbugException {
