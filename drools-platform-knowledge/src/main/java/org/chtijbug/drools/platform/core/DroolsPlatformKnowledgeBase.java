@@ -33,45 +33,40 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
      * Class Logger
      */
     private static Logger logger = LoggerFactory.getLogger(DroolsPlatformKnowledgeBase.class);
-    @Value("${guvnor.url}")
     private String guvnor_url;
-    @Value("${guvnor.appName}")
     private String guvnor_appName;
-    @Value("${guvnor.packageName}")
     private String guvnor_packageName;
-    @Value("${guvnor.packageVersion}")
     private String guvnor_packageVersion;
-    @Value("${guvnor.username}")
     private String guvnor_username;
-    @Value("${guvnor.password}")
     private String guvnor_password;
 
-    private RuleBasePackage ruleBasePackage;
+    private RuleBaseSingleton ruleBasePackage;
     @Autowired
     private JmsStorageHistoryListener jmsStorageHistoryListener;
 
     private RuntimeWebSocketServerService runtimeWebSocketServerService;
 
+    public DroolsPlatformKnowledgeBase() {
+    }
 
-    public RuleBasePackage getGuvnorRuleBasePackage() throws DroolsChtijbugException {
+    public DroolsPlatformKnowledgeBase(String baseUrl, String webappName, String packageName, String packageVersion, String username, String password) throws DroolsChtijbugException {
 
         logger.debug(">>createGuvnorRuleBasePackage", this.toString());
         jmsStorageHistoryListener.setDroolsPlatformKnowledgeBase(this);
-        RuleBaseSingleton newRuleBasePackage = new RuleBaseSingleton(RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, this.jmsStorageHistoryListener);
+        ruleBasePackage = new RuleBaseSingleton(RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, this.jmsStorageHistoryListener);
         GuvnorDroolsResource gdr = new GuvnorDroolsResource(guvnor_url, guvnor_appName, guvnor_packageName, guvnor_packageVersion, guvnor_username, guvnor_password);
-        newRuleBasePackage.createKBase(gdr);
-        jmsStorageHistoryListener.setMbsRuleBase(newRuleBasePackage.getMbsRuleBase());
-        jmsStorageHistoryListener.setMbsSession(newRuleBasePackage.getMbsSession());
+        ruleBasePackage.createKBase(gdr);
+        jmsStorageHistoryListener.setMbsRuleBase(ruleBasePackage.getMbsRuleBase());
+        jmsStorageHistoryListener.setMbsSession(ruleBasePackage.getMbsSession());
 
-        this.ruleBasePackage = newRuleBasePackage;
-        logger.debug("<<createGuvnorRuleBasePackage", newRuleBasePackage);
-        return ruleBasePackage;
+        this.ruleBasePackage = ruleBasePackage;
+        logger.debug("<<createGuvnorRuleBasePackage", ruleBasePackage);
     }
 
-    public RuleBasePackage getRuleBasePackage(String... filenames) throws DroolsChtijbugException {
+    public DroolsPlatformKnowledgeBase(String... filenames) throws DroolsChtijbugException {
         logger.debug(">>createPackageBasePackage");
         jmsStorageHistoryListener.setDroolsPlatformKnowledgeBase(this);
-        RuleBasePackage ruleBasePackage = new RuleBaseSingleton(RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, this.jmsStorageHistoryListener);
+        ruleBasePackage = new RuleBaseSingleton(RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, this.jmsStorageHistoryListener);
         try {
             List<DroolsResource> droolsResources = new ArrayList<DroolsResource>();
             for (String filename : filenames) {
@@ -82,8 +77,8 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
                 } else if ("BPMN2".equals(extensionName)) {
                     resource = Bpmn2DroolsRessource.createClassPathResource(filename);
                 }
-               // if (resource != null) {
-               //     ruleBasePackage.createKBase(resource);
+                // if (resource != null) {
+                //     ruleBasePackage.createKBase(resource);
                 //} else {
                 //    throw new DroolsChtijbugException(DroolsChtijbugException.UnknowFileExtension, filename, null);
                 //}
@@ -91,13 +86,12 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
             }
             ruleBasePackage.createKBase(droolsResources);
 
-            this.ruleBasePackage = ruleBasePackage;
-            //_____ Returning the result
-            return ruleBasePackage;
+
         } finally {
             logger.debug("<<createPackageBasePackage", ruleBasePackage);
         }
     }
+
 
     public void shutdown() {
         this.jmsStorageHistoryListener.shutdown();
@@ -172,7 +166,7 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
 
     @Override
     public RuleBaseSession createRuleBaseSession() throws DroolsChtijbugException {
-        RuleBaseStatefulSession created = (RuleBaseStatefulSession)this.ruleBasePackage.createRuleBaseSession();
+        RuleBaseStatefulSession created = (RuleBaseStatefulSession) this.ruleBasePackage.createRuleBaseSession();
         DroolsPlatformSession droolsPlatformSession = new DroolsPlatformSession();
         droolsPlatformSession.setRuntimeWebSocketServerService(this.runtimeWebSocketServerService);
         droolsPlatformSession.setRuleBaseStatefulSession(created);
@@ -181,7 +175,7 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
 
     @Override
     public RuleBaseSession createRuleBaseSession(int maxNumberRulesToExecute) throws DroolsChtijbugException {
-        RuleBaseStatefulSession created = (RuleBaseStatefulSession)this.ruleBasePackage.createRuleBaseSession(maxNumberRulesToExecute);
+        RuleBaseStatefulSession created = (RuleBaseStatefulSession) this.ruleBasePackage.createRuleBaseSession(maxNumberRulesToExecute);
         DroolsPlatformSession droolsPlatformSession = new DroolsPlatformSession();
         droolsPlatformSession.setRuntimeWebSocketServerService(this.runtimeWebSocketServerService);
         droolsPlatformSession.setRuleBaseStatefulSession(created);
@@ -226,6 +220,7 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
     @Override
     public void dispose() {
         this.ruleBasePackage.dispose();
+        this.shutdown();
     }
 
     @Override

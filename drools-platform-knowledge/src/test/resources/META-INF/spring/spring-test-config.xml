@@ -6,5 +6,5 @@
     >
 
   <import resource="classpath:spring/spring-drools-platfomr-runtime-context.xml"/>
-  <bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase"/>
+
 </beans>

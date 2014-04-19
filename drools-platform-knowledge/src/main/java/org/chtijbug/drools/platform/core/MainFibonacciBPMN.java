@@ -16,15 +16,13 @@ import java.io.File;
 public class MainFibonacciBPMN {
     public static void main(String[] args) {
         ApplicationContext context = new ClassPathXmlApplicationContext("classpath:spring/spring-drools-platfomr-runtime-context.xml");
-        DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase = (DroolsPlatformKnowledgeBase) context.getBean("platformRunner");
         File ruleResource = null;
-        RuleBasePackage ruleBasePackage=null;
-
+        RuleBasePackage droolsPlatformKnowledgeBase =null;
         try {
+            droolsPlatformKnowledgeBase = DroolsPlatformRunTimeFactory.createPackageBasePackageWithListener("ruleflow2.drl", "RuleFlowProcess2.bpmn2");
             //ruleResource = ResourceUtils.getFile("classpath:fibonacci.drl");
-            ruleBasePackage = droolsPlatformKnowledgeBase.getRuleBasePackage("ruleflow2.drl","RuleFlowProcess2.bpmn2");
-            for (int i=0;i<100;i++) {
-                RuleBaseSession ruleBaseSession = ruleBasePackage.createRuleBaseSession();
+             for (int i=0;i<100;i++) {
+                RuleBaseSession ruleBaseSession = droolsPlatformKnowledgeBase.createRuleBaseSession();
                 Fibonacci fibonacci = new Fibonacci(0);
                 ruleBaseSession.insertObject(fibonacci);
                 ruleBaseSession.startProcess("P1");
@@ -36,7 +34,7 @@ public class MainFibonacciBPMN {
 
             e.printStackTrace();
         } finally {
-            droolsPlatformKnowledgeBase.shutdown();
+            droolsPlatformKnowledgeBase.dispose();
 
         }
         System.out.println("Hello World");
