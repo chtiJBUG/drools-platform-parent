@@ -89,8 +89,9 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
     }
 
 
-
-
+    public List<DroolsResource> getDroolsResources() {
+        return droolsResources;
+    }
 
     public void setRuntimeWebSocketServerService(RuntimeWebSocketServerService runtimeWebSocketServerService) {
         this.runtimeWebSocketServerService = runtimeWebSocketServerService;
