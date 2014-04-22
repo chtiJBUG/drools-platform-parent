@@ -5,11 +5,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
     >
 
-  <context:annotation-config/>
   <context:property-placeholder location="classpath:spring/platform-knowledge.properties"/>
-  <context:component-scan base-package="org.chtijbug.drools.platform.core"/>
 
-  <import resource="classpath:spring/spring-activemq-client-context.xml"/>
+   <import resource="classpath:META-INF/spring/spring-drools-platfomr-runtime-context.xml"/>
 
   <bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase"/>
 
