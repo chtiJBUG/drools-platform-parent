@@ -11,6 +11,6 @@
 
   <import resource="classpath:META-INF/spring/spring-activemq-client-context.xml"/>
 
-  <bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase"/>
+  <!--bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase"/-->
 
 </beans>

@@ -8,7 +8,7 @@
 
   <context:property-placeholder location="classpath:spring/platform-knowledge.properties"/>
 
-  <import resource="classpath:META-INF/spring/spring-drools-platfomr-runtime-context.xml"/>
+  <import resource="classpath:META-INF/spring/spring-drools-platform-runtime-context.xml"/>
 
 
   <bean id="drlFile" class="org.chtijbug.drools.runtime.resource.DrlDroolsRessource"

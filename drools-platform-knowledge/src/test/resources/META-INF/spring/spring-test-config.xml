@@ -2,9 +2,39 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd"
     >
+
+  <!--  lets create an embedded ActiveMQ Broker -->
+
+
+  <amq:broker brokerName="brokerService" useJmx="false" xmlns="http://activemq.apache.org/schema/core">
+    <amq:persistenceAdapter>
+      <amq:amqPersistenceAdapter directory="${jms.basedir}" maxFileLength="32mb"/>
+    </amq:persistenceAdapter>
+    <amq:transportConnectors>
+      <amq:transportConnector uri="tcp://${jms.server}:${jms.port}"/>
+    </amq:transportConnectors>
+  </amq:broker>
+
+
   <context:property-placeholder location="classpath:spring/platform-knowledge.properties"/>
-  <import resource="classpath:META-INF/spring/spring-drools-platfomr-runtime-context.xml"/>
+  <import resource="classpath:META-INF/spring/spring-drools-platform-runtime-context.xml"/>
+  <bean id="drlFile" class="org.chtijbug.drools.runtime.resource.DrlDroolsRessource"
+        factory-method="createClassPathResource">
+    <constructor-arg index="0" value="fibonacci.drl"/>
+  </bean>
+  <util:list id="droolsResources" value-type="org.chtijbug.drools.runtime.resource.DroolsResource">
+    <ref bean="drlFile"/>
+  </util:list>
+
+  <bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase"
+        init-method="initFromFiles">
+
+  </bean>
+
 
 </beans>
