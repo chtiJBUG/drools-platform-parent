@@ -5,8 +5,6 @@ import org.chtijbug.drools.runtime.RuleBaseSession;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.io.File;
-
 /**
  * Created by IntelliJ IDEA.
  * Date: 10/01/14
@@ -15,12 +13,10 @@ import java.io.File;
  */
 public class MainFibonacciBPMN {
     public static void main(String[] args) {
-        ApplicationContext context = new ClassPathXmlApplicationContext("classpath:spring/spring-drools-platfomr-runtime-context.xml");
-        File ruleResource = null;
-        RuleBasePackage droolsPlatformKnowledgeBase =null;
+        ApplicationContext context = new ClassPathXmlApplicationContext("classpath:spring/spring-context-BPMN.xml");
+         RuleBasePackage droolsPlatformKnowledgeBase =null;
         try {
-            droolsPlatformKnowledgeBase = DroolsPlatformRunTimeFactory.createPackageBasePackageWithListener("ruleflow2.drl", "RuleFlowProcess2.bpmn2");
-            //ruleResource = ResourceUtils.getFile("classpath:fibonacci.drl");
+             droolsPlatformKnowledgeBase = (RuleBasePackage)context.getBean("platformRunner") ;
              for (int i=0;i<100;i++) {
                 RuleBaseSession ruleBaseSession = droolsPlatformKnowledgeBase.createRuleBaseSession();
                 Fibonacci fibonacci = new Fibonacci(0);

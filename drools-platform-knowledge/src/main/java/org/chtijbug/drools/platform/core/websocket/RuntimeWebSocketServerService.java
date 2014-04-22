@@ -47,11 +47,11 @@ public class RuntimeWebSocketServerService {
             case ruleVersionInfos:
                 GuvnorVersion createNewGuvnorVersion = new GuvnorVersion();
                 bean.setGuvnorVersion(createNewGuvnorVersion);
-                createNewGuvnorVersion.setGuvnor_url(droolsPlatformKnowledgeBase.getGuvnor_url());
-                createNewGuvnorVersion.setGuvnor_appName(droolsPlatformKnowledgeBase.getGuvnor_appName());
-                createNewGuvnorVersion.setGuvnor_packageName(droolsPlatformKnowledgeBase.getGuvnor_packageName());
-                createNewGuvnorVersion.setGuvnor_packageVersion(droolsPlatformKnowledgeBase.getGuvnor_packageVersion());
-                bean.setRequestStatus(RequestStatus.SUCCESS);
+            //    createNewGuvnorVersion.setGuvnor_url(droolsPlatformKnowledgeBase.getGuvnor_url());
+            //    createNewGuvnorVersion.setGuvnor_appName(droolsPlatformKnowledgeBase.getGuvnor_appName());
+            //    createNewGuvnorVersion.setGuvnor_packageName(droolsPlatformKnowledgeBase.getGuvnor_packageName());
+            //    createNewGuvnorVersion.setGuvnor_packageVersion(droolsPlatformKnowledgeBase.getGuvnor_packageVersion());
+            //    bean.setRequestStatus(RequestStatus.SUCCESS);
                 peer.getBasicRemote().sendObject(bean);
                 LOG.info("Runtime Guvnor Version " + createNewGuvnorVersion);
                 break;

@@ -15,13 +15,14 @@ import java.io.File;
  */
 public class MainFibonacciNoBPMN {
     public static void main(String[] args) {
-        ApplicationContext context = new ClassPathXmlApplicationContext("classpath:spring/spring-drools-platfomr-runtime-context.xml");
+        ApplicationContext context = new ClassPathXmlApplicationContext("classpath:spring/spring-context-noBPMN.xml");
         File ruleResource = null;
         RuleBasePackage droolsPlatformKnowledgeBase = null;
 
         try {
-            //ruleResource = ResourceUtils.getFile("classpath:fibonacci.drl");
-            droolsPlatformKnowledgeBase = DroolsPlatformRunTimeFactory.createPackageBasePackageWithListener("fibonacci.drl");
+
+            droolsPlatformKnowledgeBase = (RuleBasePackage)context.getBean("platformRunner") ;
+            //droolsPlatformKnowledgeBase =
 
             for (int i = 0; i < 2; i++) {
                 RuleBaseSession ruleBaseSession = droolsPlatformKnowledgeBase.createRuleBaseSession();
