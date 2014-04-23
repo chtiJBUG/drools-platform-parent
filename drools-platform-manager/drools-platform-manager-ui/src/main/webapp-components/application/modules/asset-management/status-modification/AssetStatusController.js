@@ -3,12 +3,6 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
     $scope.selectPackage = {
         allowClear: true
     };
-    /*$scope.packagesList = [
-     {name:'package 1'},
-     {name:'package 2'},
-     {name:'package 3'},
-     {name:'package 4'}
-     ];*/
 
     $http.get('./server/rules_package/list')
         .success(function (data) {
@@ -35,7 +29,6 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
         });
 
     $scope.filtersOptions = {
-        width: '600px',
         selectOnBlur: true
     };
 

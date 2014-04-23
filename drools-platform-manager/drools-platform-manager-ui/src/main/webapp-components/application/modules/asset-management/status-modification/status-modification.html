@@ -1,89 +1,108 @@
-<div class="container" ng-controller="assetStatusController">
+<div class="" ng-controller="assetStatusController">
     <div class="page-header">
         <h3>Asset Status Modification</h3>
     </div>
+    <div class="row col-sm-12">
+        <div class="col-md-3">
+            <div class="panel panel-default dataSource-panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Search All assets by status</h3>
+                </div>
+                <div class="panel-body">
+                    <!-- Search form -->
+                    <form role="form" name="SearchForm">
+                        <div class="form-group" >
+                            <label for="package-name-select">Rule Package</label>
+                            <div id="popoverPackage" data-placement="bottom" data-toggle="popover" data-content="You have to choose a package">
+                                <select id="package-name-select" ui-select2="selectPackage" ng-model="package"
+                                        class="form-control"
+                                        onchange="$('#popoverPackage').popover('destroy');"
+                                        data-placeholder="Select a package"
 
-    <div class="panel panel-default">
-        <div class="panel-heading panel-title">
-            Search All assets by status
+                                        >
+                                    <option value=""></option>
+                                    <option ng-repeat="p in packagesList" value="{{p}}" ng-change="selectAction()">{{p}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="asset-status-select">Asset Status</label>
+                            <div id="popoverBtn" data-placement="bottom" data-toggle="popover" data-content="You have to choose at least an item ">
+                                <select id="asset-status-select"
+                                        class="form-control"
+                                        ui-select2="filtersOptions"
+                                        multiple
+                                        ng-model="filters"
+                                        onchange="$('#popoverBtn').popover('destroy');"
+                                        data-placeholder="Select Status filters">
+                                    <option ng-repeat="stat in statuses" value="{{stat.assetStatus}}">{{stat.description}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                            <button id="btn-search" class="btn btn-info show-tooltip" ng-click="search()">
+                                <i class="fa fa-search"></i> Search
+                            </button>
+                    </form>
+                </div>
+
+            </div>
+
         </div>
-        <div class="panel-body">
-            <!-- Search form -->
-            <div class="row">
-                <div class="input-group col-sm-1" id="popoverPackage" data-placement="bottom"
-                     data-toggle="popover" data-content="You have to choose a package">
-                    <select ui-select2="selectPackage" ng-model="package"
-                            onchange="$('#popoverPackage').popover('destroy');"
-                            data-placeholder="Select a package">
-                        <option value=""></option>
-                        <option ng-repeat="p in packagesList" value="{{p}}" ng-change="selectAction()">{{p}}</option>
-                    </select>
-
+        <div class="col-md-7">
+            <div class="panel panel-default">
+                <div class="panel-heading panel-title">
+                    Search results
                 </div>
+                <div class="panel-body">
+                    <!-- Search result -->
+                    <br/>
+                    <br/>
 
+                    <div class="alert alert-danger" ng-show="noAssetSent">
+                        Error system
+                    </div>
+                    <div ng-show="assets.length == 0">
+                        <div class="well well-lg">
+                            No Assets have been found
+                        </div>
+                    </div>
+                    <div ng-show="assets.length > 0">
+                        <div class="table-wrapper-div">
+                            <table class="table table-hover table-striped">
+                                <thead>
+                                <tr>
+                                    <th class="bold">Asset name</th>
+                                    <th>Asset Type</th>
+                                    <th>Current status</th>
+                                    <th>Promote ?</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="asset in assets">
+                                    <td>{{asset.name}}</td>
+                                    <td>{{asset.type}}</td>
+                                    <td>{{asset.status}}</td>
+                                    <td>
+                                        <label>
+                                            <input type="checkbox" data-ng-model="asset.selected"/>
+                                        </label>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
 
-                <div class="input-group col-sm-2" id="popoverBtn" data-placement="bottom"
-                     data-toggle="popover" data-content="You have to choose at least an item ">
-                    <span class="input-group-addon"><i class="fa fa-tag"></i></span>
-                    <select
-                            ui-select2="filtersOptions"
-                            multiple
-                            class="control-group"
-                            ng-model="filters"
-                            onchange="$('#popoverBtn').popover('destroy');"
-                            data-placeholder="Select Status filters">
-                        <option ng-repeat="stat in statuses" value="{{stat.assetStatus}}">{{stat.description}}</option>
-                    </select>
+                        </div>
+                        <br>
+                        <button id="btn-demote" class="btn btn-warning pull-left" ng-click="demoteAssetsStatus()">Demote
+                        </button>
+                        <button id="btn-promote" class="btn btn-success pull-right" ng-click="promoteAssetsStatus()">
+                            Promote
+                        </button>
+                    </div>
                 </div>
-                <div class="input-group  col-sm-2">
-                    <button id="btn-search" class="btn btn-info show-tooltip" ng-click="search()"><i
-                            class="fa fa-search"></i> Search
-                    </button>
-                </div>
-            </div>
-            <!-- Search result -->
-            <br/>
-            <br/>
-
-            <div class="alert alert-danger" ng-show="noAssetSent">
-                Error system
-            </div>
-            <div ng-show="assets.length == 0">
-                <div class="well well-lg">
-                    No Assets have been found
-                </div>
-            </div>
-            <div ng-show="assets.length > 0">
-                <div class="table-wrapper-div">
-                    <table class="table table-hover table-striped">
-                        <thead>
-                        <tr>
-                            <th class="bold">Asset name</th>
-                            <th>Asset Type</th>
-                            <th>Current status</th>
-                            <th>Promote ?</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="asset in assets">
-                            <td>{{asset.name}}</td>
-                            <td>{{asset.type}}</td>
-                            <td>{{asset.status}}</td>
-                            <td>
-                                <label>
-                                    <input type="checkbox" data-ng-model="asset.selected"/>
-                                </label>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                </div>
-                <br>
-                <button id="btn-demote" class="btn btn-warning pull-left" ng-click="demoteAssetsStatus()">Demote
-                </button>
-                <button id="btn-promote" class="btn btn-success pull-right" ng-click="promoteAssetsStatus()">Promote
-                </button>
             </div>
         </div>
     </div>
