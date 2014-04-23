@@ -81,6 +81,7 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
     };
 
     $scope.demoteAssetsStatus = function () {
+        var packageSelected=$scope.package;
         var assetsToDemote = _.where($scope.assets, {selected: true});
         var data = {assetsToDemote: assetsToDemote, assetStatuses: $scope.filters};
         $http.post('./server/rule_status/'+packageSelected+'/demote', data)
