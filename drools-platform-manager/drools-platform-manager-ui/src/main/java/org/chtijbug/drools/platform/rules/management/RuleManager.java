@@ -43,9 +43,9 @@ public class RuleManager {
         guvnorRepositoryConnector = new GuvnorRepositoryConnector(runtimeSiteTopology.buildGuvnorConfiguration());
     }
 
-    public List<Asset> findAllAssetsByStatus(List<AssetStatus> assetStatuses) throws ChtijbugDroolsRestException {
+    public List<Asset> findAllAssetsByStatus(String packageName, List<AssetStatus> assetStatuses) throws ChtijbugDroolsRestException {
         //___ Fetch all assets metadata
-        List<Asset> assets = guvnorRepositoryConnector.getAllBusinessAssets();
+        List<Asset> assets = guvnorRepositoryConnector.getAllBusinessAssets(packageName);
         //___ If no filter provided, then return the whole list
         if (assetStatuses == null || assetStatuses.isEmpty())
             return assets;
@@ -60,8 +60,8 @@ public class RuleManager {
         return select(assets, having(on(Asset.class).getStatus(), anyOfFilters));
     }
 
-    public void updateAssetStatus(String assetName, AssetStatus assetStatus) throws ChtijbugDroolsRestException {
-        guvnorRepositoryConnector.changeAssetPropertyValue(assetName, AssetPropertyType.STATE, assetStatus.toString());
+    public void updateAssetStatus(String packageName, String assetName, AssetStatus assetStatus) throws ChtijbugDroolsRestException {
+        guvnorRepositoryConnector.changeAssetPropertyValue(packageName, assetName, AssetPropertyType.STATE, assetStatus.toString());
     }
 
     public void buildAndTakeSnapshot(List<AssetStatus> buildScope, String version) throws Exception {
