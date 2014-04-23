@@ -6,11 +6,11 @@
     >
 
   <context:annotation-config/>
-  <context:property-placeholder location="classpath:spring/platform-knowledge.properties"/>
+
   <context:component-scan base-package="org.chtijbug.drools.platform.core"/>
 
-  <import resource="classpath:spring/spring-activemq-client-context.xml"/>
+  <import resource="classpath:META-INF/spring/spring-activemq-client-context.xml"/>
 
-  <bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase"/>
+  <!--bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase"/-->
 
 </beans>

@@ -45,15 +45,22 @@ public class RuntimeWebSocketServerService {
                 LOG.info("Runtime is alive");
                 break;
             case ruleVersionInfos:
-                GuvnorVersion createNewGuvnorVersion = new GuvnorVersion();
-                bean.setGuvnorVersion(createNewGuvnorVersion);
-                createNewGuvnorVersion.setGuvnor_url(droolsPlatformKnowledgeBase.getGuvnor_url());
-                createNewGuvnorVersion.setGuvnor_appName(droolsPlatformKnowledgeBase.getGuvnor_appName());
-                createNewGuvnorVersion.setGuvnor_packageName(droolsPlatformKnowledgeBase.getGuvnor_packageName());
-                createNewGuvnorVersion.setGuvnor_packageVersion(droolsPlatformKnowledgeBase.getGuvnor_packageVersion());
-                bean.setRequestStatus(RequestStatus.SUCCESS);
+                if (droolsPlatformKnowledgeBase.getDroolsResources().size()==1 && droolsPlatformKnowledgeBase.getDroolsResources().get(0) instanceof GuvnorDroolsResource) {
+                    GuvnorVersion createNewGuvnorVersion = new GuvnorVersion();
+                    bean.setGuvnorVersion(createNewGuvnorVersion);
+                    GuvnorDroolsResource guvnorDroolsResource = (GuvnorDroolsResource) droolsPlatformKnowledgeBase.getDroolsResources().get(0);
+                    createNewGuvnorVersion.setGuvnor_url(guvnorDroolsResource.getBaseUrl());
+                    createNewGuvnorVersion.setGuvnor_appName(guvnorDroolsResource.getWebappName());
+                    createNewGuvnorVersion.setGuvnor_packageName(guvnorDroolsResource.getPackageName());
+                    createNewGuvnorVersion.setGuvnor_packageVersion(guvnorDroolsResource.getPackageVersion());
+                    bean.setRequestStatus(RequestStatus.SUCCESS);
+                    LOG.info("Runtime Guvnor Version " + createNewGuvnorVersion);
+                } else {
+                    bean.setRequestStatus(RequestStatus.SUCCESS);
+                    bean.setGuvnorVersion(null);
+                }
                 peer.getBasicRemote().sendObject(bean);
-                LOG.info("Runtime Guvnor Version " + createNewGuvnorVersion);
+
                 break;
             case loadNewRuleVersion:
                 GuvnorVersion newGuvnorVersionToLoad = bean.getGuvnorVersion();

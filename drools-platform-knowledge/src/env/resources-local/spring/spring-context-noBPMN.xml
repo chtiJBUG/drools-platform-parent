@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+    >
+
+  <context:property-placeholder location="classpath:spring/platform-knowledge.properties"/>
+
+  <import resource="classpath:META-INF/spring/spring-drools-platform-runtime-context.xml"/>
+
+
+  <bean id = "drlFile" class="org.chtijbug.drools.runtime.resource.DrlDroolsRessource" factory-method="createClassPathResource">
+     <constructor-arg index="0" value="fibonacci.drl"/>
+  </bean>
+  <util:list id="droolsResources" value-type="org.chtijbug.drools.runtime.resource.DroolsResource">
+      <ref bean="drlFile"/>
+  </util:list>
+
+  <bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase" init-method="initFromFiles">
+
+  </bean>
+
+
+</beans>
