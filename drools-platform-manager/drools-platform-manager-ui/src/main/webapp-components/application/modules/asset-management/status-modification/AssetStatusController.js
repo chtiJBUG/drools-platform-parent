@@ -57,7 +57,7 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
             return;
         }else{
             //$("#popoverBtn").popover('destroy');
-            $http.post('./server/rule_status', JSON.stringify(filters))
+            $http.post('./server/rule_status/'+packageSelected, JSON.stringify(filters))
                 .success(function (data) {
                     $scope.assets = data;
                 })
@@ -69,9 +69,10 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
     };
 
     $scope.promoteAssetsStatus = function () {
+        var packageSelected=$scope.package;
         var assetsToPromote = _.where($scope.assets, {selected: true});
         var data = {assetsToPromote: assetsToPromote, assetStatuses: $scope.filters};
-        $http.post('./server/rule_status/promote', data)
+        $http.post('./server/rule_status/'+packageSelected+'/promote', data)
             .success(function (data) {
                 $scope.assets = data;
             })
@@ -83,7 +84,7 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
     $scope.demoteAssetsStatus = function () {
         var assetsToDemote = _.where($scope.assets, {selected: true});
         var data = {assetsToDemote: assetsToDemote, assetStatuses: $scope.filters};
-        $http.post('./server/rule_status/demote', data)
+        $http.post('./server/rule_status/'+packageSelected+'/demote', data)
             .success(function (data) {
                 $scope.assets = data;
             })
