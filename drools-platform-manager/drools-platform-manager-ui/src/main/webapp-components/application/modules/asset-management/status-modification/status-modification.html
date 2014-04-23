@@ -1,6 +1,6 @@
-<div class="" ng-controller="assetStatusController">
+<div ng-controller="assetStatusController">
     <div class="page-header">
-        <h3>Asset Status Modification</h3>
+        <h3 style="margin-left:20px">Asset Status Modification</h3>
     </div>
     <div class="row col-sm-12">
         <div class="col-md-3">
@@ -11,47 +11,48 @@
                 <div class="panel-body">
                     <!-- Search form -->
                     <form role="form" name="SearchForm">
-                        <div class="form-group" >
+                        <div class="form-group" ng-class="namePackageSelectClass" >
                             <label for="package-name-select">Rule Package</label>
-                            <div id="popoverPackage" data-placement="bottom" data-toggle="popover" data-content="You have to choose a package">
-                                <select id="package-name-select" ui-select2="selectPackage" ng-model="package"
-                                        class="form-control"
-                                        onchange="$('#popoverPackage').popover('destroy');"
-                                        data-placeholder="Select a package"
+                            <select id="package-name-select" ui-select2="selectPackage" ng-model="package"
+                                    class="form-control"
+                                    style="padding:0;height:auto;width:auto;"
+                                    data-placeholder="Select a package">
+                                <option value=""></option>
+                                <option ng-repeat="p in packagesList" value="{{p}}">{{p}}
+                                </option>
+                            </select>
 
-                                        >
-                                    <option value=""></option>
-                                    <option ng-repeat="p in packagesList" value="{{p}}" ng-change="selectAction()">{{p}}
-                                    </option>
-                                </select>
-                            </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" ng-class="assetStatusSelectClass">
                             <label for="asset-status-select">Asset Status</label>
-                            <div id="popoverBtn" data-placement="bottom" data-toggle="popover" data-content="You have to choose at least an item ">
-                                <select id="asset-status-select"
-                                        class="form-control"
-                                        ui-select2="filtersOptions"
-                                        multiple
-                                        ng-model="filters"
-                                        onchange="$('#popoverBtn').popover('destroy');"
-                                        data-placeholder="Select Status filters">
-                                    <option ng-repeat="stat in statuses" value="{{stat.assetStatus}}">{{stat.description}}
-                                    </option>
-                                </select>
-                            </div>
+                            <select id="asset-status-select"
+                                    class="form-control"
+                                    style="padding:0;height:auto;width:auto;"
+                                    ui-select2="filtersOptions"
+                                    multiple
+                                    ng-model="filters"
+                                    data-placeholder="Select Status filters">
+                                <option ng-repeat="stat in statuses" value="{{stat.assetStatus}}">{{stat.description}}
+                                </option>
+                            </select>
+
                         </div>
-                            <button id="btn-search" class="btn btn-info show-tooltip" ng-click="search()">
+                        <div class="form-group">
+                            <button id="btn-cancel" class="btn btn-danger show-tooltip" ng-show="showCancelButton" ng-click="reset()">
+                                <i class="fa fa-times"></i>
+                            </button>
+                            <button id="btn-search" class="btn btn-info show-tooltip pull-right" ng-click="search()">
                                 <i class="fa fa-search"></i> Search
                             </button>
+                        </div>
                     </form>
                 </div>
 
             </div>
 
         </div>
-        <div class="col-md-7">
+        <div class="col-md-7 col-md-offset-1">
             <div class="panel panel-default">
                 <div class="panel-heading panel-title">
                     Search results

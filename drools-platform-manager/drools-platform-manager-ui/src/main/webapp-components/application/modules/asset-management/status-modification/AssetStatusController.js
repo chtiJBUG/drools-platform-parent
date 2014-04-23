@@ -12,11 +12,6 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
             console.log(error);
         });
 
-
-    $scope.selectAction = function () {
-        alert("You've selected : " + $scope.package.name);
-    };
-
     /* Input select */
     $scope.filters = {};
     $scope.assets = undefined;
@@ -38,28 +33,39 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
         console.log("Package selected : "+packageSelected);
         console.log("Filter()s selected : "+packageSelected);
         if(packageSelected == "" && filters.length == 0 ) {
-            $("#popoverPackage").popover('show');
-            $("#popoverBtn").popover('show');
+            $scope.namePackageSelectClass="form-group has-error has-feedback";
+            $scope.assetStatusSelectClass="form-group has-error has-feedback";
         }else if (filters.length == 0) {
             /* When mistake happens display the tooltip */
-            $("#popoverBtn").popover('show');
+            $scope.assetStatusSelectClass="form-group has-error has-feedback";
             return;
         }else if (packageSelected == "") {
             /* When mistake happens display the tooltip */
-            $("#popoverPackage").popover('show');
+            $scope.namePackageSelectClass="form-group has-error has-feedback";
+            $scope.assetStatusSelectClass="form-group";
             return;
         }else{
+            $scope.namePackageSelectClass="form-group";
+            $scope.assetStatusSelectClass="form-group";
             //$("#popoverBtn").popover('destroy');
             $http.post('./server/rule_status/'+packageSelected, JSON.stringify(filters))
                 .success(function (data) {
+                    $scope.showCancelButton=true;
                     $scope.assets = data;
                 })
                 .error(function (error) {
                     console.log(error);
+                    $scope.showCancelButton=true;
                     $scope.noAssetSent = true;
                 });
         }
     };
+    $scope.reset = function () {
+        $scope.showCancelButton=false;
+        $scope.package=undefined;
+        $scope.filters = undefined;
+        $scope.assets = undefined;
+    }
 
     $scope.promoteAssetsStatus = function () {
         var packageSelected=$scope.package;
