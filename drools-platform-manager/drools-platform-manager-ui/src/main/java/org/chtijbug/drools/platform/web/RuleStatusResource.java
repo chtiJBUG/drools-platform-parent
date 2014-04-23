@@ -39,7 +39,7 @@ public class RuleStatusResource {
         return Arrays.asList(dev, integration, prod);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/{packageName}")
+    @RequestMapping(method = RequestMethod.POST, value = "/{packageName:.+}")
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
