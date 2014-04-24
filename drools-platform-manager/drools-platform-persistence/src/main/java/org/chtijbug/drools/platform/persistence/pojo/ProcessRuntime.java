@@ -46,10 +46,10 @@ public class ProcessRuntime {
     private String processId;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "process_runtime_id_fk")
     private List<RuleflowGroupRuntime> ruleflowGroupRuntimes = new ArrayList<RuleflowGroupRuntime>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<RuleRuntime> ruleRuntimeList  = new ArrayList<RuleRuntime>();
+
 
     public Long getId() {
         return id;
@@ -155,13 +155,6 @@ public class ProcessRuntime {
         this.ruleflowGroupRuntimes = ruleflowGroupRuntimes;
     }
 
-    public List<RuleRuntime> getRuleRuntimeList() {
-        return ruleRuntimeList;
-    }
-
-    public void setRuleRuntimeList(List<RuleRuntime> ruleRuntimeList) {
-        this.ruleRuntimeList = ruleRuntimeList;
-    }
 
     @Override
     public String toString() {
