@@ -83,6 +83,7 @@
     <module>drools-platform-entity</module>
     <module>drools-platform-governance</module>
     <module>drools-platform-manager</module>
+    <module>drools-platform-example</module>
   </modules>
 
 
@@ -128,9 +129,11 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
+
+
 
     <dependency>
       <groupId>org.mockito</groupId>
@@ -428,6 +431,22 @@
         <groupId>commons-dbcp</groupId>
         <artifactId>commons-dbcp</artifactId>
         <version>1.4</version>
+      </dependency>
+      <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+        <version>2.2</version>
+      </dependency>
+      <!-- Apache CXF dependencies -->
+      <dependency>
+          <groupId>org.apache.cxf</groupId>
+          <artifactId>cxf-rt-frontend-jaxws</artifactId>
+          <version>${cxf.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.cxf</groupId>
+          <artifactId>cxf-rt-transports-http</artifactId>
+          <version>${cxf.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

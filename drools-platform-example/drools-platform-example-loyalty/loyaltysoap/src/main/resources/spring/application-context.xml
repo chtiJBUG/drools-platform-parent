@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jaxws="http://cxf.apache.org/jaxws" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <import resource="classpath:META-INF/cxf/cxf.xml"/>
+  <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml"/>
+  <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
+  <context:property-placeholder location="classpath:spring/platform-knowledge.properties"/>
+
+  <bean id="guvnorResource" class="org.chtijbug.drools.runtime.resource.GuvnorDroolsResource"
+        factory-method="createGuvnorRessource">
+    <constructor-arg index="0" value="${guvnor.url}"/>
+    <constructor-arg index="1" value="${guvnor.appName}"/>
+    <constructor-arg index="2" value="${guvnor.packageName}"/>
+    <constructor-arg index="3" value="${guvnor.packageVersion}"/>
+    <constructor-arg index="4" value="${guvnor.username}"/>
+    <constructor-arg index="5" value="${guvnor.password}"/>
+  </bean>
+  <util:list id="droolsResources" value-type="org.chtijbug.drools.runtime.resource.DroolsResource">
+    <ref bean="guvnorResource"/>
+  </util:list>
+
+  <bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase"
+        init-method="initFromGuvnor">
+
+  </bean>
+
+  <bean id="calculateService" class="loyalty.service.ServiceCalculate">
+    <property name="ruleBasePackage" ref="platformRunner"/>
+  </bean>
+
+
+
+
+  <!-- JAX-WS Service Endpoint -->
+  <jaxws:endpoint id="personService" implementor="#calculateService" address="/calculateService"/>
+
+</beans>
