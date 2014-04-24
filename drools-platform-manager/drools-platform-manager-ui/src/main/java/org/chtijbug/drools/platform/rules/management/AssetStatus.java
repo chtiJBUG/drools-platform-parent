@@ -1,8 +1,5 @@
 package org.chtijbug.drools.platform.rules.management;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public enum AssetStatus {
     DEV,
     INT,

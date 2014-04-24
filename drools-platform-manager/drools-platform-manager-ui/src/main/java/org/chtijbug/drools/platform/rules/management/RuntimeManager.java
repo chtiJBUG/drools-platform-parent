@@ -36,6 +36,7 @@ public class RuntimeManager {
 
     public String getDeployedPackageVersion(String envName) {
         try {
+            //___ Get the deployed rulebase version on the target environment
             return runtimeSiteTopology.webClient(envName, REST_SERVICE_PATH)
                     .accept(MediaType.TEXT_PLAIN_TYPE)
                     .get(String.class);

@@ -143,6 +143,7 @@
     </dependencies>
 
     <build>
+        <finalName>drools-platform-ui</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
