@@ -1,5 +1,8 @@
 package org.chtijbug.drools.platform.rules.management;
 
+/**
+ * All Business Error code should be mapped here
+ */
 public enum BusinessProcessError {
     ENVIRONMENT_UPDATE_ERROR,
     NO_ENVIRONMENT_DEFINED,

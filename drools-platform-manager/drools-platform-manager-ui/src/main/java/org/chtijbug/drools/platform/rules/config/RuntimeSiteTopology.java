@@ -22,11 +22,7 @@ import static java.util.Arrays.asList;
 
 @Component
 public class RuntimeSiteTopology {
-    /**
-     * TODO
-     * Will see later to store this info into OrientDB.
-     * Maybe, we could get multiple site topologies as we could get severals guvnor instances...
-     */
+    /** Default values */
     private String guvnorUrl = "http://localhost:8080";
     private String guvnorApplicationName = "drools-guvnor";
     private String guvnorPackageName = null;

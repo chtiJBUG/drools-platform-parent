@@ -5,7 +5,10 @@ import com.google.common.collect.Lists;
 import org.chtijbug.drools.guvnor.rest.model.Snapshot;
 import org.chtijbug.drools.platform.rules.config.Environment;
 import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
-import org.chtijbug.drools.platform.rules.management.*;
+import org.chtijbug.drools.platform.rules.management.AdministrationBusinessProcessException;
+import org.chtijbug.drools.platform.rules.management.BusinessProcessError;
+import org.chtijbug.drools.platform.rules.management.RuleManager;
+import org.chtijbug.drools.platform.rules.management.RuntimeManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,6 +32,13 @@ public class RulesPackageResource {
     @Resource
     private RuntimeSiteTopology runtimeSiteTopology;
 
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @Produces(value = MediaType.APPLICATION_JSON)
+    @ResponseBody
+    public List<String> getAllPackages() throws Exception {
+        return this.ruleManager.findAllPackages();
+    }
+
     @RequestMapping(value = "/build", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<String> createRulePackageVersion(@RequestBody PackageSnapshotRequest packageSnapshotRequest) throws Exception {
@@ -36,7 +46,7 @@ public class RulesPackageResource {
             this.ruleManager.buildAndTakeSnapshot(packageSnapshotRequest.getAssetStatuses(), packageSnapshotRequest.constructVersionName());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (AdministrationBusinessProcessException e) {
-            if(BusinessProcessError.VERSION_ALREADY_EXISTS.equals(e.getError())) {
+            if (BusinessProcessError.VERSION_ALREADY_EXISTS.equals(e.getError())) {
                 return new ResponseEntity<>("This snapshot name does already exists.", HttpStatus.CONFLICT);
             }
         }

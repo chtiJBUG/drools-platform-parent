@@ -1,6 +1,7 @@
 package org.chtijbug.drools.platform.rules.management;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
 import org.apache.commons.lang.StringUtils;
 import org.chtijbug.drools.guvnor.rest.ChtijbugDroolsRestException;
 import org.chtijbug.drools.guvnor.rest.GuvnorRepositoryConnector;
@@ -15,10 +16,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 import static ch.lambdaj.Lambda.*;
+import static com.google.common.collect.Lists.transform;
 import static org.hamcrest.Matchers.equalTo;
 
 /**
@@ -40,9 +43,9 @@ public class RuleManager {
         guvnorRepositoryConnector = new GuvnorRepositoryConnector(runtimeSiteTopology.buildGuvnorConfiguration());
     }
 
-    public List<Asset> findAllAssetsByStatus(List<AssetStatus> assetStatuses) throws ChtijbugDroolsRestException {
+    public List<Asset> findAllAssetsByStatus(String packageName, List<AssetStatus> assetStatuses) throws ChtijbugDroolsRestException {
         //___ Fetch all assets metadata
-        List<Asset> assets = guvnorRepositoryConnector.getAllBusinessAssets();
+        List<Asset> assets = guvnorRepositoryConnector.getAllBusinessAssets(packageName);
         //___ If no filter provided, then return the whole list
         if (assetStatuses == null || assetStatuses.isEmpty())
             return assets;
@@ -57,8 +60,8 @@ public class RuleManager {
         return select(assets, having(on(Asset.class).getStatus(), anyOfFilters));
     }
 
-    public void updateAssetStatus(String assetName, AssetStatus assetStatus) throws ChtijbugDroolsRestException {
-        guvnorRepositoryConnector.changeAssetPropertyValue(assetName, AssetPropertyType.STATE, assetStatus.toString());
+    public void updateAssetStatus(String packageName, String assetName, AssetStatus assetStatus) throws ChtijbugDroolsRestException {
+        guvnorRepositoryConnector.changeAssetPropertyValue(packageName, assetName, AssetPropertyType.STATE, assetStatus.toString());
     }
 
     public void buildAndTakeSnapshot(List<AssetStatus> buildScope, String version) throws Exception {
@@ -83,5 +86,16 @@ public class RuleManager {
 
     public List<Snapshot> getAvailableSnapshots() throws Exception {
         return guvnorRepositoryConnector.getListSnapshots();
+    }
+
+
+    public List<String> findAllPackages() {
+        return transform(this.guvnorRepositoryConnector.getAllPackagesInGuvnorRepo(), new Function<Asset, String>() {
+            @Nullable
+            @Override
+            public String apply(@Nullable Asset asset) {
+                return asset.getName();
+            }
+        });
     }
 }
