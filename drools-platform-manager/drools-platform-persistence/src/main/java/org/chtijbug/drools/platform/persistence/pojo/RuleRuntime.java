@@ -34,9 +34,11 @@ public class RuleRuntime {
     private List<FactRuntime> thenFacts = new ArrayList<FactRuntime>() ;
 
     @ManyToOne
+    @JoinColumn(name="ruleflowgroup_runtime_id_fk")
     private RuleflowGroupRuntime ruleflowGroupRuntime;
 
     @ManyToOne
+    @JoinColumn(name="session_runtime_id_fk")
     private SessionRuntime sessionRuntime;
 
     public String getRuleName() {

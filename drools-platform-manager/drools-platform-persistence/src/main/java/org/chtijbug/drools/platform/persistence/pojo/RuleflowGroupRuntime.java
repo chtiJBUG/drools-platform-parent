@@ -24,9 +24,11 @@ public class RuleflowGroupRuntime {
     private String ruleflowGroup;
 
     @ManyToOne
+    @JoinColumn(name = "process_runtime_id_fk")
     private ProcessRuntime processRuntime;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "ruleflowgroup_runtime_id_fk")
     private List<RuleRuntime> ruleRuntimeList  = new ArrayList<RuleRuntime>();
 
     @Column(nullable = false)

@@ -19,6 +19,7 @@ public class SessionRuntime {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "session_id_seq")
     private Long id;
     @ManyToOne
+    @JoinColumn(name="platform_runtime_id_fk")
     private PlatformRuntime platformRuntime;
 
     private Integer sessionId;
@@ -34,9 +35,11 @@ public class SessionRuntime {
     private SessionRuntimeStatus sessionRuntimeStatus;
 
     @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "session_runtime_id_fk")
     private List<RuleRuntime> ruleRuntimes = new ArrayList<RuleRuntime>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "session_runtime_id_fk")
     private List<FactRuntime> facts = new ArrayList<FactRuntime>() ;
 
     public SessionRuntime() {

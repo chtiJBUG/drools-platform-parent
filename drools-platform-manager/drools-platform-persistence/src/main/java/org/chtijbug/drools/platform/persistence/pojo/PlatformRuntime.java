@@ -35,9 +35,11 @@ public class PlatformRuntime implements Serializable {
     private Integer ruleBaseID;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "platform_runtime_id_fk")
     private List<DroolsRessource> droolsRessources = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "platform_runtime_id_fk")
     private List<SessionRuntime> sessionRuntimes = new ArrayList<SessionRuntime>();
 
 
