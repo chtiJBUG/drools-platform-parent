@@ -52,11 +52,13 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
                 .success(function (data) {
                     $scope.showCancelButton=true;
                     $scope.assets = data;
+                    console.log(data);
                 })
-                .error(function (error) {
-                    console.log(error);
+                .error(function (error, status) {
                     $scope.showCancelButton=true;
                     $scope.noAssetSent = true;
+                    $scope.status=status;
+                    console.log(error);
                 });
         }
     };

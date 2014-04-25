@@ -1,55 +1,90 @@
-
-<div class="container" data-ng-controller="assetPackagingController">
+<div data-ng-controller="assetPackagingController">
     <div class="page-header">
-        <h3>Asset Package Building</h3>
+        <h3 style="margin-left:20px">Asset Package Building</h3>
     </div>
+    <div class="row col-sm-12">
+        <div class="col-md-3">
+            <div class="panel panel-default dataSource-panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Search Package's versions</h3>
+                </div>
+                <div class="panel-body">
+                    <!-- Search form -->
+                    <form role="form" name="NewPackageForm">
+                        <div class="form-group" ng-class="namePackageSelectClass" >
+                            <label for="package-name-select">Rule Package Name</label>
+                            <select id="package-name-select" ui-select2="selectPackage" ng-model="package"
+                                    class="form-control"
+                                    style="padding:0;height:auto;width:auto;"
+                                    data-placeholder="Select a package">
+                                <option value=""></option>
+                                <option ng-repeat="p in packagesList" value="{{p}}">{{p}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group" >
+                            <label for="ipt-version">Rule Package Version </label> <small>(Optional)</small>
+                            <input id="ipt-version" class="form-control" type="text" placeholder="Please enter the new rule package version name" data-ng-model="version">
+                        </div>
+                        <div class="form-group">
+                            <button id="btn-cancel" class="btn btn-danger show-tooltip" ng-show="showCancelButton" ng-click="reset()"><i class="fa fa-times"></i></button>
+                            <button id="btn-create" class="btn btn-info pull-right" data-ng-click="searchPackageByName()"><i class="fa fa-search"></i> Search</button>
+                        </div>
+                    </form>
+                </div>
 
-    <div class="panel panel-default">
-        <div class="panel-heading panel-title">
-            Define new Asset Package
+            </div>
         </div>
-        <div class="panel-body">
-            <!-- Select Asset to include into the build -->
-            <form class="form-horizontal" role="form">
-                <div class="form-group">
-                    <label for="filers-input" class="col-sm-2 control-label" style="margin-left:200px;">Asset status filter </label>
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="fa fa-tag"></i>
-                        </span>
-                        <select id="filers-input" ui-select2="filtersOptions"
-                                multiple
-                                class="control-group input-medium"
-                                data-ng-model="filters"
-                                data-placeholder="Select Status filters">
-                            <option ng-repeat="stat in statuses"
-                                    value="{{stat.assetStatus}}">{{stat.description}}
-                            </option>
-                        </select>
-                    </div>
+        <div class="col-md-7 col-md-offset-1">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Result search</h3>
                 </div>
-                <div class="form-group" >
-                    <label for="ipt-version" class="col-sm-2 control-label" style="margin-left:200px;">Rule Package Version</label>
-                    <div style="width:485px">
-                        <input id="ipt-version" class="form-control" type="text" placeholder="Please enter the new rule package version name" data-ng-model="version">
+                <div class="panel-body">
+                    <br/>
+                    <div class="alert alert-danger" ng-show="noAssetSent">
+                        Error HTTP {{status}}
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-4 col-sm-10">
-                        <div class="checkbox">
-                            <label>
-                                <input id="release-snapshot-option" type="checkbox" data-ng-model="isRelease"> Release ?
-                            </label>
+                    <div ng-show="assets.length == 0">
+                        <div class="well well-lg">
+                            No Assets have been found
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-6">
-                    <button id="btn-demote" class="btn btn-info" data-ng-click="createVersion()">Create new Version</button>
-                        </div>
-                </div>
-            </form>
+                    <div ng-show="assets.length > 0">
+                        <div class="table-wrapper-div">
+                            <table class="table table-hover table-striped">
+                                <thead>
+                                <tr>
+                                    <th class="bold">Asset name</th>
+                                    <th>Asset Type</th>
+                                    <th>Current status</th>
+                                    <th>Promote ?</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="asset in assets">
+                                    <td>{{asset.name}}</td>
+                                    <td>{{asset.type}}</td>
+                                    <td>{{asset.status}}</td>
+                                    <td>
+                                        <label>
+                                            <input type="checkbox" data-ng-model="asset.selected"/>
+                                        </label>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
 
+                        </div>
+                        <br>
+                        <button id="btn-demote" class="btn btn-warning pull-left" ng-click="demoteAssetsStatus()">Demote
+                        </button>
+                        <button id="btn-promote" class="btn btn-success pull-right" ng-click="promoteAssetsStatus()">
+                            Promote
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
