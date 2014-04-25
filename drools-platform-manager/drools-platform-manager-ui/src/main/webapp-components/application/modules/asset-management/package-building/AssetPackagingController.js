@@ -22,11 +22,6 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         });
     $scope.searchPackageByName = function() {
         var packageSelected=$scope.package;
-        var packageSnapshotRequest = {
-            assetStatuses: $scope.filters,
-            version: $scope.version,
-            isRelease: $scope.isRelease
-        };
         if(packageSelected == "") {
             $scope.namePackageSelectClass="form-group has-error has-feedback";
 
