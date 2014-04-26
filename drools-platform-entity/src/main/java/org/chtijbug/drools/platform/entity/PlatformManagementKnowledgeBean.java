@@ -1,7 +1,11 @@
 package org.chtijbug.drools.platform.entity;
 
+import org.chtijbug.drools.entity.history.ResourceFile;
 import org.chtijbug.drools.platform.entity.coder.JSONCoder;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,7 +37,7 @@ public class PlatformManagementKnowledgeBean {
 
     private JMXInfo jmxInfo;
 
-    private GuvnorVersion guvnorVersion=null;
+    private List<ResourceFile> resourceFileList = new ArrayList<>();
 
     private DroolsChtijbugException droolsChtijbugException;
 
@@ -61,13 +65,6 @@ public class PlatformManagementKnowledgeBean {
         this.jmxInfo = jmxInfo;
     }
 
-    public GuvnorVersion getGuvnorVersion() {
-        return guvnorVersion;
-    }
-
-    public void setGuvnorVersion(GuvnorVersion guvnorVersion) {
-        this.guvnorVersion = guvnorVersion;
-    }
 
     public DroolsChtijbugException getDroolsChtijbugException() {
         return droolsChtijbugException;
@@ -77,6 +74,14 @@ public class PlatformManagementKnowledgeBean {
         this.droolsChtijbugException = droolsChtijbugException;
     }
 
+    public List<ResourceFile> getResourceFileList() {
+        return resourceFileList;
+    }
+
+    public void setResourceFileList(List<ResourceFile> resourceFileList) {
+        this.resourceFileList = resourceFileList;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("PlatformManagementKnowledgeBean{");
@@ -84,7 +89,8 @@ public class PlatformManagementKnowledgeBean {
         sb.append(", requestRuntimePlarform=").append(requestRuntimePlarform);
         sb.append(", requestStatus=").append(requestStatus);
         sb.append(", jmxInfo=").append(jmxInfo);
-        sb.append(", guvnorVersion=").append(guvnorVersion);
+        sb.append(", resourceFileList=").append(resourceFileList);
+        sb.append(", droolsChtijbugException=").append(droolsChtijbugException);
         sb.append('}');
         return sb.toString();
     }

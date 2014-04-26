@@ -1,18 +1,17 @@
 package org.chtijbug.drools.platform.backend.service.impl.knowledgeBase;
 
 import org.apache.log4j.Logger;
+import org.chtijbug.drools.entity.history.DrlResourceFile;
+import org.chtijbug.drools.entity.history.GuvnorResourceFile;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseAddRessourceEvent;
-import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseDelRessourceEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.pojo.DroolsRessource;
+import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,14 +33,16 @@ public class KnowledgeBaseAddRessourceEventStrategy extends AbstractEventHandler
         KnowledgeBaseAddRessourceEvent knowledgeBaseAddRessourceEvent = (KnowledgeBaseAddRessourceEvent) historyEvent;
         PlatformRuntime existingPlatformRuntime = platformRuntimeRepository.findByRuleBaseIDAndEndDateNull(knowledgeBaseAddRessourceEvent.getRuleBaseID());
 
-         DroolsRessource droolsRessource = null;
-         if (knowledgeBaseAddRessourceEvent.getDrlRessourceFiles().size() == 0) {
-             droolsRessource = new DroolsRessource(knowledgeBaseAddRessourceEvent.getGuvnor_url(), knowledgeBaseAddRessourceEvent.getGuvnor_appName(), knowledgeBaseAddRessourceEvent.getGuvnor_packageName(), knowledgeBaseAddRessourceEvent.getGuvnor_packageVersion());
-         } else {
-             droolsRessource = new DroolsRessource(knowledgeBaseAddRessourceEvent.getDrlRessourceFiles().get(0).getFileName(), knowledgeBaseAddRessourceEvent.getDrlRessourceFiles().get(0).getContent());
-         }
-         droolsRessource.setStartDate(knowledgeBaseAddRessourceEvent.getDateEvent());
-         existingPlatformRuntime.getDroolsRessources().add(droolsRessource);
+        DroolsResource droolsResource = null;
+          if (knowledgeBaseAddRessourceEvent.getResourceFiles().size() == 1 && knowledgeBaseAddRessourceEvent.getResourceFiles().get(0) instanceof GuvnorResourceFile) {
+              GuvnorResourceFile guvnorResourceFile = (GuvnorResourceFile) knowledgeBaseAddRessourceEvent.getResourceFiles().get(0);
+              droolsResource = new DroolsResource(guvnorResourceFile.getGuvnor_url(), guvnorResourceFile.getGuvnor_appName(), guvnorResourceFile.getGuvnor_packageName(), guvnorResourceFile.getGuvnor_packageVersion());
+          } else {
+              DrlResourceFile drlResourceFile = (DrlResourceFile)knowledgeBaseAddRessourceEvent.getResourceFiles().get(0);
+              droolsResource = new DroolsResource(drlResourceFile.getFileName(), drlResourceFile.getContent());
+          }
+         droolsResource.setStartDate(knowledgeBaseAddRessourceEvent.getDateEvent());
+         existingPlatformRuntime.getDroolsRessources().add(droolsResource);
 
          platformRuntimeRepository.save(existingPlatformRuntime);
     }

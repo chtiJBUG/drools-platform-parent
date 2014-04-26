@@ -2,17 +2,14 @@ package org.chtijbug.drools.platform.rules;
 
 import com.google.common.base.Throwables;
 import org.chtijbug.drools.entity.history.HistoryEvent;
-import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseCreatedEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.backend.service.MessageHandlerResolver;
-import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.listener.HistoryListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,10 +32,6 @@ public class DirectAccessHistoryListener implements HistoryListener {
     @Override
     public void fireEvent(HistoryEvent newHistoryEvent) throws DroolsChtijbugException {
         HistoryEvent historyEventToSend = newHistoryEvent;
-        if (newHistoryEvent instanceof KnowledgeBaseCreatedEvent) {
-            PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent = new PlatformKnowledgeBaseCreatedEvent(newHistoryEvent.getEventID(), newHistoryEvent.getDateEvent(), newHistoryEvent.getRuleBaseID(), "localhost", 8025, new Date());
-            historyEventToSend = platformKnowledgeBaseCreatedEvent;
-        }
         historyEvents.add(historyEventToSend);
         try {
             AbstractEventHandlerStrategy strategy = messageHandlerResolver.resolveMessageHandler(historyEventToSend);

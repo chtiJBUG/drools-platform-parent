@@ -18,7 +18,7 @@
       <ref bean="drlFile"/>
   </util:list>
 
-  <bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase" init-method="initFromFiles">
+  <bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase" init-method="initPlatformRuntime">
 
   </bean>
 

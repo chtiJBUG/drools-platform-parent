@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 
 import javax.websocket.DeploymentException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,14 +20,22 @@ public class WebSocketSessionManager {
 
     private static final Logger LOG = Logger.getLogger(WebSocketSessionManager.class);
 
-    private List<WebSocketClient> webSocketClientList = new ArrayList<WebSocketClient>();
+    private Map<Integer,WebSocketClient> webSocketClientList = new HashMap<>();
 
 
-    public void AddClient(PlatformRuntime  platformRuntime) throws DeploymentException, IOException {
+    public WebSocketClient AddClient(PlatformRuntime  platformRuntime) throws DeploymentException, IOException {
 
         WebSocketClient webSocketClient = new WebSocketClient(platformRuntime);
-        this.webSocketClientList.add(webSocketClient);
+        this.webSocketClientList.put(platformRuntime.getRuleBaseID(),webSocketClient);
+        return webSocketClient;
 
+    }
 
+    public WebSocketClient getWebSocketClient(Integer ruleBaseID){
+        WebSocketClient webSocketClient = null;
+        if (webSocketClientList.containsKey(ruleBaseID)){
+             webSocketClient = webSocketClientList.get(ruleBaseID);
+        }
+        return webSocketClient;
     }
 }

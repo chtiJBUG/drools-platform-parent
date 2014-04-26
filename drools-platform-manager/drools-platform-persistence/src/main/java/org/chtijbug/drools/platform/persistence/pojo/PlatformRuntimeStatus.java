@@ -7,6 +7,6 @@ package org.chtijbug.drools.platform.persistence.pojo;
  * To change this template use File | Settings | File Templates.
  */
 public enum PlatformRuntimeStatus {
-    STARTED,NOT_JOINGNABLE, STOPPED, CRASHED;
+    INITMODE,STARTED,NOT_JOINGNABLE, STOPPED, CRASHED;
 
 }

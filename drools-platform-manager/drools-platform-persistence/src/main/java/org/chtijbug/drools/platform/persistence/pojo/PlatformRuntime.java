@@ -36,11 +36,14 @@ public class PlatformRuntime implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "platform_runtime_id_fk")
-    private List<DroolsRessource> droolsRessources = new ArrayList<>();
+    private List<DroolsResource> droolsRessources = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "platform_runtime_id_fk")
     private List<SessionRuntime> sessionRuntimes = new ArrayList<SessionRuntime>();
+    @ManyToOne
+    @JoinColumn(name = "platform_instance_id_fk")
+    private PlatformRuntimeInstance platformRuntimeInstance ;
 
 
     public PlatformRuntime() {
@@ -131,12 +134,12 @@ public class PlatformRuntime implements Serializable {
         this.ruleBaseID = ruleBaseID;
     }
 
-    public List<DroolsRessource> getDroolsRessources() {
+    public List<DroolsResource> getDroolsRessources() {
         return droolsRessources;
     }
 
-    public void setDroolsRessources(List<DroolsRessource> droolsRessources) {
-        this.droolsRessources = droolsRessources;
+    public void setDroolsRessources(List<DroolsResource> droolsResources) {
+        this.droolsRessources = droolsResources;
     }
 
     public List<SessionRuntime> getSessionRuntimes() {
@@ -145,6 +148,14 @@ public class PlatformRuntime implements Serializable {
 
     public void setSessionRuntimes(List<SessionRuntime> sessionRuntimes) {
         this.sessionRuntimes = sessionRuntimes;
+    }
+
+    public PlatformRuntimeInstance getPlatformRuntimeInstance() {
+        return platformRuntimeInstance;
+    }
+
+    public void setPlatformRuntimeInstance(PlatformRuntimeInstance platformRuntimeInstance) {
+        this.platformRuntimeInstance = platformRuntimeInstance;
     }
 
     @Override
