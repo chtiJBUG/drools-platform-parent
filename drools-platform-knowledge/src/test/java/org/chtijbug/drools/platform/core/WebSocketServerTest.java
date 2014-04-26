@@ -4,6 +4,7 @@ import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.entity.RequestRuntimePlarform;
 import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class WebSocketServerTest {
 
 
 
-
+    @Ignore
     @Test
     public void testKnowledgeBaseCreate() throws DroolsChtijbugException, IOException, DeploymentException, EncodeException, InterruptedException {
         final Semaphore doWait = new Semaphore(1);
