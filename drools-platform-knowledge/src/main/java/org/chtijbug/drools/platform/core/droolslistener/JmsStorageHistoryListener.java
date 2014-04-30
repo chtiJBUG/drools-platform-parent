@@ -3,13 +3,8 @@ package org.chtijbug.drools.platform.core.droolslistener;
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
-import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseAddRessourceEvent;
-import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseCreatedEvent;
-import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseInitialLoadEvent;
-import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseReloadedEvent;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServer;
-import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseCreatedEvent;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEvent;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.listener.HistoryListener;
@@ -26,6 +21,7 @@ import javax.jms.Message;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import java.io.Serializable;
+import java.net.UnknownHostException;
 import java.util.Date;
 
 /**
@@ -56,41 +52,13 @@ public class JmsStorageHistoryListener implements HistoryListener {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    @Autowired
-    private WebSocketServer webSocketServer;
-
     private DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase;
 
     @Override
     public void fireEvent(HistoryEvent historyEvent) throws DroolsChtijbugException {
 
-        HistoryEvent historyEventToSend = historyEvent;
-        if (historyEvent instanceof KnowledgeBaseCreatedEvent) {
-            /**
-             * Here we have to add all info to allow server-log to connect us
-             */
 
-            PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent = new PlatformKnowledgeBaseCreatedEvent(historyEvent.getEventID(), historyEvent.getDateEvent(), historyEvent.getRuleBaseID(), webSocketServer.getWs_hostname(), webSocketServer.getWs_port(),new Date());
-            historyEventToSend = platformKnowledgeBaseCreatedEvent;
-        } else if (historyEvent instanceof KnowledgeBaseAddRessourceEvent
-                || historyEvent instanceof KnowledgeBaseInitialLoadEvent
-                || historyEvent instanceof KnowledgeBaseReloadedEvent) {
-            if (historyEvent.getGuvnor_url() != null) {
-                this.guvnor_url = historyEvent.getGuvnor_url();
-                this.guvnor_appName = historyEvent.getGuvnor_appName();
-                this.guvnor_packageName = historyEvent.getGuvnor_packageName();
-                this.guvnor_packageVersion = historyEvent.getGuvnor_packageVersion();
-            }
-
-        } else if (this.guvnor_url != null) {
-            historyEvent.setRuleBaseID(Integer.valueOf(this.ruleBaseID).intValue());
-            historyEvent.setGuvnor_url(this.guvnor_url);
-            historyEvent.setGuvnor_appName(this.guvnor_appName);
-            historyEvent.setGuvnor_packageName(this.guvnor_packageName);
-            historyEvent.setGuvnor_packageVersion(this.guvnor_packageVersion);
-        }
-
-        final Serializable objectToSend = historyEventToSend;
+        final Serializable objectToSend = historyEvent;
         jmsTemplate.send(new MessageCreator() {
 
             public Message createMessage(Session session) throws JMSException {
@@ -104,8 +72,6 @@ public class JmsStorageHistoryListener implements HistoryListener {
     }
 
     public void shutdown() {
-        this.webSocketServer.stop();
-        this.webSocketServer = null;
         final PlatformKnowledgeBaseShutdownEvent platformKnowledgeBaseShutdownEvent = new PlatformKnowledgeBaseShutdownEvent(-1, this.startDate, Integer.valueOf(this.ruleBaseID).intValue(), new Date());
         jmsTemplate.send(new MessageCreator() {
 
@@ -124,7 +90,7 @@ public class JmsStorageHistoryListener implements HistoryListener {
     protected void finalize()
             throws Throwable {
         super.finalize();
-        this.webSocketServer.stop();
+
     }
 
     public JmsTemplate getJmsTemplate() {
@@ -144,8 +110,9 @@ public class JmsStorageHistoryListener implements HistoryListener {
         this.mbsSession = mbsSession;
     }
 
-    public void setDroolsPlatformKnowledgeBase(DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase) {
+    public void setDroolsPlatformKnowledgeBase(DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase) throws UnknownHostException {
         this.droolsPlatformKnowledgeBase = droolsPlatformKnowledgeBase;
-        webSocketServer.setDroolsPlatformKnowledgeBase(droolsPlatformKnowledgeBase);
+
+
     }
 }

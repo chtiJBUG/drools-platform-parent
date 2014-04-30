@@ -1,7 +1,7 @@
 package org.chtijbug.drools.platform.rules;
 
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.platform.entity.GuvnorVersion;
+import org.chtijbug.drools.entity.history.GuvnorResourceFile;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
@@ -42,16 +42,17 @@ public class TestRuntimeWebSocketServerService {
                 LOG.info("Runtime is alive");
                 break;
             case ruleVersionInfos:
-                GuvnorVersion createNewGuvnorVersion = new GuvnorVersion();
-                bean.setGuvnorVersion(createNewGuvnorVersion);
+                GuvnorResourceFile guvnorResourceFile = new GuvnorResourceFile();
+                bean.getResourceFileList().add(guvnorResourceFile);
+
 
                 bean.setRequestStatus(RequestStatus.SUCCESS);
                 peer.getBasicRemote().sendObject(bean);
-                LOG.info("Runtime Guvnor Version " + createNewGuvnorVersion);
+                LOG.info("Runtime Guvnor Version " + guvnorResourceFile);
                 break;
             case loadNewRuleVersion:
-                GuvnorVersion newGuvnorVersionToLoad = bean.getGuvnorVersion();
-                DroolsResource droolsResource = new GuvnorDroolsResource(newGuvnorVersionToLoad.getGuvnor_url(), newGuvnorVersionToLoad.getGuvnor_appName(), newGuvnorVersionToLoad.getGuvnor_packageName(), newGuvnorVersionToLoad.getGuvnor_packageVersion(), guvnor_username, guvnor_password);
+                GuvnorResourceFile guvnorResourceFile2 = (GuvnorResourceFile)bean.getResourceFileList().get(0);
+                DroolsResource droolsResource = new GuvnorDroolsResource(guvnorResourceFile2.getGuvnor_url(), guvnorResourceFile2.getGuvnor_appName(), guvnorResourceFile2.getGuvnor_packageName(), guvnorResourceFile2.getGuvnor_packageVersion(), guvnor_username, guvnor_password);
                 try {
 
                     bean.setRequestStatus(RequestStatus.SUCCESS);

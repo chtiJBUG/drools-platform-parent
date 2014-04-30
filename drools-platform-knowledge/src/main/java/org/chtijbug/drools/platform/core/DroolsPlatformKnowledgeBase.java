@@ -1,23 +1,33 @@
 package org.chtijbug.drools.platform.core;
 
+import org.chtijbug.drools.entity.history.DrlResourceFile;
+import org.chtijbug.drools.entity.history.GuvnorResourceFile;
 import org.chtijbug.drools.platform.core.droolslistener.JmsStorageHistoryListener;
 import org.chtijbug.drools.platform.core.websocket.RuntimeWebSocketServerService;
+import org.chtijbug.drools.platform.core.websocket.WebSocketServer;
+import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseInitialConnectionEvent;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.RuleBasePackage;
 import org.chtijbug.drools.runtime.RuleBaseSession;
 import org.chtijbug.drools.runtime.impl.RuleBaseSingleton;
 import org.chtijbug.drools.runtime.impl.RuleBaseStatefulSession;
 import org.chtijbug.drools.runtime.listener.HistoryListener;
+import org.chtijbug.drools.runtime.resource.Bpmn2DroolsRessource;
+import org.chtijbug.drools.runtime.resource.DrlDroolsRessource;
 import org.chtijbug.drools.runtime.resource.DroolsResource;
 import org.chtijbug.drools.runtime.resource.GuvnorDroolsResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,6 +42,12 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
      */
     private static Logger logger = LoggerFactory.getLogger(DroolsPlatformKnowledgeBase.class);
 
+    @Value("${knowledge.rulebaseid}")
+    private Integer ruleBaseID;
+
+    private Semaphore ruleBaseReady = new Semaphore(1);
+    private Semaphore lockRunning = new Semaphore(1);
+
 
     private RuleBaseSingleton ruleBasePackage;
     @Autowired
@@ -40,34 +56,62 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
     private RuntimeWebSocketServerService runtimeWebSocketServerService;
     @Resource
     private List<DroolsResource> droolsResources = new ArrayList<>();
+    @Value("${ws.hostname}")
+    private String ws_hostname;
+    @Value("${ws.port}")
+    private int ws_port;
 
 
-    public void initFromGuvnor() throws DroolsChtijbugException {
-        logger.debug(">>createGuvnorRuleBasePackage", this.toString());
+    private WebSocketServer webSocketServer;
+
+    Thread worker;
+
+
+    public void initPlatformRuntime() throws DroolsChtijbugException, InterruptedException, UnknownHostException {
+        logger.debug(">>createPackageBasePackage");
+        this.ruleBaseReady.acquire();
+        initSocketServer();
         jmsStorageHistoryListener.setDroolsPlatformKnowledgeBase(this);
         ruleBasePackage = new RuleBaseSingleton(RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, this.jmsStorageHistoryListener);
+        PlatformKnowledgeBaseInitialConnectionEvent platformKnowledgeBaseInitialConnectionEvent = new PlatformKnowledgeBaseInitialConnectionEvent(-1, new Date(), this.ruleBaseID);
+        platformKnowledgeBaseInitialConnectionEvent.setRuleBaseID(this.ruleBaseID);
+        platformKnowledgeBaseInitialConnectionEvent.setSessionId(-1);
         if (droolsResources.size() == 1 && droolsResources.get(0) instanceof GuvnorDroolsResource) {
-            ruleBasePackage.createKBase(droolsResources.get(0));
+            GuvnorDroolsResource guvnorDroolsResource = (GuvnorDroolsResource) droolsResources.get(0);
+            GuvnorResourceFile guvnorResourceFile = new GuvnorResourceFile(guvnorDroolsResource.getBaseUrl(), guvnorDroolsResource.getWebappName(), guvnorDroolsResource.getPackageName(), guvnorDroolsResource.getPackageVersion(), guvnorDroolsResource.getUsername(), guvnorDroolsResource.getPassword());
+            platformKnowledgeBaseInitialConnectionEvent.getResourceFiles().add(guvnorResourceFile);
+            jmsStorageHistoryListener.fireEvent(platformKnowledgeBaseInitialConnectionEvent);
         } else {
-            throw new RuntimeException("List not correct");
+            for (DroolsResource droolsResource : droolsResources) {
+                if (droolsResource instanceof DrlDroolsRessource) {
+                    DrlDroolsRessource drlDroolsRessource = (DrlDroolsRessource) droolsResource;
+                    DrlResourceFile drlResourceFile = new DrlResourceFile();
+                    drlResourceFile.setFileName(drlDroolsRessource.getFileName());
+                    platformKnowledgeBaseInitialConnectionEvent.getResourceFiles().add(drlResourceFile);
+                } else if (droolsResource instanceof Bpmn2DroolsRessource) {
+                    Bpmn2DroolsRessource drlDroolsRessource = (Bpmn2DroolsRessource) droolsResource;
+                    DrlResourceFile drlResourceFile = new DrlResourceFile();
+                    drlResourceFile.setFileName(drlDroolsRessource.getFileName());
+                    platformKnowledgeBaseInitialConnectionEvent.getResourceFiles().add(drlResourceFile);
+                }
+            }
         }
         jmsStorageHistoryListener.setMbsRuleBase(ruleBasePackage.getMbsRuleBase());
         jmsStorageHistoryListener.setMbsSession(ruleBasePackage.getMbsSession());
-
-        this.ruleBasePackage = ruleBasePackage;
-        logger.debug("<<createGuvnorRuleBasePackage", ruleBasePackage);
+        jmsStorageHistoryListener.fireEvent(platformKnowledgeBaseInitialConnectionEvent);
+        this.ruleBaseReady.acquire();
+        logger.debug("<<createPackageBasePackage", ruleBasePackage);
     }
 
-    public void initFromFiles() throws DroolsChtijbugException {
-        logger.debug(">>createPackageBasePackage");
+    private void initSocketServer() throws UnknownHostException, InterruptedException {
 
-        jmsStorageHistoryListener.setDroolsPlatformKnowledgeBase(this);
-        ruleBasePackage = new RuleBaseSingleton(RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, this.jmsStorageHistoryListener);
-        try {
-            ruleBasePackage.createKBase(droolsResources);
-        } finally {
-            logger.debug("<<createPackageBasePackage", ruleBasePackage);
-        }
+        this.lockRunning.acquire();
+        webSocketServer = new WebSocketServer(ws_hostname, ws_port, this, this.ruleBaseReady, this.lockRunning);
+        worker = new Thread(webSocketServer);
+        // We can set the name of the thread
+        worker.setName("WebSocketServer");
+        // Start the thread, never call method run() direct
+        worker.start();
     }
 
 
@@ -80,6 +124,7 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
     protected void finalize() throws Throwable {
         super.finalize();
         this.jmsStorageHistoryListener = null;
+        this.webSocketServer.end();
     }
 
     private String getFileExtension(String ressourceName) {
@@ -161,6 +206,7 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
     public void cleanup() {
         this.ruleBasePackage.cleanup();
     }
+
 
     @Override
     public String toString() {

@@ -25,7 +25,7 @@
   </util:list>
 
   <bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase"
-        init-method="initFromFiles">
+        init-method="initPlatformRuntime">
 
   </bean>
 

@@ -3,12 +3,11 @@ package org.chtijbug.drools.platform.core.websocket;
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
 import org.glassfish.tyrus.server.Server;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import javax.websocket.DeploymentException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.concurrent.Semaphore;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,13 +15,12 @@ import java.util.HashMap;
  * Time: 17:14
  * To change this template use File | Settings | File Templates.
  */
-@Component
-public class WebSocketServer {
+
+public class WebSocketServer extends Thread {
 
 
-    @Value("${ws.hostname}")
     private String ws_hostname;
-    @Value("${ws.port}")
+
     private int ws_port;
 
     public static HashMap<String, Object> userProperties = new HashMap<String, Object>();
@@ -33,24 +31,41 @@ public class WebSocketServer {
 
     public DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase;
 
-    public WebSocketServer() throws UnknownHostException {
-        run();
+    private Semaphore releaseWhenReady;
+    private Semaphore tellWhenToStop;
+
+
+    public WebSocketServer(String ws_hostname, int ws_port, DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase, Semaphore releaseWhenReady, Semaphore tellWhenToStop) throws UnknownHostException {
+        this.ws_hostname = ws_hostname;
+        this.ws_port = ws_port;
+        this.droolsPlatformKnowledgeBase = droolsPlatformKnowledgeBase;
+        userProperties.put("droolsPlatformKnowledgeBase", droolsPlatformKnowledgeBase);
+        this.releaseWhenReady = releaseWhenReady;
+        this.tellWhenToStop = tellWhenToStop;
     }
 
-    public void run() throws UnknownHostException {
+    //@Override
+    public void run() {
 
 
         this.localWebSocketServer = new Server(ws_hostname, ws_port, "/", userProperties, RuntimeWebSocketServerService.class);
         try {
             localWebSocketServer.start();
+            this.releaseWhenReady.release();
+            this.tellWhenToStop.acquire();
         } catch (DeploymentException e) {
             LOG.error("WebSocketServer.run", e);
+        } catch (InterruptedException e) {
+            LOG.error("WebSocketServer.run", e);
+
         }
 
     }
-    public  void stop() {
+
+    public void end() {
         this.localWebSocketServer.stop();
-        this.localWebSocketServer=null;
+        this.localWebSocketServer = null;
+        this.tellWhenToStop.release();
     }
 
 
@@ -65,6 +80,5 @@ public class WebSocketServer {
 
     public void setDroolsPlatformKnowledgeBase(DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase) {
         this.droolsPlatformKnowledgeBase = droolsPlatformKnowledgeBase;
-        userProperties.put("droolsPlatformKnowledgeBase",droolsPlatformKnowledgeBase);
     }
 }

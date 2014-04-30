@@ -11,7 +11,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "drools_resource")
-public class DroolsRessource {
+public class DroolsResource {
 
     @Id
     @SequenceGenerator(name = "resource_id_seq", sequenceName = "drools_platform_seq")
@@ -35,17 +35,17 @@ public class DroolsRessource {
     @Column
     private Date endDate;
 
-    public DroolsRessource() {
+    public DroolsResource() {
     }
 
-    public DroolsRessource(String guvnor_url, String guvnor_appName, String guvnor_packageName, String guvnor_packageVersion) {
+    public DroolsResource(String guvnor_url, String guvnor_appName, String guvnor_packageName, String guvnor_packageVersion) {
         this.guvnor_url = guvnor_url;
         this.guvnor_appName = guvnor_appName;
         this.guvnor_packageName = guvnor_packageName;
         this.guvnor_packageVersion = guvnor_packageVersion;
     }
 
-    public DroolsRessource(String fileName, String fileContent) {
+    public DroolsResource(String fileName, String fileContent) {
         this.fileName = fileName;
         this.fileContent = fileContent;
     }
@@ -103,7 +103,7 @@ public class DroolsRessource {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        DroolsRessource that = (DroolsRessource) o;
+        DroolsResource that = (DroolsResource) o;
 
         if (!guvnor_appName.equals(that.guvnor_appName)) return false;
         if (!guvnor_packageName.equals(that.guvnor_packageName)) return false;
@@ -124,7 +124,7 @@ public class DroolsRessource {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("DroolsRessource{");
+        final StringBuffer sb = new StringBuffer("DroolsResource{");
         sb.append("guvnor_url='").append(guvnor_url).append('\'');
         sb.append(", guvnor_appName='").append(guvnor_appName).append('\'');
         sb.append(", guvnor_packageName='").append(guvnor_packageName).append('\'');
