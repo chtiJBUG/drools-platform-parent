@@ -38,16 +38,14 @@ public class JMSHistoryEventListener implements MessageListener {
                 try {
                     AbstractEventHandlerStrategy strategy = messageHandlerResolver.resolveMessageHandler(historyEvent);
                     strategy.handleMessage(historyEvent);
-                   // handleKnowledgeEventService.getClass().getMethod("handleMessage",messageContent.getClass()).invoke(handleKnowledgeEventService,messageContent) ;
                   } catch (Throwable e) {
                       throw Throwables.propagate(e);
                   }
                 ObjectMessage msg = (ObjectMessage) message;
-                LOG.info("Consumed message: " + msg.toString());
+                LOG.debug("Consumed message: " + msg.toString());
             }
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error("Consumed message: " + e.toString());
         }
     }
 

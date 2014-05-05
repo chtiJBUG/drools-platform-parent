@@ -21,7 +21,7 @@ public class BeforeNodeLeftEventStrategy extends AbstractEventHandlerStrategy {
     @Override
     protected void handleMessageInternally(HistoryEvent historyEvent) {
 
-        LOG.info("BeforeNodeLeftHistoryEvent " + historyEvent.toString());
+        LOG.debug("BeforeNodeLeftHistoryEvent " + historyEvent.toString());
     }
 
     @Override

@@ -27,35 +27,35 @@ import java.util.List;
 public class BeforeProcessStartEventStrategy extends AbstractEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(BeforeProcessStartEventStrategy.class);
     @Autowired
-        ProcessRuntimeRepository processRuntimeRepository;
-        @Autowired
-        private SessionRuntimeRepository sessionRuntimeRepository;
+    ProcessRuntimeRepository processRuntimeRepository;
+    @Autowired
+    private SessionRuntimeRepository sessionRuntimeRepository;
 
 
     @Override
     @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         BeforeProcessStartHistoryEvent beforeProcessStartHistoryEvent = (BeforeProcessStartHistoryEvent) historyEvent;
-             List<ProcessRuntime> processRuntimes = processRuntimeRepository.findAllStartedProcessByRuleBaseIDAndSessionIDAndProcessInstanceId(beforeProcessStartHistoryEvent.getRuleBaseID(), beforeProcessStartHistoryEvent.getSessionId(), beforeProcessStartHistoryEvent.getProcessInstance().getId());
-             for (ProcessRuntime runningProcessRuntime : processRuntimes) {
-                 runningProcessRuntime.setEndDate(new Date());
-                 runningProcessRuntime.setProcessRuntimeStatus(ProcessRuntimeStatus.CRASHED);
-                 processRuntimeRepository.save(runningProcessRuntime);
-             }
-             SessionRuntime existingSessionRutime = sessionRuntimeRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
+        List<ProcessRuntime> processRuntimes = processRuntimeRepository.findAllStartedProcessByRuleBaseIDAndSessionIDAndProcessInstanceId(beforeProcessStartHistoryEvent.getRuleBaseID(), beforeProcessStartHistoryEvent.getSessionId(), beforeProcessStartHistoryEvent.getProcessInstance().getId());
+        for (ProcessRuntime runningProcessRuntime : processRuntimes) {
+            runningProcessRuntime.setEndDate(new Date());
+            runningProcessRuntime.setProcessRuntimeStatus(ProcessRuntimeStatus.CRASHED);
+            processRuntimeRepository.save(runningProcessRuntime);
+        }
+        SessionRuntime existingSessionRutime = sessionRuntimeRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
 
-             ProcessRuntime processRuntime = new ProcessRuntime();
-             processRuntime.setSessionRuntime(existingSessionRutime);
-             processRuntime.setProcessInstanceId(beforeProcessStartHistoryEvent.getProcessInstance().getId());
-             processRuntime.setProcessName(beforeProcessStartHistoryEvent.getProcessInstance().getName());
-             processRuntime.setProcessPackageName(beforeProcessStartHistoryEvent.getProcessInstance().getPackageName());
-             processRuntime.setProcessType(beforeProcessStartHistoryEvent.getProcessInstance().getType());
-             processRuntime.setProcessVersion(beforeProcessStartHistoryEvent.getProcessInstance().getVersion());
-             processRuntime.setEventID(beforeProcessStartHistoryEvent.getEventID());
-             processRuntime.setStartDate(beforeProcessStartHistoryEvent.getDateEvent());
-             processRuntime.setProcessRuntimeStatus(ProcessRuntimeStatus.JBPMSTARTED);
-             processRuntimeRepository.save(processRuntime);
-        LOG.info("BeforeProcessStartHistoryEvent " + historyEvent.toString());
+        ProcessRuntime processRuntime = new ProcessRuntime();
+        processRuntime.setSessionRuntime(existingSessionRutime);
+        processRuntime.setProcessInstanceId(beforeProcessStartHistoryEvent.getProcessInstance().getId());
+        processRuntime.setProcessName(beforeProcessStartHistoryEvent.getProcessInstance().getName());
+        processRuntime.setProcessPackageName(beforeProcessStartHistoryEvent.getProcessInstance().getPackageName());
+        processRuntime.setProcessType(beforeProcessStartHistoryEvent.getProcessInstance().getType());
+        processRuntime.setProcessVersion(beforeProcessStartHistoryEvent.getProcessInstance().getVersion());
+        processRuntime.setEventID(beforeProcessStartHistoryEvent.getEventID());
+        processRuntime.setStartDate(beforeProcessStartHistoryEvent.getDateEvent());
+        processRuntime.setProcessRuntimeStatus(ProcessRuntimeStatus.JBPMSTARTED);
+        processRuntimeRepository.save(processRuntime);
+        LOG.debug("BeforeProcessStartHistoryEvent " + historyEvent.toString());
     }
 
     @Override

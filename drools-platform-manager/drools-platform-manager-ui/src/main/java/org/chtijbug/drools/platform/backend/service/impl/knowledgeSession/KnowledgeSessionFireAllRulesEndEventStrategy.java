@@ -40,7 +40,7 @@ public class KnowledgeSessionFireAllRulesEndEventStrategy extends AbstractEventH
         fireRulesRuntime.setNbreRulesFired(Long.valueOf(sessionFireAllRulesEndEvent.getNumberRulesExecuted()));
         fireRulesRuntime.setExecutionTime(Long.valueOf(sessionFireAllRulesEndEvent.getExecutionTime()));
         fireRulesRuntimeRepository.save(fireRulesRuntime);
-        LOG.info("SessionFireAllRulesEndEvent " + historyEvent.toString());
+        LOG.debug("SessionFireAllRulesEndEvent " + historyEvent.toString());
     }
 
     @Override

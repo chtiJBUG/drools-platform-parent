@@ -21,7 +21,7 @@ public class AfterRuleflowGroupDeactivatedEventStrategy extends AbstractEventHan
     @Override
     protected void handleMessageInternally(HistoryEvent historyEvent) {
 
-        LOG.info("AfterRuleFlowDeactivatedHistoryEvent " + historyEvent.toString());
+        LOG.debug("AfterRuleFlowDeactivatedHistoryEvent " + historyEvent.toString());
     }
 
     @Override

@@ -21,7 +21,7 @@ public class BeforeProcessEndEventStrategy extends AbstractEventHandlerStrategy 
     @Override
     protected void handleMessageInternally(HistoryEvent historyEvent) {
 
-        LOG.info("BeforeProcessStartHistoryEvent " + historyEvent.toString());
+        LOG.debug("BeforeProcessStartHistoryEvent " + historyEvent.toString());
     }
 
     @Override

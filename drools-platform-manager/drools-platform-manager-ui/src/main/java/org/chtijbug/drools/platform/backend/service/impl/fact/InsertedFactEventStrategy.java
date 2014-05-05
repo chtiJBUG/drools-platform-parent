@@ -57,7 +57,7 @@ public class InsertedFactEventStrategy extends AbstractEventHandlerStrategy {
                 sessionRuntimeRepository.save(sessionRuntime);
             }
         }
-        LOG.info("InsertedFactHistoryEvent " + historyEvent.toString());
+        LOG.debug("InsertedFactHistoryEvent " + historyEvent.toString());
     }
 
     @Override

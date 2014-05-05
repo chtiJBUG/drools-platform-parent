@@ -40,7 +40,7 @@ public class KnowledgeSessionFireAllRulesMaxRulesEventStrategy extends AbstractE
         fireRulesRuntime.setNbreRulesFired(Long.valueOf(sessionFireAllRulesMaxNumberReachedEvent.getNumberOfRulesExecuted()));
         fireRulesRuntime.setMaxNbreRulesDefinedForSession(Long.valueOf(sessionFireAllRulesMaxNumberReachedEvent.getMaxNumberOfRulesForSession()));
         fireRulesRuntimeRepository.save(fireRulesRuntime);
-        LOG.info("SessionFireAllRulesMaxNumberReachedEvent " + historyEvent.toString());
+        LOG.debug("SessionFireAllRulesMaxNumberReachedEvent " + historyEvent.toString());
     }
 
     @Override

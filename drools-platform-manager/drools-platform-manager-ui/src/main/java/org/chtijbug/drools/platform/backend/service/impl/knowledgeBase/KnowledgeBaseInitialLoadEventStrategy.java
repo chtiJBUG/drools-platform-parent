@@ -18,7 +18,7 @@ public class KnowledgeBaseInitialLoadEventStrategy extends AbstractEventHandlerS
     private static final Logger LOG = Logger.getLogger(KnowledgeBaseInitialLoadEventStrategy.class);
     @Override
     protected void handleMessageInternally(HistoryEvent historyEvent) {
-        LOG.info("KnowledgeBaseInitialLoadEvent " + historyEvent.toString());
+        LOG.debug("KnowledgeBaseInitialLoadEvent " + historyEvent.toString());
     }
 
     @Override

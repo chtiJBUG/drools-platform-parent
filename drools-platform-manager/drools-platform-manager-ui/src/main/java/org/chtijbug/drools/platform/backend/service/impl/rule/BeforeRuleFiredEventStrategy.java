@@ -57,7 +57,7 @@ public class BeforeRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
             ruleRuntime.getWhenFacts().add(factRuntime);
         }
         rulesRuntimeRepository.save(ruleRuntime);
-        LOG.info("BeforeRuleFiredHistoryEvent " + historyEvent.toString());
+        LOG.debug("BeforeRuleFiredHistoryEvent " + historyEvent.toString());
     }
 
     @Override

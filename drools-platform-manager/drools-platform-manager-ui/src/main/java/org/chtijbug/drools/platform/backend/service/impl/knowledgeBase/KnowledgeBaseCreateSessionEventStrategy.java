@@ -17,7 +17,7 @@ public class KnowledgeBaseCreateSessionEventStrategy extends AbstractEventHandle
     private static final Logger LOG = Logger.getLogger(KnowledgeBaseCreateSessionEventStrategy.class);
     @Override
     protected void handleMessageInternally(HistoryEvent historyEvent) {
-        LOG.info("KnowledgeBaseCreateSessionEvent " + historyEvent.toString());
+        LOG.debug("KnowledgeBaseCreateSessionEvent " + historyEvent.toString());
     }
 
     @Override

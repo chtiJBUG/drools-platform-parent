@@ -20,11 +20,10 @@ public class WebSocketClientBean
     private static final Logger LOG = Logger.getLogger(WebSocketClient.class);
 
 
-    private static WebSocketClientBean webSocketClientBean;
 
 
     private Session peerLoggerClient;
-    private WebSocketClientListenerInterface webSocketClientListenerInterface;
+    public static WebSocketClientListenerInterface webSocketClientListenerInterface;
 
     public WebSocketClientBean() {
     }
@@ -43,22 +42,16 @@ public class WebSocketClientBean
         this.peerLoggerClient.getBasicRemote().sendObject(bean);
     }
 
-    public static WebSocketClientBean getWebSocketClientBean() {
-        return webSocketClientBean;
-    }
 
-    public void registerListener (WebSocketClientListenerInterface webSocketClientListenerInterface){
-        this.webSocketClientListenerInterface = webSocketClientListenerInterface;
-    }
-    
+
+
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
-        webSocketClientBean = this;
         this.peerLoggerClient = session;
         session.addMessageHandler(new MessageHandler.Whole<PlatformManagementKnowledgeBean>() {
-             @Override
-              public void onMessage(PlatformManagementKnowledgeBean bean) {
-                if (webSocketClientListenerInterface!= null){
+            @Override
+            public void onMessage(PlatformManagementKnowledgeBean bean) {
+                if (webSocketClientListenerInterface != null) {
                     webSocketClientListenerInterface.answer(bean);
 
                 }

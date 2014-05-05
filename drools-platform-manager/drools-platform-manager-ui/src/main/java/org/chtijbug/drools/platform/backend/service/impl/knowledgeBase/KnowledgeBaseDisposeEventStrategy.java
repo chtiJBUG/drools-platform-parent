@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,9 +30,12 @@ public class KnowledgeBaseDisposeEventStrategy extends AbstractEventHandlerStrat
     @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         KnowledgeBaseDisposeEvent knowledgeBaseDisposeEvent = (KnowledgeBaseDisposeEvent) historyEvent;
-        PlatformRuntime existingPlatformRuntime = platformRuntimeRepository.findByRuleBaseIDAndEndDateNull(knowledgeBaseDisposeEvent.getRuleBaseID());
-        existingPlatformRuntime.setEndDate(knowledgeBaseDisposeEvent.getDateEvent());
-        platformRuntimeRepository.save(existingPlatformRuntime);
+        List<PlatformRuntime> existingPlatformRuntimes = platformRuntimeRepository.findByRuleBaseIDAndEndDateNull(knowledgeBaseDisposeEvent.getRuleBaseID());
+        if (existingPlatformRuntimes.size()==1) {
+            existingPlatformRuntimes.get(0).setEndDate(knowledgeBaseDisposeEvent.getDateEvent());
+            existingPlatformRuntimes.get(0).setShutdowDate(knowledgeBaseDisposeEvent.getDateEvent());
+            platformRuntimeRepository.save( existingPlatformRuntimes.get(0));
+        }
     }
 
     @Override

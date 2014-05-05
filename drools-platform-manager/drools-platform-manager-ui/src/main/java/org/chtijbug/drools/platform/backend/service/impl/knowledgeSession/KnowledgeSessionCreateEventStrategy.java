@@ -4,16 +4,17 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionCreatedEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.pojo.SessionRuntimeStatus;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
 import org.chtijbug.drools.platform.persistence.pojo.SessionRuntime;
+import org.chtijbug.drools.platform.persistence.pojo.SessionRuntimeStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -42,15 +43,17 @@ public class KnowledgeSessionCreateEventStrategy extends AbstractEventHandlerStr
             existingSessionRutime.setSessionRuntimeStatus(SessionRuntimeStatus.CRASHED);
             sessionRuntimeRepository.save(existingSessionRutime);
         }
-        PlatformRuntime platformRuntime = platformRuntimeRepository.findByRuleBaseIDAndEndDateNull(sessionCreatedEvent.getRuleBaseID());
-        SessionRuntime sessionRuntime = new SessionRuntime();
-        sessionRuntime.setPlatformRuntime(platformRuntime);
-        sessionRuntime.setStartDate(sessionCreatedEvent.getDateEvent());
-        sessionRuntime.setSessionId(sessionCreatedEvent.getSessionId());
-        sessionRuntime.setEventID(sessionCreatedEvent.getEventID());
-        sessionRuntime.setSessionRuntimeStatus(SessionRuntimeStatus.STARTED);
-        sessionRuntimeRepository.save(sessionRuntime);
-        LOG.info("SessionCreatedEvent " + historyEvent.toString());
+        List<PlatformRuntime> platformRuntimes = platformRuntimeRepository.findByRuleBaseIDAndEndDateNull(sessionCreatedEvent.getRuleBaseID());
+        if (platformRuntimes.size()==1) {
+            SessionRuntime sessionRuntime = new SessionRuntime();
+            sessionRuntime.setPlatformRuntime(platformRuntimes.get(0));
+            sessionRuntime.setStartDate(sessionCreatedEvent.getDateEvent());
+            sessionRuntime.setSessionId(sessionCreatedEvent.getSessionId());
+            sessionRuntime.setEventID(sessionCreatedEvent.getEventID());
+            sessionRuntime.setSessionRuntimeStatus(SessionRuntimeStatus.STARTED);
+            sessionRuntimeRepository.save(sessionRuntime);
+        }
+        LOG.debug("SessionCreatedEvent " + historyEvent.toString());
     }
 
     @Override

@@ -23,7 +23,7 @@ public class InsertedByRelectionFactStartEventStrategy extends AbstractEventHand
     @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
 
-        LOG.info("InsertedByReflectionFactStartHistoryEvent " + historyEvent.toString());
+        LOG.debug("InsertedByReflectionFactStartHistoryEvent " + historyEvent.toString());
     }
 
     @Override

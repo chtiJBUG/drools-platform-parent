@@ -7,7 +7,6 @@ import org.glassfish.tyrus.server.Server;
 import javax.websocket.DeploymentException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
-import java.util.concurrent.Semaphore;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,7 +15,7 @@ import java.util.concurrent.Semaphore;
  * To change this template use File | Settings | File Templates.
  */
 
-public class WebSocketServer extends Thread {
+public class WebSocketServer  {
 
 
     private String ws_hostname;
@@ -31,41 +30,31 @@ public class WebSocketServer extends Thread {
 
     public DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase;
 
-    private Semaphore releaseWhenReady;
-    private Semaphore tellWhenToStop;
 
 
-    public WebSocketServer(String ws_hostname, int ws_port, DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase, Semaphore releaseWhenReady, Semaphore tellWhenToStop) throws UnknownHostException {
+
+    public WebSocketServer(String ws_hostname, int ws_port, DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase) throws UnknownHostException {
         this.ws_hostname = ws_hostname;
         this.ws_port = ws_port;
         this.droolsPlatformKnowledgeBase = droolsPlatformKnowledgeBase;
         userProperties.put("droolsPlatformKnowledgeBase", droolsPlatformKnowledgeBase);
-        this.releaseWhenReady = releaseWhenReady;
-        this.tellWhenToStop = tellWhenToStop;
+
     }
 
-    //@Override
-    public void run() {
-
-
+    public void run(){
         this.localWebSocketServer = new Server(ws_hostname, ws_port, "/", userProperties, RuntimeWebSocketServerService.class);
         try {
             localWebSocketServer.start();
-            this.releaseWhenReady.release();
-            this.tellWhenToStop.acquire();
         } catch (DeploymentException e) {
             LOG.error("WebSocketServer.run", e);
-        } catch (InterruptedException e) {
-            LOG.error("WebSocketServer.run", e);
-
         }
-
     }
+
+
 
     public void end() {
         this.localWebSocketServer.stop();
         this.localWebSocketServer = null;
-        this.tellWhenToStop.release();
     }
 
 
@@ -78,7 +67,5 @@ public class WebSocketServer extends Thread {
     }
 
 
-    public void setDroolsPlatformKnowledgeBase(DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase) {
-        this.droolsPlatformKnowledgeBase = droolsPlatformKnowledgeBase;
-    }
+
 }

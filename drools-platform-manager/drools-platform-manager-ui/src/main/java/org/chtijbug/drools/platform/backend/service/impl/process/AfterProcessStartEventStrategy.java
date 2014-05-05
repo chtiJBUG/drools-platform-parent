@@ -20,7 +20,7 @@ public class AfterProcessStartEventStrategy extends AbstractEventHandlerStrategy
     @Override
     protected void handleMessageInternally(HistoryEvent historyEvent) {
 
-        LOG.info("AfterProcessStartHistoryEvent " + historyEvent.toString());
+        LOG.debug("AfterProcessStartHistoryEvent " + historyEvent.toString());
     }
 
     @Override

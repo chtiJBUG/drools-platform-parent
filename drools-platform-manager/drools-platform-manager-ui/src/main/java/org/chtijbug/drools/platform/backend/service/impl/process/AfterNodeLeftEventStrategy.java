@@ -40,7 +40,7 @@ public class AfterNodeLeftEventStrategy extends AbstractEventHandlerStrategy {
             ruleflowGroupRuntimeRepository.save(ruleflowGroupRuntime);
         }
         // afterNodeLeftHistoryEvent.get
-        LOG.info("AfterNodeLeftHistoryEvent " + historyEvent.toString());
+        LOG.debug("AfterNodeLeftHistoryEvent " + historyEvent.toString());
     }
 
     @Override

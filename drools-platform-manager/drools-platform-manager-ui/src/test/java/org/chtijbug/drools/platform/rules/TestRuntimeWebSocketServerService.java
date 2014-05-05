@@ -1,8 +1,8 @@
 package org.chtijbug.drools.platform.rules;
 
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.entity.history.GuvnorResourceFile;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
+import org.chtijbug.drools.platform.entity.PlatformResourceFile;
 import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.resource.DroolsResource;
@@ -42,16 +42,15 @@ public class TestRuntimeWebSocketServerService {
                 LOG.info("Runtime is alive");
                 break;
             case ruleVersionInfos:
-                GuvnorResourceFile guvnorResourceFile = new GuvnorResourceFile();
-                bean.getResourceFileList().add(guvnorResourceFile);
+                PlatformResourceFile platformResourceFile = new PlatformResourceFile();
+                bean.getResourceFileList().add(platformResourceFile);
 
 
                 bean.setRequestStatus(RequestStatus.SUCCESS);
                 peer.getBasicRemote().sendObject(bean);
-                LOG.info("Runtime Guvnor Version " + guvnorResourceFile);
-                break;
+                LOG.info("Runtime Guvnor Version " + platformResourceFile);
             case loadNewRuleVersion:
-                GuvnorResourceFile guvnorResourceFile2 = (GuvnorResourceFile)bean.getResourceFileList().get(0);
+                PlatformResourceFile guvnorResourceFile2 = (PlatformResourceFile)bean.getResourceFileList().get(0);
                 DroolsResource droolsResource = new GuvnorDroolsResource(guvnorResourceFile2.getGuvnor_url(), guvnorResourceFile2.getGuvnor_appName(), guvnorResourceFile2.getGuvnor_packageName(), guvnorResourceFile2.getGuvnor_packageVersion(), guvnor_username, guvnor_password);
                 try {
 
