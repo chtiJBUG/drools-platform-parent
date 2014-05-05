@@ -54,7 +54,7 @@ public class AfterNodeInstanceTriggeredEventStrategy extends AbstractEventHandle
             ruleflowGroupRuntime.setRuleflowGroup(afterNodeInstanceTriggeredHistoryEvent.getNodeInstance().getNode().getRuleflowGroupName());
             ruleflowGroupRuntimeRepository.save(ruleflowGroupRuntime);
         }
-        LOG.info("AfterNodeInstanceTriggeredHistoryEvent " + historyEvent.toString());
+        LOG.debug("AfterNodeInstanceTriggeredHistoryEvent " + historyEvent.toString());
     }
 
     @Override

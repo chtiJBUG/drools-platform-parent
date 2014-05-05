@@ -22,7 +22,7 @@ public class KnowledgeSessionProcessEndEventStrategy extends AbstractEventHandle
     protected void handleMessageInternally(HistoryEvent historyEvent) {
 
 
-        LOG.info("SessionStartProcessEndEvent " + historyEvent.toString());
+        LOG.debug("SessionStartProcessEndEvent " + historyEvent.toString());
     }
 
     @Override

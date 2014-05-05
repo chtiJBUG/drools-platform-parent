@@ -1,6 +1,5 @@
 package org.chtijbug.drools.platform.entity;
 
-import org.chtijbug.drools.entity.history.ResourceFile;
 import org.chtijbug.drools.platform.entity.coder.JSONCoder;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 
@@ -37,7 +36,7 @@ public class PlatformManagementKnowledgeBean {
 
     private JMXInfo jmxInfo;
 
-    private List<ResourceFile> resourceFileList = new ArrayList<>();
+    private List<PlatformResourceFile> resourceFileList = new ArrayList<>();
 
     private DroolsChtijbugException droolsChtijbugException;
 
@@ -74,11 +73,11 @@ public class PlatformManagementKnowledgeBean {
         this.droolsChtijbugException = droolsChtijbugException;
     }
 
-    public List<ResourceFile> getResourceFileList() {
+    public List<PlatformResourceFile> getResourceFileList() {
         return resourceFileList;
     }
 
-    public void setResourceFileList(List<ResourceFile> resourceFileList) {
+    public void setResourceFileList(List<PlatformResourceFile> resourceFileList) {
         this.resourceFileList = resourceFileList;
     }
 

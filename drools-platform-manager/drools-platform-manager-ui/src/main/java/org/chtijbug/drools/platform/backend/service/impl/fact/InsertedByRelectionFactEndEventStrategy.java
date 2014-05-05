@@ -23,7 +23,7 @@ public class InsertedByRelectionFactEndEventStrategy extends AbstractEventHandle
     @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
 
-        LOG.info("DeletedFactHistoryEvent " + historyEvent.toString());
+        LOG.debug("DeletedFactHistoryEvent " + historyEvent.toString());
     }
 
     @Override

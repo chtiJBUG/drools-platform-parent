@@ -52,7 +52,7 @@ public class KnowledgeSessionFireAllRulesBeginEventStrategy extends AbstractEven
         fireRulesRuntime.setStartDate(sessionFireAllRulesBeginEvent.getDateEvent());
         fireRulesRuntime.setFireRulesRuntimeStatus(FireRulesRuntimeStatus.STARTED);
         fireRulesRuntimeRepository.save(fireRulesRuntime);
-        LOG.info("SessionFireAllRulesBeginEvent " + historyEvent.toString());
+        LOG.debug("SessionFireAllRulesBeginEvent " + historyEvent.toString());
     }
 
     @Override

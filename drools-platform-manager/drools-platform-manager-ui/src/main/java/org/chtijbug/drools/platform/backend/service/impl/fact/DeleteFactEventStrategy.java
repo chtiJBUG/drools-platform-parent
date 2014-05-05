@@ -57,7 +57,7 @@ public class DeleteFactEventStrategy extends AbstractEventHandlerStrategy {
                 sessionRuntimeRepository.save(sessionRuntime);
             }
         }
-        LOG.info("DeletedFactHistoryEvent " + historyEvent.toString());
+        LOG.debug("DeletedFactHistoryEvent " + historyEvent.toString());
     }
 
     @Override

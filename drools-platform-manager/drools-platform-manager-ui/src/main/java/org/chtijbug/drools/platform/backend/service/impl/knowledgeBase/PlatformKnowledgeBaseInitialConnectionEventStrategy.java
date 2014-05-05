@@ -9,6 +9,7 @@ import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketClient;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
+import org.chtijbug.drools.platform.entity.PlatformResourceFile;
 import org.chtijbug.drools.platform.entity.RequestRuntimePlarform;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseInitialConnectionEvent;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
@@ -57,10 +58,14 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
         PlatformRuntime platformRuntime = null;
         platformRuntimeInstance = platformRuntimeInstanceRepository.findByRuleBaseID(ruleBaseId);
         if (platformRuntimeInstance != null) {
-            PlatformRuntime existingPlatformRuntime = platformRuntimeRepository.findByRuleBaseIDAndEndDateNull(ruleBaseId);
-            if (existingPlatformRuntime != null) {
-                existingPlatformRuntime.setEndDate(new Date());
-                existingPlatformRuntime.setStatus(PlatformRuntimeStatus.CRASHED);
+
+            for (PlatformRuntime existingPlatformRuntime : platformRuntimeInstance.getPlatformRuntimes()) {
+                if (existingPlatformRuntime != null && existingPlatformRuntime.getEndDate() == null) {
+                    existingPlatformRuntime.setEndDate(new Date());
+                    existingPlatformRuntime.setShutdowDate(new Date());
+                    existingPlatformRuntime.setStatus(PlatformRuntimeStatus.CRASHED);
+                    platformRuntimeRepository.save(existingPlatformRuntime);
+                }
             }
         } else {
             platformRuntimeInstance = new PlatformRuntimeInstance();
@@ -96,17 +101,11 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
             PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
             for (DroolsResource droolsResource : platformRuntimeInstance.getDroolsRessourcesDefinition()) {
                 if (droolsResource.getGuvnor_url() != null) {
-                    GuvnorResourceFile guvnorResourceFile = new GuvnorResourceFile();
-                    guvnorResourceFile.setGuvnor_url(droolsResource.getGuvnor_url());
-                    guvnorResourceFile.setGuvnor_appName(droolsResource.getGuvnor_appName());
-                    guvnorResourceFile.setGuvnor_packageName(droolsResource.getGuvnor_packageName());
-                    guvnorResourceFile.setGuvnor_packageVersion(droolsResource.getGuvnor_packageVersion());
-                    platformManagementKnowledgeBean.getResourceFileList().add(guvnorResourceFile);
+                    PlatformResourceFile platformResourceFile = new PlatformResourceFile(droolsResource.getGuvnor_url(), droolsResource.getGuvnor_appName(), droolsResource.getGuvnor_packageName(), droolsResource.getGuvnor_packageVersion(), null, null);
+                    platformManagementKnowledgeBean.getResourceFileList().add(platformResourceFile);
                 } else {
-                    DrlResourceFile drlResourceFile = new DrlResourceFile();
-                    drlResourceFile.setFileName(droolsResource.getFileName());
-                    drlResourceFile.setContent(droolsResource.getFileContent());
-                    platformManagementKnowledgeBean.getResourceFileList().add(drlResourceFile);
+                    PlatformResourceFile platformResourceFile = new PlatformResourceFile(droolsResource.getFileName(), droolsResource.getFileContent());
+                    platformManagementKnowledgeBean.getResourceFileList().add(platformResourceFile);
 
                 }
             }

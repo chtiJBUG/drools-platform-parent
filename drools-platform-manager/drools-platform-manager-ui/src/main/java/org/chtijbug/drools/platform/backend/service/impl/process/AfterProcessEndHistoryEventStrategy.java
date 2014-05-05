@@ -34,7 +34,7 @@ public class AfterProcessEndHistoryEventStrategy extends AbstractEventHandlerStr
         processRuntime.setEndDate(afterProcessEndHistoryEvent.getDateEvent());
         processRuntime.setProcessRuntimeStatus(ProcessRuntimeStatus.JBPMSTOPPED);
         processRuntimeRepository.save(processRuntime);
-        LOG.info("AfterProcessEndHistoryEvent " + historyEvent.toString());
+        LOG.debug("AfterProcessEndHistoryEvent " + historyEvent.toString());
     }
 
     @Override

@@ -21,7 +21,7 @@ public class KnowledgeSessionProcessBeginEventStrategy extends AbstractEventHand
     @Override
     protected void handleMessageInternally(HistoryEvent historyEvent) {
 
-        LOG.info("SessionFireAllRulesBeginEvent " + historyEvent.toString());
+        LOG.debug("SessionFireAllRulesBeginEvent " + historyEvent.toString());
     }
 
     @Override

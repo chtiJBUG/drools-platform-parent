@@ -49,7 +49,7 @@ public class AfterRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
             ruleRuntime.setEndDate(afterRuleFiredHistoryEvent.getDateEvent());
             rulesRuntimeRepository.save(ruleRuntime);
         }
-        LOG.info("AfterRuleFiredHistoryEvent " + historyEvent.toString());
+        LOG.debug("AfterRuleFiredHistoryEvent " + historyEvent.toString());
     }
 
     @Override

@@ -21,7 +21,7 @@ public class AfterVariableChangeEventStrategy extends AbstractEventHandlerStrate
     @Override
     protected void handleMessageInternally(HistoryEvent historyEvent) {
 
-        LOG.info("AfterVariableChangeChangedHistoryEvent " + historyEvent.toString());
+        LOG.debug("AfterVariableChangeChangedHistoryEvent " + historyEvent.toString());
     }
 
     @Override

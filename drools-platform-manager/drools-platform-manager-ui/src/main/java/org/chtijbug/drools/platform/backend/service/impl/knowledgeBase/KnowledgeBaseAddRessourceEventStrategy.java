@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * Date: 25/03/14
@@ -31,7 +33,7 @@ public class KnowledgeBaseAddRessourceEventStrategy extends AbstractEventHandler
     @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         KnowledgeBaseAddRessourceEvent knowledgeBaseAddRessourceEvent = (KnowledgeBaseAddRessourceEvent) historyEvent;
-        PlatformRuntime existingPlatformRuntime = platformRuntimeRepository.findByRuleBaseIDAndEndDateNull(knowledgeBaseAddRessourceEvent.getRuleBaseID());
+        List<PlatformRuntime> existingPlatformRuntimes = platformRuntimeRepository.findByRuleBaseIDAndEndDateNull(knowledgeBaseAddRessourceEvent.getRuleBaseID());
 
         DroolsResource droolsResource = null;
           if (knowledgeBaseAddRessourceEvent.getResourceFiles().size() == 1 && knowledgeBaseAddRessourceEvent.getResourceFiles().get(0) instanceof GuvnorResourceFile) {
@@ -42,9 +44,10 @@ public class KnowledgeBaseAddRessourceEventStrategy extends AbstractEventHandler
               droolsResource = new DroolsResource(drlResourceFile.getFileName(), drlResourceFile.getContent());
           }
          droolsResource.setStartDate(knowledgeBaseAddRessourceEvent.getDateEvent());
-         existingPlatformRuntime.getDroolsRessources().add(droolsResource);
-
-         platformRuntimeRepository.save(existingPlatformRuntime);
+        if (existingPlatformRuntimes.size()==1) {
+            existingPlatformRuntimes.get(0).getDroolsRessources().add(droolsResource);
+            platformRuntimeRepository.save(existingPlatformRuntimes.get(0));
+        }
     }
 
     @Override

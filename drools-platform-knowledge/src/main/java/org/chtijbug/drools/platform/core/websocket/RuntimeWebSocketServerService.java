@@ -1,13 +1,12 @@
 package org.chtijbug.drools.platform.core.websocket;
 
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.entity.history.DrlResourceFile;
-import org.chtijbug.drools.entity.history.GuvnorResourceFile;
-import org.chtijbug.drools.entity.history.ResourceFile;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
+import org.chtijbug.drools.platform.entity.PlatformResourceFile;
 import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
+import org.chtijbug.drools.runtime.resource.Bpmn2DroolsRessource;
 import org.chtijbug.drools.runtime.resource.DrlDroolsRessource;
 import org.chtijbug.drools.runtime.resource.DroolsResource;
 import org.chtijbug.drools.runtime.resource.GuvnorDroolsResource;
@@ -33,7 +32,6 @@ public class RuntimeWebSocketServerService {
     private DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase;
 
 
-
     private String guvnor_username;
 
     private String guvnor_password;
@@ -52,44 +50,43 @@ public class RuntimeWebSocketServerService {
                 for (DroolsResource droolsResource : droolsPlatformKnowledgeBase.getDroolsResources()) {
                     if (droolsResource instanceof GuvnorDroolsResource) {
                         GuvnorDroolsResource guvnorDroolsResource = (GuvnorDroolsResource) droolsResource;
-                        GuvnorResourceFile guvnorResourceFile = new GuvnorResourceFile();
-                        guvnorResourceFile.setGuvnor_url(guvnorDroolsResource.getBaseUrl());
-                        guvnorResourceFile.setGuvnor_appName(guvnorDroolsResource.getWebappName());
-                        guvnorResourceFile.setGuvnor_packageName(guvnorDroolsResource.getPackageName());
-                        guvnorResourceFile.setGuvnor_packageVersion(guvnorDroolsResource.getPackageVersion());
-                        bean.getResourceFileList().add(guvnorResourceFile);
+                        PlatformResourceFile platformResourceFile = new PlatformResourceFile(guvnorDroolsResource.getBaseUrl(), guvnorDroolsResource.getWebappName(), guvnorDroolsResource.getPackageName(), guvnorDroolsResource.getPackageVersion(), null, null);
+                        bean.getResourceFileList().add(platformResourceFile);
                     } else if (droolsResource instanceof DrlDroolsRessource) {
                         DrlDroolsRessource drlDroolsRessource = (DrlDroolsRessource) droolsResource;
-                        DrlResourceFile drlResourceFile = new DrlResourceFile();
-                        drlResourceFile.setFileName(drlDroolsRessource.getFileName());
-                        drlResourceFile.setContent(drlDroolsRessource.getFileContent());
-                        bean.getResourceFileList().add(drlResourceFile);
+                        PlatformResourceFile platformResourceFile = new PlatformResourceFile(drlDroolsRessource.getFileName(), drlDroolsRessource.getFileContent());
+                        bean.getResourceFileList().add(platformResourceFile);
                     }
                 }
                 bean.setRequestStatus(RequestStatus.SUCCESS);
-                System.out.println("Server Side before sent");
+                System.out.println("Server Side before sent" + bean.toString());
                 peer.getBasicRemote().sendObject(bean);
                 System.out.println("Server Side after sent");
 
                 break;
             case loadNewRuleVersion:
-                List<ResourceFile> resourceFiles = bean.getResourceFileList();
+                List<PlatformResourceFile> resourceFiles = bean.getResourceFileList();
                 List<DroolsResource> droolsResources = new ArrayList<>();
-                for (ResourceFile resourceFile : resourceFiles) {
-                    if (resourceFile instanceof GuvnorDroolsResource) {
-                        GuvnorDroolsResource guvnorDroolsResource = (GuvnorDroolsResource) resourceFile;
-                        DroolsResource droolsResource = new GuvnorDroolsResource(guvnorDroolsResource.getBaseUrl(), guvnorDroolsResource.getWebappName(), guvnorDroolsResource.getPackageName(), guvnorDroolsResource.getPackageVersion(), guvnor_username, guvnor_password);
+                for (PlatformResourceFile resourceFile : resourceFiles) {
+                    if (resourceFile.getGuvnor_url() != null) {
+                        DroolsResource droolsResource = GuvnorDroolsResource.createGuvnorRessource(resourceFile.getGuvnor_url(), resourceFile.getGuvnor_appName(), resourceFile.getGuvnor_packageName(), resourceFile.getGuvnor_packageVersion(), guvnor_username, guvnor_password);
                         droolsResources.add(droolsResource);
-                    } else if (resourceFile instanceof DrlResourceFile) {
-                        DrlResourceFile drlResourceFile = (DrlResourceFile) resourceFile;
-                        DroolsResource droolsResource = DrlDroolsRessource.createClassPathResource(drlResourceFile.getFileName());
-                        droolsResources.add(droolsResource);
+                    } else {
+                        String extension = getFileExtension(resourceFile.getFileName());
+                        if ("bpmn2".equals(extension)) {
+                            Bpmn2DroolsRessource bpmn2DroolsRessource = Bpmn2DroolsRessource.createClassPathResource(resourceFile.getFileName());
+                            droolsResources.add(bpmn2DroolsRessource);
+                        } else if ("drl".equals(extension)) {
+                            DroolsResource droolsResource = DrlDroolsRessource.createClassPathResource(resourceFile.getFileName());
+                            droolsResources.add(droolsResource);
+                        }
                     }
                 }
                 try {
                     droolsPlatformKnowledgeBase.RecreateKBaseWithNewRessources(droolsResources);
                     bean.setRequestStatus(RequestStatus.SUCCESS);
                     peer.getBasicRemote().sendObject(bean);
+                    this.droolsPlatformKnowledgeBase.setRuleBaseStatus(true);
                 } catch (Exception e) {
                     DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("RELOAD", "Could not reload Rule Package From Guvnor", e);
                     bean.setDroolsChtijbugException(droolsChtijbugException);
@@ -119,5 +116,16 @@ public class RuntimeWebSocketServerService {
     @OnClose
     public void onClose(Session session, CloseReason reason) throws IOException {
         //prepare the endpoint for closing.
+    }
+
+    private String getFileExtension(String fileName) {
+        String extension=null;
+        int i = fileName.lastIndexOf('.');
+        int p = Math.max(fileName.lastIndexOf('/'), fileName.lastIndexOf('\\'));
+
+        if (i > p) {
+            extension = fileName.substring(i + 1);
+        }
+        return extension;
     }
 }  

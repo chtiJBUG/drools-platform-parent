@@ -21,7 +21,7 @@ public class BeforeNodeInstanceTriggeredEventStrategy extends AbstractEventHandl
     @Override
     protected void handleMessageInternally(HistoryEvent historyEvent) {
 
-        LOG.info("BeforeNodeInstanceTriggeredHistoryEvent " + historyEvent.toString());
+        LOG.debug("BeforeNodeInstanceTriggeredHistoryEvent " + historyEvent.toString());
     }
 
     @Override

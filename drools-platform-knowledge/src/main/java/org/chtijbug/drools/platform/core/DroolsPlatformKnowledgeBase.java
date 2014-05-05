@@ -3,6 +3,7 @@ package org.chtijbug.drools.platform.core;
 import org.chtijbug.drools.entity.history.DrlResourceFile;
 import org.chtijbug.drools.entity.history.GuvnorResourceFile;
 import org.chtijbug.drools.platform.core.droolslistener.JmsStorageHistoryListener;
+import org.chtijbug.drools.platform.core.droolslistener.RuleBaseReady;
 import org.chtijbug.drools.platform.core.websocket.RuntimeWebSocketServerService;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServer;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseInitialConnectionEvent;
@@ -27,7 +28,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Semaphore;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,7 +36,7 @@ import java.util.concurrent.Semaphore;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
+public class DroolsPlatformKnowledgeBase implements RuleBasePackage,RuleBaseReady {
     /**
      * Class Logger
      */
@@ -44,9 +44,6 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
 
     @Value("${knowledge.rulebaseid}")
     private Integer ruleBaseID;
-
-    private Semaphore ruleBaseReady = new Semaphore(1);
-    private Semaphore lockRunning = new Semaphore(1);
 
 
     private RuleBaseSingleton ruleBasePackage;
@@ -61,21 +58,21 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
     @Value("${ws.port}")
     private int ws_port;
 
+    private boolean isReady = false;
 
     private WebSocketServer webSocketServer;
-
-    Thread worker;
 
 
     public void initPlatformRuntime() throws DroolsChtijbugException, InterruptedException, UnknownHostException {
         logger.debug(">>createPackageBasePackage");
-        this.ruleBaseReady.acquire();
         initSocketServer();
         jmsStorageHistoryListener.setDroolsPlatformKnowledgeBase(this);
         ruleBasePackage = new RuleBaseSingleton(RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, this.jmsStorageHistoryListener);
         PlatformKnowledgeBaseInitialConnectionEvent platformKnowledgeBaseInitialConnectionEvent = new PlatformKnowledgeBaseInitialConnectionEvent(-1, new Date(), this.ruleBaseID);
         platformKnowledgeBaseInitialConnectionEvent.setRuleBaseID(this.ruleBaseID);
         platformKnowledgeBaseInitialConnectionEvent.setSessionId(-1);
+        platformKnowledgeBaseInitialConnectionEvent.setHostname(this.ws_hostname);
+        platformKnowledgeBaseInitialConnectionEvent.setPort(this.ws_port);
         if (droolsResources.size() == 1 && droolsResources.get(0) instanceof GuvnorDroolsResource) {
             GuvnorDroolsResource guvnorDroolsResource = (GuvnorDroolsResource) droolsResources.get(0);
             GuvnorResourceFile guvnorResourceFile = new GuvnorResourceFile(guvnorDroolsResource.getBaseUrl(), guvnorDroolsResource.getWebappName(), guvnorDroolsResource.getPackageName(), guvnorDroolsResource.getPackageVersion(), guvnorDroolsResource.getUsername(), guvnorDroolsResource.getPassword());
@@ -99,25 +96,20 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
         jmsStorageHistoryListener.setMbsRuleBase(ruleBasePackage.getMbsRuleBase());
         jmsStorageHistoryListener.setMbsSession(ruleBasePackage.getMbsSession());
         jmsStorageHistoryListener.fireEvent(platformKnowledgeBaseInitialConnectionEvent);
-        this.ruleBaseReady.acquire();
+        isReady = false;
         logger.debug("<<createPackageBasePackage", ruleBasePackage);
     }
 
     private void initSocketServer() throws UnknownHostException, InterruptedException {
-
-        this.lockRunning.acquire();
-        webSocketServer = new WebSocketServer(ws_hostname, ws_port, this, this.ruleBaseReady, this.lockRunning);
-        worker = new Thread(webSocketServer);
-        // We can set the name of the thread
-        worker.setName("WebSocketServer");
-        // Start the thread, never call method run() direct
-        worker.start();
+        webSocketServer = new WebSocketServer(ws_hostname, ws_port, this);
+        webSocketServer.run();
     }
 
 
     public void shutdown() {
         this.jmsStorageHistoryListener.shutdown();
         this.jmsStorageHistoryListener = null;
+        this.webSocketServer.end();
     }
 
     @Override
@@ -145,19 +137,25 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
 
     @Override
     public RuleBaseSession createRuleBaseSession() throws DroolsChtijbugException {
-        RuleBaseStatefulSession created = (RuleBaseStatefulSession) this.ruleBasePackage.createRuleBaseSession();
-        DroolsPlatformSession droolsPlatformSession = new DroolsPlatformSession();
-        droolsPlatformSession.setRuntimeWebSocketServerService(this.runtimeWebSocketServerService);
-        droolsPlatformSession.setRuleBaseStatefulSession(created);
+        DroolsPlatformSession droolsPlatformSession = null;
+        if (isReady == true) {
+            RuleBaseStatefulSession created = (RuleBaseStatefulSession) this.ruleBasePackage.createRuleBaseSession();
+            droolsPlatformSession = new DroolsPlatformSession();
+            droolsPlatformSession.setRuntimeWebSocketServerService(this.runtimeWebSocketServerService);
+            droolsPlatformSession.setRuleBaseStatefulSession(created);
+        }
         return droolsPlatformSession;
     }
 
     @Override
     public RuleBaseSession createRuleBaseSession(int maxNumberRulesToExecute) throws DroolsChtijbugException {
-        RuleBaseStatefulSession created = (RuleBaseStatefulSession) this.ruleBasePackage.createRuleBaseSession(maxNumberRulesToExecute);
-        DroolsPlatformSession droolsPlatformSession = new DroolsPlatformSession();
-        droolsPlatformSession.setRuntimeWebSocketServerService(this.runtimeWebSocketServerService);
-        droolsPlatformSession.setRuleBaseStatefulSession(created);
+        DroolsPlatformSession droolsPlatformSession = null;
+        if (isReady == true) {
+            RuleBaseStatefulSession created = (RuleBaseStatefulSession) this.ruleBasePackage.createRuleBaseSession(maxNumberRulesToExecute);
+            droolsPlatformSession = new DroolsPlatformSession();
+            droolsPlatformSession.setRuntimeWebSocketServerService(this.runtimeWebSocketServerService);
+            droolsPlatformSession.setRuleBaseStatefulSession(created);
+        }
         return droolsPlatformSession;
     }
 
@@ -207,6 +205,9 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
         this.ruleBasePackage.cleanup();
     }
 
+    public boolean isReady() {
+        return isReady;
+    }
 
     @Override
     public String toString() {
@@ -215,5 +216,10 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage {
         sb.append(", ruleBasePackage=").append(ruleBasePackage);
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public void setRuleBaseStatus(boolean ready) {
+        this.isReady = ready;
     }
 }

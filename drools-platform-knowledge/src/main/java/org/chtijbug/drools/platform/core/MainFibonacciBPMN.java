@@ -17,6 +17,10 @@ public class MainFibonacciBPMN {
          RuleBasePackage droolsPlatformKnowledgeBase =null;
         try {
              droolsPlatformKnowledgeBase = (RuleBasePackage)context.getBean("platformRunner") ;
+            DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase1=(DroolsPlatformKnowledgeBase)droolsPlatformKnowledgeBase;
+             while (droolsPlatformKnowledgeBase1.isReady()==false){
+                 Thread.sleep(2000);
+             }
              for (int i=0;i<100;i++) {
                 RuleBaseSession ruleBaseSession = droolsPlatformKnowledgeBase.createRuleBaseSession();
                 Fibonacci fibonacci = new Fibonacci(0);
@@ -24,7 +28,8 @@ public class MainFibonacciBPMN {
                 ruleBaseSession.startProcess("P1");
                 ruleBaseSession.fireAllRules();
                 ruleBaseSession.dispose();
-                Thread.sleep(10000);
+                 System.out.println("i= "+i);
+//                Thread.sleep(1000);
             }
         } catch (Exception e) {
 

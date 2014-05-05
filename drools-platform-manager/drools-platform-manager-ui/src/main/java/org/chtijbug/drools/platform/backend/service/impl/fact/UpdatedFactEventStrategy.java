@@ -65,7 +65,7 @@ public class UpdatedFactEventStrategy extends AbstractEventHandlerStrategy {
                 sessionRuntimeRepository.save(sessionRuntime);
             }
         }
-        LOG.info("UpdatedFactHistoryEvent " + historyEvent.toString());
+        LOG.debug("UpdatedFactHistoryEvent " + historyEvent.toString());
     }
 
     @Override

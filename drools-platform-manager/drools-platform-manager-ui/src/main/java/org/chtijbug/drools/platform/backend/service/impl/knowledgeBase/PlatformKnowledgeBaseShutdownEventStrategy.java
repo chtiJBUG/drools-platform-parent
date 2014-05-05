@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,11 +30,13 @@ public class PlatformKnowledgeBaseShutdownEventStrategy extends AbstractEventHan
     @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         PlatformKnowledgeBaseShutdownEvent platformKnowledgeBaseShutdownEvent = (PlatformKnowledgeBaseShutdownEvent) historyEvent;
-        PlatformRuntime existingPlatformRuntime = null;
+        List<PlatformRuntime> existingPlatformRuntimes = null;
         try {
-            existingPlatformRuntime = platformRuntimeRepository.findByRuleBaseIDAndShutdowDateNull(platformKnowledgeBaseShutdownEvent.getRuleBaseID());
-            existingPlatformRuntime.setShutdowDate(platformKnowledgeBaseShutdownEvent.getDateEvent());
-            platformRuntimeRepository.save(existingPlatformRuntime);
+            existingPlatformRuntimes = platformRuntimeRepository.findByRuleBaseIDAndShutdowDateNull(platformKnowledgeBaseShutdownEvent.getRuleBaseID());
+            if (existingPlatformRuntimes.size()==1) {
+                existingPlatformRuntimes.get(0).setShutdowDate(platformKnowledgeBaseShutdownEvent.getDateEvent());
+                platformRuntimeRepository.save(existingPlatformRuntimes.get(0));
+            }
         } catch (Exception e) {
             LOG.error(platformKnowledgeBaseShutdownEvent, e);
         }
