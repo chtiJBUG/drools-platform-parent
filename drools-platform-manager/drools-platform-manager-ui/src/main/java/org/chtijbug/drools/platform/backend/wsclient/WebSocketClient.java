@@ -22,10 +22,11 @@ public class WebSocketClient {
 
     private Session session;
 
+    private WebSocketClientBean beanClient;
 
-    public WebSocketClient(PlatformRuntime platformRuntime) throws DeploymentException, IOException {
+    public WebSocketClient(PlatformRuntime platformRuntime,WebSocketMessageListener webSocketMessageListener) throws DeploymentException, IOException {
         ClientManager client = ClientManager.createClient();
-         WebSocketClientBean beanClient = new WebSocketClientBean(platformRuntime);
+         beanClient = new WebSocketClientBean(webSocketMessageListener);
          this.session = client.connectToServer(
                 beanClient,
                 ClientEndpointConfig.Builder.create()
@@ -35,8 +36,14 @@ public class WebSocketClient {
                 URI.create("ws://" + platformRuntime.getHostname() + ":" + platformRuntime.getPort() + platformRuntime.getEndPoint()));
      }
 
-
-
+    public WebSocketClientBean getBeanClient() {
+        return beanClient;
+    }
+    public void closeSession() throws IOException {
+        if (this.session !=null ) {
+            this.session.close();
+        }
+    }
     public Session getSession() {
         return session;
     }

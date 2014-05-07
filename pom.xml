@@ -42,7 +42,7 @@
     <tomcat.deployment.url>http://localhost:8080/manager/text</tomcat.deployment.url>
     <tomcat.deployment.username>tomcat</tomcat.deployment.username>
     <tomcat.deployment.password>tomcat</tomcat.deployment.password>
-
+    <tomcat.version>7.0.52</tomcat.version>
 
   </properties>
 
@@ -239,6 +239,16 @@
             <artifactId>spring-security-config</artifactId>
             <version>${org.springframework.security.version}</version>
         </dependency>
+      <dependency>
+       <groupId>org.springframework</groupId>
+       <artifactId>spring-messaging</artifactId>
+       <version>${org.springframework.version}</version>
+       </dependency>
+       <dependency>
+       <groupId>org.springframework</groupId>
+       <artifactId>spring-websocket</artifactId>
+       <version>${org.springframework.version}</version>
+       </dependency>
       <!-- Logging deps -->
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -254,6 +264,13 @@
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-log4j12</artifactId>
         <version>${org.slf4j.slf4j.version}</version>
+      </dependency>
+
+      <!-- tomcat websocket -->
+      <dependency>
+         <groupId>org.apache.tomcat.embed</groupId>
+         <artifactId>tomcat-embed-websocket</artifactId>
+         <version>${tomcat.version}</version>
       </dependency>
 
       <!-- persistence deps -->
