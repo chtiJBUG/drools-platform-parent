@@ -1,14 +1,12 @@
 package org.chtijbug.drools.platform.web;
 
+import com.fasterxml.jackson.core.json.PackageVersion;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.chtijbug.drools.guvnor.rest.model.Snapshot;
 import org.chtijbug.drools.platform.rules.config.Environment;
 import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
-import org.chtijbug.drools.platform.rules.management.AdministrationBusinessProcessException;
-import org.chtijbug.drools.platform.rules.management.BusinessProcessError;
-import org.chtijbug.drools.platform.rules.management.RuleManager;
-import org.chtijbug.drools.platform.rules.management.RuntimeManager;
+import org.chtijbug.drools.platform.rules.management.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Nullable;
 import javax.annotation.Resource;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
@@ -24,7 +23,6 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/rules_package")
 public class RulesPackageResource {
-
     @Resource
     private RuleManager ruleManager;
     @Resource
@@ -39,19 +37,33 @@ public class RulesPackageResource {
         return this.ruleManager.findAllPackages();
     }
 
-    @RequestMapping(value = "/build", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.GET, value = "/{packageName:.+}/{version:.+}")
+    @Consumes(value = MediaType.APPLICATION_JSON)
+    @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
-    public ResponseEntity<String> createRulePackageVersion(@RequestBody PackageSnapshotRequest packageSnapshotRequest) throws Exception {
-        try {
-            this.ruleManager.buildAndTakeSnapshot(packageSnapshotRequest.getAssetStatuses(), packageSnapshotRequest.constructVersionName());
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (AdministrationBusinessProcessException e) {
-            if (BusinessProcessError.VERSION_ALREADY_EXISTS.equals(e.getError())) {
-                return new ResponseEntity<>("This snapshot name does already exists.", HttpStatus.CONFLICT);
-            }
+    public List<PackageSnapshot> getAllPackageVersions(@PathVariable final String packageName, @PathVariable String version) throws Exception {
+        List<String> result;
+        if (version.equals("default")) {
+            result = this.ruleManager.findAllPackageVersionsByName(packageName);
+        } else {
+            result = this.ruleManager.findAllPackageVersionsByNameAndVersion(packageName, version);
         }
-        return new ResponseEntity<>("Not supported case", HttpStatus.INTERNAL_SERVER_ERROR);
+        return Lists.transform(result, new Function<String, PackageSnapshot>() {
+            @Nullable
+            @Override
+            public PackageSnapshot apply(@Nullable String snapshot) {
+                return new PackageSnapshot(packageName, snapshot);
+            }
+        });
     }
+    @RequestMapping(method = RequestMethod.POST, value = "/{packageName:.+}/{version:.+}")
+    @Consumes(value = MediaType.APPLICATION_JSON)
+    @Produces(value = MediaType.APPLICATION_JSON)
+    @ResponseBody
+    public void setPackageVersion(@PathVariable final String packageName, @PathVariable String version, @RequestBody List<AssetStatus> buildScope) throws Exception {
+        this.ruleManager.buildAndTakeSnapshot(packageName, buildScope, version);
+    }
+
 
     @RequestMapping(value = "/envs", method = RequestMethod.GET)
     @Produces(value = MediaType.APPLICATION_JSON)

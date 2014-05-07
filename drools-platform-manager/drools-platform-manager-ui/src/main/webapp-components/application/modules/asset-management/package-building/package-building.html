@@ -28,7 +28,7 @@
                         </div>
                         <div class="form-group">
                             <button id="btn-cancel" class="btn btn-danger show-tooltip" ng-show="showCancelButton" ng-click="reset()"><i class="fa fa-times"></i></button>
-                            <button id="btn-create" class="btn btn-info pull-right" data-ng-click="searchPackageByName()"><i class="fa fa-search"></i> Search</button>
+                            <button id="btn-search" class="btn btn-info pull-right" data-ng-click="searchPackageByName()"><i class="fa fa-search"></i> Search</button>
                         </div>
                     </form>
                 </div>
@@ -45,43 +45,108 @@
                     <div class="alert alert-danger" ng-show="noAssetSent">
                         Error HTTP {{status}}
                     </div>
-                    <div ng-show="assets.length == 0">
+                    <div ng-show="packageVersionsList.length == 0">
                         <div class="well well-lg">
-                            No Assets have been found
+                            No packages have been found
                         </div>
                     </div>
-                    <div ng-show="assets.length > 0">
+                    <div ng-show="packageVersionsList.length > 0">
                         <div class="table-wrapper-div">
-                            <table class="table table-hover table-striped">
+                            <table class="table table-hover">
                                 <thead>
-                                <tr>
-                                    <th class="bold">Asset name</th>
-                                    <th>Asset Type</th>
-                                    <th>Current status</th>
-                                    <th>Promote ?</th>
-                                </tr>
+                                    <tr>
+                                        <th class="bold">Package name</th>
+                                        <th>Version</th>
+                                        <th>Status</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="asset in assets">
-                                    <td>{{asset.name}}</td>
-                                    <td>{{asset.type}}</td>
-                                    <td>{{asset.status}}</td>
-                                    <td>
-                                        <label>
-                                            <input type="checkbox" data-ng-model="asset.selected"/>
-                                        </label>
-                                    </td>
-                                </tr>
+                                    <!-- onRightClick will enable the change of boolean statement (isSnapshot) which allow to know if it is a snapshot version or not -->
+                                    <!-- data-target links the line to the context menu -->
+                                    <tr context-menu="onRightClick(packageVersion)" data-target="myMenu" ng-repeat="packageVersion in packageVersionsList">
+                                        <td>{{packageVersion.packageName}}</td>
+                                        <td>{{packageVersion.version}}</td>
+                                        <td>
+                                            <span ng-show="!packageVersion.isRelease" class="label label-warning"><small>SNAPSHOT</small></span>
+                                            <span ng-show="packageVersion.isRelease" class="label label-success"><small>RELEASE</small></span>
+                                        </td>
+                                    </tr>
+                                    <!-- Context menu applied to snapshot versions -->
+                                    <div ng-show="isSnapshot" class="dropdown position-fixed ng-scope" id="myMenu" >
+                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                            <li role="presentation">
+                                                <a class="pointer" role="menuitem" tabindex="-1" ng-click="launchRebuildWizzard()">Rebuild</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a class="pointer" role="menuitem" tabindex="-1" ng-click="launchReleaseWizzard()">Release</a>
+                                            </li>
+                                            <li class="divider"></li>
+                                            <li role="presentation">
+                                                <a class="pointer" role="menuitem" tabindex="-1" ng-click="deletePackageVersion()">Delete</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
                                 </tbody>
                             </table>
 
                         </div>
                         <br>
-                        <button id="btn-demote" class="btn btn-warning pull-left" ng-click="demoteAssetsStatus()">Demote
+                        <button id="btn-launcher" class="btn btn-success pull-right" ng-click="launchCreationWizzard()">
+                            <i class="fa fa-plus"></i>  Add a new version
                         </button>
-                        <button id="btn-promote" class="btn btn-success pull-right" ng-click="promoteAssetsStatus()">
-                            Promote
-                        </button>
+                        <div id="Wizzard" class="modal fade" data-backdrop="static">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Add a new version</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form role="form" name="NewVersionPackageForm">
+                                            <div class="form-group" ng-class="NewVersionClass">
+                                                <label for="package-version-select">Version</label>  <small>(x.y.z format)</small>
+                                                <input id="package-version-select" class="form-control" placeholder="{{newVersion}}" data-ng-model="newVersion" ng-disabled="isVersionFieldEnabled">
+                                            </div>
+                                            <div ng-class="AssetStatusClass" >
+                                                <label for="asset-status-select">Asset status</label>
+                                                <select id="asset-status-select"
+                                                        class="form-control"
+                                                        style="padding:0;height:auto;width:auto;"
+                                                        ui-select2="filtersOptions"
+                                                        multiple
+                                                        ng-model="filters"
+                                                        data-placeholder="Select Status filters">
+                                                    <option ng-repeat="stat in statuses" value="{{stat.assetStatus}}">{{stat.description}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" ng-checked="snapshot" ng-model="snapshot" ng-disabled="isCheckboxFieldEnabled"> SNAPSHOT
+                                                </label>
+                                            </div>
+                                        </form>
+
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button id="btn-closeWizzard" class="btn btn-danger pull-left" ng-click="closeWizzard()">
+                                            Cancel
+                                        </button>
+
+                                        <button ng-show="isCreateButtonEnabled" id="btn-create" class="btn btn-success pull-right" ng-click="createVersion()">
+                                            Create
+                                        </button>
+                                        <button ng-show="isRebuildButtonEnabled" id="btn-rebuild" class="btn btn-success pull-right" ng-click="rebuildVersion()">
+                                            Rebuild
+                                        </button>
+                                        <button ng-show="isReleaseButtonEnabled" id="btn-release" class="btn btn-success pull-right" ng-click="makeRelease()">
+                                            Release
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

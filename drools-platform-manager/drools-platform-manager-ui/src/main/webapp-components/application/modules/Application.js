@@ -3,7 +3,8 @@ var droolsPlatformApp = angular.module('droolsPlatformApp', [
     'http-auth-interceptor',
     'drools-platform.services',
     'drools-platform.controllers',
-    'ui.select2'
+    'ui.select2',
+    'ng-context-menu'
 ]);
 
 droolsPlatformApp.config(function ($locationProvider) {
