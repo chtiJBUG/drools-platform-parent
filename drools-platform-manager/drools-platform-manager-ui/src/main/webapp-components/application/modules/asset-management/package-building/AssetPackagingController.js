@@ -14,10 +14,18 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
     $scope.selectPackage = {allowClear: true};
     $scope.filtersOptions = {selectOnBlur: true};
 
+    //___ According to the wizzard you have opened some field are disabled
     $scope.isVersionFieldEnabled = false;
     $scope.isCreateButtonEnabled = false;
     $scope.isRebuildButtonEnabled = false;
 
+    //___ Showing the "Create" button only if there is no error from the server returned
+    $scope.isCreateButtonVisible = false;
+
+    //___ Allowing the creation or not of the version
+    $scope.allowToCreate=true;
+
+    //___ Get the list of the existed package from the server
      $http.get('./server/rules_package/list')
         .success(function (data) {
             $scope.packagesList = data;
@@ -26,7 +34,7 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
             console.log(error);
         });
 
-
+    //___ Get the list of the asset statuses from the server
     $http.get('./server/rule_status/all')
         .success(function (data) {
             $scope.statuses = data;
@@ -58,8 +66,16 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
             $http.get('./server/rules_package/'+packageSelected+'/'+versionSelected)
                 .success(function (data) {
                     $scope.showCancelButton=true;
+                    $scope.isCreateButtonVisible = true;
                     $scope.packageVersionsList = data;
                     console.log("Get process successful");
+                    console.log($scope.packageVersionsList[0].version);
+                    console.log($scope.packageVersionsList.length);
+                    for(var i=0; i<$scope.packageVersionsList.length;i++){
+                        console.log($scope.packageVersionsList[i].version);
+                        console.log($scope.packageVersionsList[i].isRelease);
+                    }
+
                 })
                 .error(function (error, status) {
                     $scope.showCancelButton=true;
@@ -85,11 +101,13 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         }
     }
 
-    //___ Launching wizzard according type of wizzard needed
+    //___ Launching wizzard according to the type of wizzard needed
     $scope.launchCreationWizzard = function() {
         //___ Show only the button needed
         $scope.isCreateButtonEnabled = true;
         $scope.isRebuildButtonEnabled = false;
+        $scope.isReleaseButtonEnabled = false;
+        //___ version field enabled
         $scope.isVersionFieldEnabled = false;
         //___ snapshot checkbox unchecked
         $scope.snapshot=false;
@@ -126,7 +144,6 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         //___ Show the modal window
         $('#Wizzard').modal('show');
     }
-
     $scope.closeWizzard = function() {
         $scope.newVersion = "x.y.z";
         $scope.filters = {};
@@ -135,9 +152,22 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         $('#Wizzard').modal('hide');
     }
 
+    //___ Wizzard events
+    //___ When you click on Version Field
+    $scope.changeVersionField = function() {
+        if($scope.newVersion=="x.y.z" || $scope.NewVersionClass=="form-group has-error has-feedback"){
+            $scope.newVersion="";
+            $scope.NewVersionClass="form-group";
+        }
+    }
+    //___ When you click on AssetStatus Field while you've done a mistake
+    $scope.changeASField = function() {
+        if($scope.AssetStatusClass=="form-group has-error has-feedback"){
+            $scope.AssetStatusClass="form-group";
+        }
+    }
 
-
-    //___ Creation of a new package
+    //___ Create the new package
     $scope.createVersion = function() {
         //___ Regex to filter the version field
         var searchPattern  = new RegExp("^[0-9]+.[0-9]+.[0-9]+$");
@@ -150,24 +180,44 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         console.log(filters.length);
         //___ test if the field is not empty or respects the pattern x.y.z.
         if(NewVersion == undefined || searchPattern.test($scope.newVersion) == false) {
+            console.log("new version undefined of no new version given did not respect the pattern");
             //___ Red halo to show there's a mistake or an omission
             $scope.NewVersionClass="form-group has-error has-feedback";
             if(filters == undefined || filters.length == 0) {
                 //___ Red halo to show there's a mistake or an omission
                 $scope.AssetStatusClass="form-group has-error has-feedback";
             }
+            $scope.allowToCreate=false;
         }else if(filters == undefined || filters.length == 0){
-            console.log("tutu");
+            console.log("filters undefined of no filters given");
+            //___ Red halo to show there's a mistake or an omission
             $scope.AssetStatusClass="form-group has-error has-feedback";
             if(NewVersion == undefined || searchPattern.test($scope.newVersion) == false) {
                 //___ Red halo to show there's a mistake or an omission
                 $scope.NewVersionClass="form-group has-error has-feedback";
             }
-            $scope.NewVersionClass="form-group";
-        }else{
+            $scope.allowToCreate=false;
+        }else {
             //___ No red halo
-            $scope.NewVersionClass="form-group";
-            $scope.AssetStatusClass="form-group";
+            $scope.NewVersionClass = "form-group";
+            $scope.AssetStatusClass = "form-group";
+            //___ Last test : does the version already exist ?
+            for (var i = 0; i < $scope.packageVersionsList.length; i++) {
+                console.log($scope.packageVersionsList[i].version);
+                if (NewVersion == $scope.packageVersionsList[i].version) {
+                    //alert("pb");
+                    if ($scope.snapshot == !$scope.packageVersionsList[i].isRealease) {
+                        $scope.NewVersionClass = "form-group has-error has-feedback";
+                        $scope.allowToCreate = false;
+                    }
+
+                }else{
+                    $scope.allowToCreate = true;
+                }
+            }
+        }
+
+        if($scope.allowToCreate){
             //__ If checked add the suffix
             if($scope.snapshot){
                 NewVersion+=""+"-SNAPSHOT";
@@ -180,6 +230,7 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
             $http.post('./server/rules_package/'+packageSelected+'/'+NewVersion, JSON.stringify(filters))
                 .success(function (data) {
                     $scope.showCancelButton=true;
+                    $scope.newVersion = "x.y.z";
                     //___ reload the list
                     $scope.searchPackageByName();
                 })
@@ -193,20 +244,20 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
     };
 
     $scope.rebuildVersion = function() {
-        console.log("Ahem");
+        console.log("Ahem...not yet done");
         //___ Then close the wizzard window
         $scope.closeWizzard();
 
     }
 
     $scope.makeRelease = function() {
-        console.log("Ahem");
+        console.log("Ahem...not yet done");
         //___ Then close the wizzard window
         $scope.closeWizzard();
     }
 
     $scope.deletePackageVersion = function() {
-        console.log("Ahem");
+        console.log("Ahem...not yet done");
     }
 
     //___ Reset all
@@ -214,6 +265,7 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         $scope.package = undefined;
         $scope.filters = undefined;
         $scope.packageVersionsList=undefined;
+        $scope.newVersion = "x.y.z";
         $scope.isRelease = false;
         $scope.isSnapshot = false;
         $scope.showCancelButton=false;
@@ -221,5 +273,7 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         $scope.isVersionFieldEnabled = false;
         $scope.isCreateButtonEnabled = false;
         $scope.isRebuildButtonEnabled = false;
+        $scope.isCreateButtonVisible = false;
+        $scope.allowToCreate=true;
     }
 });

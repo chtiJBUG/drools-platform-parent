@@ -41,7 +41,7 @@
                     <h3 class="panel-title">Result search</h3>
                 </div>
                 <div class="panel-body">
-                    <br/>
+                     <br/>
                     <div class="alert alert-danger" ng-show="noAssetSent">
                         Error HTTP {{status}}
                     </div>
@@ -92,58 +92,59 @@
 
                         </div>
                         <br>
-                        <button id="btn-launcher" class="btn btn-success pull-right" ng-click="launchCreationWizzard()">
-                            <i class="fa fa-plus"></i>  Add a new version
-                        </button>
-                        <div id="Wizzard" class="modal fade" data-backdrop="static">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">Add a new version</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form role="form" name="NewVersionPackageForm">
-                                            <div class="form-group" ng-class="NewVersionClass">
-                                                <label for="package-version-select">Version</label>  <small>(x.y.z format)</small>
-                                                <input id="package-version-select" class="form-control" placeholder="{{newVersion}}" data-ng-model="newVersion" ng-disabled="isVersionFieldEnabled">
-                                            </div>
-                                            <div ng-class="AssetStatusClass" >
-                                                <label for="asset-status-select">Asset status</label>
-                                                <select id="asset-status-select"
-                                                        class="form-control"
-                                                        style="padding:0;height:auto;width:auto;"
-                                                        ui-select2="filtersOptions"
-                                                        multiple
-                                                        ng-model="filters"
-                                                        data-placeholder="Select Status filters">
-                                                    <option ng-repeat="stat in statuses" value="{{stat.assetStatus}}">{{stat.description}}
-                                                    </option>
-                                                </select>
-                                            </div>
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" ng-checked="snapshot" ng-model="snapshot" ng-disabled="isCheckboxFieldEnabled"> SNAPSHOT
-                                                </label>
-                                            </div>
-                                        </form>
 
-
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button id="btn-closeWizzard" class="btn btn-danger pull-left" ng-click="closeWizzard()">
-                                            Cancel
-                                        </button>
-
-                                        <button ng-show="isCreateButtonEnabled" id="btn-create" class="btn btn-success pull-right" ng-click="createVersion()">
-                                            Create
-                                        </button>
-                                        <button ng-show="isRebuildButtonEnabled" id="btn-rebuild" class="btn btn-success pull-right" ng-click="rebuildVersion()">
-                                            Rebuild
-                                        </button>
-                                        <button ng-show="isReleaseButtonEnabled" id="btn-release" class="btn btn-success pull-right" ng-click="makeRelease()">
-                                            Release
-                                        </button>
-                                    </div>
+                    </div>
+                    <button id="btn-launcher" class="btn btn-success pull-right" ng-show="isCreateButtonVisible" ng-click="launchCreationWizzard()">
+                        <i class="fa fa-plus"></i>  Add a new version
+                    </button>
+                    <!-- Modal -->
+                    <div id="Wizzard" class="modal fade" data-backdrop="static">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Add a new version</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form role="form" name="NewVersionPackageForm">
+                                        <div class="form-group" ng-class="NewVersionClass">
+                                            <label for="package-version-select">Version</label>  <small>(x.y.z format)</small>
+                                            <input id="package-version-select" class="form-control" placeholder="{{newVersion}}" data-ng-model="newVersion" ng-disabled="isVersionFieldEnabled" ng-click="changeVersionField()">
+                                        </div>
+                                        <div ng-class="AssetStatusClass" >
+                                            <label for="asset-status-select">Asset status</label>
+                                            <select id="asset-status-select"
+                                                    class="form-control"
+                                                    style="padding:0;height:auto;width:auto;"
+                                                    ui-select2="filtersOptions"
+                                                    multiple
+                                                    ng-model="filters"
+                                                    data-placeholder="Select Status filters"
+                                                    ng-click="changeASField()">
+                                                <option ng-repeat="stat in statuses" value="{{stat.assetStatus}}">{{stat.description}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" ng-checked="snapshot" ng-model="snapshot" ng-disabled="isCheckboxFieldEnabled"> SNAPSHOT
+                                            </label>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="btn-closeWizzard" class="btn btn-danger pull-left" ng-click="closeWizzard()">
+                                        Cancel
+                                    </button>
+                                    <!-- ng-show -->
+                                    <button ng-show="isCreateButtonEnabled" id="btn-create" class="btn btn-success pull-right" ng-click="createVersion()">
+                                        Create
+                                    </button>
+                                    <button ng-show="isRebuildButtonEnabled" id="btn-rebuild" class="btn btn-success pull-right" ng-click="rebuildVersion()">
+                                        Rebuild
+                                    </button>
+                                    <button ng-show="isReleaseButtonEnabled" id="btn-release" class="btn btn-success pull-right" ng-click="makeRelease()">
+                                        Release
+                                    </button>
                                 </div>
                             </div>
                         </div>
