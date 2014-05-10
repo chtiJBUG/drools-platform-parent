@@ -10,7 +10,6 @@ import org.chtijbug.drools.guvnor.rest.model.Asset;
 import org.chtijbug.drools.guvnor.rest.model.AssetPropertyType;
 import org.chtijbug.drools.guvnor.rest.model.Snapshot;
 import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
-import org.chtijbug.drools.platform.web.PackageSnapshot;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.slf4j.Logger;
@@ -120,4 +119,7 @@ public class RuleManager {
         return null;
     }
 
+    public void deletePackageVersion(String packageName, String version) throws ChtijbugDroolsRestException {
+        this.guvnorRepositoryConnector.deletePackageSnapshot(packageName, version);
+    }
 }
