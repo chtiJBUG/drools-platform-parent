@@ -19,6 +19,9 @@ public class PlatformManagementKnowledgeBean {
             JSONCoder<PlatformManagementKnowledgeBean> {
      }
 
+    private Heartbeat heartbeat;
+
+
     private boolean isAlive=false;
 
     public boolean isAlive() {
@@ -79,6 +82,14 @@ public class PlatformManagementKnowledgeBean {
 
     public void setResourceFileList(List<PlatformResourceFile> resourceFileList) {
         this.resourceFileList = resourceFileList;
+    }
+
+    public Heartbeat getHeartbeat() {
+        return heartbeat;
+    }
+
+    public void setHeartbeat(Heartbeat heartbeat) {
+        this.heartbeat = heartbeat;
     }
 
     @Override

@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -36,7 +37,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class DroolsPlatformKnowledgeBase implements RuleBasePackage,RuleBaseReady {
+public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseReady {
     /**
      * Class Logger
      */
@@ -105,11 +106,19 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage,RuleBaseRead
         webSocketServer.run();
     }
 
+    @Scheduled(fixedDelay = 5000)
+    public void sendHeartBeat() {
+        if (this.runtimeWebSocketServerService != null) {
+            this.runtimeWebSocketServerService.sendHeartBeat();
+        }
+
+    }
 
     public void shutdown() {
         this.jmsStorageHistoryListener.shutdown();
         this.jmsStorageHistoryListener = null;
         this.webSocketServer.end();
+        this.webSocketServer = null;
     }
 
     @Override
