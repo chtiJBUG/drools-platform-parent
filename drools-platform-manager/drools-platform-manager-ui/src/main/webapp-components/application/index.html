@@ -22,7 +22,7 @@
     <body ng-controller="MainCtrl" ng-cloak>
 
         <!-- build:js scripts/scripts.js -->
-        <script src="components/underscore/underscore-min.js"></script>
+        <script src="components/underscore/underscore.js"></script>
         <script src="components/jquery/dist/jquery.min.js"></script>
         <script src="components/bootstrap/dist/js/bootstrap.min.js"></script>
         <script src="components/angular/angular.js"></script>
@@ -35,6 +35,7 @@
 
         <!-- build:js modules/modules.js -->
         <script src="modules/Application.js"></script>
+        <script src="modules/app-routes.js"></script>
         <script src="modules/home/HomeController.js"></script>
 
         <script src="modules/login/LoginService.js"></script>
@@ -46,6 +47,8 @@
 
         <script src="modules/asset-management/status-modification/AssetStatusController.js"></script>
         <script src="modules/asset-management/package-building/AssetPackagingController.js"></script>
+
+        <script src="modules/runtime-monitoring/runtime-analysis/runtime-analysis.js"></script>
         <!-- endbuild -->
 
         <div id="wrap">
