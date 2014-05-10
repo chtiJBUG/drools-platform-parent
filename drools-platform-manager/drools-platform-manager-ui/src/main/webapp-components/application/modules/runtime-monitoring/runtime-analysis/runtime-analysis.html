@@ -1,5 +1,57 @@
-<div class="container">
+<div>
     <div class="page-header">
-        <h3>{{pageTitle}}</h3>
+        <h3 style="margin-left:20px">Runtime Analysis</h3>
+    </div>
+    <div class="row col-sm-12">
+        <div class="col-md-3">
+            <div class="panel panel-default dataSource-panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Filter execution by Runtime</h3>
+                </div>
+                <div class="panel-body">
+                    <!-- Search form -->
+                    <form role="form" name="SearchForm">
+
+                        <div class="form-group">
+                            <button id="btn-cancel" class="btn btn-danger show-tooltip" ng-show="showCancelButton"
+                                    ng-click="reset()">
+                                <i class="fa fa-times"></i>
+                            </button>
+                            <button id="btn-search" class="btn btn-info show-tooltip pull-right" ng-click="search()">
+                                <i class="fa fa-search"></i> Search
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="col-md-7 col-md-offset-1">
+
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel-heading panel-title">
+                        All Rules Execution on Runtime {{selectedRuntimeID}}
+                    </div>
+                    <div class="panel-body">
+                        <!-- Search result -->
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel-heading panel-title">
+                        All Rules Execution on Runtime {{selectedRuntimeID}}
+                    </div>
+                    <div class="panel-body">
+                        <!-- Search result -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
