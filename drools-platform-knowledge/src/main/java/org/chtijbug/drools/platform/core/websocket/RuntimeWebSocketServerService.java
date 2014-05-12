@@ -46,6 +46,9 @@ public class RuntimeWebSocketServerService {
                 peer.getBasicRemote().sendObject(bean);
                 LOG.info("Runtime is alive");
                 break;
+            case duplicateRuleBaseID:
+                this.droolsPlatformKnowledgeBase.dispose();
+                break;
             case ruleVersionInfos:
                 for (DroolsResource droolsResource : droolsPlatformKnowledgeBase.getDroolsResources()) {
                     if (droolsResource instanceof GuvnorDroolsResource) {
@@ -103,6 +106,12 @@ public class RuntimeWebSocketServerService {
         this.peerLoggerServer.getBasicRemote().sendObject(bean);
 
     }
+
+     public void sendHeartBeat(){
+          if (this.peerLoggerServer != null) {
+              PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
+          }
+     }
 
     @OnOpen
     public void onOpen(final Session session, EndpointConfig endpointConfig) {

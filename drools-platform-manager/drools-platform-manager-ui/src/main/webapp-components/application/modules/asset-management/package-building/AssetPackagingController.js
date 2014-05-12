@@ -68,7 +68,13 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
                     $scope.showCancelButton=true;
                     $scope.isCreateButtonVisible = true;
                     $scope.packageVersionsList = data;
-                    console.log("Search successful");
+                    console.log("Get process successful");
+                    console.log($scope.packageVersionsList[0].version);
+                    console.log($scope.packageVersionsList.length);
+                    for(var i=0; i<$scope.packageVersionsList.length;i++){
+                        console.log($scope.packageVersionsList[i].version);
+                        console.log($scope.packageVersionsList[i].isRelease);
+                    }
 
                 })
                 .error(function (error, status) {
@@ -93,8 +99,7 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
             $scope.isSnapshot = true;
             console.log($scope.isSnapshot);
         }
-        console.log($scope.newVersion);
-    };
+    }
 
     //___ Launching wizzard according to the type of wizzard needed
     $scope.launchCreationWizzard = function() {
@@ -109,7 +114,7 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         $scope.isCheckboxFieldEnabled=false;
         //___ Show the modal window
         $('#Wizzard').modal('show');
-    };
+    }
     $scope.launchRebuildWizzard = function() {
         //___ Show only the button needed
         $scope.isRebuildButtonEnabled = true;

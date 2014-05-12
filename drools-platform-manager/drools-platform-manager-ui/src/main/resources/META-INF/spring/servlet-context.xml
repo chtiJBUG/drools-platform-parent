@@ -3,7 +3,11 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+       xmlns:websocket="http://www.springframework.org/schema/websocket"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                           http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.0.xsd">
 
 
   <!-- TODO need to support the externalization of the authentication manager
@@ -23,5 +27,19 @@
       <bean class="org.chtijbug.drools.platform.web.annotation.JsonPathArgumentResolver"/>
     </mvc:argument-resolvers>
   </mvc:annotation-driven>
+
+  <!--
+      http://raymondhlee.wordpress.com/2014/01/19/using-spring-4-websocket-sockjs-and-stomp-support-to-implement-two-way-server-client-communication/
+  -->
+
+
+  <!--websocket:message-broker application-destination-prefix="/app">
+    <websocket:stomp-endpoint path="/hello">
+      <websocket:sockjs/>
+    </websocket:stomp-endpoint>
+    <websocket:simple-broker prefix="/topic"/>
+
+  </websocket:message-broker-->
+
 
 </beans>
