@@ -120,4 +120,8 @@ public class RuleManager {
         return null;
     }
 
+    public void deleteVersionPackage(String packageName, String version) throws ChtijbugDroolsRestException {
+        this.guvnorRepositoryConnector.deletePackageSnapshot(packageName, version);
+    }
+
 }

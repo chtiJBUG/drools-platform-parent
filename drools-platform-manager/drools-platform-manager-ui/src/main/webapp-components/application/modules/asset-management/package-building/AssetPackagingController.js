@@ -68,13 +68,7 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
                     $scope.showCancelButton=true;
                     $scope.isCreateButtonVisible = true;
                     $scope.packageVersionsList = data;
-                    console.log("Get process successful");
-                    console.log($scope.packageVersionsList[0].version);
-                    console.log($scope.packageVersionsList.length);
-                    for(var i=0; i<$scope.packageVersionsList.length;i++){
-                        console.log($scope.packageVersionsList[i].version);
-                        console.log($scope.packageVersionsList[i].isRelease);
-                    }
+                    console.log("Search successful");
 
                 })
                 .error(function (error, status) {
@@ -99,7 +93,8 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
             $scope.isSnapshot = true;
             console.log($scope.isSnapshot);
         }
-    }
+        console.log($scope.newVersion);
+    };
 
     //___ Launching wizzard according to the type of wizzard needed
     $scope.launchCreationWizzard = function() {
@@ -114,7 +109,7 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         $scope.isCheckboxFieldEnabled=false;
         //___ Show the modal window
         $('#Wizzard').modal('show');
-    }
+    };
     $scope.launchRebuildWizzard = function() {
         //___ Show only the button needed
         $scope.isRebuildButtonEnabled = true;
@@ -129,7 +124,7 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         //$scope.newVersion="0.0.0";
         //___ Show the modal window
         $('#Wizzard').modal('show');
-    }
+    };
     $scope.launchReleaseWizzard = function() {
         //___ Show only the button needed
         $scope.isReleaseButtonEnabled = true;
@@ -143,14 +138,14 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
 
         //___ Show the modal window
         $('#Wizzard').modal('show');
-    }
+    };
     $scope.closeWizzard = function() {
         $scope.newVersion = "x.y.z";
         $scope.filters = {};
         $scope.NewVersionClass="form-group";
         $scope.AssetStatusClass="form-group";
         $('#Wizzard').modal('hide');
-    }
+    };
 
     //___ Wizzard events
     //___ When you click on Version Field
@@ -165,7 +160,7 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         if($scope.AssetStatusClass=="form-group has-error has-feedback"){
             $scope.AssetStatusClass="form-group";
         }
-    }
+    };
 
     //___ Create the new package
     $scope.createVersion = function() {
@@ -231,6 +226,7 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
                 .success(function (data) {
                     $scope.showCancelButton=true;
                     $scope.newVersion = "x.y.z";
+                    console.log("Build successful");
                     //___ reload the list
                     $scope.searchPackageByName();
                 })
@@ -244,21 +240,77 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
     };
 
     $scope.rebuildVersion = function() {
-        console.log("Ahem...not yet done");
-        //___ Then close the wizzard window
-        $scope.closeWizzard();
+        //___ Recovering the values
+        var packageSelected=$scope.package;
+        var NewVersion=$scope.newVersion;
+        var filters = $scope.filters;
 
-    }
+        if(filters == undefined || filters.length == 0){
+            console.log("filters undefined of no filters given");
+            //___ Red halo to show there's a mistake or an omission
+            $scope.AssetStatusClass="form-group has-error has-feedback";
+        }else {
+            //___ No red halo
+            $scope.AssetStatusClass = "form-group";
+            //__ If checked add the suffix
+            if($scope.snapshot){
+                NewVersion+=""+"-SNAPSHOT";
+            }
+            //___ Check the result on the console
+            console.log("Package : "+packageSelected +", Version chosen : "+ NewVersion+", Asset statuses : "+ filters);
+            //___ Then close the wizzard window
+            $scope.closeWizzard();
+            //___ Post the values
+            $http.post('./server/rules_package/rebuild/'+packageSelected+'/'+NewVersion, JSON.stringify(filters))
+                .success(function (data) {
+                    $scope.showCancelButton=true;
+                    $scope.newVersion = "x.y.z";
+                    console.log("Build successful");
+                    //___ reload the list
+                    $scope.searchPackageByName();
+                       $scope.closeWizzard();
+                })
+                .error(function (error, status) {
+                    $scope.showCancelButton=true;
+                    $scope.noAssetSent = true;
+                    $scope.status=status;
+                    console.log(error);
+                })
+
+        }
+
+    };
 
     $scope.makeRelease = function() {
         console.log("Ahem...not yet done");
         //___ Then close the wizzard window
         $scope.closeWizzard();
-    }
+    };
 
+    //___ Deletion method
     $scope.deletePackageVersion = function() {
-        console.log("Ahem...not yet done");
-    }
+        $scope.allowToCreate = false;
+        if($scope.isSnapshot){
+            $scope.newVersion=$scope.newVersion + "-SNAPSHOT";
+        }
+        //___ Recovering the values
+        var packageSelected=$scope.package;
+        var NewVersion=$scope.newVersion;
+        console.log("Package : "+packageSelected +", Version chosen : "+ NewVersion);
+
+        $http.post('./server/rules_package/delete/'+packageSelected+'/'+NewVersion)
+            .success(function (data) {
+                $scope.showCancelButton=true;
+                $scope.newVersion = "x.y.z";
+                console.log("Delete process successful");
+            })
+            .error(function (error, status) {
+                $scope.showCancelButton=true;
+                $scope.noAssetSent = true;
+                $scope.status=status;
+                console.log(error);
+            })
+    };
 
     //___ Reset all
     $scope.reset = function () {
@@ -275,5 +327,5 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         $scope.isRebuildButtonEnabled = false;
         $scope.isCreateButtonVisible = false;
         $scope.allowToCreate=true;
-    }
+    };
 });

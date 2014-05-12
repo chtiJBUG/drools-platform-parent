@@ -64,6 +64,20 @@ public class RulesPackageResource {
         this.ruleManager.buildAndTakeSnapshot(packageName, buildScope, version);
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/delete/{packageName:.+}/{version:.+}")
+    @Consumes(value = MediaType.APPLICATION_JSON)
+    @Produces(value = MediaType.APPLICATION_JSON)
+    @ResponseBody
+    public void deleteVersion(@PathVariable final String packageName, @PathVariable String version) throws Exception {
+        this.ruleManager.deleteVersionPackage(packageName, version);
+    }
+    @RequestMapping(method = RequestMethod.POST, value = "/rebuild/{packageName:.+}/{version:.+}")
+    @Consumes(value = MediaType.APPLICATION_JSON)
+    @Produces(value = MediaType.APPLICATION_JSON)
+    @ResponseBody
+    public void rebuildPackageVersion(@PathVariable final String packageName, @PathVariable String version, @RequestBody List<AssetStatus> buildScope) throws Exception {
+        this.ruleManager.buildAndTakeSnapshot(packageName, buildScope, version);
+    }
 
     @RequestMapping(value = "/envs", method = RequestMethod.GET)
     @Produces(value = MediaType.APPLICATION_JSON)
