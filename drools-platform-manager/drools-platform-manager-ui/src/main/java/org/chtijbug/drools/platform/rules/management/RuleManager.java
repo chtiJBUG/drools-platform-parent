@@ -2,6 +2,7 @@ package org.chtijbug.drools.platform.rules.management;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.chtijbug.drools.guvnor.rest.ChtijbugDroolsRestException;
 import org.chtijbug.drools.guvnor.rest.GuvnorRepositoryConnector;
@@ -9,6 +10,7 @@ import org.chtijbug.drools.guvnor.rest.model.Asset;
 import org.chtijbug.drools.guvnor.rest.model.AssetPropertyType;
 import org.chtijbug.drools.guvnor.rest.model.Snapshot;
 import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
+import org.chtijbug.drools.platform.web.PackageSnapshot;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.slf4j.Logger;
@@ -64,12 +66,12 @@ public class RuleManager {
         guvnorRepositoryConnector.changeAssetPropertyValue(packageName, assetName, AssetPropertyType.STATE, assetStatus.toString());
     }
 
-    public void buildAndTakeSnapshot(List<AssetStatus> buildScope, String version) throws Exception {
+    public void buildAndTakeSnapshot(String packageName, List<AssetStatus> buildScope, String version) throws Exception {
         if (isSnapshotVersion(version)) {
-            this.guvnorRepositoryConnector.deletePackageSnapshot(version);
+            this.guvnorRepositoryConnector.deletePackageSnapshot(packageName, version);
         }
 
-        List<Snapshot> listSnapshots = this.guvnorRepositoryConnector.getListSnapshots();
+        List<Snapshot> listSnapshots = this.guvnorRepositoryConnector.getListSnapshots(packageName);
         for (Snapshot snapshot : listSnapshots) {
             if (snapshot.getName().equals(version)) {
                 logger.warn("Cannot take a RulePackage Snapshot. Version already exists");
@@ -77,7 +79,7 @@ public class RuleManager {
             }
         }
         String filter = StringUtils.join(buildScope, ",");
-        this.guvnorRepositoryConnector.buildRulePackageByStatus(version, filter);
+        this.guvnorRepositoryConnector.buildRulePackageByStatus(packageName, version, filter);
     }
 
     private boolean isSnapshotVersion(String version) {
@@ -97,5 +99,28 @@ public class RuleManager {
                 return asset.getName();
             }
         });
+    }
+
+    //___ Fetch all package's versions with the package's name
+    public List<String> findAllPackageVersionsByName(String packageName) throws ChtijbugDroolsRestException {
+        List<Snapshot> listPackages = guvnorRepositoryConnector.getListSnapshots(packageName);
+        return Lists.transform(listPackages, new Function<Snapshot, String>() {
+            @Nullable
+            @Override
+            public String apply(@Nullable Snapshot snapshot) {
+                if (snapshot == null)
+                    return null;
+                return snapshot.getName();
+            }
+        });
+    }
+
+    //___ Fetch all package's versions with the package's name and version
+    public List<String> findAllPackageVersionsByNameAndVersion(String packageName, String version) {
+        return null;
+    }
+
+    public void deletePackageVersion(String packageName, String version) throws ChtijbugDroolsRestException {
+        this.guvnorRepositoryConnector.deletePackageSnapshot(packageName, version);
     }
 }
