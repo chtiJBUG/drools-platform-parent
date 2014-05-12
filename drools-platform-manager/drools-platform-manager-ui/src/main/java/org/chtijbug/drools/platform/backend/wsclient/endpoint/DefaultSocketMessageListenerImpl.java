@@ -1,7 +1,8 @@
-package org.chtijbug.drools.platform.backend.wsclient;
+package org.chtijbug.drools.platform.backend.wsclient.endpoint;
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.platform.backend.AppContext;
+import org.chtijbug.drools.platform.backend.wsclient.listener.*;
 import org.chtijbug.drools.platform.entity.Heartbeat;
 import org.chtijbug.drools.platform.entity.JMXInfo;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
@@ -29,14 +30,23 @@ public class DefaultSocketMessageListenerImpl implements WebSocketMessageListene
     private PlatformRuntime platformRuntime;
     private PlatformManagementKnowledgeBean lastBeanReceived;
     private Heartbeat heartbeat;
+    private JMXInfosListener jmxInfosListeners;
+    private HeartBeatListner heartBeatListner;
+    private IsAliveListener isAliveListener;
+    private LoadNewRuleVersionListener loadNewRuleVersionListener;
+    private VersionInfosListener versionInfosListener;
 
-
-    public DefaultSocketMessageListenerImpl(PlatformRuntime platformRuntime,Heartbeat heartbeat) {
+    public DefaultSocketMessageListenerImpl(PlatformRuntime platformRuntime, Heartbeat heartbeat) {
         this.platformRuntime = platformRuntime;
         ApplicationContext applicationContext = AppContext.getApplicationContext();
         this.platformRuntimeRepository = applicationContext.getBean(PlatformRuntimeRepository.class);
         this.sessionRuntimeRepository = applicationContext.getBean(SessionRuntimeRepository.class);
         this.realTimeParametersRepository = applicationContext.getBean(RealTimeParametersRepository.class);
+        jmxInfosListeners = applicationContext.getBean(JMXInfosListener.class);
+        heartBeatListner = applicationContext.getBean(HeartBeatListner.class);
+        isAliveListener = applicationContext.getBean(IsAliveListener.class);
+        loadNewRuleVersionListener = applicationContext.getBean(LoadNewRuleVersionListener.class);
+        versionInfosListener = applicationContext.getBean(VersionInfosListener.class);
         this.heartbeat = heartbeat;
     }
 
@@ -66,20 +76,23 @@ public class DefaultSocketMessageListenerImpl implements WebSocketMessageListene
                     realTimeParameters.setMinRuleThroughout(jmxInfo.getMinRuleThroughout());
                     realTimeParameters.setMaxRuleThroughout(jmxInfo.getMaxRuleThroughout());
                     realTimeParametersRepository.save(realTimeParameters);
+                    this.jmxInfosListeners.messageReceived(platformRuntime.getRuleBaseID(), realTimeParameters);
                     break;
                 case versionInfos:
+                    this.versionInfosListener.messageReceived(platformRuntime.getRuleBaseID(), bean.getResourceFileList());
                     break;
                 case isAlive:
+                    this.isAliveListener.messageReceived(platformRuntime.getRuleBaseID());
+                    break;
 
-                    break;
-                case ruleVersionInfos:
-                    break;
                 case loadNewRuleVersion:
+                    this.loadNewRuleVersionListener.messageReceived(platformRuntime.getRuleBaseID(), bean.getRequestStatus(), bean.getResourceFileList());
                     break;
                 case heartbeat:
-                    if (bean.getHeartbeat()!= null) {
+                    if (bean.getHeartbeat() != null) {
                         this.heartbeat.setLastAlive(bean.getHeartbeat().getLastAlive());
                     }
+                    this.heartBeatListner.messageReceived(platformRuntime.getRuleBaseID(), bean.getHeartbeat().getLastAlive());
                     break;
             }
         }

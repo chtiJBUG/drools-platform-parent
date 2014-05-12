@@ -1,4 +1,4 @@
-package org.chtijbug.drools.platform.backend.wsclient;
+package org.chtijbug.drools.platform.backend.wsclient.endpoint;
 
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 
