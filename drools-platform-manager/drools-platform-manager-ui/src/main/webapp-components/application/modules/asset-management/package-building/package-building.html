@@ -11,7 +11,7 @@
                 <div class="panel-body">
                     <!-- Search form -->
                     <form role="form" name="NewPackageForm">
-                        <div class="form-group" ng-class="namePackageSelectClass" >
+                        <div class="form-group" ng-class="namePackageSelectClass">
                             <label for="package-name-select">Rule Package Name</label>
                             <select id="package-name-select" ui-select2="selectPackage" ng-model="package"
                                     class="form-control"
@@ -22,13 +22,18 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="form-group" >
-                            <label for="ipt-version">Rule Package Version </label> <small>(Optional)</small>
-                            <input id="ipt-version" class="form-control" type="text" placeholder="Please enter the new rule package version name" data-ng-model="version">
+                        <div class="form-group">
+                            <label for="ipt-version">Rule Package Version </label>
+                            <small>(Optional)</small>
+                            <input id="ipt-version" class="form-control" type="text"
+                                   placeholder="Please enter the new rule package version name" data-ng-model="version">
                         </div>
                         <div class="form-group">
-                            <button id="btn-cancel" class="btn btn-danger show-tooltip" ng-show="showCancelButton" ng-click="reset()"><i class="fa fa-times"></i></button>
-                            <button id="btn-search" class="btn btn-info pull-right" data-ng-click="searchPackageByName()"><i class="fa fa-search"></i> Search</button>
+                            <button id="btn-cancel" class="btn btn-danger show-tooltip" ng-show="showCancelButton"
+                                    ng-click="reset()"><i class="fa fa-times"></i></button>
+                            <button id="btn-search" class="btn btn-info pull-right"
+                                    data-ng-click="searchPackageByName()"><i class="fa fa-search"></i> Search
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -41,7 +46,8 @@
                     <h3 class="panel-title">Result search</h3>
                 </div>
                 <div class="panel-body">
-                     <br/>
+                    <br/>
+
                     <div class="alert alert-danger" ng-show="noAssetSent">
                         Error HTTP {{status}}
                     </div>
@@ -54,38 +60,46 @@
                         <div class="table-wrapper-div">
                             <table class="table table-hover">
                                 <thead>
-                                    <tr>
-                                        <th class="bold">Package name</th>
-                                        <th>Version</th>
-                                        <th>Status</th>
-                                    </tr>
+                                <tr>
+                                    <th class="bold">Package name</th>
+                                    <th>Version</th>
+                                    <th>Status</th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- onRightClick will enable the change of boolean statement (isSnapshot) which allow to know if it is a snapshot version or not -->
-                                    <!-- data-target links the line to the context menu -->
-                                    <tr context-menu="onRightClick(packageVersion)" data-target="myMenu" ng-repeat="packageVersion in packageVersionsList">
-                                        <td>{{packageVersion.packageName}}</td>
-                                        <td>{{packageVersion.version}}</td>
-                                        <td>
-                                            <span ng-show="!packageVersion.isRelease" class="label label-warning"><small>SNAPSHOT</small></span>
-                                            <span ng-show="packageVersion.isRelease" class="label label-success"><small>RELEASE</small></span>
-                                        </td>
-                                    </tr>
-                                    <!-- Context menu applied to snapshot versions -->
-                                    <div ng-show="isSnapshot" class="dropdown position-fixed ng-scope" id="myMenu" >
-                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                            <li role="presentation">
-                                                <a class="pointer" role="menuitem" tabindex="-1" ng-click="launchRebuildWizzard()">Rebuild</a>
-                                            </li>
-                                            <li role="presentation">
-                                                <a class="pointer" role="menuitem" tabindex="-1" ng-click="launchReleaseWizzard()">Release</a>
-                                            </li>
-                                            <li class="divider"></li>
-                                            <li role="presentation">
-                                                <a class="pointer" role="menuitem" tabindex="-1" ng-click="deletePackageVersion()">Delete</a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                <!-- onRightClick will enable the change of boolean statement (isSnapshot) which allow to know if it is a snapshot version or not -->
+                                <!-- data-target links the line to the context menu -->
+                                <tr context-menu="onRightClick(packageVersion)" data-target="myMenu"
+                                    ng-repeat="packageVersion in packageVersionsList">
+                                    <td>{{packageVersion.packageName}}</td>
+                                    <td>{{packageVersion.version}}</td>
+                                    <td>
+                                        <span ng-show="!packageVersion.isRelease" class="label label-warning"><small>
+                                            SNAPSHOT
+                                        </small></span>
+                                        <span ng-show="packageVersion.isRelease" class="label label-success"><small>
+                                            RELEASE
+                                        </small></span>
+                                    </td>
+                                </tr>
+                                <!-- Context menu applied to snapshot versions -->
+                                <div ng-show="isSnapshot" class="dropdown position-fixed ng-scope" id="myMenu">
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                        <li role="presentation">
+                                            <a class="pointer" role="menuitem" tabindex="-1"
+                                               ng-click="launchWizzard('rebuild')">Rebuild</a>
+                                        </li>
+                                        <li role="presentation">
+                                            <a class="pointer" role="menuitem" tabindex="-1"
+                                               ng-click="launchWizzard('release')">Release</a>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li role="presentation">
+                                            <a class="pointer" role="menuitem" tabindex="-1"
+                                               ng-click="launchAlertMsg()">Delete</a>
+                                        </li>
+                                    </ul>
+                                </div>
 
                                 </tbody>
                             </table>
@@ -94,8 +108,9 @@
                         <br>
 
                     </div>
-                    <button id="btn-launcher" class="btn btn-success pull-right" ng-show="isCreateButtonVisible" ng-click="launchCreationWizzard()">
-                        <i class="fa fa-plus"></i>  Add a new version
+                    <button id="btn-launcher" class="btn btn-success pull-right" ng-show="isCreateButtonVisible"
+                            ng-click="launchWizzard('create')">
+                        <i class="fa fa-plus"></i> Add a new version
                     </button>
                     <!-- Modal -->
                     <div id="Wizzard" class="modal fade" data-backdrop="static">
@@ -106,49 +121,86 @@
                                 </div>
                                 <div class="modal-body">
                                     <form role="form" name="NewVersionPackageForm">
-                                        <div class="form-group" ng-class="NewVersionClass">
-                                            <label for="package-version-select">Version</label>  <small>(x.y.z format)</small>
-                                            <input id="package-version-select" class="form-control" placeholder="{{newVersion}}" data-ng-model="newVersion" ng-disabled="isVersionFieldEnabled" ng-click="changeVersionField()">
+                                        <div class="form-group" ng-class="{true:'form-group has-error has-feedback'}[NewVersionPackageForm.newVersion.$invalid]">
+                                            <label for="newVersion">Version</label> <span ng-show="alreadyExist" class="label label-warning">Version already existing</span>
+                                            <input id="newVersion" class="form-control"  placeholder="x.y.z" name="newVersion"
+                                                  ng-model="newVersion" ng-disabled="isVersionFieldDisabled"
+                                                   required ng-pattern="/^[0-9]+.[0-9]+.[0-9]+$/" />
+
                                         </div>
-                                        <div ng-class="AssetStatusClass" >
-                                            <label for="asset-status-select">Asset status</label>
-                                            <select id="asset-status-select"
+                                        <div class="form-group" ng-class="{true:'form-group has-error has-feedback'}[NewVersionPackageForm.assetStatusSelect.$invalid]">
+                                            <label for="assetStatusSelect">Asset status</label>
+                                            <select id="assetStatusSelect"
                                                     class="form-control"
+                                                    name="assetStatusSelect"
                                                     style="padding:0;height:auto;width:auto;"
                                                     ui-select2="filtersOptions"
                                                     multiple
                                                     ng-model="filters"
-                                                    data-placeholder="Select Status filters"
-                                                    ng-click="changeASField()">
-                                                <option ng-repeat="stat in statuses" value="{{stat.assetStatus}}">{{stat.description}}
+                                                    ng-disabled="isASFieldDisabled"
+                                                    placeholder="Select Status filters"
+                                                    ng-required="true">
+                                                <option ng-repeat="stat in statuses" value="{{stat.assetStatus}}">
+                                                    {{stat.description}}
                                                 </option>
                                             </select>
                                         </div>
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox" ng-checked="snapshot" ng-model="snapshot" ng-disabled="isCheckboxFieldEnabled"> SNAPSHOT
+                                                <input type="checkbox" ng-checked="isChecked" ng-model="isChecked"
+                                                       ng-disabled="isCheckboxFieldDisabled"> SNAPSHOT
                                             </label>
                                         </div>
                                     </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <button id="btn-closeWizzard" class="btn btn-danger pull-left" ng-click="closeWizzard()">
+                                    <button id="btn-closeWizzard" class="btn btn-danger pull-left"
+                                            ng-click="closeWizzard()">
                                         Cancel
                                     </button>
                                     <!-- ng-show -->
-                                    <button ng-show="isCreateButtonEnabled" id="btn-create" class="btn btn-success pull-right" ng-click="createVersion()">
-                                        Create
+                                    <button ng-show="isCreateButtonEnabled" id="btn-create"
+                                            class="btn btn-success pull-right" ng-click="createVersion()"  ng-disabled="NewVersionPackageForm.newVersion.$invalid || NewVersionPackageForm.assetStatusSelect.$invalid || NewVersionPackageForm.newVersion.$invalid && NewVersionPackageForm.assetStatusSelect.$invalid ">
+                                        <span>Create</span>
                                     </button>
-                                    <button ng-show="isRebuildButtonEnabled" id="btn-rebuild" class="btn btn-success pull-right" ng-click="rebuildVersion()">
-                                        Rebuild
+                                    <button ng-show="isRebuildButtonEnabled" id="btn-rebuild"
+                                            class="btn btn-success pull-right" ng-click="rebuildVersion()" ng-disabled="NewVersionPackageForm.assetStatusSelect.$invalid ">
+                                        <span>Rebuild</span>
                                     </button>
-                                    <button ng-show="isReleaseButtonEnabled" id="btn-release" class="btn btn-success pull-right" ng-click="makeRelease()">
-                                        Release
+                                    <button ng-show="isReleaseButtonEnabled" id="btn-release"
+                                            class="btn btn-success pull-right" ng-click="createVersion()">
+                                        <span>Release</span>
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <div id="AlertMsg" class="modal fade" data-backdrop="static">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Delete package version</h4>
+                                </div>
+                                <div class="modal-body">
+                                        Are you sure you want to delete this version : {{newVersion}} ?
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="btn-cancelAction" class="btn btn-danger pull-left"
+                                            ng-click="closeAlertMsg()">
+                                        Cancel
+                                    </button>
+                                    <!-- ng-show -->
+                                    <button id="btn-delete"
+                                            class="btn btn-success pull-right" ng-click="deletePackageVersion()">
+                                        <span>Delete</span>
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

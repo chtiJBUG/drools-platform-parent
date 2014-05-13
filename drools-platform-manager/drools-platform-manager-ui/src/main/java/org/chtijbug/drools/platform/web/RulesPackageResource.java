@@ -1,14 +1,14 @@
 package org.chtijbug.drools.platform.web;
 
-import com.fasterxml.jackson.core.json.PackageVersion;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import org.chtijbug.drools.guvnor.rest.ChtijbugDroolsRestException;
 import org.chtijbug.drools.guvnor.rest.model.Snapshot;
 import org.chtijbug.drools.platform.rules.config.Environment;
 import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
-import org.chtijbug.drools.platform.rules.management.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.chtijbug.drools.platform.rules.management.AssetStatus;
+import org.chtijbug.drools.platform.rules.management.RuleManager;
+import org.chtijbug.drools.platform.rules.management.RuntimeManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,7 +61,11 @@ public class RulesPackageResource {
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
     public void setPackageVersion(@PathVariable final String packageName, @PathVariable String version, @RequestBody List<AssetStatus> buildScope) throws Exception {
-        this.ruleManager.buildAndTakeSnapshot(packageName, buildScope, version);
+        try {
+            this.ruleManager.buildAndTakeSnapshot(packageName, buildScope, version);
+        } catch (ChtijbugDroolsRestException e){
+            // TODO
+        }
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/delete/{packageName:.+}/{version:.+}")
@@ -69,14 +73,18 @@ public class RulesPackageResource {
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
     public void deleteVersion(@PathVariable final String packageName, @PathVariable String version) throws Exception {
-        this.ruleManager.deleteVersionPackage(packageName, version);
+        this.ruleManager.deletePackageVersion(packageName, version);
     }
     @RequestMapping(method = RequestMethod.POST, value = "/rebuild/{packageName:.+}/{version:.+}")
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
     public void rebuildPackageVersion(@PathVariable final String packageName, @PathVariable String version, @RequestBody List<AssetStatus> buildScope) throws Exception {
-        this.ruleManager.buildAndTakeSnapshot(packageName, buildScope, version);
+        try {
+            this.ruleManager.buildAndTakeSnapshot(packageName, buildScope, version);
+        } catch (ChtijbugDroolsRestException e){
+            // TODO
+        }
     }
 
     @RequestMapping(value = "/envs", method = RequestMethod.GET)
