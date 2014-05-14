@@ -1,12 +1,33 @@
 DroolsPlatformControllers.controller('assetPackagingController', function ($rootScope, $scope, $http, $log) {
     initController();
-
-    //___ Search all package's versions
+    //___ Quick search after any modification
     $scope.searchPackageByName = function() {
         $scope.noAssetSent = false;
         //___ Recovering the values
         var packageSelected=$scope.package;
+        var versionSelected="default";
+        //___ Get the list according to the params chosen
+        $http.get('./server/rules_package/'+packageSelected+'/'+versionSelected)
+            .success(function (data) {
+                $scope.showCancelButton=true;
+                $scope.isCreateButtonVisible = true;
+                $scope.packageVersionsList = data;
+                console.log("Get process successful");
+            })
+            .error(function (error, status) {
+                $scope.showCancelButton=true;
+                $scope.noAssetSent = true;
+                $scope.status=status;
+                console.log(error);
+            })
+    };
+    //___ Search all package's versions
+    $scope.searchPackage = function() {
+        $scope.noAssetSent = false;
+        //___ Recovering the values
+        var packageSelected=$scope.package;
         var versionSelected=$scope.version;
+
         //___ Test if the field is not empty
         if(packageSelected == "") {
             //___ Red halo to show there's a mistake or an omission
@@ -20,6 +41,9 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
                 //___ if it is, value by default attributed
                 versionSelected="default";
                 console.log("keyword applied : "+ versionSelected);
+            }
+            if($scope.isCheckedSearch){
+                versionSelected+="-SNAPSHOT";
             }
             //___ Get the list according to the params chosen
             $http.get('./server/rules_package/'+packageSelected+'/'+versionSelected)
@@ -45,6 +69,13 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
             $scope.isSnapshot = false;
         }else{
             $scope.isSnapshot = true;
+            var existingVersions =_.where($scope.packageVersionsList, {version: $scope.newVersion, isRelease : $scope.isSnapshot});
+            if (!_.isEmpty(existingVersions)) {
+                //______  --> On pete une exception
+                $scope.visibleItem=true;
+            } else  {
+                $scope.visibleItem=false;
+            }
         }
     }
 
@@ -116,16 +147,24 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
 
         //____ Rechercher dans le tableau si le couple version/snapshot(ou release) existe
         var allExistingVersions =_.where($scope.packageVersionsList, {version: NewVersion, isRelease : !$scope.isChecked});
+        var versionsRelease =_.where($scope.packageVersionsList, {version: NewVersion, isRelease : $scope.isChecked});
         //____ Si oui
         if (!_.isEmpty(allExistingVersions)) {
             //______  --> On pete une exception
             allowToCreate = false;
             $scope.alreadyExist=true;
         } else  {
-            //____ Si non, et bien on peut continuer
-            console.log("kowabunga");
-            allowToCreate = true;
-            $scope.alreadyExist = false;
+            //___ Si la release existe déjà et la checkbox SNPASHOT cochée
+            if (!_.isEmpty(versionsRelease) && $scope.isChecked) {
+                //______  --> On pete une exception
+                allowToCreate = false;
+                $scope.alreadyExist=true;
+            } else  {
+                //____ Si non, et bien on peut continuer
+                console.log("kowabunga");
+                allowToCreate = true;
+                $scope.alreadyExist = false;
+            }
         }
 
         if(allowToCreate){
@@ -195,6 +234,7 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
 
     //___ Delete
     $scope.deletePackageVersion = function() {
+        $scope.closeAlertMsg();
         allowToCreate = false;
         if($scope.isSnapshot){
             $scope.newVersion=$scope.newVersion + "-SNAPSHOT";
@@ -203,9 +243,8 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         var packageSelected=$scope.package;
         var NewVersion=$scope.newVersion;
 
-
         console.log("Package : "+packageSelected +", Version chosen : "+ NewVersion);
-        $scope.closeAlertMsg();
+
         $http.post('./server/rules_package/delete/'+packageSelected+'/'+NewVersion)
             .success(function (data) {
                 $scope.showCancelButton=true;
@@ -224,32 +263,26 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
     $scope.reset = function () { initController();};
 
     function initController() {
-        $scope.filters = {};
+        $scope.isCheckedSearch = false;
         $scope.isSnapshot = false;
-        $scope.version = undefined;
-        $scope.package = undefined;
+        //___ Mainly useful for reset
         $scope.filters = undefined;
         $scope.packageVersionsList=undefined;
-
-        $scope.newVersion = '0.0.0';
+        $scope.package=undefined;
+        $scope.version=undefined;
 
         //___ Allow to erase the item chosen in the field
         $scope.selectPackage = {allowClear: true};
         $scope.filtersOptions = {selectOnBlur: true};
-
-        //___ According to the wizzard you have opened some field are disabled
-        $scope.isVersionFieldEnabled = false;
-        $scope.isCreateButtonEnabled = false;
-        $scope.isRebuildButtonEnabled = false;
 
         //___ Showing the "Create" button only if there is no error from the server returned
         $scope.isCreateButtonVisible = false;
 
         $scope.showCancelButton=false;
         $scope.noAssetSent = false;
-
         $scope.isChecked=false;
 
+        //___ After resetting the values, get values from the server
         //___ Get the list of the existed package from the server
         $http.get('./server/rules_package/list')
             .success(function (data) {
