@@ -2,6 +2,9 @@ package org.chtijbug.drools.platform.rules.management;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.base.Throwables;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.chtijbug.drools.guvnor.rest.ChtijbugDroolsRestException;
@@ -20,7 +23,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static ch.lambdaj.Lambda.*;
 import static com.google.common.collect.Lists.transform;
@@ -116,8 +121,20 @@ public class RuleManager {
     }
 
     //___ Fetch all package's versions with the package's name and version
-    public List<String> findAllPackageVersionsByNameAndVersion(String packageName, String version) {
-        return null;
+    public List<String> findAllPackageVersionsByNameAndVersion(String packageName, final String version) {
+        try {
+            List<String> allSnapshots = findAllPackageVersionsByName(packageName);
+            Collection<String> filteredSnapshots = Collections2.filter(allSnapshots, new Predicate<String>() {
+                @Override
+                public boolean apply(@Nullable String snapshot) {
+                    return snapshot.matches(version);
+                }
+            });
+
+            return Lists.newArrayList(filteredSnapshots);
+        } catch (ChtijbugDroolsRestException e) {
+            throw Throwables.propagate(e);
+        }
     }
 
     public void deletePackageVersion(String packageName, String version) throws ChtijbugDroolsRestException {
