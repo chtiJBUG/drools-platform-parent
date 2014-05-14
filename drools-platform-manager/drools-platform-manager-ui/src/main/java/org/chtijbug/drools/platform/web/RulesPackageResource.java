@@ -2,6 +2,7 @@ package org.chtijbug.drools.platform.web;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import org.chtijbug.drools.guvnor.rest.ChtijbugDroolsRestException;
 import org.chtijbug.drools.guvnor.rest.model.Snapshot;
 import org.chtijbug.drools.platform.rules.config.Environment;
 import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
@@ -45,6 +46,9 @@ public class RulesPackageResource {
         if (version.equals("default")) {
             result = this.ruleManager.findAllPackageVersionsByName(packageName);
         } else {
+            if(version.equals("*")){
+                version=".*";
+            }
             result = this.ruleManager.findAllPackageVersionsByNameAndVersion(packageName, version);
         }
         return Lists.transform(result, new Function<String, PackageSnapshot>() {
@@ -60,7 +64,11 @@ public class RulesPackageResource {
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
     public void setPackageVersion(@PathVariable final String packageName, @PathVariable String version, @RequestBody List<AssetStatus> buildScope) throws Exception {
-        this.ruleManager.buildAndTakeSnapshot(packageName, buildScope, version);
+        try {
+            this.ruleManager.buildAndTakeSnapshot(packageName, buildScope, version);
+        } catch (ChtijbugDroolsRestException e){
+            // TODO
+        }
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/delete/{packageName:.+}/{version:.+}")
@@ -75,7 +83,11 @@ public class RulesPackageResource {
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
     public void rebuildPackageVersion(@PathVariable final String packageName, @PathVariable String version, @RequestBody List<AssetStatus> buildScope) throws Exception {
-        this.ruleManager.buildAndTakeSnapshot(packageName, buildScope, version);
+        try {
+            this.ruleManager.buildAndTakeSnapshot(packageName, buildScope, version);
+        } catch (ChtijbugDroolsRestException e){
+            // TODO
+        }
     }
 
     @RequestMapping(value = "/envs", method = RequestMethod.GET)

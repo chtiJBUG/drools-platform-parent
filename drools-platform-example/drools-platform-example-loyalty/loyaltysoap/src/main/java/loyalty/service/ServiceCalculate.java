@@ -12,22 +12,14 @@ import javax.jws.WebService;
 
 @WebService(endpointInterface = "loyalty.service.IServiceCalculate")
 public class ServiceCalculate implements IServiceCalculate {
-
-
     private static Logger logger = LoggerFactory.getLogger(ServiceCalculate.class);
-
-
     private RuleBasePackage ruleBasePackage = null;
-
-    public void setRuleBasePackage(RuleBasePackage ruleBasePackage) {
+     public void setRuleBasePackage(RuleBasePackage ruleBasePackage) {
         this.ruleBasePackage = ruleBasePackage;
     }
 
-
     @Override
     public Ticket calculate(@WebParam(name = "ticket") Ticket ticket) {
-
-
         RuleBaseSession sessionStatefull = null;
         try {
             sessionStatefull = ruleBasePackage.createRuleBaseSession();
@@ -40,7 +32,6 @@ public class ServiceCalculate implements IServiceCalculate {
         }
         return ticket;
     }
-
     @Override
     public String reloadPackageVersion() throws DroolsChtijbugException {
         ruleBasePackage.ReloadWithSameRessources();
