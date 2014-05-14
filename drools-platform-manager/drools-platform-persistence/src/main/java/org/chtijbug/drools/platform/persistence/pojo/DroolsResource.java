@@ -98,6 +98,10 @@ public class DroolsResource {
         this.endDate = endDate;
     }
 
+    public void setGuvnor_packageVersion(String guvnor_packageVersion) {
+        this.guvnor_packageVersion = guvnor_packageVersion;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

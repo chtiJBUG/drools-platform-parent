@@ -82,6 +82,8 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
         try {
 
             clientSocket.getSession().getBasicRemote().sendObject(platformManagementKnowledgeBean);
+            guvnorRessource.setGuvnor_packageVersion(packageVersion);
+            platformRuntimeInstanceRepository.save(instance);
         } catch (IOException e) {
             LOG.error("updateRulePackage(ruleBaseID="+ruleBaseID+",packageVersion)="+packageVersion,e);
         } catch (EncodeException e) {
