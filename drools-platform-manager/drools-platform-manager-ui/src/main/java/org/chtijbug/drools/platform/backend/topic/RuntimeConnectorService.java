@@ -63,7 +63,7 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
                 DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("updateRulePackage-NoUniqueRuleBaseID", ruleBaseID.toString(), null);
                 throw droolsChtijbugException;
             }
-            //TODO
+
         }
 
         PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
