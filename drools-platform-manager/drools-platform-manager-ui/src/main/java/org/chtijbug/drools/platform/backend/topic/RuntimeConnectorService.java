@@ -6,8 +6,11 @@ import org.chtijbug.drools.platform.backend.wsclient.WebSocketClient;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
 import org.chtijbug.drools.platform.backend.wsclient.listener.*;
 import org.chtijbug.drools.platform.entity.*;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
+import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.RealTimeParameters;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
+import javax.websocket.EncodeException;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -36,6 +41,9 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
     @Autowired
     private PlatformRuntimeRepository platformRuntimeRepository;
 
+    @Autowired
+    private PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
+
     private BaseTopicData baseTopicDataToSend;
 
     private Semaphore sendSemaphore = new Semaphore(1);
@@ -55,6 +63,29 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
                 DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("updateRulePackage-NoUniqueRuleBaseID", ruleBaseID.toString(), null);
                 throw droolsChtijbugException;
             }
+            //TODO
+        }
+
+        PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
+        platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.loadNewRuleVersion);
+        PlatformRuntimeInstance instance = platformRuntimeInstanceRepository.findByRuleBaseID(ruleBaseID);
+        List<DroolsResource> droolsRessourceList = instance.getDroolsRessourcesDefinition();
+        if (droolsRessourceList ==null || droolsRessourceList.size()>1 || droolsRessourceList.get(0).getGuvnor_url()==null){
+            DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("updateRulePackage-NotAguvnorRessource", ruleBaseID.toString(), null);
+            throw droolsChtijbugException;
+        }
+        DroolsResource guvnorRessource = droolsRessourceList.get(0);
+        PlatformResourceFile platformResourceFile = new PlatformResourceFile(guvnorRessource.getGuvnor_url(),guvnorRessource.getGuvnor_appName(),guvnorRessource.getGuvnor_packageName(),packageVersion,null,null);
+        platformManagementKnowledgeBean.getResourceFileList().add(platformResourceFile);
+        platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.loadNewRuleVersion);
+
+        try {
+
+            clientSocket.getSession().getBasicRemote().sendObject(platformManagementKnowledgeBean);
+        } catch (IOException e) {
+            LOG.error("updateRulePackage(ruleBaseID="+ruleBaseID+",packageVersion)="+packageVersion,e);
+        } catch (EncodeException e) {
+            LOG.error("updateRulePackage(ruleBaseID=" + ruleBaseID + ",packageVersion)=" + packageVersion, e);
         }
 
 
