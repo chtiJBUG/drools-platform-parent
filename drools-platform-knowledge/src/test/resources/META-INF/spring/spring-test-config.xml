@@ -20,7 +20,7 @@
         </amq:transportConnectors>
     </amq:broker>
 
-    <context:property-placeholder location="classpath:spring/platform-knowledge.properties"/>
+    <context:property-placeholder location="classpath:META-INF/spring/platform-knowledge.properties"/>
 
 
     <import resource="classpath:META-INF/spring/spring-drools-platform-runtime-context.xml"/>

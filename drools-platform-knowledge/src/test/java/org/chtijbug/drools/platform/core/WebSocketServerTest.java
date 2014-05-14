@@ -22,8 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:META-INF/spring/spring-test-config.xml"})
-
-
 public class WebSocketServerTest {
 
 
