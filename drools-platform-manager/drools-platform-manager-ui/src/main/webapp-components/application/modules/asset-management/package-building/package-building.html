@@ -25,8 +25,9 @@
                         <div class="form-group">
                             <label for="ipt-version">Rule Package Version </label>
                             <small>(Optional)</small>
-                            <input id="ipt-version" class="form-control" type="text"
-                                   placeholder="Please enter the new rule package version name" data-ng-model="version">
+                            <input id="ipt-version" class="form-control" name="versionSearched" type="text"
+                                   placeholder="Please enter the new rule package version name" data-ng-model="version"
+                                   ng-pattern="/^[0-9]+.[0-9]+.[0-9]+$/">
                         </div>
                         <div class="checkbox">
                             <label>
@@ -57,10 +58,15 @@
                     <div class="alert alert-danger" ng-show="noAssetSent">
                         Error HTTP {{status}}
                     </div>
-                    <div ng-show="packageVersionsList.length == 0">
-                        <div class="well well-lg">
-                            No packages have been found
-                        </div>
+                    <div ng-show="NewPackageForm.versionSearched.$invalid" class="alert alert-info">
+                        <strong>You did not write well the version.</strong><br>
+                        If you want to find a precise version of this package you have to follow a pattern.<br>
+                        For example, to find the version 1.0.0 of this package, you must write : <code>1.0.0</code>.<br>
+                        To find the package versions beginning with 1 : <code>1.*.*</code><br>
+                        To see all the existing versions you can type : <code>*</code>
+                    </div>
+                    <div ng-show="packageVersionsList.length == 0 && NewPackageForm.versionSearched.$valid" class="alert alert-warning">
+                            Not successful search.
                     </div>
                     <div ng-show="packageVersionsList.length > 0">
                         <div class="table-wrapper-div">
