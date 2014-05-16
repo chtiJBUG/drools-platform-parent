@@ -45,9 +45,14 @@ public class RulesPackageResource {
         List<String> result;
         if (version.equals("default")) {
             result = this.ruleManager.findAllPackageVersionsByName(packageName);
-        } else {
+        }else if(version.equals("default-SNAPSHOT")){
+            version=".*-SNAPSHOT";
+            result = this.ruleManager.findAllPackageVersionsByNameAndVersion(packageName, version);
+        }else {
             if(version.equals("*")){
                 version=".*";
+            }else if(version.equals("*-SNAPSHOT")){
+                version=".*-SNAPSHOT";
             }
             result = this.ruleManager.findAllPackageVersionsByNameAndVersion(packageName, version);
         }

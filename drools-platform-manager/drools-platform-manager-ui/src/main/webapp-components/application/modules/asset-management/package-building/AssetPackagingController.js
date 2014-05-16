@@ -27,16 +27,17 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         //___ Recovering the values
         var packageSelected=$scope.package;
         var versionSelected=$scope.version;
+        console.log(versionSelected);
 
         //___ Test if the field is not empty
-        if(packageSelected == "") {
+        if(packageSelected == "" || packageSelected==undefined) {
             //___ Red halo to show there's a mistake or an omission
             $scope.namePackageSelectClass="form-group has-error has-feedback";
         }else{
             //___ No red halo
             $scope.namePackageSelectClass="form-group";
             //___ Test if the field is empty
-            if(typeof(versionSelected) == "undefined" || versionSelected == ""){
+            if(versionSelected == "undefined" || versionSelected == ""){
                 console.log("No version chosen");
                 //___ if it is, value by default attributed
                 versionSelected="default";
@@ -50,6 +51,7 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
                 .success(function (data) {
                     $scope.showCancelButton=true;
                     $scope.isCreateButtonVisible = true;
+                    $scope.searchNotSuccessful=false;
                     $scope.packageVersionsList = data;
                     console.log("Get process successful");
                 })
@@ -269,7 +271,7 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         $scope.filters = undefined;
         $scope.packageVersionsList=undefined;
         $scope.package=undefined;
-        $scope.version=undefined;
+        $scope.version="";
 
         //___ Allow to erase the item chosen in the field
         $scope.selectPackage = {allowClear: true};
@@ -281,6 +283,7 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         $scope.showCancelButton=false;
         $scope.noAssetSent = false;
         $scope.isChecked=false;
+        $scope.searchNotSuccessful=true;
 
         //___ After resetting the values, get values from the server
         //___ Get the list of the existed package from the server
