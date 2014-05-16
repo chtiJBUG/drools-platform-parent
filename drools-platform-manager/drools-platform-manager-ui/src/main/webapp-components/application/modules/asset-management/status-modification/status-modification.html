@@ -50,7 +50,7 @@
 
         </div>
         <div class="col-md-7 col-md-offset-1">
-            <div class="panel panel-default">
+            <div class="panel panel-default" style="min-height: 248px;">
                 <div class="panel-heading">
                     <h3 class="panel-title">Result search</h3>
                 </div>
@@ -60,10 +60,8 @@
                     <div class="alert alert-danger" ng-show="noAssetSent">
                         Error system
                     </div>
-                    <div ng-show="assets.length == 0">
-                        <div class="well well-lg">
+                    <div ng-show="assets.length == 0" class="alert alert-info" style="height:116px;padding-top:40px;padding-left:50px">
                             No Assets have been found
-                        </div>
                     </div>
                     <div ng-show="assets.length > 0">
                         <div class="table-wrapper-div">

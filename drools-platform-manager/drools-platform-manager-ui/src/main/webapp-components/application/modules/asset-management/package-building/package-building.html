@@ -27,7 +27,7 @@
                             <small>(Optional)</small>
                             <input id="ipt-version" class="form-control" name="versionSearched" type="text"
                                    placeholder="Please enter the new rule package version name" data-ng-model="version"
-                                   ng-pattern="/^[0-9]+.[0-9]+.[0-9]+$/">
+                                   ng-pattern="/^.*+.[0-9]+.[0-9]+$/">
                         </div>
                         <div class="checkbox">
                             <label>
@@ -48,25 +48,26 @@
             </div>
         </div>
         <div class="col-md-7 col-md-offset-1">
-            <div class="panel panel-default">
+            <div class="panel panel-default" style="min-height: 280px;">
                 <div class="panel-heading">
                     <h3 class="panel-title">Result search</h3>
                 </div>
                 <div class="panel-body">
                     <br/>
-
                     <div class="alert alert-danger" ng-show="noAssetSent">
                         Error HTTP {{status}}
                     </div>
-                    <div ng-show="NewPackageForm.versionSearched.$invalid" class="alert alert-info">
-                        <strong>You did not write well the version.</strong><br>
-                        If you want to find a precise version of this package you have to follow a pattern.<br>
-                        For example, to find the version 1.0.0 of this package, you must write : <code>1.0.0</code>.<br>
-                        To find the package versions beginning with 1 : <code>1.*.*</code><br>
-                        To see all the existing versions you can type : <code>*</code>
+                    <div ng-show="searchNotSuccessful || NewPackageForm.versionSearched.$invalid" class="alert alert-info">
+                        <strong>If you are looking for a particular version :</strong><br>
+                        <ul>
+                            <li>To find the version <strong>1.0.0 of this package</strong>, you must write : <code>1.0.0</code></li>
+                            <li>To find the package versions <strong>beginning with 1</strong>, you must write : : <code>1.*.*</code></li>
+                            <li>To see <strong>all the existing versions</strong> you can type, you must write : : <code>*</code></li>
+                        </ul>
                     </div>
-                    <div ng-show="packageVersionsList.length == 0 && NewPackageForm.versionSearched.$valid" class="alert alert-warning">
-                            Not successful search.
+                    <div ng-show="packageVersionsList.length == 0" class="alert alert-warning" style="height:116px;padding-top:40px;padding-left:50px">
+                        <p>Not successful search.</p>
+
                     </div>
                     <div ng-show="packageVersionsList.length > 0">
                         <div class="table-wrapper-div">

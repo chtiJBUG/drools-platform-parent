@@ -30,9 +30,10 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
     $scope.search = function () {
         var filters = $scope.filters;
         var packageSelected=$scope.package;
-        console.log("Package selected : "+packageSelected);
-        console.log("Filter()s selected : "+packageSelected);
-        if(packageSelected == "" && filters.length == 0 ) {
+        if(filters==undefined){
+            $scope.assetStatusSelectClass="form-group has-error has-feedback";
+        }
+        else if(packageSelected == "" && filters.length == 0 ) {
             $scope.namePackageSelectClass="form-group has-error has-feedback";
             $scope.assetStatusSelectClass="form-group has-error has-feedback";
         }else if (filters.length == 0) {
@@ -67,6 +68,8 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
         $scope.package=undefined;
         $scope.filters = undefined;
         $scope.assets = undefined;
+        $scope.namePackageSelectClass="form-group";
+        $scope.assetStatusSelectClass="form-group";
     }
 
     $scope.promoteAssetsStatus = function () {

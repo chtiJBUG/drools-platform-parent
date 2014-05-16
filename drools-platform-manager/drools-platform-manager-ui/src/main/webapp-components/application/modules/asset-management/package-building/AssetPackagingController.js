@@ -51,6 +51,7 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
                 .success(function (data) {
                     $scope.showCancelButton=true;
                     $scope.isCreateButtonVisible = true;
+                    $scope.searchNotSuccessful=false;
                     $scope.packageVersionsList = data;
                     console.log("Get process successful");
                 })
@@ -282,6 +283,7 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         $scope.showCancelButton=false;
         $scope.noAssetSent = false;
         $scope.isChecked=false;
+        $scope.searchNotSuccessful=true;
 
         //___ After resetting the values, get values from the server
         //___ Get the list of the existed package from the server
