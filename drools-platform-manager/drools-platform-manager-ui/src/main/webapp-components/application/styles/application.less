@@ -67,6 +67,7 @@ a {
 }
 
 #wrap {
+  background-image:url('../images/pattern.png');
   min-height: 100%;
   height: auto !important;
   height: 100%;
@@ -75,7 +76,7 @@ a {
 
 footer {
   height: @footer-height;
-  background-color: #ffffff;
+  /*background-color: #ffffff;*/
   p {
     padding-left: 10px;
     padding-right: 10px;
@@ -119,7 +120,8 @@ footer {
 
 /* Modify width and margins of jumbotron */
 .jumbotron{
-  background-color: #ffffff;
+  /* Usually : background-color: #ffffff; */
+  background-color:transparent;
   max-width:1000px;
   margin:auto;
   padding:auto;
@@ -410,6 +412,7 @@ a:hover{
 /* panel default */
 .panel-default {
   border-color: #81776d;
+  background-color: rgb(245,245,245);
 }
 .panel-default > .panel-heading {
   font-size:20px;
@@ -544,3 +547,4 @@ a.list-group-item.active > .badge, .nav-pills > .active > a > .badge {
 .position-fixed {
   position: fixed;
 }
+

@@ -134,14 +134,14 @@
                                 </div>
                                 <div class="modal-body">
                                     <form role="form" name="NewVersionPackageForm">
-                                        <div class="form-group" ng-class="{true:'form-group has-error has-feedback'}[NewVersionPackageForm.newVersion.$invalid]">
+                                        <div class="form-group" ng-class="iptNewVersion">
                                             <label for="newVersion">Version</label> <span ng-show="alreadyExist" class="label label-warning">Version already existing</span>
-                                            <input id="newVersion" class="form-control"  placeholder="x.y.z" name="newVersion"
+                                            <input id="newVersion" class="form-control" placeholder="x.y.z" name="newVersion"
                                                   ng-model="newVersion" ng-disabled="isVersionFieldDisabled"
                                                    required ng-pattern="/^[0-9]+.[0-9]+.[0-9]+$/" />
 
                                         </div>
-                                        <div class="form-group" ng-class="{true:'form-group has-error has-feedback'}[NewVersionPackageForm.assetStatusSelect.$invalid]">
+                                        <div class="form-group" ng-class="slctAssetStatus">
                                             <label for="assetStatusSelect">Asset status</label>
                                             <select id="assetStatusSelect"
                                                     class="form-control"
@@ -173,11 +173,11 @@
                                     </button>
                                     <!-- ng-show -->
                                     <button ng-show="isCreateButtonEnabled" id="btn-create"
-                                            class="btn btn-success pull-right" ng-click="createVersion()"  ng-disabled="NewVersionPackageForm.newVersion.$invalid || NewVersionPackageForm.assetStatusSelect.$invalid || NewVersionPackageForm.newVersion.$invalid && NewVersionPackageForm.assetStatusSelect.$invalid ">
+                                            class="btn btn-success pull-right" ng-click="createVersion()">
                                         <span>Create</span>
                                     </button>
                                     <button ng-show="isRebuildButtonEnabled" id="btn-rebuild"
-                                            class="btn btn-success pull-right" ng-click="rebuildVersion()" ng-disabled="NewVersionPackageForm.assetStatusSelect.$invalid ">
+                                            class="btn btn-success pull-right" ng-click="rebuildVersion()">
                                         <span>Rebuild</span>
                                     </button>
                                     <button ng-show="isReleaseButtonEnabled" id="btn-release"

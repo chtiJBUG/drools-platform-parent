@@ -2,7 +2,7 @@
     <div class="panel panel-default" ng-controller="artifactsDefinitionsController">
 
         <div class="panel-heading">
-            Artifacts Definitions
+            <h3 class="panel-title">Artifacts Definitions</h3>
         </div>
 
         <div class="panel-body">
@@ -24,11 +24,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-offset-3 col-sm-9">
-                            <button type="button" class="btn btn-info" style="margin-left: 0px" ng-click="gotoPreviousStep()"><i class="fa fa-long-arrow-left"></i> Prev.</button>
-                            <button type="submit" class="btn btn-info" style="margin-left: 212px" >Next <i class="fa fa-long-arrow-right"></i></button>
-                    </div>
+                    <button type="button" class="btn btn-info col-sm-offset-3" ng-click="gotoPreviousStep()"><i class="fa fa-long-arrow-left"></i> Prev.</button>
+                    <button type="submit" class="btn btn-info col-sm-offset-5">Next <i class="fa fa-long-arrow-right"></i></button>
                 </div>
+
             </form>
         </div>
     </div>
