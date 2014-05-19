@@ -16,7 +16,7 @@ import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositor
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeDefinition;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -62,11 +62,11 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
                 }
             }
             WebSocketClient webSocketClient = null;
-            PlatformRuntimeInstance platformRuntimeInstance = null;
+            PlatformRuntimeDefinition platformRuntimeDefinition = null;
             PlatformRuntime platformRuntime = null;
-            platformRuntimeInstance = platformRuntimeInstanceRepository.findByRuleBaseID(ruleBaseId);
-            if (platformRuntimeInstance != null) {
-                for (PlatformRuntime existingPlatformRuntime : platformRuntimeInstance.getPlatformRuntimes()) {
+            platformRuntimeDefinition = platformRuntimeInstanceRepository.findByRuleBaseID(ruleBaseId);
+            if (platformRuntimeDefinition != null) {
+                for (PlatformRuntime existingPlatformRuntime : platformRuntimeDefinition.getPlatformRuntimes()) {
                     if (existingPlatformRuntime != null && existingPlatformRuntime.getEndDate() == null) {
                         existingPlatformRuntime.setEndDate(new Date());
                         existingPlatformRuntime.setShutdowDate(new Date());
@@ -75,18 +75,18 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
                     }
                 }
             } else {
-                platformRuntimeInstance = new PlatformRuntimeInstance();
-                platformRuntimeInstance.setRuleBaseID(ruleBaseId);
+                platformRuntimeDefinition = new PlatformRuntimeDefinition();
+                platformRuntimeDefinition.setRuleBaseID(ruleBaseId);
                 for (ResourceFile resourceFile : platformKnowledgeBaseInitialConnectionEvent.getResourceFiles()) {
                     DroolsResource droolsResource = new DroolsResource();
                     if (resourceFile instanceof DrlResourceFile) {
                         DrlResourceFile drlResourceFile = (DrlResourceFile) resourceFile;
                         droolsResource = new DroolsResource(drlResourceFile.getFileName(), drlResourceFile.getContent());
-                        platformRuntimeInstance.getDroolsRessourcesDefinition().add(droolsResource);
+                        platformRuntimeDefinition.getDroolsRessourcesDefinition().add(droolsResource);
                     } else if (resourceFile instanceof GuvnorResourceFile) {
                         GuvnorResourceFile guvnorResourceFile = (GuvnorResourceFile) resourceFile;
                         droolsResource = new DroolsResource(guvnorResourceFile.getGuvnor_url(), guvnorResourceFile.getGuvnor_appName(), guvnorResourceFile.getGuvnor_packageName(), guvnorResourceFile.getGuvnor_packageVersion());
-                        platformRuntimeInstance.getDroolsRessourcesDefinition().add(droolsResource);
+                        platformRuntimeDefinition.getDroolsRessourcesDefinition().add(droolsResource);
                     }
                 }
 
@@ -98,15 +98,15 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
             platformRuntime.setStartDate(platformKnowledgeBaseInitialConnectionEvent.getStartDate());
             platformRuntime.setHostname(platformKnowledgeBaseInitialConnectionEvent.getHostname());
             platformRuntime.setPort(platformKnowledgeBaseInitialConnectionEvent.getPort());
-            platformRuntime.setPlatformRuntimeInstance(platformRuntimeInstance);
+            platformRuntime.setPlatformRuntimeDefinition(platformRuntimeDefinition);
             platformRuntime.setStatus(PlatformRuntimeStatus.INITMODE);
-            platformRuntimeInstance.getPlatformRuntimes().add(platformRuntime);
+            platformRuntimeDefinition.getPlatformRuntimes().add(platformRuntime);
 
 
             try {
                 webSocketClient = webSocketSessionManager.AddClient(platformRuntime);
                 PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
-                for (DroolsResource droolsResource : platformRuntimeInstance.getDroolsRessourcesDefinition()) {
+                for (DroolsResource droolsResource : platformRuntimeDefinition.getDroolsRessourcesDefinition()) {
                     if (droolsResource.getGuvnor_url() != null) {
                         PlatformResourceFile platformResourceFile = new PlatformResourceFile(droolsResource.getGuvnor_url(), droolsResource.getGuvnor_appName(), droolsResource.getGuvnor_packageName(), droolsResource.getGuvnor_packageVersion(), null, null);
                         platformManagementKnowledgeBean.getResourceFileList().add(platformResourceFile);
@@ -127,7 +127,7 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
                 LOG.error(" handleMessage(PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent) ", e);
                 e.printStackTrace();
             } finally {
-                platformRuntimeInstanceRepository.save(platformRuntimeInstance);
+                platformRuntimeInstanceRepository.save(platformRuntimeDefinition);
             }
         }
     }

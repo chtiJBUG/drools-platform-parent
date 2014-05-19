@@ -43,7 +43,7 @@ public class PlatformRuntime implements Serializable {
     private List<SessionRuntime> sessionRuntimes = new ArrayList<SessionRuntime>();
     @ManyToOne
     @JoinColumn(name = "platform_instance_id_fk")
-    private PlatformRuntimeInstance platformRuntimeInstance ;
+    private PlatformRuntimeDefinition platformRuntimeDefinition;
 
 
     public PlatformRuntime() {
@@ -150,12 +150,12 @@ public class PlatformRuntime implements Serializable {
         this.sessionRuntimes = sessionRuntimes;
     }
 
-    public PlatformRuntimeInstance getPlatformRuntimeInstance() {
-        return platformRuntimeInstance;
+    public PlatformRuntimeDefinition getPlatformRuntimeDefinition() {
+        return platformRuntimeDefinition;
     }
 
-    public void setPlatformRuntimeInstance(PlatformRuntimeInstance platformRuntimeInstance) {
-        this.platformRuntimeInstance = platformRuntimeInstance;
+    public void setPlatformRuntimeDefinition(PlatformRuntimeDefinition platformRuntimeDefinition) {
+        this.platformRuntimeDefinition = platformRuntimeDefinition;
     }
 
     @Override

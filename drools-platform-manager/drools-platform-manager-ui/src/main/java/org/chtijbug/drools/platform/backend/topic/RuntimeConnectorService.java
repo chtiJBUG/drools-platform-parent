@@ -10,7 +10,7 @@ import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositor
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeDefinition;
 import org.chtijbug.drools.platform.persistence.pojo.RealTimeParameters;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +68,7 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
 
         PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
         platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.loadNewRuleVersion);
-        PlatformRuntimeInstance instance = platformRuntimeInstanceRepository.findByRuleBaseID(ruleBaseID);
+        PlatformRuntimeDefinition instance = platformRuntimeInstanceRepository.findByRuleBaseID(ruleBaseID);
         List<DroolsResource> droolsRessourceList = instance.getDroolsRessourcesDefinition();
         if (droolsRessourceList ==null || droolsRessourceList.size()>1 || droolsRessourceList.get(0).getGuvnor_url()==null){
             DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("updateRulePackage-NotAguvnorRessource", ruleBaseID.toString(), null);

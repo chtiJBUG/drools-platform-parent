@@ -12,27 +12,27 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "platform_runtime_instance")
-public class PlatformRuntimeInstance implements Serializable {
+@Table(name = "platform_runtime_definition")
+public class PlatformRuntimeDefinition implements Serializable {
 
     @Id
-    @SequenceGenerator(name = "platform_runtime_instance_id_seq", sequenceName = "platform_runtime_instance_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "platform_runtime_instance_id_seq")
+    @SequenceGenerator(name = "platform_runtime_definition_id_seq", sequenceName = "platform_runtime_definition_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "platform_runtime_definition_id_seq")
     private Long id;
 
     @Column(nullable = false)
     private Integer ruleBaseID;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "platform_instance_id_fk")
+    @JoinColumn(name = "platform_runtime_definition_id_fk")
     private List<PlatformRuntime> platformRuntimes = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "platform_instance_id_fk")
+    @JoinColumn(name = "platform_runtime_definition_id_fk")
     private List<DroolsResource> droolsRessourcesDefinition = new ArrayList<>();
 
 
-    public PlatformRuntimeInstance() {
+    public PlatformRuntimeDefinition() {
     }
 
 
