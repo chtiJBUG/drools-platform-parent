@@ -8,7 +8,7 @@ import org.chtijbug.drools.platform.persistence.RulesRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
 import org.chtijbug.drools.platform.persistence.pojo.Fact;
 import org.chtijbug.drools.platform.persistence.pojo.FactType;
-import org.chtijbug.drools.platform.persistence.pojo.RuleRuntime;
+import org.chtijbug.drools.platform.persistence.pojo.RuleExecution;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,16 +41,16 @@ public class DeleteFactEventStrategy extends AbstractEventHandlerStrategy {
         fact.setJsonFact(deletedFactHistoryEvent.getDeletedObject().getRealObject_JSON());
         fact.setModificationDate(deletedFactHistoryEvent.getDateEvent());
         fact.setFactType(FactType.INSERTED);
-        RuleRuntime existingInSessionRuleRuntime = rulesRuntimeRepository.findActiveRuleInSessionByRuleBaseIDAndSessionID(deletedFactHistoryEvent.getRuleBaseID(), deletedFactHistoryEvent.getSessionId());
-        if (existingInSessionRuleRuntime != null) {
-            existingInSessionRuleRuntime.getThenFacts().add(fact);
-            rulesRuntimeRepository.save(existingInSessionRuleRuntime);
+        RuleExecution existingInSessionRuleExecution = rulesRuntimeRepository.findActiveRuleInSessionByRuleBaseIDAndSessionID(deletedFactHistoryEvent.getRuleBaseID(), deletedFactHistoryEvent.getSessionId());
+        if (existingInSessionRuleExecution != null) {
+            existingInSessionRuleExecution.getThenFacts().add(fact);
+            rulesRuntimeRepository.save(existingInSessionRuleExecution);
 
         } else {
-            existingInSessionRuleRuntime = rulesRuntimeRepository.findActiveRuleInRuleFlowGroupByRuleBaseIDAndSessionID(deletedFactHistoryEvent.getRuleBaseID(), deletedFactHistoryEvent.getSessionId());
-            if (existingInSessionRuleRuntime != null) {
-                existingInSessionRuleRuntime.getThenFacts().add(fact);
-                rulesRuntimeRepository.save(existingInSessionRuleRuntime);
+            existingInSessionRuleExecution = rulesRuntimeRepository.findActiveRuleInRuleFlowGroupByRuleBaseIDAndSessionID(deletedFactHistoryEvent.getRuleBaseID(), deletedFactHistoryEvent.getSessionId());
+            if (existingInSessionRuleExecution != null) {
+                existingInSessionRuleExecution.getThenFacts().add(fact);
+                rulesRuntimeRepository.save(existingInSessionRuleExecution);
             } else {
                 SessionExecution sessionExecution = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(deletedFactHistoryEvent.getRuleBaseID(), deletedFactHistoryEvent.getSessionId());
                 sessionExecution.getFacts().add(fact);

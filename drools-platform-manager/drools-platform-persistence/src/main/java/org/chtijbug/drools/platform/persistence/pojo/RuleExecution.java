@@ -12,12 +12,12 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "rule_runtime")
-public class RuleRuntime {
+@Table(name = "rule_execution")
+public class RuleExecution {
 
     @Id
-    @SequenceGenerator(name = "rules_id_seq", sequenceName = "rules_platform_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rules_id_seq")
+    @SequenceGenerator(name = "rule_execution_id_seq", sequenceName = "rule_execution_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rule_execution_id_seq")
     private Long id;
 
     private String ruleName;
@@ -26,19 +26,19 @@ public class RuleRuntime {
     private Date endDate;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "rule_whenFacts")
+    @JoinTable(name = "rule_execution_whenFacts")
     private List<Fact> whenFacts = new ArrayList<Fact>() ;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "rule_thenFacts")
+    @JoinTable(name = "rule_execution_thenFacts")
     private List<Fact> thenFacts = new ArrayList<Fact>() ;
 
     @ManyToOne
-    @JoinColumn(name="ruleflowgroup_runtime_id_fk")
+    @JoinColumn(name="ruleflowgroup_execution_id_fk")
     private RuleflowGroupRuntime ruleflowGroupRuntime;
 
     @ManyToOne
-    @JoinColumn(name="session_runtime_id_fk")
+    @JoinColumn(name="session_execution_id_fk")
     private SessionExecution sessionExecution;
 
     public String getRuleName() {

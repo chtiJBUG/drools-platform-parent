@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * Cf. http://docs.spring.io/spring-data/jpa/docs/1.4.2.RELEASE/reference/html/jpa.repositories.html
  */
 @Component
-public interface FactRuntimeRepository extends JpaRepository<Fact, Long> {
+public interface FactRepository extends JpaRepository<Fact, Long> {
 
 
 

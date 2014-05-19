@@ -29,7 +29,7 @@ public class RuleflowGroupRuntime {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "ruleflowgroup_runtime_id_fk")
-    private List<RuleRuntime> ruleRuntimeList  = new ArrayList<RuleRuntime>();
+    private List<RuleExecution> ruleExecutionList = new ArrayList<RuleExecution>();
 
     @Column(nullable = false)
     private Date startDate;
@@ -63,12 +63,12 @@ public class RuleflowGroupRuntime {
         this.processExecution = processExecution;
     }
 
-    public List<RuleRuntime> getRuleRuntimeList() {
-        return ruleRuntimeList;
+    public List<RuleExecution> getRuleExecutionList() {
+        return ruleExecutionList;
     }
 
-    public void setRuleRuntimeList(List<RuleRuntime> ruleRuntimeList) {
-        this.ruleRuntimeList = ruleRuntimeList;
+    public void setRuleExecutionList(List<RuleExecution> ruleExecutionList) {
+        this.ruleExecutionList = ruleExecutionList;
     }
 
     public Date getStartDate() {

@@ -8,7 +8,7 @@ import org.chtijbug.drools.platform.persistence.RulesRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
 import org.chtijbug.drools.platform.persistence.pojo.Fact;
 import org.chtijbug.drools.platform.persistence.pojo.FactType;
-import org.chtijbug.drools.platform.persistence.pojo.RuleRuntime;
+import org.chtijbug.drools.platform.persistence.pojo.RuleExecution;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,18 +46,18 @@ public class UpdatedFactEventStrategy extends AbstractEventHandlerStrategy {
         factNewValue.setJsonFact(updatedFactHistoryEvent.getObjectNewValue().getRealObject_JSON());
         factNewValue.setModificationDate(updatedFactHistoryEvent.getDateEvent());
         factNewValue.setFactType(FactType.UPDATED_NEWVALUE);
-        RuleRuntime existingInSessionRuleRuntime = rulesRuntimeRepository.findActiveRuleInSessionByRuleBaseIDAndSessionID(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
-        if (existingInSessionRuleRuntime != null) {
-            existingInSessionRuleRuntime.getThenFacts().add(factOldValue);
-            existingInSessionRuleRuntime.getThenFacts().add(factNewValue);
-            rulesRuntimeRepository.save(existingInSessionRuleRuntime);
+        RuleExecution existingInSessionRuleExecution = rulesRuntimeRepository.findActiveRuleInSessionByRuleBaseIDAndSessionID(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
+        if (existingInSessionRuleExecution != null) {
+            existingInSessionRuleExecution.getThenFacts().add(factOldValue);
+            existingInSessionRuleExecution.getThenFacts().add(factNewValue);
+            rulesRuntimeRepository.save(existingInSessionRuleExecution);
 
         } else {
-            existingInSessionRuleRuntime = rulesRuntimeRepository.findActiveRuleInRuleFlowGroupByRuleBaseIDAndSessionID(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
-            if (existingInSessionRuleRuntime != null) {
-                existingInSessionRuleRuntime.getThenFacts().add(factOldValue);
-                existingInSessionRuleRuntime.getThenFacts().add(factNewValue);
-                rulesRuntimeRepository.save(existingInSessionRuleRuntime);
+            existingInSessionRuleExecution = rulesRuntimeRepository.findActiveRuleInRuleFlowGroupByRuleBaseIDAndSessionID(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
+            if (existingInSessionRuleExecution != null) {
+                existingInSessionRuleExecution.getThenFacts().add(factOldValue);
+                existingInSessionRuleExecution.getThenFacts().add(factNewValue);
+                rulesRuntimeRepository.save(existingInSessionRuleExecution);
             } else {
                 SessionExecution sessionExecution = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
                 sessionExecution.getFacts().add(factOldValue);
