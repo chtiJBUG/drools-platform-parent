@@ -10,7 +10,8 @@
         "moment": "2.6.0",
         "font-awesome": "4.0.3",
         "underscore": "1.6.0",
-        "ng-context-menu": "latest"
+        "ng-context-menu": "latest",
+        "animate.css": "~3.1.1"
     },
     "devDependencies": {}
 }
