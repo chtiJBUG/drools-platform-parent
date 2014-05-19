@@ -5,8 +5,8 @@ import org.chtijbug.drools.entity.DroolsFactObject;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.rule.BeforeRuleFiredHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.RuleflowGroupRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.RulesRuntimeRepository;
+import org.chtijbug.drools.platform.persistence.RuleflowGroupRepository;
+import org.chtijbug.drools.platform.persistence.RuleExecutionRepository;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
 import org.chtijbug.drools.platform.persistence.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class BeforeRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(BeforeRuleFiredEventStrategy.class);
     @Autowired
-    private RuleflowGroupRuntimeRepository ruleflowGroupRuntimeRepository;
+    private RuleflowGroupRepository ruleflowGroupRepository;
 
     @Autowired
-    private RulesRuntimeRepository rulesRuntimeRepository;
+    private RuleExecutionRepository ruleExecutionRepository;
 
     @Autowired
     private SessionExecutionRepository sessionExecutionRepository;
@@ -38,8 +38,8 @@ public class BeforeRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
         BeforeRuleFiredHistoryEvent beforeRuleFiredHistoryEvent = (BeforeRuleFiredHistoryEvent) historyEvent;
         RuleExecution ruleExecution = new RuleExecution();
         if (beforeRuleFiredHistoryEvent.getRule().getRuleFlowGroup() != null && beforeRuleFiredHistoryEvent.getRule().getRuleFlowGroup().length() > 0) {
-            RuleflowGroupRuntime ruleflowGroupRuntime = ruleflowGroupRuntimeRepository.findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndRuleflowgroupName(beforeRuleFiredHistoryEvent.getRuleBaseID(), beforeRuleFiredHistoryEvent.getSessionId(), beforeRuleFiredHistoryEvent.getRule().getRuleFlowGroup());
-            ruleExecution.setRuleflowGroupRuntime(ruleflowGroupRuntime);
+            RuleflowGroup ruleflowGroup = ruleflowGroupRepository.findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndRuleflowgroupName(beforeRuleFiredHistoryEvent.getRuleBaseID(), beforeRuleFiredHistoryEvent.getSessionId(), beforeRuleFiredHistoryEvent.getRule().getRuleFlowGroup());
+            ruleExecution.setRuleflowGroup(ruleflowGroup);
         } else {
             SessionExecution sessionExecution = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(beforeRuleFiredHistoryEvent.getRuleBaseID(), beforeRuleFiredHistoryEvent.getSessionId());
             ruleExecution.setSessionExecution(sessionExecution);
@@ -56,7 +56,7 @@ public class BeforeRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
             fact.setFullClassName(droolsFactObject.getFullClassName());
             ruleExecution.getWhenFacts().add(fact);
         }
-        rulesRuntimeRepository.save(ruleExecution);
+        ruleExecutionRepository.save(ruleExecution);
         LOG.debug("BeforeRuleFiredHistoryEvent " + historyEvent.toString());
     }
 

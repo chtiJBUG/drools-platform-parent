@@ -35,7 +35,7 @@ public class RuleExecution {
 
     @ManyToOne
     @JoinColumn(name="ruleflowgroup_execution_id_fk")
-    private RuleflowGroupRuntime ruleflowGroupRuntime;
+    private RuleflowGroup ruleflowGroup;
 
     @ManyToOne
     @JoinColumn(name="session_execution_id_fk")
@@ -57,12 +57,12 @@ public class RuleExecution {
         this.packageName = packageName;
     }
 
-    public RuleflowGroupRuntime getRuleflowGroupRuntime() {
-        return ruleflowGroupRuntime;
+    public RuleflowGroup getRuleflowGroup() {
+        return ruleflowGroup;
     }
 
-    public void setRuleflowGroupRuntime(RuleflowGroupRuntime ruleflowGroupRuntime) {
-        this.ruleflowGroupRuntime = ruleflowGroupRuntime;
+    public void setRuleflowGroup(RuleflowGroup ruleflowGroup) {
+        this.ruleflowGroup = ruleflowGroup;
     }
 
     public Date getStartDate() {
