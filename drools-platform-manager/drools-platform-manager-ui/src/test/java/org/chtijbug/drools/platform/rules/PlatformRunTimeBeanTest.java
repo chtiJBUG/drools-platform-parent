@@ -6,9 +6,8 @@ import org.chtijbug.drools.entity.history.rule.AfterRuleFiredHistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFlowActivatedHistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFlowDeactivatedHistoryEvent;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeStatus;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.RuleBaseBuilder;
@@ -39,7 +38,7 @@ public class PlatformRunTimeBeanTest {
     DirectAccessHistoryListener historyListener;
 
     @Autowired
-    PlatformRuntimeRepository platformRuntimeRepository;
+    PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
     @BeforeClass
     public static void BeforeClass() throws UnknownHostException {
@@ -63,9 +62,9 @@ public class PlatformRunTimeBeanTest {
 
 
         RuleBasePackage ruleBasePackage = RuleBaseBuilder.createPackageBasePackageWithListener(historyListener, "ruleflow2.drl", "RuleFlowProcess2.bpmn2");
-        List<PlatformRuntime> platform1 = platformRuntimeRepository.findByHostnameAndEndDateNull("localhost");
+        List<PlatformRuntimeInstance> platform1 = platformRuntimeInstanceRepository.findByHostnameAndEndDateNull("localhost");
         Assert.assertTrue(platform1.size() == 1);
-        PlatformRuntime platforRuntime = platform1.get(0);
+        PlatformRuntimeInstance platforRuntime = platform1.get(0);
         Assert.assertTrue(platforRuntime.getEndDate() == null);
         Assert.assertTrue(platforRuntime.getStatus() == PlatformRuntimeStatus.STARTED);
         Assert.assertTrue(platforRuntime.getRuleBaseID() == 1l);

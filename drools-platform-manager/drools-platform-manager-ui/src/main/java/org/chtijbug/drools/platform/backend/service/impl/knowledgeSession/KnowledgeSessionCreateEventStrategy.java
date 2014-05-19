@@ -4,9 +4,9 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionCreatedEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.SessionRuntime;
 import org.chtijbug.drools.platform.persistence.pojo.SessionRuntimeStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class KnowledgeSessionCreateEventStrategy extends AbstractEventHandlerStr
     private static final Logger LOG = Logger.getLogger(KnowledgeSessionCreateEventStrategy.class);
 
     @Autowired
-    PlatformRuntimeRepository platformRuntimeRepository;
+    PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
     @Autowired
     SessionRuntimeRepository sessionRuntimeRepository;
@@ -43,10 +43,10 @@ public class KnowledgeSessionCreateEventStrategy extends AbstractEventHandlerStr
             existingSessionRutime.setSessionRuntimeStatus(SessionRuntimeStatus.CRASHED);
             sessionRuntimeRepository.save(existingSessionRutime);
         }
-        List<PlatformRuntime> platformRuntimes = platformRuntimeRepository.findByRuleBaseIDAndEndDateNull(sessionCreatedEvent.getRuleBaseID());
-        if (platformRuntimes.size()==1) {
+        List<PlatformRuntimeInstance> platformRuntimeInstances = platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(sessionCreatedEvent.getRuleBaseID());
+        if (platformRuntimeInstances.size()==1) {
             SessionRuntime sessionRuntime = new SessionRuntime();
-            sessionRuntime.setPlatformRuntime(platformRuntimes.get(0));
+            sessionRuntime.setPlatformRuntimeInstance(platformRuntimeInstances.get(0));
             sessionRuntime.setStartDate(sessionCreatedEvent.getDateEvent());
             sessionRuntime.setSessionId(sessionCreatedEvent.getSessionId());
             sessionRuntime.setEventID(sessionCreatedEvent.getEventID());

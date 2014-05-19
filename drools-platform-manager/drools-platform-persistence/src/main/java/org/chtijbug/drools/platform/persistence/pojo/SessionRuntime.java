@@ -20,7 +20,7 @@ public class SessionRuntime {
     private Long id;
     @ManyToOne
     @JoinColumn(name="platform_runtime_id_fk")
-    private PlatformRuntime platformRuntime;
+    private PlatformRuntimeInstance platformRuntimeInstance;
 
     private Integer sessionId;
 
@@ -53,12 +53,12 @@ public class SessionRuntime {
         this.id = id;
     }
 
-    public PlatformRuntime getPlatformRuntime() {
-        return platformRuntime;
+    public PlatformRuntimeInstance getPlatformRuntimeInstance() {
+        return platformRuntimeInstance;
     }
 
-    public void setPlatformRuntime(PlatformRuntime platformRuntime) {
-        this.platformRuntime = platformRuntime;
+    public void setPlatformRuntimeInstance(PlatformRuntimeInstance platformRuntimeInstance) {
+        this.platformRuntimeInstance = platformRuntimeInstance;
     }
 
     public Integer getSessionId() {

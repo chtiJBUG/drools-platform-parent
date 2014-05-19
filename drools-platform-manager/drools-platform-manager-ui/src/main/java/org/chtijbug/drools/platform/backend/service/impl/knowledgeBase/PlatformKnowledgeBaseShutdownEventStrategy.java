@@ -4,8 +4,8 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEvent;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,18 +24,18 @@ public class PlatformKnowledgeBaseShutdownEventStrategy extends AbstractEventHan
 
 
     @Autowired
-    PlatformRuntimeRepository platformRuntimeRepository;
+    PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
     @Override
     @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         PlatformKnowledgeBaseShutdownEvent platformKnowledgeBaseShutdownEvent = (PlatformKnowledgeBaseShutdownEvent) historyEvent;
-        List<PlatformRuntime> existingPlatformRuntimes = null;
+        List<PlatformRuntimeInstance> existingPlatformRuntimeInstances = null;
         try {
-            existingPlatformRuntimes = platformRuntimeRepository.findByRuleBaseIDAndShutdowDateNull(platformKnowledgeBaseShutdownEvent.getRuleBaseID());
-            if (existingPlatformRuntimes.size()==1) {
-                existingPlatformRuntimes.get(0).setShutdowDate(platformKnowledgeBaseShutdownEvent.getDateEvent());
-                platformRuntimeRepository.save(existingPlatformRuntimes.get(0));
+            existingPlatformRuntimeInstances = platformRuntimeInstanceRepository.findByRuleBaseIDAndShutdowDateNull(platformKnowledgeBaseShutdownEvent.getRuleBaseID());
+            if (existingPlatformRuntimeInstances.size()==1) {
+                existingPlatformRuntimeInstances.get(0).setShutdowDate(platformKnowledgeBaseShutdownEvent.getDateEvent());
+                platformRuntimeInstanceRepository.save(existingPlatformRuntimeInstances.get(0));
             }
         } catch (Exception e) {
             LOG.error(platformKnowledgeBaseShutdownEvent, e);

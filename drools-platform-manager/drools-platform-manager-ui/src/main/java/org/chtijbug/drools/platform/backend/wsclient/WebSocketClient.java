@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.platform.backend.wsclient.endpoint.WebSocketClientBean;
 import org.chtijbug.drools.platform.backend.wsclient.endpoint.WebSocketMessageListener;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.glassfish.tyrus.client.ClientManager;
 
 import javax.websocket.*;
@@ -26,7 +26,7 @@ public class WebSocketClient {
 
     private WebSocketClientBean beanClient;
 
-    public WebSocketClient(PlatformRuntime platformRuntime,WebSocketMessageListener webSocketMessageListener) throws DeploymentException, IOException {
+    public WebSocketClient(PlatformRuntimeInstance platformRuntimeInstance,WebSocketMessageListener webSocketMessageListener) throws DeploymentException, IOException {
         ClientManager client = ClientManager.createClient();
          beanClient = new WebSocketClientBean(webSocketMessageListener);
          this.session = client.connectToServer(
@@ -35,7 +35,7 @@ public class WebSocketClient {
                         .encoders(Arrays.<Class<? extends Encoder>>asList(PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class))
                         .decoders(Arrays.<Class<? extends Decoder>>asList(PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class))
                         .build(),
-                URI.create("ws://" + platformRuntime.getHostname() + ":" + platformRuntime.getPort() + platformRuntime.getEndPoint()));
+                URI.create("ws://" + platformRuntimeInstance.getHostname() + ":" + platformRuntimeInstance.getPort() + platformRuntimeInstance.getEndPoint()));
      }
 
     public WebSocketClientBean getBeanClient() {

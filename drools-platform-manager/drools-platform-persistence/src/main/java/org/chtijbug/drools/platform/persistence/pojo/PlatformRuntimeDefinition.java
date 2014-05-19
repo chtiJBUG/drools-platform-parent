@@ -25,7 +25,7 @@ public class PlatformRuntimeDefinition implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "platform_runtime_definition_id_fk")
-    private List<PlatformRuntime> platformRuntimes = new ArrayList<>();
+    private List<PlatformRuntimeInstance> platformRuntimeInstances = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "platform_runtime_definition_id_fk")
@@ -53,12 +53,12 @@ public class PlatformRuntimeDefinition implements Serializable {
         this.ruleBaseID = ruleBaseID;
     }
 
-    public List<PlatformRuntime> getPlatformRuntimes() {
-        return platformRuntimes;
+    public List<PlatformRuntimeInstance> getPlatformRuntimeInstances() {
+        return platformRuntimeInstances;
     }
 
-    public void setPlatformRuntimes(List<PlatformRuntime> platformRuntimes) {
-        this.platformRuntimes = platformRuntimes;
+    public void setPlatformRuntimeInstances(List<PlatformRuntimeInstance> platformRuntimeInstances) {
+        this.platformRuntimeInstances = platformRuntimeInstances;
     }
 
     public List<DroolsResource> getDroolsRessourcesDefinition() {

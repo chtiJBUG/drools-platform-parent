@@ -15,9 +15,9 @@ import java.util.List;
 @Component
 public interface ProcessRuntimeRepository extends JpaRepository<ProcessRuntime, Long> {
 
-    @Query("select r from PlatformRuntime p,ProcessRuntime r,SessionRuntime s where s.platformRuntime = p and p.endDate is null  and r.sessionRuntime = s and r.endDate is null and p.ruleBaseID = :ruleBaseID and s.sessionId = :sessionID and r.ProcessInstanceId = :processInstanceId")
+    @Query("select r from PlatformRuntimeInstance p,ProcessRuntime r,SessionRuntime s where s.platformRuntimeInstance = p and p.endDate is null  and r.sessionRuntime = s and r.endDate is null and p.ruleBaseID = :ruleBaseID and s.sessionId = :sessionID and r.ProcessInstanceId = :processInstanceId")
     List<ProcessRuntime> findAllStartedProcessByRuleBaseIDAndSessionIDAndProcessInstanceId(@Param("ruleBaseID") Integer ruleBaseID,@Param("sessionID") Integer sessionID, @Param("processInstanceId") String processInstanceId);
 
-    @Query("select r from PlatformRuntime p,ProcessRuntime r,SessionRuntime s where s.platformRuntime = p  and p.endDate is null  and r.sessionRuntime = s and r.endDate is null and p.ruleBaseID = :ruleBaseID and s.sessionId = :sessionID and r.ProcessInstanceId = :processInstanceId")
+    @Query("select r from PlatformRuntimeInstance p,ProcessRuntime r,SessionRuntime s where s.platformRuntimeInstance = p  and p.endDate is null  and r.sessionRuntime = s and r.endDate is null and p.ruleBaseID = :ruleBaseID and s.sessionId = :sessionID and r.ProcessInstanceId = :processInstanceId")
     ProcessRuntime findStartedProcessByRuleBaseIDBySessionIDAndProcessInstanceId(@Param("ruleBaseID") Integer ruleBaseID,@Param("sessionID") Integer sessionID, @Param("processInstanceId") String processInstanceId);
 }

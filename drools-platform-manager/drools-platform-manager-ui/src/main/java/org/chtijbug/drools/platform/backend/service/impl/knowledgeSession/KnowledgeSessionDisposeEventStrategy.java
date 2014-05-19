@@ -5,7 +5,7 @@ import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionDisposedEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.pojo.SessionRuntimeStatus;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.SessionRuntime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class KnowledgeSessionDisposeEventStrategy extends AbstractEventHandlerSt
     private static final Logger LOG = Logger.getLogger(KnowledgeSessionDisposeEventStrategy.class);
 
     @Autowired
-    PlatformRuntimeRepository platformRuntimeRepository;
+    PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
     @Autowired
     SessionRuntimeRepository sessionRuntimeRepository;

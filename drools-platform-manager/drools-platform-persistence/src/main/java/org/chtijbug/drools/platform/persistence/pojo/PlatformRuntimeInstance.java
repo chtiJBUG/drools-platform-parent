@@ -15,12 +15,12 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "platform_runtime")
-public class PlatformRuntime implements Serializable {
+@Table(name = "platform_runtime_instance")
+public class PlatformRuntimeInstance implements Serializable {
 
     @Id
-    @SequenceGenerator(name = "platform_id_seq", sequenceName = "drools_platform_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "platform_id_seq")
+    @SequenceGenerator(name = "platform_runtime_instance_id_seq", sequenceName = "platform_runtime_instance_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "platform_runtime_instance_id_seq")
     private Long id;
     private String hostname;
     private Integer port;
@@ -35,21 +35,21 @@ public class PlatformRuntime implements Serializable {
     private Integer ruleBaseID;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "platform_runtime_id_fk")
+    @JoinColumn(name = "platform_runtime_instance_id_fk")
     private List<DroolsResource> droolsRessources = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "platform_runtime_id_fk")
+    @JoinColumn(name = "platform_runtime_instance_id_fk")
     private List<SessionRuntime> sessionRuntimes = new ArrayList<SessionRuntime>();
     @ManyToOne
-    @JoinColumn(name = "platform_instance_id_fk")
+    @JoinColumn(name = "platform_runtime_instance_id_fk")
     private PlatformRuntimeDefinition platformRuntimeDefinition;
 
 
-    public PlatformRuntime() {
+    public PlatformRuntimeInstance() {
     }
 
-    public PlatformRuntime(String hostname, int port) {
+    public PlatformRuntimeInstance(String hostname, int port) {
         this.hostname = hostname;
         this.port = port;
     }
@@ -161,9 +161,9 @@ public class PlatformRuntime implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PlatformRuntime)) return false;
+        if (!(o instanceof PlatformRuntimeInstance)) return false;
 
-        PlatformRuntime that = (PlatformRuntime) o;
+        PlatformRuntimeInstance that = (PlatformRuntimeInstance) o;
 
         if (!eventID.equals(that.eventID)) return false;
         if (!hostname.equals(that.hostname)) return false;

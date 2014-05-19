@@ -4,8 +4,8 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseDisposeEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,17 +24,17 @@ public class KnowledgeBaseDisposeEventStrategy extends AbstractEventHandlerStrat
 
 
     @Autowired
-    PlatformRuntimeRepository platformRuntimeRepository;
+    PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
     @Override
     @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         KnowledgeBaseDisposeEvent knowledgeBaseDisposeEvent = (KnowledgeBaseDisposeEvent) historyEvent;
-        List<PlatformRuntime> existingPlatformRuntimes = platformRuntimeRepository.findByRuleBaseIDAndEndDateNull(knowledgeBaseDisposeEvent.getRuleBaseID());
-        if (existingPlatformRuntimes.size()==1) {
-            existingPlatformRuntimes.get(0).setEndDate(knowledgeBaseDisposeEvent.getDateEvent());
-            existingPlatformRuntimes.get(0).setShutdowDate(knowledgeBaseDisposeEvent.getDateEvent());
-            platformRuntimeRepository.save( existingPlatformRuntimes.get(0));
+        List<PlatformRuntimeInstance> existingPlatformRuntimeInstances = platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(knowledgeBaseDisposeEvent.getRuleBaseID());
+        if (existingPlatformRuntimeInstances.size()==1) {
+            existingPlatformRuntimeInstances.get(0).setEndDate(knowledgeBaseDisposeEvent.getDateEvent());
+            existingPlatformRuntimeInstances.get(0).setShutdowDate(knowledgeBaseDisposeEvent.getDateEvent());
+            platformRuntimeInstanceRepository.save( existingPlatformRuntimeInstances.get(0));
         }
     }
 

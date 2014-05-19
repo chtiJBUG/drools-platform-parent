@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 public interface SessionRuntimeRepository extends JpaRepository<SessionRuntime, Long> {
 
 
-    @Query("select s from PlatformRuntime pp,SessionRuntime s " +
-             "where s.platformRuntime=pp " +
+    @Query("select s from PlatformRuntimeInstance pp,SessionRuntime s " +
+             "where s.platformRuntimeInstance=pp " +
              "and  pp.ruleBaseID= :ruleBaseID and s.sessionId = :sessionID  " +
              "and s.endDate is null ")
     SessionRuntime findByRuleBaseIDAndSessionIdAndEndDateIsNull(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionID") Integer sessionId);
