@@ -2,10 +2,11 @@ package org.chtijbug.drools.platform.core;
 
 import org.chtijbug.drools.runtime.RuleBasePackage;
 import org.chtijbug.drools.runtime.RuleBaseSession;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.chtijbug.drools.runtime.resource.DrlDroolsRessource;
+import org.chtijbug.drools.runtime.resource.DroolsResource;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,15 +16,12 @@ import java.io.File;
  */
 public class MainFibonacciNoBPMN {
     public static void main(String[] args) {
-        ApplicationContext context = new ClassPathXmlApplicationContext("classpath:spring/spring-context-noBPMN.xml");
-        File ruleResource = null;
-        RuleBasePackage droolsPlatformKnowledgeBase = null;
-
+         RuleBasePackage droolsPlatformKnowledgeBase = null;
         try {
-
-            droolsPlatformKnowledgeBase = (RuleBasePackage)context.getBean("platformRunner") ;
-            //droolsPlatformKnowledgeBase =
-
+            DrlDroolsRessource drlFile = DrlDroolsRessource.createClassPathResource("fibonacci.drl");
+             List<DroolsResource> droolsResources = new ArrayList<>();
+             droolsResources.add(drlFile);
+             droolsPlatformKnowledgeBase = new DroolsPlatformKnowledgeBase(1,droolsResources,"localhost" ,"localhost" );
             for (int i = 0; i < 2; i++) {
                 RuleBaseSession ruleBaseSession = droolsPlatformKnowledgeBase.createRuleBaseSession();
                 Fibonacci fibonacci = new Fibonacci(3);
