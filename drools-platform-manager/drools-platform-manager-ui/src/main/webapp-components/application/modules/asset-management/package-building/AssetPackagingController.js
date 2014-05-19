@@ -125,6 +125,9 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         $scope.isChecked=false;
         $scope.isCheckboxFieldDisabled=false;
 
+        $scope.iptNewVersion = "form-group";
+        $scope.slctAssetStatus = "form-group";
+
         $scope.alreadyExist=false;
 
         //___ The hide the modal
@@ -144,28 +147,46 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         var packageSelected=$scope.package;
         var NewVersion=$scope.newVersion;
         var filters = $scope.filters;
-
-        //__ Last test : does the version already exist ?
-
-        //____ Rechercher dans le tableau si le couple version/snapshot(ou release) existe
-        var allExistingVersions =_.where($scope.packageVersionsList, {version: NewVersion, isRelease : !$scope.isChecked});
-        var versionsRelease =_.where($scope.packageVersionsList, {version: NewVersion, isRelease : $scope.isChecked});
-        //____ Si oui
-        if (!_.isEmpty(allExistingVersions)) {
-            //______  --> On pete une exception
+        if($scope.NewVersionPackageForm.newVersion.$invalid){
+            $scope.iptNewVersion="form-group has-error has-feedback animated shake";
+            if($scope.NewVersionPackageForm.assetStatusSelect.$invalid){
+                $scope.slctAssetStatus="form-group has-error has-feedback animated shake";
+            }
             allowToCreate = false;
-            $scope.alreadyExist=true;
-        } else  {
-            //___ Si la release existe déjà et la checkbox SNPASHOT cochée
-            if (!_.isEmpty(versionsRelease) && $scope.isChecked) {
+        }else if($scope.NewVersionPackageForm.assetStatusSelect.$invalid){
+            $scope.slctAssetStatus="form-group has-error has-feedback animated shake";
+            if($scope.NewVersionPackageForm.newVersion.$invalid){
+                $scope.iptNewVersion="form-group has-error has-feedback animated shake";
+            }
+            allowToCreate = false;
+
+        }else{
+            //__ Last test : does the version already exist ?
+
+            //____ Rechercher dans le tableau si le couple version/snapshot(ou release) existe
+            var allExistingVersions = _.where($scope.packageVersionsList, {version: NewVersion, isRelease: !$scope.isChecked});
+            var versionsRelease = _.where($scope.packageVersionsList, {version: NewVersion, isRelease: $scope.isChecked});
+            //____ Si oui
+            if (!_.isEmpty(allExistingVersions)) {
                 //______  --> On pete une exception
+                $scope.iptNewVersion = "form-group has-error has-feedback animated shake";
                 allowToCreate = false;
-                $scope.alreadyExist=true;
-            } else  {
-                //____ Si non, et bien on peut continuer
-                console.log("kowabunga");
-                allowToCreate = true;
-                $scope.alreadyExist = false;
+                $scope.alreadyExist = true;
+            } else {
+                //___ Si la release existe déjà et la checkbox SNPASHOT cochée
+                if (!_.isEmpty(versionsRelease) && $scope.isChecked) {
+                    //______  --> On pete une exception
+                    $scope.iptNewVersion = "form-group has-error has-feedback animated shake";
+                    allowToCreate = false;
+                    $scope.alreadyExist = true;
+                } else {
+                    //____ Si non, et bien on peut continuer
+                    console.log("kowabunga");
+                    $scope.iptNewVersion = "form-group";
+                    $scope.slctAssetStatus = "form-group";
+                    allowToCreate = true;
+                    $scope.alreadyExist = false;
+                }
             }
         }
 
@@ -204,10 +225,8 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         if(filters == undefined || filters.length == 0){
             console.log("filters undefined of no filters given");
             //___ Red halo to show there's a mistake or an omission
-            $scope.AssetStatusClass="form-group has-error has-feedback";
+            $scope.slctAssetStatus="form-group has-error has-feedback animated shake";
         }else {
-            //___ No red halo
-            $scope.AssetStatusClass = "form-group";
             //__ If checked add the suffix
             if($scope.isChecked){
                 NewVersion+=""+"-SNAPSHOT";

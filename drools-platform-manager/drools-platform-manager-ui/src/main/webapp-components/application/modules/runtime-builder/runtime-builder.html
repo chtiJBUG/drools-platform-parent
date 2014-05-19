@@ -1,10 +1,9 @@
-<div class="container">
+<div>
     <div class="page-header">
-        <h3>Service Runtime generation</h3>
+        <h3 style="margin-left:20px">Service Runtime generation</h3>
     </div>
-
-    <div class="row row-offcanvas row-offcanvas-right" ng-show="runtimeGenerationModule" ng-controller="runtimeBuilderController">
-        <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
+    <div class="row col-sm-12" ng-show="runtimeGenerationModule" ng-controller="runtimeBuilderController">
+        <div class="col-md-3" id="sidebar">
             <div class="well sidebar-nav">
                 <ul class="nav nav-pills nav-stacked">
                     <li ng-class="{true:'active'}[isSettingsEnabled]">
@@ -31,7 +30,7 @@
         </div>
         <!--/span-->
 
-        <div class="col-xs-12 col-sm-9">
+        <div class="col-md-7 col-md-offset-1">
             <div ng-switch="subview">
                 <div ng-switch-when="settings">
                     <div ng-include="'modules/runtime-builder/guvnor-settings/guvnor-settings.html'"></div>
