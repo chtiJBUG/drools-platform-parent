@@ -40,7 +40,7 @@ public class SessionExecution {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "session_execution_id_fk")
-    private List<FactRuntime> facts = new ArrayList<FactRuntime>() ;
+    private List<Fact> facts = new ArrayList<Fact>() ;
 
     public SessionExecution() {
     }
@@ -109,11 +109,11 @@ public class SessionExecution {
         this.ruleRuntimes = ruleRuntimes;
     }
 
-    public List<FactRuntime> getFacts() {
+    public List<Fact> getFacts() {
         return facts;
     }
 
-    public void setFacts(List<FactRuntime> facts) {
+    public void setFacts(List<Fact> facts) {
         this.facts = facts;
     }
 }

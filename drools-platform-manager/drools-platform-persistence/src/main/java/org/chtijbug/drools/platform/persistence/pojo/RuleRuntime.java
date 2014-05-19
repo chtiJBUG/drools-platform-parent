@@ -27,11 +27,11 @@ public class RuleRuntime {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "rule_whenFacts")
-    private List<FactRuntime> whenFacts = new ArrayList<FactRuntime>() ;
+    private List<Fact> whenFacts = new ArrayList<Fact>() ;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "rule_thenFacts")
-    private List<FactRuntime> thenFacts = new ArrayList<FactRuntime>() ;
+    private List<Fact> thenFacts = new ArrayList<Fact>() ;
 
     @ManyToOne
     @JoinColumn(name="ruleflowgroup_runtime_id_fk")
@@ -89,11 +89,11 @@ public class RuleRuntime {
         this.id = id;
     }
 
-    public List<FactRuntime> getWhenFacts() {
+    public List<Fact> getWhenFacts() {
         return whenFacts;
     }
 
-    public void setWhenFacts(List<FactRuntime> whenFacts) {
+    public void setWhenFacts(List<Fact> whenFacts) {
         this.whenFacts = whenFacts;
     }
 
@@ -105,11 +105,11 @@ public class RuleRuntime {
         return sessionExecution;
     }
 
-    public List<FactRuntime> getThenFacts() {
+    public List<Fact> getThenFacts() {
         return thenFacts;
     }
 
-    public void setThenFacts(List<FactRuntime> thenFacts) {
+    public void setThenFacts(List<Fact> thenFacts) {
         this.thenFacts = thenFacts;
     }
 }
