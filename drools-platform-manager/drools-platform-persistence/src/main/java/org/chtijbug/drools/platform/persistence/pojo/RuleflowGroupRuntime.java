@@ -25,7 +25,7 @@ public class RuleflowGroupRuntime {
 
     @ManyToOne
     @JoinColumn(name = "process_runtime_id_fk")
-    private ProcessRuntime processRuntime;
+    private ProcessExecution processExecution;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "ruleflowgroup_runtime_id_fk")
@@ -55,12 +55,12 @@ public class RuleflowGroupRuntime {
         this.ruleflowGroup = ruleflowGroup;
     }
 
-    public ProcessRuntime getProcessRuntime() {
-        return processRuntime;
+    public ProcessExecution getProcessExecution() {
+        return processExecution;
     }
 
-    public void setProcessRuntime(ProcessRuntime processRuntime) {
-        this.processRuntime = processRuntime;
+    public void setProcessExecution(ProcessExecution processExecution) {
+        this.processExecution = processExecution;
     }
 
     public List<RuleRuntime> getRuleRuntimeList() {
@@ -102,7 +102,7 @@ public class RuleflowGroupRuntime {
 
         RuleflowGroupRuntime that = (RuleflowGroupRuntime) o;
 
-        if (!processRuntime.equals(that.processRuntime)) return false;
+        if (!processExecution.equals(that.processExecution)) return false;
         if (!ruleflowGroup.equals(that.ruleflowGroup)) return false;
 
         return true;
@@ -111,7 +111,7 @@ public class RuleflowGroupRuntime {
     @Override
     public int hashCode() {
         int result = ruleflowGroup.hashCode();
-        result = 31 * result + processRuntime.hashCode();
+        result = 31 * result + processExecution.hashCode();
         return result;
     }
 

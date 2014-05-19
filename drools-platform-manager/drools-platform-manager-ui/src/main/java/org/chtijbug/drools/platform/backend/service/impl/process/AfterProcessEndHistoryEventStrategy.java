@@ -4,9 +4,9 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.process.AfterProcessEndHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.ProcessRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.pojo.ProcessRuntime;
-import org.chtijbug.drools.platform.persistence.pojo.ProcessRuntimeStatus;
+import org.chtijbug.drools.platform.persistence.ProcessExecutionRepository;
+import org.chtijbug.drools.platform.persistence.pojo.ProcessExecution;
+import org.chtijbug.drools.platform.persistence.pojo.ProcessExecutionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,17 +23,17 @@ public class AfterProcessEndHistoryEventStrategy extends AbstractEventHandlerStr
     private static final Logger LOG = Logger.getLogger(AfterProcessEndHistoryEventStrategy.class);
 
     @Autowired
-    ProcessRuntimeRepository processRuntimeRepository;
+    ProcessExecutionRepository processExecutionRepository;
 
     @Override
     @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         AfterProcessEndHistoryEvent afterProcessEndHistoryEvent = (AfterProcessEndHistoryEvent) historyEvent;
 
-        ProcessRuntime processRuntime = processRuntimeRepository.findStartedProcessByRuleBaseIDBySessionIDAndProcessInstanceId(afterProcessEndHistoryEvent.getRuleBaseID(), afterProcessEndHistoryEvent.getSessionId(), afterProcessEndHistoryEvent.getProcessInstance().getId());
-        processRuntime.setEndDate(afterProcessEndHistoryEvent.getDateEvent());
-        processRuntime.setProcessRuntimeStatus(ProcessRuntimeStatus.JBPMSTOPPED);
-        processRuntimeRepository.save(processRuntime);
+        ProcessExecution processExecution = processExecutionRepository.findStartedProcessByRuleBaseIDBySessionIDAndProcessInstanceId(afterProcessEndHistoryEvent.getRuleBaseID(), afterProcessEndHistoryEvent.getSessionId(), afterProcessEndHistoryEvent.getProcessInstance().getId());
+        processExecution.setEndDate(afterProcessEndHistoryEvent.getDateEvent());
+        processExecution.setProcessExecutionStatus(ProcessExecutionStatus.JBPMSTOPPED);
+        processExecutionRepository.save(processExecution);
         LOG.debug("AfterProcessEndHistoryEvent " + historyEvent.toString());
     }
 

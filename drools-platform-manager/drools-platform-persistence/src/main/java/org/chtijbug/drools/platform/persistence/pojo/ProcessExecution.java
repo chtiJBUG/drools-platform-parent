@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "process_runtime")
-public class ProcessRuntime {
+public class ProcessExecution {
 
     @Id
     @SequenceGenerator(name = "process_id_seq", sequenceName = "process_platform_seq")
@@ -28,7 +28,7 @@ public class ProcessRuntime {
     private Date endDate;
 
     @Enumerated(EnumType.STRING)
-    private ProcessRuntimeStatus processRuntimeStatus;
+    private ProcessExecutionStatus processExecutionStatus;
 
     private Integer eventID;
 
@@ -99,12 +99,12 @@ public class ProcessRuntime {
         this.sessionExecution = sessionExecution;
     }
 
-    public ProcessRuntimeStatus getProcessRuntimeStatus() {
-        return processRuntimeStatus;
+    public ProcessExecutionStatus getProcessExecutionStatus() {
+        return processExecutionStatus;
     }
 
-    public void setProcessRuntimeStatus(ProcessRuntimeStatus processRuntimeStatus) {
-        this.processRuntimeStatus = processRuntimeStatus;
+    public void setProcessExecutionStatus(ProcessExecutionStatus processExecutionStatus) {
+        this.processExecutionStatus = processExecutionStatus;
     }
 
     public String getProcessInstanceId() {
@@ -163,7 +163,7 @@ public class ProcessRuntime {
         sb.append(", processName='").append(processName).append('\'');
         sb.append(", startDate=").append(startDate);
         sb.append(", endDate=").append(endDate);
-        sb.append(", processRuntimeStatus=").append(processRuntimeStatus);
+        sb.append(", processRuntimeStatus=").append(processExecutionStatus);
         sb.append(", eventID=").append(eventID);
         sb.append(", ProcessInstanceId='").append(ProcessInstanceId).append('\'');
         sb.append(", processPackageName='").append(processPackageName).append('\'');
@@ -177,9 +177,9 @@ public class ProcessRuntime {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ProcessRuntime)) return false;
+        if (!(o instanceof ProcessExecution)) return false;
 
-        ProcessRuntime that = (ProcessRuntime) o;
+        ProcessExecution that = (ProcessExecution) o;
 
         if (!processName.equals(that.processName)) return false;
         if (!sessionExecution.equals(that.sessionExecution)) return false;
