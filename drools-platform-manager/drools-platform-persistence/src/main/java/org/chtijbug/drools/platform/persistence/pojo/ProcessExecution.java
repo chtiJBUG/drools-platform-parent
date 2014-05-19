@@ -12,12 +12,12 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "process_runtime")
+@Table(name = "process_execution")
 public class ProcessExecution {
 
     @Id
-    @SequenceGenerator(name = "process_id_seq", sequenceName = "process_platform_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "process_id_seq")
+    @SequenceGenerator(name = "process_execution_id_seq", sequenceName = "process_execution_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "process_execution_id_seq")
     private Long id;
 
     @Column(nullable = false)
@@ -46,7 +46,7 @@ public class ProcessExecution {
     private String processId;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "process_runtime_id_fk")
+    @JoinColumn(name = "process_execution_id_fk")
     private List<RuleflowGroupRuntime> ruleflowGroupRuntimes = new ArrayList<RuleflowGroupRuntime>();
 
 
