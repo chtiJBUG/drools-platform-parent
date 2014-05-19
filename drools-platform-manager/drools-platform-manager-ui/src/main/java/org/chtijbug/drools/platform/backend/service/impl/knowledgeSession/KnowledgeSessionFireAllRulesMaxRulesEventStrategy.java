@@ -4,10 +4,10 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionFireAllRulesMaxNumberReachedEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.pojo.FireRulesRuntimeStatus;
-import org.chtijbug.drools.platform.persistence.FireRulesRuntimeRepository;
+import org.chtijbug.drools.platform.persistence.pojo.FireAllRulesExecutionStatus;
+import org.chtijbug.drools.platform.persistence.FireAllRulesExecutionRepository;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
-import org.chtijbug.drools.platform.persistence.pojo.FireRulesRuntime;
+import org.chtijbug.drools.platform.persistence.pojo.FireAllRulesExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +24,7 @@ public class KnowledgeSessionFireAllRulesMaxRulesEventStrategy extends AbstractE
     private static final Logger LOG = Logger.getLogger(KnowledgeSessionFireAllRulesMaxRulesEventStrategy.class);
 
     @Autowired
-    FireRulesRuntimeRepository fireRulesRuntimeRepository;
+    FireAllRulesExecutionRepository fireAllRulesExecutionRepository;
 
     @Autowired
     SessionExecutionRepository sessionExecutionRepository;
@@ -33,13 +33,13 @@ public class KnowledgeSessionFireAllRulesMaxRulesEventStrategy extends AbstractE
     @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         SessionFireAllRulesMaxNumberReachedEvent sessionFireAllRulesMaxNumberReachedEvent = (SessionFireAllRulesMaxNumberReachedEvent) historyEvent;
-        FireRulesRuntime fireRulesRuntime = fireRulesRuntimeRepository.findStartedFireAllRulesBySessionID(historyEvent.getSessionId());
-        fireRulesRuntime.setEventID(sessionFireAllRulesMaxNumberReachedEvent.getEventID());
-        fireRulesRuntime.setEndDate(sessionFireAllRulesMaxNumberReachedEvent.getDateEvent());
-        fireRulesRuntime.setFireRulesRuntimeStatus(FireRulesRuntimeStatus.MAXNBRULES);
-        fireRulesRuntime.setNbreRulesFired(Long.valueOf(sessionFireAllRulesMaxNumberReachedEvent.getNumberOfRulesExecuted()));
-        fireRulesRuntime.setMaxNbreRulesDefinedForSession(Long.valueOf(sessionFireAllRulesMaxNumberReachedEvent.getMaxNumberOfRulesForSession()));
-        fireRulesRuntimeRepository.save(fireRulesRuntime);
+        FireAllRulesExecution fireAllRulesExecution = fireAllRulesExecutionRepository.findStartedFireAllRulesBySessionID(historyEvent.getSessionId());
+        fireAllRulesExecution.setEventID(sessionFireAllRulesMaxNumberReachedEvent.getEventID());
+        fireAllRulesExecution.setEndDate(sessionFireAllRulesMaxNumberReachedEvent.getDateEvent());
+        fireAllRulesExecution.setFireAllRulesExecutionStatus(FireAllRulesExecutionStatus.MAXNBRULES);
+        fireAllRulesExecution.setNbreRulesFired(Long.valueOf(sessionFireAllRulesMaxNumberReachedEvent.getNumberOfRulesExecuted()));
+        fireAllRulesExecution.setMaxNbreRulesDefinedForSession(Long.valueOf(sessionFireAllRulesMaxNumberReachedEvent.getMaxNumberOfRulesForSession()));
+        fireAllRulesExecutionRepository.save(fireAllRulesExecution);
         LOG.debug("SessionFireAllRulesMaxNumberReachedEvent " + historyEvent.toString());
     }
 
