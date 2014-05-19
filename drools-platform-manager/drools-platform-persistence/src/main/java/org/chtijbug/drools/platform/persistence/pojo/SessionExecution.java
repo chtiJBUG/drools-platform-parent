@@ -12,14 +12,14 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "session_runtime")
-public class SessionRuntime {
+@Table(name = "session_execution")
+public class SessionExecution {
     @Id
-    @SequenceGenerator(name = "session_id_seq", sequenceName = "session_platform_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "session_id_seq")
+    @SequenceGenerator(name = "session_execution_id_seq", sequenceName = "session_execution_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "session_execution_id_seq")
     private Long id;
     @ManyToOne
-    @JoinColumn(name="platform_runtime_id_fk")
+    @JoinColumn(name="platform_runtime_instance_id_fk")
     private PlatformRuntimeInstance platformRuntimeInstance;
 
     private Integer sessionId;
@@ -32,17 +32,17 @@ public class SessionRuntime {
     private Integer eventID;
 
     @Enumerated(EnumType.STRING)
-    private SessionRuntimeStatus sessionRuntimeStatus;
+    private SessionExecutionStatus sessionExecutionStatus;
 
     @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "session_runtime_id_fk")
+    @JoinColumn(name = "session_execution_id_fk")
     private List<RuleRuntime> ruleRuntimes = new ArrayList<RuleRuntime>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "session_runtime_id_fk")
+    @JoinColumn(name = "session_execution_id_fk")
     private List<FactRuntime> facts = new ArrayList<FactRuntime>() ;
 
-    public SessionRuntime() {
+    public SessionExecution() {
     }
 
     public Long getId() {
@@ -93,12 +93,12 @@ public class SessionRuntime {
         this.eventID = eventID;
     }
 
-    public SessionRuntimeStatus getSessionRuntimeStatus() {
-        return sessionRuntimeStatus;
+    public SessionExecutionStatus getSessionExecutionStatus() {
+        return sessionExecutionStatus;
     }
 
-    public void setSessionRuntimeStatus(SessionRuntimeStatus sessionRuntimeStatus) {
-        this.sessionRuntimeStatus = sessionRuntimeStatus;
+    public void setSessionExecutionStatus(SessionExecutionStatus sessionExecutionStatus) {
+        this.sessionExecutionStatus = sessionExecutionStatus;
     }
 
     public List<RuleRuntime> getRuleRuntimes() {

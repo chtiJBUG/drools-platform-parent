@@ -6,9 +6,9 @@ import org.chtijbug.drools.entity.history.session.SessionFireAllRulesBeginEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.pojo.FireRulesRuntimeStatus;
 import org.chtijbug.drools.platform.persistence.FireRulesRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
 import org.chtijbug.drools.platform.persistence.pojo.FireRulesRuntime;
-import org.chtijbug.drools.platform.persistence.pojo.SessionRuntime;
+import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +31,7 @@ public class KnowledgeSessionFireAllRulesBeginEventStrategy extends AbstractEven
     FireRulesRuntimeRepository fireRulesRuntimeRepository;
 
     @Autowired
-    SessionRuntimeRepository sessionRuntimeRepository;
+    SessionExecutionRepository sessionExecutionRepository;
 
     @Override
     @Transactional
@@ -44,10 +44,10 @@ public class KnowledgeSessionFireAllRulesBeginEventStrategy extends AbstractEven
             runningFireRulesRuntime.setFireRulesRuntimeStatus(FireRulesRuntimeStatus.CRASHED);
             fireRulesRuntimeRepository.save(runningFireRulesRuntime);
         }
-        SessionRuntime existingSessionRutime = sessionRuntimeRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
+        SessionExecution existingSessionRutime = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
 
         FireRulesRuntime fireRulesRuntime = new FireRulesRuntime();
-        fireRulesRuntime.setSessionRuntime(existingSessionRutime);
+        fireRulesRuntime.setSessionExecution(existingSessionRutime);
         fireRulesRuntime.setEventID(sessionFireAllRulesBeginEvent.getEventID());
         fireRulesRuntime.setStartDate(sessionFireAllRulesBeginEvent.getDateEvent());
         fireRulesRuntime.setFireRulesRuntimeStatus(FireRulesRuntimeStatus.STARTED);

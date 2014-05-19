@@ -17,7 +17,7 @@ import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositor
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeDefinition;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeStatus;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstanceStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,7 +70,7 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
                     if (existingPlatformRuntimeInstance != null && existingPlatformRuntimeInstance.getEndDate() == null) {
                         existingPlatformRuntimeInstance.setEndDate(new Date());
                         existingPlatformRuntimeInstance.setShutdowDate(new Date());
-                        existingPlatformRuntimeInstance.setStatus(PlatformRuntimeStatus.CRASHED);
+                        existingPlatformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.CRASHED);
                         platformRuntimeInstanceRepository.save(existingPlatformRuntimeInstance);
                     }
                 }
@@ -99,7 +99,7 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
             platformRuntimeInstance.setHostname(platformKnowledgeBaseInitialConnectionEvent.getHostname());
             platformRuntimeInstance.setPort(platformKnowledgeBaseInitialConnectionEvent.getPort());
             platformRuntimeInstance.setPlatformRuntimeDefinition(platformRuntimeDefinition);
-            platformRuntimeInstance.setStatus(PlatformRuntimeStatus.INITMODE);
+            platformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.INITMODE);
             platformRuntimeDefinition.getPlatformRuntimeInstances().add(platformRuntimeInstance);
 
 
@@ -118,12 +118,12 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
                 }
                 platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.loadNewRuleVersion);
                 webSocketClient.getSession().getBasicRemote().sendObject(platformManagementKnowledgeBean);
-                platformRuntimeInstance.setStatus(PlatformRuntimeStatus.STARTED);
+                platformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.STARTED);
             } catch (DeploymentException | IOException e) {
-                platformRuntimeInstance.setStatus(PlatformRuntimeStatus.NOT_JOINGNABLE);
+                platformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.NOT_JOINGNABLE);
                 LOG.error(" handleMessage(PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent) ", e);
             } catch (EncodeException e) {
-                platformRuntimeInstance.setStatus(PlatformRuntimeStatus.CRASHED);
+                platformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.CRASHED);
                 LOG.error(" handleMessage(PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent) ", e);
                 e.printStackTrace();
             } finally {

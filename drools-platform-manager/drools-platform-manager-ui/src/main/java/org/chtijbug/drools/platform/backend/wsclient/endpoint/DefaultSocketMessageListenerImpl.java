@@ -9,7 +9,7 @@ import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.RealTimeParametersRepository;
-import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.RealTimeParameters;
 import org.springframework.context.ApplicationContext;
@@ -25,7 +25,7 @@ public class DefaultSocketMessageListenerImpl implements WebSocketMessageListene
     private static final Logger LOG = Logger.getLogger(DefaultSocketMessageListenerImpl.class);
 
     private PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
-    private SessionRuntimeRepository sessionRuntimeRepository;
+    private SessionExecutionRepository sessionExecutionRepository;
     private RealTimeParametersRepository realTimeParametersRepository;
     private PlatformRuntimeInstance platformRuntimeInstance;
     private PlatformManagementKnowledgeBean lastBeanReceived;
@@ -40,7 +40,7 @@ public class DefaultSocketMessageListenerImpl implements WebSocketMessageListene
         this.platformRuntimeInstance = platformRuntimeInstance;
         ApplicationContext applicationContext = AppContext.getApplicationContext();
         this.platformRuntimeInstanceRepository = applicationContext.getBean(PlatformRuntimeInstanceRepository.class);
-        this.sessionRuntimeRepository = applicationContext.getBean(SessionRuntimeRepository.class);
+        this.sessionExecutionRepository = applicationContext.getBean(SessionExecutionRepository.class);
         this.realTimeParametersRepository = applicationContext.getBean(RealTimeParametersRepository.class);
         jmxInfosListeners = applicationContext.getBean(JMXInfosListener.class);
         heartBeatListner = applicationContext.getBean(HeartBeatListner.class);

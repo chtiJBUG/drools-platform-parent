@@ -7,7 +7,7 @@ import org.chtijbug.drools.entity.history.rule.BeforeRuleFiredHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.RuleflowGroupRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.RulesRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
 import org.chtijbug.drools.platform.persistence.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ public class BeforeRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
     private RulesRuntimeRepository rulesRuntimeRepository;
 
     @Autowired
-    private SessionRuntimeRepository sessionRuntimeRepository;
+    private SessionExecutionRepository sessionExecutionRepository;
 
     @Override
     @Transactional
@@ -41,8 +41,8 @@ public class BeforeRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
             RuleflowGroupRuntime ruleflowGroupRuntime = ruleflowGroupRuntimeRepository.findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndRuleflowgroupName(beforeRuleFiredHistoryEvent.getRuleBaseID(), beforeRuleFiredHistoryEvent.getSessionId(), beforeRuleFiredHistoryEvent.getRule().getRuleFlowGroup());
             ruleRuntime.setRuleflowGroupRuntime(ruleflowGroupRuntime);
         } else {
-            SessionRuntime sessionRuntime = sessionRuntimeRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(beforeRuleFiredHistoryEvent.getRuleBaseID(), beforeRuleFiredHistoryEvent.getSessionId());
-            ruleRuntime.setSessionRuntime(sessionRuntime);
+            SessionExecution sessionExecution = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(beforeRuleFiredHistoryEvent.getRuleBaseID(), beforeRuleFiredHistoryEvent.getSessionId());
+            ruleRuntime.setSessionExecution(sessionExecution);
         }
         ruleRuntime.setStartDate(beforeRuleFiredHistoryEvent.getDateEvent());
         ruleRuntime.setRuleName(beforeRuleFiredHistoryEvent.getRule().getRuleName());

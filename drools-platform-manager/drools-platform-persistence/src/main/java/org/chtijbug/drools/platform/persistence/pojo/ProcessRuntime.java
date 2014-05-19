@@ -33,7 +33,7 @@ public class ProcessRuntime {
     private Integer eventID;
 
     @ManyToOne
-    private SessionRuntime sessionRuntime;
+    private SessionExecution sessionExecution;
 
     private String ProcessInstanceId;
 
@@ -91,12 +91,12 @@ public class ProcessRuntime {
         this.eventID = eventID;
     }
 
-    public SessionRuntime getSessionRuntime() {
-        return sessionRuntime;
+    public SessionExecution getSessionExecution() {
+        return sessionExecution;
     }
 
-    public void setSessionRuntime(SessionRuntime sessionRuntime) {
-        this.sessionRuntime = sessionRuntime;
+    public void setSessionExecution(SessionExecution sessionExecution) {
+        this.sessionExecution = sessionExecution;
     }
 
     public ProcessRuntimeStatus getProcessRuntimeStatus() {
@@ -182,7 +182,7 @@ public class ProcessRuntime {
         ProcessRuntime that = (ProcessRuntime) o;
 
         if (!processName.equals(that.processName)) return false;
-        if (!sessionRuntime.equals(that.sessionRuntime)) return false;
+        if (!sessionExecution.equals(that.sessionExecution)) return false;
         if (!startDate.equals(that.startDate)) return false;
 
         return true;
@@ -192,7 +192,7 @@ public class ProcessRuntime {
     public int hashCode() {
         int result = processName.hashCode();
         result = 31 * result + startDate.hashCode();
-        result = 31 * result + sessionRuntime.hashCode();
+        result = 31 * result + sessionExecution.hashCode();
         return result;
     }
 

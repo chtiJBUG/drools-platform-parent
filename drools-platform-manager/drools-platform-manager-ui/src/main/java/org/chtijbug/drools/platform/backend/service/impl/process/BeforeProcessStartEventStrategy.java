@@ -5,10 +5,10 @@ import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.process.BeforeProcessStartHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.ProcessRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
 import org.chtijbug.drools.platform.persistence.pojo.ProcessRuntime;
 import org.chtijbug.drools.platform.persistence.pojo.ProcessRuntimeStatus;
-import org.chtijbug.drools.platform.persistence.pojo.SessionRuntime;
+import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +29,7 @@ public class BeforeProcessStartEventStrategy extends AbstractEventHandlerStrateg
     @Autowired
     ProcessRuntimeRepository processRuntimeRepository;
     @Autowired
-    private SessionRuntimeRepository sessionRuntimeRepository;
+    private SessionExecutionRepository sessionExecutionRepository;
 
 
     @Override
@@ -42,10 +42,10 @@ public class BeforeProcessStartEventStrategy extends AbstractEventHandlerStrateg
             runningProcessRuntime.setProcessRuntimeStatus(ProcessRuntimeStatus.CRASHED);
             processRuntimeRepository.save(runningProcessRuntime);
         }
-        SessionRuntime existingSessionRutime = sessionRuntimeRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
+        SessionExecution existingSessionRutime = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
 
         ProcessRuntime processRuntime = new ProcessRuntime();
-        processRuntime.setSessionRuntime(existingSessionRutime);
+        processRuntime.setSessionExecution(existingSessionRutime);
         processRuntime.setProcessInstanceId(beforeProcessStartHistoryEvent.getProcessInstance().getId());
         processRuntime.setProcessName(beforeProcessStartHistoryEvent.getProcessInstance().getName());
         processRuntime.setProcessPackageName(beforeProcessStartHistoryEvent.getProcessInstance().getPackageName());

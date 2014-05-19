@@ -4,10 +4,10 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionDisposedEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.pojo.SessionRuntimeStatus;
+import org.chtijbug.drools.platform.persistence.pojo.SessionExecutionStatus;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
-import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.pojo.SessionRuntime;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
+import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,17 +27,17 @@ public class KnowledgeSessionDisposeEventStrategy extends AbstractEventHandlerSt
     PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
     @Autowired
-    SessionRuntimeRepository sessionRuntimeRepository;
+    SessionExecutionRepository sessionExecutionRepository;
 
     @Override
     @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         SessionDisposedEvent sessionDisposedEvent = (SessionDisposedEvent) historyEvent;
-        SessionRuntime existingSessionRutime = sessionRuntimeRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
+        SessionExecution existingSessionRutime = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
 
         existingSessionRutime.setEndDate(sessionDisposedEvent.getDateEvent());
-        existingSessionRutime.setSessionRuntimeStatus(SessionRuntimeStatus.DISPOSED);
-        sessionRuntimeRepository.save(existingSessionRutime);
+        existingSessionRutime.setSessionExecutionStatus(SessionExecutionStatus.DISPOSED);
+        sessionExecutionRepository.save(existingSessionRutime);
         LOG.debug("SessionDisposedEvent " + historyEvent.toString());
     }
 

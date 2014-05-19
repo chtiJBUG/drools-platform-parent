@@ -27,7 +27,7 @@ public class FireRulesRuntime {
     private Long executionTime;
 
     @ManyToOne
-    private SessionRuntime sessionRuntime;
+    private SessionExecution sessionExecution;
 
     private Integer eventID;
 
@@ -69,12 +69,12 @@ public class FireRulesRuntime {
         this.eventID = eventID;
     }
 
-    public SessionRuntime getSessionRuntime() {
-        return sessionRuntime;
+    public SessionExecution getSessionExecution() {
+        return sessionExecution;
     }
 
-    public void setSessionRuntime(SessionRuntime sessionRuntime) {
-        this.sessionRuntime = sessionRuntime;
+    public void setSessionExecution(SessionExecution sessionExecution) {
+        this.sessionExecution = sessionExecution;
     }
 
     public Long getNbreRulesFired() {
@@ -131,7 +131,7 @@ public class FireRulesRuntime {
 
         FireRulesRuntime that = (FireRulesRuntime) o;
 
-        if (!sessionRuntime.equals(that.sessionRuntime)) return false;
+        if (!sessionExecution.equals(that.sessionExecution)) return false;
         if (!startDate.equals(that.startDate)) return false;
 
         return true;
@@ -140,7 +140,7 @@ public class FireRulesRuntime {
     @Override
     public int hashCode() {
         int result = startDate.hashCode();
-        result = 31 * result + sessionRuntime.hashCode();
+        result = 31 * result + sessionExecution.hashCode();
         return result;
     }
 

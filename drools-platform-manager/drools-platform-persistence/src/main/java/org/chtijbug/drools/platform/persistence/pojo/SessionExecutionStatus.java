@@ -2,11 +2,10 @@ package org.chtijbug.drools.platform.persistence.pojo;
 
 /**
  * Created by IntelliJ IDEA.
- * Date: 13/01/14
- * Time: 21:15
+ * Date: 26/03/14
+ * Time: 09:28
  * To change this template use File | Settings | File Templates.
  */
-public enum PlatformRuntimeStatus {
-    INITMODE,STARTED,NOT_JOINGNABLE, STOPPED, CRASHED;
-
+public enum SessionExecutionStatus {
+    STARTED,DISPOSED, CRASHED
 }

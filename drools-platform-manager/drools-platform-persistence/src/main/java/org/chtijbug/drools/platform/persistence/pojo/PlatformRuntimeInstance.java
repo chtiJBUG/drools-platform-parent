@@ -30,7 +30,7 @@ public class PlatformRuntimeInstance implements Serializable {
     private Date endDate;
     private Date shutdowDate;
     @Enumerated(EnumType.STRING)
-    private PlatformRuntimeStatus status;
+    private PlatformRuntimeInstanceStatus status;
     private Integer eventID;
     private Integer ruleBaseID;
 
@@ -40,7 +40,7 @@ public class PlatformRuntimeInstance implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "platform_runtime_instance_id_fk")
-    private List<SessionRuntime> sessionRuntimes = new ArrayList<SessionRuntime>();
+    private List<SessionExecution> sessionExecutions = new ArrayList<SessionExecution>();
     @ManyToOne
     @JoinColumn(name = "platform_runtime_instance_id_fk")
     private PlatformRuntimeDefinition platformRuntimeDefinition;
@@ -110,11 +110,11 @@ public class PlatformRuntimeInstance implements Serializable {
         this.shutdowDate = shutdowDate;
     }
 
-    public PlatformRuntimeStatus getStatus() {
+    public PlatformRuntimeInstanceStatus getStatus() {
         return status;
     }
 
-    public void setStatus(PlatformRuntimeStatus status) {
+    public void setStatus(PlatformRuntimeInstanceStatus status) {
         this.status = status;
     }
 
@@ -142,12 +142,12 @@ public class PlatformRuntimeInstance implements Serializable {
         this.droolsRessources = droolsResources;
     }
 
-    public List<SessionRuntime> getSessionRuntimes() {
-        return sessionRuntimes;
+    public List<SessionExecution> getSessionExecutions() {
+        return sessionExecutions;
     }
 
-    public void setSessionRuntimes(List<SessionRuntime> sessionRuntimes) {
-        this.sessionRuntimes = sessionRuntimes;
+    public void setSessionExecutions(List<SessionExecution> sessionExecutions) {
+        this.sessionExecutions = sessionExecutions;
     }
 
     public PlatformRuntimeDefinition getPlatformRuntimeDefinition() {

@@ -15,10 +15,10 @@ import java.util.List;
 @Component
 public interface FireRulesRuntimeRepository extends JpaRepository<FireRulesRuntime, Long> {
 
-    @Query("select r from FireRulesRuntime r,SessionRuntime s where r.sessionRuntime = s and s.endDate is null and r.endDate is null and s.sessionId = :sessionID")
+    @Query("select r from FireRulesRuntime r,SessionExecution s where r.sessionExecution = s and s.endDate is null and r.endDate is null and s.sessionId = :sessionID")
     List<FireRulesRuntime> findAllStartedFireAllRulesBySessionID(@Param("sessionID") Integer sessionID);
 
-    @Query("select r from FireRulesRuntime r,SessionRuntime s where r.sessionRuntime = s and s.endDate is null and  r.endDate is null and s.sessionId = :sessionID")
+    @Query("select r from FireRulesRuntime r,SessionExecution s where r.sessionExecution = s and s.endDate is null and  r.endDate is null and s.sessionId = :sessionID")
     FireRulesRuntime findStartedFireAllRulesBySessionID(@Param("sessionID") Integer sessionID);
 
 

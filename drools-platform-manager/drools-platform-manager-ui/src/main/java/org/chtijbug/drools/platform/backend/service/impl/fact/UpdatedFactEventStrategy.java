@@ -5,11 +5,11 @@ import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.fact.UpdatedFactHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.RulesRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
 import org.chtijbug.drools.platform.persistence.pojo.FactRuntime;
 import org.chtijbug.drools.platform.persistence.pojo.FactRuntimeType;
 import org.chtijbug.drools.platform.persistence.pojo.RuleRuntime;
-import org.chtijbug.drools.platform.persistence.pojo.SessionRuntime;
+import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +28,7 @@ public class UpdatedFactEventStrategy extends AbstractEventHandlerStrategy {
     RulesRuntimeRepository rulesRuntimeRepository;
 
     @Autowired
-    SessionRuntimeRepository sessionRuntimeRepository;
+    SessionExecutionRepository sessionExecutionRepository;
 
     @Override
     @Transactional
@@ -59,10 +59,10 @@ public class UpdatedFactEventStrategy extends AbstractEventHandlerStrategy {
                 existingInSessionRuleRuntime.getThenFacts().add(factRuntimeNewValue);
                 rulesRuntimeRepository.save(existingInSessionRuleRuntime);
             } else {
-                SessionRuntime sessionRuntime = sessionRuntimeRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
-                sessionRuntime.getFacts().add(factRuntimeOldValue);
-                sessionRuntime.getFacts().add(factRuntimeNewValue);
-                sessionRuntimeRepository.save(sessionRuntime);
+                SessionExecution sessionExecution = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
+                sessionExecution.getFacts().add(factRuntimeOldValue);
+                sessionExecution.getFacts().add(factRuntimeNewValue);
+                sessionExecutionRepository.save(sessionExecution);
             }
         }
         LOG.debug("UpdatedFactHistoryEvent " + historyEvent.toString());

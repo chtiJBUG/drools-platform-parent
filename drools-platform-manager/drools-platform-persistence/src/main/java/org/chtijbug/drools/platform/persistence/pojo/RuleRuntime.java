@@ -39,7 +39,7 @@ public class RuleRuntime {
 
     @ManyToOne
     @JoinColumn(name="session_runtime_id_fk")
-    private SessionRuntime sessionRuntime;
+    private SessionExecution sessionExecution;
 
     public String getRuleName() {
         return ruleName;
@@ -97,12 +97,12 @@ public class RuleRuntime {
         this.whenFacts = whenFacts;
     }
 
-    public void setSessionRuntime(SessionRuntime sessionRuntime) {
-        this.sessionRuntime = sessionRuntime;
+    public void setSessionExecution(SessionExecution sessionExecution) {
+        this.sessionExecution = sessionExecution;
     }
 
-    public SessionRuntime getSessionRuntime() {
-        return sessionRuntime;
+    public SessionExecution getSessionExecution() {
+        return sessionExecution;
     }
 
     public List<FactRuntime> getThenFacts() {

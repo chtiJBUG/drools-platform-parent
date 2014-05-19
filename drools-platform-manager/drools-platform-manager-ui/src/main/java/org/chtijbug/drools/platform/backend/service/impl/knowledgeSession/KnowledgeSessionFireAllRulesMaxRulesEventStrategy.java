@@ -6,7 +6,7 @@ import org.chtijbug.drools.entity.history.session.SessionFireAllRulesMaxNumberRe
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.pojo.FireRulesRuntimeStatus;
 import org.chtijbug.drools.platform.persistence.FireRulesRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
 import org.chtijbug.drools.platform.persistence.pojo.FireRulesRuntime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,7 +27,7 @@ public class KnowledgeSessionFireAllRulesMaxRulesEventStrategy extends AbstractE
     FireRulesRuntimeRepository fireRulesRuntimeRepository;
 
     @Autowired
-    SessionRuntimeRepository sessionRuntimeRepository;
+    SessionExecutionRepository sessionExecutionRepository;
 
     @Override
     @Transactional
