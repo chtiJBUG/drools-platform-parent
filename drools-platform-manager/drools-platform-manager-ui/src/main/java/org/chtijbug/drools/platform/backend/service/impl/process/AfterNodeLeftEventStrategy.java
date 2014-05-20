@@ -5,14 +5,12 @@ import org.chtijbug.drools.entity.DroolsNodeType;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.process.AfterNodeLeftHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.RuleflowGroupRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.pojo.RuleflowGroupRuntime;
-import org.chtijbug.drools.platform.persistence.pojo.RuleflowGroupRuntimeStatus;
+import org.chtijbug.drools.platform.persistence.RuleflowGroupRepository;
+import org.chtijbug.drools.platform.persistence.pojo.RuleflowGroup;
+import org.chtijbug.drools.platform.persistence.pojo.RuleflowGroupStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,7 +24,7 @@ public class AfterNodeLeftEventStrategy extends AbstractEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(AfterNodeLeftEventStrategy.class);
 
     @Autowired
-    RuleflowGroupRuntimeRepository ruleflowGroupRuntimeRepository;
+    RuleflowGroupRepository ruleflowGroupRepository;
 
     @Override
     @Transactional
@@ -34,10 +32,10 @@ public class AfterNodeLeftEventStrategy extends AbstractEventHandlerStrategy {
         AfterNodeLeftHistoryEvent afterNodeLeftHistoryEvent = (AfterNodeLeftHistoryEvent) historyEvent;
         if (afterNodeLeftHistoryEvent.getNodeInstance().getNode().getNodeType() == DroolsNodeType.RuleNode) {
 
-            RuleflowGroupRuntime ruleflowGroupRuntime = ruleflowGroupRuntimeRepository.findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(afterNodeLeftHistoryEvent.getRuleBaseID(), afterNodeLeftHistoryEvent.getSessionId(), afterNodeLeftHistoryEvent.getProcessInstance().getId(), afterNodeLeftHistoryEvent.getNodeInstance().getNode().getRuleflowGroupName());
-             ruleflowGroupRuntime.setEndDate(afterNodeLeftHistoryEvent.getDateEvent());
-            ruleflowGroupRuntime.setRuleflowGroupRuntimeStatus(RuleflowGroupRuntimeStatus.STOPPED);
-            ruleflowGroupRuntimeRepository.save(ruleflowGroupRuntime);
+            RuleflowGroup ruleflowGroup = ruleflowGroupRepository.findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(afterNodeLeftHistoryEvent.getRuleBaseID(), afterNodeLeftHistoryEvent.getSessionId(), afterNodeLeftHistoryEvent.getProcessInstance().getId(), afterNodeLeftHistoryEvent.getNodeInstance().getNode().getRuleflowGroupName());
+             ruleflowGroup.setEndDate(afterNodeLeftHistoryEvent.getDateEvent());
+            ruleflowGroup.setRuleflowGroupStatus(RuleflowGroupStatus.STOPPED);
+            ruleflowGroupRepository.save(ruleflowGroup);
         }
         // afterNodeLeftHistoryEvent.get
         LOG.debug("AfterNodeLeftHistoryEvent " + historyEvent.toString());

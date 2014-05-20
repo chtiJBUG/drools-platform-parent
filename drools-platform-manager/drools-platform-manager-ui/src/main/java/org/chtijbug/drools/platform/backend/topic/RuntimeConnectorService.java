@@ -6,11 +6,11 @@ import org.chtijbug.drools.platform.backend.wsclient.WebSocketClient;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
 import org.chtijbug.drools.platform.backend.wsclient.listener.*;
 import org.chtijbug.drools.platform.entity.*;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepository;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeDefinition;
 import org.chtijbug.drools.platform.persistence.pojo.RealTimeParameters;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +39,10 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
     private WebSocketSessionManager webSocketSessionManager;
 
     @Autowired
-    private PlatformRuntimeRepository platformRuntimeRepository;
+    private PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
     @Autowired
-    private PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
+    private PlatformRuntimeDefinitionRepository platformRuntimeDefinitionRepository;
 
     private BaseTopicData baseTopicDataToSend;
 
@@ -58,8 +58,8 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
         } else {
             PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
             platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.loadNewRuleVersion);
-            List<PlatformRuntime> platformRuntimeList = platformRuntimeRepository.findByRuleBaseIDAndEndDateNull(ruleBaseID);
-            if (platformRuntimeList.size() != 1) {
+            List<PlatformRuntimeInstance> platformRuntimeInstanceList = platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(ruleBaseID);
+            if (platformRuntimeInstanceList.size() != 1) {
                 DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("updateRulePackage-NoUniqueRuleBaseID", ruleBaseID.toString(), null);
                 throw droolsChtijbugException;
             }
@@ -68,7 +68,7 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
 
         PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
         platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.loadNewRuleVersion);
-        PlatformRuntimeInstance instance = platformRuntimeInstanceRepository.findByRuleBaseID(ruleBaseID);
+        PlatformRuntimeDefinition instance = platformRuntimeDefinitionRepository.findByRuleBaseID(ruleBaseID);
         List<DroolsResource> droolsRessourceList = instance.getDroolsRessourcesDefinition();
         if (droolsRessourceList ==null || droolsRessourceList.size()>1 || droolsRessourceList.get(0).getGuvnor_url()==null){
             DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("updateRulePackage-NotAguvnorRessource", ruleBaseID.toString(), null);
@@ -83,7 +83,7 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
 
             clientSocket.getSession().getBasicRemote().sendObject(platformManagementKnowledgeBean);
             guvnorRessource.setGuvnor_packageVersion(packageVersion);
-            platformRuntimeInstanceRepository.save(instance);
+            platformRuntimeDefinitionRepository.save(instance);
         } catch (IOException e) {
             LOG.error("updateRulePackage(ruleBaseID="+ruleBaseID+",packageVersion)="+packageVersion,e);
         } catch (EncodeException e) {

@@ -3,8 +3,8 @@ package org.chtijbug.drools.platform.persistence;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
-import org.chtijbug.drools.platform.persistence.pojo.SessionRuntime;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
+import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -33,22 +33,22 @@ import static org.assertj.core.api.Assertions.assertThat;
         TransactionalTestExecutionListener.class,
         DbUnitTestExecutionListener.class})
 @DatabaseSetup("classpath:dataset/dataset.xml")
-public class SessionRuntimeDaoTest {
+public class SessionExecutionDaoTest {
     @Resource
-    private SessionRuntimeRepository sessionRuntimeRepository;
+    private SessionExecutionRepository sessionExecutionRepository;
     @Resource
-    private PlatformRuntimeRepository platformRuntimeRepository;
+    private PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
     @Test
     public void should_get_platform_runtime_object_persisted() {
-        PlatformRuntime platformRuntime = platformRuntimeRepository.findByRuleBaseID(5);
-        SessionRuntime sessionRuntime = new SessionRuntime();
-        sessionRuntime.setSessionId(12);
-        sessionRuntime.setStartDate(new Date());
-        sessionRuntime.setPlatformRuntime(platformRuntime);
-        sessionRuntimeRepository.save(sessionRuntime);
-        assertThat(sessionRuntime.getId()).isNotNull();
-        assertThat(sessionRuntime.getId()).isGreaterThan(0l);
+        PlatformRuntimeInstance platformRuntimeInstance = platformRuntimeInstanceRepository.findByRuleBaseID(5);
+        SessionExecution sessionExecution = new SessionExecution();
+        sessionExecution.setSessionId(12);
+        sessionExecution.setStartDate(new Date());
+        sessionExecution.setPlatformRuntimeInstance(platformRuntimeInstance);
+        sessionExecutionRepository.save(sessionExecution);
+        assertThat(sessionExecution.getId()).isNotNull();
+        assertThat(sessionExecution.getId()).isGreaterThan(0l);
     }
 
 

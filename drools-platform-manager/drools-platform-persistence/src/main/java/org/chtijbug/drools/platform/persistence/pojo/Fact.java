@@ -15,11 +15,11 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "fact_runtime")
+@Table(name = "fact")
 @TypeDefs({@TypeDef(name = "json", typeClass = StringJsonUserType.class)})
-public class FactRuntime {
+public class Fact {
     @Id
-    @SequenceGenerator(name = "fact_id_seq", sequenceName = "fact_platform_seq")
+    @SequenceGenerator(name = "fact_id_seq", sequenceName = "fact_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fact_id_seq")
     private Long id;
 
@@ -33,9 +33,9 @@ public class FactRuntime {
     private Date modificationDate;
 
     @Enumerated(EnumType.STRING)
-    private FactRuntimeType factRuntimeType;
+    private FactType factType;
 
-    public FactRuntime() {
+    public Fact() {
     }
 
     public Long getId() {
@@ -70,12 +70,12 @@ public class FactRuntime {
         this.fullClassName = fullClassName;
     }
 
-    public FactRuntimeType getFactRuntimeType() {
-        return factRuntimeType;
+    public FactType getFactType() {
+        return factType;
     }
 
-    public void setFactRuntimeType(FactRuntimeType factRuntimeType) {
-        this.factRuntimeType = factRuntimeType;
+    public void setFactType(FactType factType) {
+        this.factType = factType;
     }
 
     public Date getModificationDate() {
@@ -94,7 +94,7 @@ public class FactRuntime {
         sb.append(", objectVersion=").append(objectVersion);
         sb.append(", fullClassName='").append(fullClassName).append('\'');
         sb.append(", modificationDate=").append(modificationDate);
-        sb.append(", factRuntimeType=").append(factRuntimeType);
+        sb.append(", factRuntimeType=").append(factType);
         sb.append('}');
         return sb.toString();
     }

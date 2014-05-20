@@ -12,12 +12,12 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "rule_runtime")
-public class RuleRuntime {
+@Table(name = "rule_execution")
+public class RuleExecution {
 
     @Id
-    @SequenceGenerator(name = "rules_id_seq", sequenceName = "rules_platform_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rules_id_seq")
+    @SequenceGenerator(name = "rule_execution_id_seq", sequenceName = "rule_execution_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rule_execution_id_seq")
     private Long id;
 
     private String ruleName;
@@ -26,20 +26,20 @@ public class RuleRuntime {
     private Date endDate;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "rule_whenFacts")
-    private List<FactRuntime> whenFacts = new ArrayList<FactRuntime>() ;
+    @JoinTable(name = "rule_execution_whenFacts")
+    private List<Fact> whenFacts = new ArrayList<Fact>() ;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "rule_thenFacts")
-    private List<FactRuntime> thenFacts = new ArrayList<FactRuntime>() ;
+    @JoinTable(name = "rule_execution_thenFacts")
+    private List<Fact> thenFacts = new ArrayList<Fact>() ;
 
     @ManyToOne
-    @JoinColumn(name="ruleflowgroup_runtime_id_fk")
-    private RuleflowGroupRuntime ruleflowGroupRuntime;
+    @JoinColumn(name="ruleflowgroup_execution_id_fk")
+    private RuleflowGroup ruleflowGroup;
 
     @ManyToOne
-    @JoinColumn(name="session_runtime_id_fk")
-    private SessionRuntime sessionRuntime;
+    @JoinColumn(name="session_execution_id_fk")
+    private SessionExecution sessionExecution;
 
     public String getRuleName() {
         return ruleName;
@@ -57,12 +57,12 @@ public class RuleRuntime {
         this.packageName = packageName;
     }
 
-    public RuleflowGroupRuntime getRuleflowGroupRuntime() {
-        return ruleflowGroupRuntime;
+    public RuleflowGroup getRuleflowGroup() {
+        return ruleflowGroup;
     }
 
-    public void setRuleflowGroupRuntime(RuleflowGroupRuntime ruleflowGroupRuntime) {
-        this.ruleflowGroupRuntime = ruleflowGroupRuntime;
+    public void setRuleflowGroup(RuleflowGroup ruleflowGroup) {
+        this.ruleflowGroup = ruleflowGroup;
     }
 
     public Date getStartDate() {
@@ -89,27 +89,27 @@ public class RuleRuntime {
         this.id = id;
     }
 
-    public List<FactRuntime> getWhenFacts() {
+    public List<Fact> getWhenFacts() {
         return whenFacts;
     }
 
-    public void setWhenFacts(List<FactRuntime> whenFacts) {
+    public void setWhenFacts(List<Fact> whenFacts) {
         this.whenFacts = whenFacts;
     }
 
-    public void setSessionRuntime(SessionRuntime sessionRuntime) {
-        this.sessionRuntime = sessionRuntime;
+    public void setSessionExecution(SessionExecution sessionExecution) {
+        this.sessionExecution = sessionExecution;
     }
 
-    public SessionRuntime getSessionRuntime() {
-        return sessionRuntime;
+    public SessionExecution getSessionExecution() {
+        return sessionExecution;
     }
 
-    public List<FactRuntime> getThenFacts() {
+    public List<Fact> getThenFacts() {
         return thenFacts;
     }
 
-    public void setThenFacts(List<FactRuntime> thenFacts) {
+    public void setThenFacts(List<Fact> thenFacts) {
         this.thenFacts = thenFacts;
     }
 }

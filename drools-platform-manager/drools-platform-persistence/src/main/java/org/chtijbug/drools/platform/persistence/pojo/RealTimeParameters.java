@@ -20,7 +20,7 @@ public class RealTimeParameters {
     private Long id;
 
    @ManyToOne
-    private PlatformRuntime platformRuntime;
+    private PlatformRuntimeInstance platformRuntimeInstance;
 
     private Date eventDate;
 
@@ -152,11 +152,11 @@ public class RealTimeParameters {
         this.maxRuleThroughout = maxRuleThroughout;
     }
 
-    public PlatformRuntime getPlatformRuntime() {
-        return platformRuntime;
+    public PlatformRuntimeInstance getPlatformRuntimeInstance() {
+        return platformRuntimeInstance;
     }
 
-    public void setPlatformRuntime(PlatformRuntime platformRuntime) {
-        this.platformRuntime = platformRuntime;
+    public void setPlatformRuntimeInstance(PlatformRuntimeInstance platformRuntimeInstance) {
+        this.platformRuntimeInstance = platformRuntimeInstance;
     }
 }

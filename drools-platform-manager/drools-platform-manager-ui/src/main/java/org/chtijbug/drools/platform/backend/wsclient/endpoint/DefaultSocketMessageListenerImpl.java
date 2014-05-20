@@ -7,10 +7,10 @@ import org.chtijbug.drools.platform.entity.Heartbeat;
 import org.chtijbug.drools.platform.entity.JMXInfo;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.entity.RequestStatus;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.RealTimeParametersRepository;
-import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.RealTimeParameters;
 import org.springframework.context.ApplicationContext;
 
@@ -24,10 +24,10 @@ public class DefaultSocketMessageListenerImpl implements WebSocketMessageListene
 
     private static final Logger LOG = Logger.getLogger(DefaultSocketMessageListenerImpl.class);
 
-    private PlatformRuntimeRepository platformRuntimeRepository;
-    private SessionRuntimeRepository sessionRuntimeRepository;
+    private PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
+    private SessionExecutionRepository sessionExecutionRepository;
     private RealTimeParametersRepository realTimeParametersRepository;
-    private PlatformRuntime platformRuntime;
+    private PlatformRuntimeInstance platformRuntimeInstance;
     private PlatformManagementKnowledgeBean lastBeanReceived;
     private Heartbeat heartbeat;
     private JMXInfosListener jmxInfosListeners;
@@ -36,11 +36,11 @@ public class DefaultSocketMessageListenerImpl implements WebSocketMessageListene
     private LoadNewRuleVersionListener loadNewRuleVersionListener;
     private VersionInfosListener versionInfosListener;
 
-    public DefaultSocketMessageListenerImpl(PlatformRuntime platformRuntime, Heartbeat heartbeat) {
-        this.platformRuntime = platformRuntime;
+    public DefaultSocketMessageListenerImpl(PlatformRuntimeInstance platformRuntimeInstance, Heartbeat heartbeat) {
+        this.platformRuntimeInstance = platformRuntimeInstance;
         ApplicationContext applicationContext = AppContext.getApplicationContext();
-        this.platformRuntimeRepository = applicationContext.getBean(PlatformRuntimeRepository.class);
-        this.sessionRuntimeRepository = applicationContext.getBean(SessionRuntimeRepository.class);
+        this.platformRuntimeInstanceRepository = applicationContext.getBean(PlatformRuntimeInstanceRepository.class);
+        this.sessionExecutionRepository = applicationContext.getBean(SessionExecutionRepository.class);
         this.realTimeParametersRepository = applicationContext.getBean(RealTimeParametersRepository.class);
         jmxInfosListeners = applicationContext.getBean(JMXInfosListener.class);
         heartBeatListner = applicationContext.getBean(HeartBeatListner.class);
@@ -60,8 +60,8 @@ public class DefaultSocketMessageListenerImpl implements WebSocketMessageListene
             switch (bean.getRequestRuntimePlarform()) {
                 case jmxInfos:
                     RealTimeParameters realTimeParameters = new RealTimeParameters();
-                    PlatformRuntime targetplatformRuntime = platformRuntimeRepository.findByRuleBaseID(platformRuntime.getRuleBaseID());
-                    realTimeParameters.setPlatformRuntime(targetplatformRuntime);
+                    PlatformRuntimeInstance targetplatformRuntimeInstance = platformRuntimeInstanceRepository.findByRuleBaseID(platformRuntimeInstance.getRuleBaseID());
+                    realTimeParameters.setPlatformRuntimeInstance(targetplatformRuntimeInstance);
                     JMXInfo jmxInfo = bean.getJmxInfo();
                     realTimeParameters.setAverageTimeExecution(jmxInfo.getAverageTimeExecution());
                     realTimeParameters.setMinTimeExecution(jmxInfo.getMinTimeExecution());
@@ -76,23 +76,23 @@ public class DefaultSocketMessageListenerImpl implements WebSocketMessageListene
                     realTimeParameters.setMinRuleThroughout(jmxInfo.getMinRuleThroughout());
                     realTimeParameters.setMaxRuleThroughout(jmxInfo.getMaxRuleThroughout());
                     realTimeParametersRepository.save(realTimeParameters);
-                    this.jmxInfosListeners.messageReceived(platformRuntime.getRuleBaseID(), realTimeParameters);
+                    this.jmxInfosListeners.messageReceived(platformRuntimeInstance.getRuleBaseID(), realTimeParameters);
                     break;
                 case versionInfos:
-                    this.versionInfosListener.messageReceived(platformRuntime.getRuleBaseID(), bean.getResourceFileList());
+                    this.versionInfosListener.messageReceived(platformRuntimeInstance.getRuleBaseID(), bean.getResourceFileList());
                     break;
                 case isAlive:
-                    this.isAliveListener.messageReceived(platformRuntime.getRuleBaseID());
+                    this.isAliveListener.messageReceived(platformRuntimeInstance.getRuleBaseID());
                     break;
 
                 case loadNewRuleVersion:
-                    this.loadNewRuleVersionListener.messageReceived(platformRuntime.getRuleBaseID(), bean.getRequestStatus(), bean.getResourceFileList());
+                    this.loadNewRuleVersionListener.messageReceived(platformRuntimeInstance.getRuleBaseID(), bean.getRequestStatus(), bean.getResourceFileList());
                     break;
                 case heartbeat:
                     if (bean.getHeartbeat() != null) {
                         this.heartbeat.setLastAlive(bean.getHeartbeat().getLastAlive());
                     }
-                    this.heartBeatListner.messageReceived(platformRuntime.getRuleBaseID(), bean.getHeartbeat().getLastAlive());
+                    this.heartBeatListner.messageReceived(platformRuntimeInstance.getRuleBaseID(), bean.getHeartbeat().getLastAlive());
                     break;
             }
         }

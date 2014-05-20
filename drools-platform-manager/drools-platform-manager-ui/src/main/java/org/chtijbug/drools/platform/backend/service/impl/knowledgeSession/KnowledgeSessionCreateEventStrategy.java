@@ -4,11 +4,11 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionCreatedEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
-import org.chtijbug.drools.platform.persistence.pojo.SessionRuntime;
-import org.chtijbug.drools.platform.persistence.pojo.SessionRuntimeStatus;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
+import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
+import org.chtijbug.drools.platform.persistence.pojo.SessionExecutionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,30 +28,30 @@ public class KnowledgeSessionCreateEventStrategy extends AbstractEventHandlerStr
     private static final Logger LOG = Logger.getLogger(KnowledgeSessionCreateEventStrategy.class);
 
     @Autowired
-    PlatformRuntimeRepository platformRuntimeRepository;
+    PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
     @Autowired
-    SessionRuntimeRepository sessionRuntimeRepository;
+    SessionExecutionRepository sessionExecutionRepository;
 
     @Override
     @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         SessionCreatedEvent sessionCreatedEvent = (SessionCreatedEvent) historyEvent;
-        SessionRuntime existingSessionRutime = sessionRuntimeRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
+        SessionExecution existingSessionRutime = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
         if (existingSessionRutime != null) {
             existingSessionRutime.setEndDate(new Date());
-            existingSessionRutime.setSessionRuntimeStatus(SessionRuntimeStatus.CRASHED);
-            sessionRuntimeRepository.save(existingSessionRutime);
+            existingSessionRutime.setSessionExecutionStatus(SessionExecutionStatus.CRASHED);
+            sessionExecutionRepository.save(existingSessionRutime);
         }
-        List<PlatformRuntime> platformRuntimes = platformRuntimeRepository.findByRuleBaseIDAndEndDateNull(sessionCreatedEvent.getRuleBaseID());
-        if (platformRuntimes.size()==1) {
-            SessionRuntime sessionRuntime = new SessionRuntime();
-            sessionRuntime.setPlatformRuntime(platformRuntimes.get(0));
-            sessionRuntime.setStartDate(sessionCreatedEvent.getDateEvent());
-            sessionRuntime.setSessionId(sessionCreatedEvent.getSessionId());
-            sessionRuntime.setEventID(sessionCreatedEvent.getEventID());
-            sessionRuntime.setSessionRuntimeStatus(SessionRuntimeStatus.STARTED);
-            sessionRuntimeRepository.save(sessionRuntime);
+        List<PlatformRuntimeInstance> platformRuntimeInstances = platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(sessionCreatedEvent.getRuleBaseID());
+        if (platformRuntimeInstances.size()==1) {
+            SessionExecution sessionExecution = new SessionExecution();
+            sessionExecution.setPlatformRuntimeInstance(platformRuntimeInstances.get(0));
+            sessionExecution.setStartDate(sessionCreatedEvent.getDateEvent());
+            sessionExecution.setSessionId(sessionCreatedEvent.getSessionId());
+            sessionExecution.setEventID(sessionCreatedEvent.getEventID());
+            sessionExecution.setSessionExecutionStatus(SessionExecutionStatus.STARTED);
+            sessionExecutionRepository.save(sessionExecution);
         }
         LOG.debug("SessionCreatedEvent " + historyEvent.toString());
     }

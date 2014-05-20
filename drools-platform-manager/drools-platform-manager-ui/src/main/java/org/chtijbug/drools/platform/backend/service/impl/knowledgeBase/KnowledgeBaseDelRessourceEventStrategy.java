@@ -6,9 +6,9 @@ import org.chtijbug.drools.entity.history.GuvnorResourceFile;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseDelRessourceEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeRepository;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,16 +28,16 @@ public class KnowledgeBaseDelRessourceEventStrategy extends AbstractEventHandler
 
 
     @Autowired
-    PlatformRuntimeRepository platformRuntimeRepository;
+    PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
     @Override
     @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         KnowledgeBaseDelRessourceEvent knowledgeBaseDelRessourceEvent = (KnowledgeBaseDelRessourceEvent) historyEvent;
-        List<PlatformRuntime> existingPlatformRuntimes = platformRuntimeRepository.findByRuleBaseIDAndEndDateNull(knowledgeBaseDelRessourceEvent.getRuleBaseID());
+        List<PlatformRuntimeInstance> existingPlatformRuntimeInstances = platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(knowledgeBaseDelRessourceEvent.getRuleBaseID());
 
-        if (existingPlatformRuntimes.size()==1) {
-            PlatformRuntime existingPlatformRuntime=existingPlatformRuntimes.get(0);
+        if (existingPlatformRuntimeInstances.size()==1) {
+            PlatformRuntimeInstance existingPlatformRuntimeInstance = existingPlatformRuntimeInstances.get(0);
             DroolsResource droolsResource = null;
             if (knowledgeBaseDelRessourceEvent.getResourceFiles().size() == 1 && knowledgeBaseDelRessourceEvent.getResourceFiles().get(0) instanceof GuvnorResourceFile) {
                 GuvnorResourceFile guvnorResourceFile = (GuvnorResourceFile) knowledgeBaseDelRessourceEvent.getResourceFiles().get(0);
@@ -46,12 +46,12 @@ public class KnowledgeBaseDelRessourceEventStrategy extends AbstractEventHandler
                 DrlResourceFile drlResourceFile = (DrlResourceFile) knowledgeBaseDelRessourceEvent.getResourceFiles().get(0);
                 droolsResource = new DroolsResource(drlResourceFile.getFileName(), drlResourceFile.getContent());
             }
-            for (DroolsResource existingResource : existingPlatformRuntime.getDroolsRessources()) {
+            for (DroolsResource existingResource : existingPlatformRuntimeInstance.getDroolsRessources()) {
                 if (existingResource.equals(droolsResource)) {
                     existingResource.setEndDate(knowledgeBaseDelRessourceEvent.getDateEvent());
                 }
             }
-            platformRuntimeRepository.save(existingPlatformRuntime);
+            platformRuntimeInstanceRepository.save(existingPlatformRuntimeInstance);
         }
     }
 

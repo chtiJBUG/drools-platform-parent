@@ -12,12 +12,12 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "process_runtime")
-public class ProcessRuntime {
+@Table(name = "process_execution")
+public class ProcessExecution {
 
     @Id
-    @SequenceGenerator(name = "process_id_seq", sequenceName = "process_platform_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "process_id_seq")
+    @SequenceGenerator(name = "process_execution_id_seq", sequenceName = "process_execution_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "process_execution_id_seq")
     private Long id;
 
     @Column(nullable = false)
@@ -28,12 +28,12 @@ public class ProcessRuntime {
     private Date endDate;
 
     @Enumerated(EnumType.STRING)
-    private ProcessRuntimeStatus processRuntimeStatus;
+    private ProcessExecutionStatus processExecutionStatus;
 
     private Integer eventID;
 
     @ManyToOne
-    private SessionRuntime sessionRuntime;
+    private SessionExecution sessionExecution;
 
     private String ProcessInstanceId;
 
@@ -46,8 +46,8 @@ public class ProcessRuntime {
     private String processId;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "process_runtime_id_fk")
-    private List<RuleflowGroupRuntime> ruleflowGroupRuntimes = new ArrayList<RuleflowGroupRuntime>();
+    @JoinColumn(name = "process_execution_id_fk")
+    private List<RuleflowGroup> ruleflowGroups = new ArrayList<RuleflowGroup>();
 
 
 
@@ -91,20 +91,20 @@ public class ProcessRuntime {
         this.eventID = eventID;
     }
 
-    public SessionRuntime getSessionRuntime() {
-        return sessionRuntime;
+    public SessionExecution getSessionExecution() {
+        return sessionExecution;
     }
 
-    public void setSessionRuntime(SessionRuntime sessionRuntime) {
-        this.sessionRuntime = sessionRuntime;
+    public void setSessionExecution(SessionExecution sessionExecution) {
+        this.sessionExecution = sessionExecution;
     }
 
-    public ProcessRuntimeStatus getProcessRuntimeStatus() {
-        return processRuntimeStatus;
+    public ProcessExecutionStatus getProcessExecutionStatus() {
+        return processExecutionStatus;
     }
 
-    public void setProcessRuntimeStatus(ProcessRuntimeStatus processRuntimeStatus) {
-        this.processRuntimeStatus = processRuntimeStatus;
+    public void setProcessExecutionStatus(ProcessExecutionStatus processExecutionStatus) {
+        this.processExecutionStatus = processExecutionStatus;
     }
 
     public String getProcessInstanceId() {
@@ -147,12 +147,12 @@ public class ProcessRuntime {
         this.processId = processId;
     }
 
-    public List<RuleflowGroupRuntime> getRuleflowGroupRuntimes() {
-        return ruleflowGroupRuntimes;
+    public List<RuleflowGroup> getRuleflowGroups() {
+        return ruleflowGroups;
     }
 
-    public void setRuleflowGroupRuntimes(List<RuleflowGroupRuntime> ruleflowGroupRuntimes) {
-        this.ruleflowGroupRuntimes = ruleflowGroupRuntimes;
+    public void setRuleflowGroups(List<RuleflowGroup> ruleflowGroups) {
+        this.ruleflowGroups = ruleflowGroups;
     }
 
 
@@ -163,7 +163,7 @@ public class ProcessRuntime {
         sb.append(", processName='").append(processName).append('\'');
         sb.append(", startDate=").append(startDate);
         sb.append(", endDate=").append(endDate);
-        sb.append(", processRuntimeStatus=").append(processRuntimeStatus);
+        sb.append(", processRuntimeStatus=").append(processExecutionStatus);
         sb.append(", eventID=").append(eventID);
         sb.append(", ProcessInstanceId='").append(ProcessInstanceId).append('\'');
         sb.append(", processPackageName='").append(processPackageName).append('\'');
@@ -177,12 +177,12 @@ public class ProcessRuntime {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ProcessRuntime)) return false;
+        if (!(o instanceof ProcessExecution)) return false;
 
-        ProcessRuntime that = (ProcessRuntime) o;
+        ProcessExecution that = (ProcessExecution) o;
 
         if (!processName.equals(that.processName)) return false;
-        if (!sessionRuntime.equals(that.sessionRuntime)) return false;
+        if (!sessionExecution.equals(that.sessionExecution)) return false;
         if (!startDate.equals(that.startDate)) return false;
 
         return true;
@@ -192,7 +192,7 @@ public class ProcessRuntime {
     public int hashCode() {
         int result = processName.hashCode();
         result = 31 * result + startDate.hashCode();
-        result = 31 * result + sessionRuntime.hashCode();
+        result = 31 * result + sessionExecution.hashCode();
         return result;
     }
 

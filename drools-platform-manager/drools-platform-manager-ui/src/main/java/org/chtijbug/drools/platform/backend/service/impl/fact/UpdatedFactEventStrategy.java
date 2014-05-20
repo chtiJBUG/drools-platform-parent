@@ -4,12 +4,12 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.fact.UpdatedFactHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.RulesRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.SessionRuntimeRepository;
-import org.chtijbug.drools.platform.persistence.pojo.FactRuntime;
-import org.chtijbug.drools.platform.persistence.pojo.FactRuntimeType;
-import org.chtijbug.drools.platform.persistence.pojo.RuleRuntime;
-import org.chtijbug.drools.platform.persistence.pojo.SessionRuntime;
+import org.chtijbug.drools.platform.persistence.RuleExecutionRepository;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
+import org.chtijbug.drools.platform.persistence.pojo.Fact;
+import org.chtijbug.drools.platform.persistence.pojo.FactType;
+import org.chtijbug.drools.platform.persistence.pojo.RuleExecution;
+import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,44 +25,44 @@ import org.springframework.transaction.annotation.Transactional;
 public class UpdatedFactEventStrategy extends AbstractEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(UpdatedFactEventStrategy.class);
     @Autowired
-    RulesRuntimeRepository rulesRuntimeRepository;
+    RuleExecutionRepository ruleExecutionRepository;
 
     @Autowired
-    SessionRuntimeRepository sessionRuntimeRepository;
+    SessionExecutionRepository sessionExecutionRepository;
 
     @Override
     @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         UpdatedFactHistoryEvent updatedFactHistoryEvent = (UpdatedFactHistoryEvent) historyEvent;
-        FactRuntime factRuntimeOldValue = new FactRuntime();
-        factRuntimeOldValue.setFullClassName(updatedFactHistoryEvent.getObjectOldValue().getFullClassName());
-        factRuntimeOldValue.setObjectVersion(updatedFactHistoryEvent.getObjectOldValue().getObjectVersion());
-        factRuntimeOldValue.setJsonFact(updatedFactHistoryEvent.getObjectOldValue().getRealObject_JSON());
-        factRuntimeOldValue.setModificationDate(updatedFactHistoryEvent.getDateEvent());
-        factRuntimeOldValue.setFactRuntimeType(FactRuntimeType.UPDATED_OLDVALUE);
-        FactRuntime factRuntimeNewValue = new FactRuntime();
-        factRuntimeNewValue.setFullClassName(updatedFactHistoryEvent.getObjectNewValue().getFullClassName());
-        factRuntimeNewValue.setObjectVersion(updatedFactHistoryEvent.getObjectNewValue().getObjectVersion());
-        factRuntimeNewValue.setJsonFact(updatedFactHistoryEvent.getObjectNewValue().getRealObject_JSON());
-        factRuntimeNewValue.setModificationDate(updatedFactHistoryEvent.getDateEvent());
-        factRuntimeNewValue.setFactRuntimeType(FactRuntimeType.UPDATED_NEWVALUE);
-        RuleRuntime existingInSessionRuleRuntime = rulesRuntimeRepository.findActiveRuleInSessionByRuleBaseIDAndSessionID(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
-        if (existingInSessionRuleRuntime != null) {
-            existingInSessionRuleRuntime.getThenFacts().add(factRuntimeOldValue);
-            existingInSessionRuleRuntime.getThenFacts().add(factRuntimeNewValue);
-            rulesRuntimeRepository.save(existingInSessionRuleRuntime);
+        Fact factOldValue = new Fact();
+        factOldValue.setFullClassName(updatedFactHistoryEvent.getObjectOldValue().getFullClassName());
+        factOldValue.setObjectVersion(updatedFactHistoryEvent.getObjectOldValue().getObjectVersion());
+        factOldValue.setJsonFact(updatedFactHistoryEvent.getObjectOldValue().getRealObject_JSON());
+        factOldValue.setModificationDate(updatedFactHistoryEvent.getDateEvent());
+        factOldValue.setFactType(FactType.UPDATED_OLDVALUE);
+        Fact factNewValue = new Fact();
+        factNewValue.setFullClassName(updatedFactHistoryEvent.getObjectNewValue().getFullClassName());
+        factNewValue.setObjectVersion(updatedFactHistoryEvent.getObjectNewValue().getObjectVersion());
+        factNewValue.setJsonFact(updatedFactHistoryEvent.getObjectNewValue().getRealObject_JSON());
+        factNewValue.setModificationDate(updatedFactHistoryEvent.getDateEvent());
+        factNewValue.setFactType(FactType.UPDATED_NEWVALUE);
+        RuleExecution existingInSessionRuleExecution = ruleExecutionRepository.findActiveRuleInSessionByRuleBaseIDAndSessionID(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
+        if (existingInSessionRuleExecution != null) {
+            existingInSessionRuleExecution.getThenFacts().add(factOldValue);
+            existingInSessionRuleExecution.getThenFacts().add(factNewValue);
+            ruleExecutionRepository.save(existingInSessionRuleExecution);
 
         } else {
-            existingInSessionRuleRuntime = rulesRuntimeRepository.findActiveRuleInRuleFlowGroupByRuleBaseIDAndSessionID(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
-            if (existingInSessionRuleRuntime != null) {
-                existingInSessionRuleRuntime.getThenFacts().add(factRuntimeOldValue);
-                existingInSessionRuleRuntime.getThenFacts().add(factRuntimeNewValue);
-                rulesRuntimeRepository.save(existingInSessionRuleRuntime);
+            existingInSessionRuleExecution = ruleExecutionRepository.findActiveRuleInRuleFlowGroupByRuleBaseIDAndSessionID(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
+            if (existingInSessionRuleExecution != null) {
+                existingInSessionRuleExecution.getThenFacts().add(factOldValue);
+                existingInSessionRuleExecution.getThenFacts().add(factNewValue);
+                ruleExecutionRepository.save(existingInSessionRuleExecution);
             } else {
-                SessionRuntime sessionRuntime = sessionRuntimeRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
-                sessionRuntime.getFacts().add(factRuntimeOldValue);
-                sessionRuntime.getFacts().add(factRuntimeNewValue);
-                sessionRuntimeRepository.save(sessionRuntime);
+                SessionExecution sessionExecution = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
+                sessionExecution.getFacts().add(factOldValue);
+                sessionExecution.getFacts().add(factNewValue);
+                sessionExecutionRepository.save(sessionExecution);
             }
         }
         LOG.debug("UpdatedFactHistoryEvent " + historyEvent.toString());

@@ -12,8 +12,8 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "ruleflowgroup_runtime")
-public class RuleflowGroupRuntime {
+@Table(name = "ruleflowgroup")
+public class RuleflowGroup {
 
     @Id
     @SequenceGenerator(name = "ruleflowgroup_id_seq", sequenceName = "ruleflowgroup_platform_seq")
@@ -24,12 +24,12 @@ public class RuleflowGroupRuntime {
     private String ruleflowGroup;
 
     @ManyToOne
-    @JoinColumn(name = "process_runtime_id_fk")
-    private ProcessRuntime processRuntime;
+    @JoinColumn(name = "process_execution_id_fk")
+    private ProcessExecution processExecution;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "ruleflowgroup_runtime_id_fk")
-    private List<RuleRuntime> ruleRuntimeList  = new ArrayList<RuleRuntime>();
+    @JoinColumn(name = "ruleflowgroup_id_fk")
+    private List<RuleExecution> ruleExecutionList = new ArrayList<RuleExecution>();
 
     @Column(nullable = false)
     private Date startDate;
@@ -37,7 +37,7 @@ public class RuleflowGroupRuntime {
     private Date endDate;
 
     @Enumerated(EnumType.STRING)
-    private RuleflowGroupRuntimeStatus ruleflowGroupRuntimeStatus;
+    private RuleflowGroupStatus ruleflowGroupStatus;
 
     public Long getId() {
         return id;
@@ -55,20 +55,20 @@ public class RuleflowGroupRuntime {
         this.ruleflowGroup = ruleflowGroup;
     }
 
-    public ProcessRuntime getProcessRuntime() {
-        return processRuntime;
+    public ProcessExecution getProcessExecution() {
+        return processExecution;
     }
 
-    public void setProcessRuntime(ProcessRuntime processRuntime) {
-        this.processRuntime = processRuntime;
+    public void setProcessExecution(ProcessExecution processExecution) {
+        this.processExecution = processExecution;
     }
 
-    public List<RuleRuntime> getRuleRuntimeList() {
-        return ruleRuntimeList;
+    public List<RuleExecution> getRuleExecutionList() {
+        return ruleExecutionList;
     }
 
-    public void setRuleRuntimeList(List<RuleRuntime> ruleRuntimeList) {
-        this.ruleRuntimeList = ruleRuntimeList;
+    public void setRuleExecutionList(List<RuleExecution> ruleExecutionList) {
+        this.ruleExecutionList = ruleExecutionList;
     }
 
     public Date getStartDate() {
@@ -87,22 +87,22 @@ public class RuleflowGroupRuntime {
         this.endDate = endDate;
     }
 
-    public RuleflowGroupRuntimeStatus getRuleflowGroupRuntimeStatus() {
-        return ruleflowGroupRuntimeStatus;
+    public RuleflowGroupStatus getRuleflowGroupStatus() {
+        return ruleflowGroupStatus;
     }
 
-    public void setRuleflowGroupRuntimeStatus(RuleflowGroupRuntimeStatus ruleflowGroupRuntimeStatus) {
-        this.ruleflowGroupRuntimeStatus = ruleflowGroupRuntimeStatus;
+    public void setRuleflowGroupStatus(RuleflowGroupStatus ruleflowGroupStatus) {
+        this.ruleflowGroupStatus = ruleflowGroupStatus;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RuleflowGroupRuntime)) return false;
+        if (!(o instanceof RuleflowGroup)) return false;
 
-        RuleflowGroupRuntime that = (RuleflowGroupRuntime) o;
+        RuleflowGroup that = (RuleflowGroup) o;
 
-        if (!processRuntime.equals(that.processRuntime)) return false;
+        if (!processExecution.equals(that.processExecution)) return false;
         if (!ruleflowGroup.equals(that.ruleflowGroup)) return false;
 
         return true;
@@ -111,7 +111,7 @@ public class RuleflowGroupRuntime {
     @Override
     public int hashCode() {
         int result = ruleflowGroup.hashCode();
-        result = 31 * result + processRuntime.hashCode();
+        result = 31 * result + processExecution.hashCode();
         return result;
     }
 
@@ -122,7 +122,7 @@ public class RuleflowGroupRuntime {
         sb.append(", ruleflowGroup='").append(ruleflowGroup).append('\'');
         sb.append(", startDate=").append(startDate);
         sb.append(", endDate=").append(endDate);
-        sb.append(", ruleflowGroupRuntimeStatus=").append(ruleflowGroupRuntimeStatus);
+        sb.append(", ruleflowGroupRuntimeStatus=").append(ruleflowGroupStatus);
         sb.append('}');
         return sb.toString();
     }

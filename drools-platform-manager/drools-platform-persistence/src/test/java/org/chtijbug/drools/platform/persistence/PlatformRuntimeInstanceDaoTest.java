@@ -4,7 +4,7 @@ package org.chtijbug.drools.platform.persistence;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import org.chtijbug.drools.platform.entity.util.DateHelper;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntime;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -34,36 +34,36 @@ import static org.assertj.core.api.Assertions.assertThat;
         TransactionalTestExecutionListener.class,
         DbUnitTestExecutionListener.class})
 @DatabaseSetup("classpath:dataset/dataset.xml")
-public class PlatformRuntimeDaoTest {
+public class PlatformRuntimeInstanceDaoTest {
     @Resource
-    private PlatformRuntimeRepository platformRuntimeRepository;
+    private PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
     @Test
     public void should_get_platform_runtime_object_persisted() {
-        PlatformRuntime platformRuntime = new PlatformRuntime("MyPc", 123);
-        platformRuntime.setStartDate(new Date());
-        platformRuntimeRepository.save(platformRuntime);
-        assertThat(platformRuntime.getId()).isNotNull();
-        assertThat(platformRuntime.getId()).isGreaterThan(0l);
+        PlatformRuntimeInstance platformRuntimeInstance = new PlatformRuntimeInstance("MyPc", 123);
+        platformRuntimeInstance.setStartDate(new Date());
+        platformRuntimeInstanceRepository.save(platformRuntimeInstance);
+        assertThat(platformRuntimeInstance.getId()).isNotNull();
+        assertThat(platformRuntimeInstance.getId()).isGreaterThan(0l);
     }
 
     @Test
     public void should_find_an_active_platform_by_ruleBaseID() {
-        PlatformRuntime platformRuntime = platformRuntimeRepository.findByRuleBaseID(5);
-        assertThat("192.168.1.18").isEqualTo(platformRuntime.getHostname());
-        assertThat(platformRuntime.getEndDate()).isNull();
+        PlatformRuntimeInstance platformRuntimeInstance = platformRuntimeInstanceRepository.findByRuleBaseID(5);
+        assertThat("192.168.1.18").isEqualTo(platformRuntimeInstance.getHostname());
+        assertThat(platformRuntimeInstance.getEndDate()).isNull();
     }
 
     @Test
     public void should_get_a_platform_resolved_by_ruleBaseID_and_startDate() throws Exception {
-        PlatformRuntime platformRuntime = platformRuntimeRepository.findByRuleBaseIDAndStartDateAndEndDateNull(5, DateHelper.getDate("2014-02-12"));
-        assertThat("192.168.1.18").isEqualTo(platformRuntime.getHostname());
-        assertThat(platformRuntime.getEndDate()).isNull();
+        PlatformRuntimeInstance platformRuntimeInstance = platformRuntimeInstanceRepository.findByRuleBaseIDAndStartDateAndEndDateNull(5, DateHelper.getDate("2014-02-12"));
+        assertThat("192.168.1.18").isEqualTo(platformRuntimeInstance.getHostname());
+        assertThat(platformRuntimeInstance.getEndDate()).isNull();
     }
 
     @Test
     public void should_get_2_runtimes_found_per_hostname() throws Exception {
-        List<PlatformRuntime> platformRuntimelist = platformRuntimeRepository.findByHostnameAndEndDateNull("192.168.1.18");
-        assertThat(platformRuntimelist).hasSize(2);
+        List<PlatformRuntimeInstance> platformRuntimelistInstance = platformRuntimeInstanceRepository.findByHostnameAndEndDateNull("192.168.1.18");
+        assertThat(platformRuntimelistInstance).hasSize(2);
     }
 }

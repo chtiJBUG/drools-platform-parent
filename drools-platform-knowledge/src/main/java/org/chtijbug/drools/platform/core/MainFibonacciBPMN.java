@@ -2,8 +2,12 @@ package org.chtijbug.drools.platform.core;
 
 import org.chtijbug.drools.runtime.RuleBasePackage;
 import org.chtijbug.drools.runtime.RuleBaseSession;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.chtijbug.drools.runtime.resource.Bpmn2DroolsRessource;
+import org.chtijbug.drools.runtime.resource.DrlDroolsRessource;
+import org.chtijbug.drools.runtime.resource.DroolsResource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,11 +17,16 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class MainFibonacciBPMN {
     public static void main(String[] args) {
-        ApplicationContext context = new ClassPathXmlApplicationContext("classpath:spring/spring-context-BPMN.xml");
+
          RuleBasePackage droolsPlatformKnowledgeBase =null;
         try {
-             droolsPlatformKnowledgeBase = (RuleBasePackage)context.getBean("platformRunner") ;
-            DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase1=(DroolsPlatformKnowledgeBase)droolsPlatformKnowledgeBase;
+            DrlDroolsRessource drlFile = DrlDroolsRessource.createClassPathResource("ruleflow2.drl");
+            Bpmn2DroolsRessource bpmnFile = Bpmn2DroolsRessource.createClassPathResource("RuleFlowProcess2.bpmn2");;
+            List<DroolsResource> droolsResources = new ArrayList<>();
+            droolsResources.add(drlFile);
+            droolsResources.add(bpmnFile);
+            droolsPlatformKnowledgeBase = new DroolsPlatformKnowledgeBase(1,droolsResources,"localhost" ,"localhost" );
+             DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase1=(DroolsPlatformKnowledgeBase)droolsPlatformKnowledgeBase;
              while (droolsPlatformKnowledgeBase1.isReady()==false){
                  Thread.sleep(2000);
              }

@@ -10,12 +10,12 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "firerules_runtime")
-public class FireRulesRuntime {
+@Table(name = "fireallrules_execution")
+public class FireAllRulesExecution {
 
     @Id
-    @SequenceGenerator(name = "firerules_id_seq", sequenceName = "firerules_platform_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "firerules_id_seq")
+    @SequenceGenerator(name = "fireallrules_execution_id_seq", sequenceName = "fireallrules_execution_platform_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fireallrules_execution_id_seq")
     private Long id;
     @Column(nullable = false)
     private Date startDate;
@@ -27,14 +27,14 @@ public class FireRulesRuntime {
     private Long executionTime;
 
     @ManyToOne
-    private SessionRuntime sessionRuntime;
+    private SessionExecution sessionExecution;
 
     private Integer eventID;
 
     @Enumerated(EnumType.STRING)
-    private FireRulesRuntimeStatus fireRulesRuntimeStatus;
+    private FireAllRulesExecutionStatus fireAllRulesExecutionStatus;
 
-    public FireRulesRuntime() {
+    public FireAllRulesExecution() {
     }
 
     public Long getId() {
@@ -69,12 +69,12 @@ public class FireRulesRuntime {
         this.eventID = eventID;
     }
 
-    public SessionRuntime getSessionRuntime() {
-        return sessionRuntime;
+    public SessionExecution getSessionExecution() {
+        return sessionExecution;
     }
 
-    public void setSessionRuntime(SessionRuntime sessionRuntime) {
-        this.sessionRuntime = sessionRuntime;
+    public void setSessionExecution(SessionExecution sessionExecution) {
+        this.sessionExecution = sessionExecution;
     }
 
     public Long getNbreRulesFired() {
@@ -93,12 +93,12 @@ public class FireRulesRuntime {
         this.executionTime = executionTime;
     }
 
-    public FireRulesRuntimeStatus getFireRulesRuntimeStatus() {
-        return fireRulesRuntimeStatus;
+    public FireAllRulesExecutionStatus getFireAllRulesExecutionStatus() {
+        return fireAllRulesExecutionStatus;
     }
 
-    public void setFireRulesRuntimeStatus(FireRulesRuntimeStatus fireRulesRuntimeStatus) {
-        this.fireRulesRuntimeStatus = fireRulesRuntimeStatus;
+    public void setFireAllRulesExecutionStatus(FireAllRulesExecutionStatus fireAllRulesExecutionStatus) {
+        this.fireAllRulesExecutionStatus = fireAllRulesExecutionStatus;
     }
 
     public Long getMaxNbreRulesDefinedForSession() {
@@ -119,7 +119,7 @@ public class FireRulesRuntime {
         sb.append(", maxNbreRulesDefinedForSession=").append(maxNbreRulesDefinedForSession);
         sb.append(", executionTime=").append(executionTime);
         sb.append(", eventID=").append(eventID);
-        sb.append(", fireRulesRuntimeStatus=").append(fireRulesRuntimeStatus);
+        sb.append(", fireRulesRuntimeStatus=").append(fireAllRulesExecutionStatus);
         sb.append('}');
         return sb.toString();
     }
@@ -127,11 +127,11 @@ public class FireRulesRuntime {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof FireRulesRuntime)) return false;
+        if (!(o instanceof FireAllRulesExecution)) return false;
 
-        FireRulesRuntime that = (FireRulesRuntime) o;
+        FireAllRulesExecution that = (FireAllRulesExecution) o;
 
-        if (!sessionRuntime.equals(that.sessionRuntime)) return false;
+        if (!sessionExecution.equals(that.sessionExecution)) return false;
         if (!startDate.equals(that.startDate)) return false;
 
         return true;
@@ -140,7 +140,7 @@ public class FireRulesRuntime {
     @Override
     public int hashCode() {
         int result = startDate.hashCode();
-        result = 31 * result + sessionRuntime.hashCode();
+        result = 31 * result + sessionExecution.hashCode();
         return result;
     }
 
