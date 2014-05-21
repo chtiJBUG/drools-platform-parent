@@ -63,6 +63,8 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
 
     private WebSocketServer webSocketServer;
 
+    private String guvnor_username;
+    private String guvnor_password;
 
     public DroolsPlatformKnowledgeBase(Integer ruleBaseID,List<DroolsResource> droolsRessourceList,
                                        String ws_hostname,
@@ -118,6 +120,8 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
             platformKnowledgeBaseInitialConnectionEvent.getResourceFiles().add(guvnorResourceFile);
             ruleBasePackage.setGuvnor_username(guvnorResourceFile.getGuvnor_userName());
             ruleBasePackage.setGuvnor_password(guvnorResourceFile.getGuvnor_password());
+            this.guvnor_username =  guvnorResourceFile.getGuvnor_userName();
+            this.guvnor_password=guvnorResourceFile.getGuvnor_password();
             jmsStorageHistoryListener.fireEvent(platformKnowledgeBaseInitialConnectionEvent);
         } else {
             for (DroolsResource droolsResource : droolsResources) {
@@ -264,6 +268,14 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
         sb.append(", ruleBasePackage=").append(ruleBasePackage);
         sb.append('}');
         return sb.toString();
+    }
+
+    public String getGuvnor_username() {
+        return guvnor_username;
+    }
+
+    public String getGuvnor_password() {
+        return guvnor_password;
     }
 
     @Override
