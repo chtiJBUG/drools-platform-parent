@@ -116,6 +116,8 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
             GuvnorDroolsResource guvnorDroolsResource = (GuvnorDroolsResource) droolsResources.get(0);
             GuvnorResourceFile guvnorResourceFile = new GuvnorResourceFile(guvnorDroolsResource.getBaseUrl(), guvnorDroolsResource.getWebappName(), guvnorDroolsResource.getPackageName(), guvnorDroolsResource.getPackageVersion(), guvnorDroolsResource.getUsername(), guvnorDroolsResource.getPassword());
             platformKnowledgeBaseInitialConnectionEvent.getResourceFiles().add(guvnorResourceFile);
+            ruleBasePackage.setGuvnor_username(guvnorResourceFile.getGuvnor_userName());
+            ruleBasePackage.setGuvnor_password(guvnorResourceFile.getGuvnor_password());
             jmsStorageHistoryListener.fireEvent(platformKnowledgeBaseInitialConnectionEvent);
         } else {
             for (DroolsResource droolsResource : droolsResources) {
