@@ -1,4 +1,4 @@
-<div>
+<div data-ng-controller="runtimeAnalysisController">
     <div class="page-header">
         <h3 style="margin-left:20px">Runtime Analysis</h3>
     </div>
@@ -11,7 +11,56 @@
                 <div class="panel-body">
                     <!-- Search form -->
                     <form role="form" name="SearchForm">
-
+                        <h4>Guvnor</h4>
+                        <div class="form-group" ng-class="namePackageSelectClass">
+                            <label for="package-name-select">Rule Package Name</label>
+                            <select id="package-name-select" ui-select2="selectPackage" ng-model="package"
+                                    class="form-control"
+                                    style="padding:0;height:auto;width:auto;"
+                                    data-placeholder="Select a package">
+                                <option value=""></option>
+                                <option ng-repeat="p in packagesList" value="{{p}}">{{p}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="iptstatus">Status</label>
+                            <small>(Optional)</small>
+                            <input id="iptstatus" class="form-control" name="status" type="text"
+                                   placeholder="Please enter the status" data-ng-model="status"
+                                   ng-pattern="/^[0-9]+.[0-9]+.[0-9]+.[0-9]+$/">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-success" ng-click="collapseForm()">
+                                <span ng-show="isCollapsed"><i class="fa fa-plus-circle"></i> More filters</span>
+                                <span ng-show="!isCollapsed"><i class="fa fa-minus-circle"></i> Less filters</span>
+                            </button>
+                            <hr ng-show="!isCollapsed">
+                            <div collapse="isCollapsed">
+                                <h4>Runtime</h4>
+                                <label for="IPaddr">Hostname</label>
+                                <small>(Optional)</small>
+                                <input id="IPaddr" class="form-control" name="status" type="text"
+                                       placeholder="Please enter the status" data-ng-model="status"
+                                       ng-pattern="/^[0-9]+.[0-9]+.[0-9]+.[0-9]+$/">
+                                <br>
+                                    <button class="btn btn-success" ng-click="isCollapsed2 = !isCollapsed2" ng-show="isCollapsed2"><i class="fa fa-plus-circle"></i> More filters</span></button>
+                                    <hr ng-show="!isCollapsed2">
+                                    <div collapse="isCollapsed2">
+                                        <h4>SessionExecution</h4>
+                                        <label>From</label>
+                                        <div class="input-group col-md-6">
+                                            <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="startDate" is-open="datepickerOpened1" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'startDate')">
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                        <label>To</label>
+                                        <div class="input-group col-md-6">
+                                            <input type="text" class="form-control" class="form-control" datepicker-popup="{{format}}" ng-model="endDate" is-open="datepickerOpened2" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'endDate')" >
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <button id="btn-cancel" class="btn btn-danger show-tooltip" ng-show="showCancelButton"
                                     ng-click="reset()">
@@ -21,10 +70,12 @@
                                 <i class="fa fa-search"></i> Search
                             </button>
                         </div>
+
                     </form>
                 </div>
 
             </div>
+
 
         </div>
         <div class="col-md-7 col-md-offset-1">
@@ -32,24 +83,87 @@
             <div class="row">
                 <div class="panel panel-default">
                     <div class="panel-heading panel-title">
-                        All Rules Execution on Runtime {{selectedRuntimeID}}
+                        <h3 class="panel-title">All Runtimes <span class="label label-info">{{allRuntimes.length}}</span></h3>
                     </div>
                     <div class="panel-body">
                         <!-- Search result -->
+                        <div class="table-wrapper-div">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th class="bold">ruleBaseID</th>
+                                    <th class="bold">runtimeURL</th>
+                                    <th class="bold">rulePackage</th>
+                                    <th class="bold">sessionId</th>
+                                    <th class="bold">status</th>
+                                    <th class="bold">startDate</th>
+                                    <th class="bold">endDate</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- onRightClick will enable the change of boolean statement (isSnapshot) which allow to know if it is a snapshot version or not -->
+                                <!-- data-target links the line to the context menu -->
+                                <tr ng-repeat="runtime in allRuntimes" >
+                                    <td>{{runtime.ruleBaseID}}</td>
+                                    <td>{{runtime.runtimeURL}}</td>
+                                    <td><span popover-placement="bottom" popover-trigger="mouseenter" popover="{{runtime.rulePackage}}" popover-title="{{dynamicPopoverTitle}}">{{runtime.rulePackage}}</span></td>
+                                    <td>{{runtime.sessionId}}</td>
+                                    <td>{{runtime.status}}</td>
+                                    <td>{{runtime.startDate}}</td>
+                                    <td>{{runtime.endDate}}</td>
+                                    <td><button class="btn btn-info" ng-click="onLeftClick()"><i class="fa fa-info-circle"></i></button></td>
+                                </tr>
+                                </tbody>
+                            </table>
 
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="row">
-                <div class="panel panel-default">
-                    <div class="panel-heading panel-title">
-                        All Rules Execution on Runtime {{selectedRuntimeID}}
-                    </div>
-                    <div class="panel-body">
-                        <!-- Search result -->
+    </div>
+    <div id="detailsPanel"  class="row col-md-12">
+        <div class="page-header">
+            <h3 style="margin-left:20px">Session Execution Details</h3>
+        </div>
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-default">
+                <div class="panel-heading panel-title">
+                    <h3 class="panel-title">All Rules Execution on Runtime {{selectedRuntimeID}}</h3>
+                </div>
+                <div class="panel-body">
+                    <!-- Search result -->
+                    <div du-scroll-container>
+                        <section id="section-1">
+                            <h2>Section 1</h2>
+                            <p><a href="#section-4" du-smooth-scroll>To section 4</a> Bacon ipsum dolor sit amet sausage tail capicola ground round hamburger ham hock. Short ribs pig andouille meatball, pastrami tri-tip fatback ham hock shank kielbasa swine. Rump pancetta jerky kielbasa doner beef ribs tongue hamburger strip steak drumstick andouille shoulder shank flank. Swine drumstick meatball pig beef sausage strip steak.</p>
 
+                            <img src="http://lorempixel.com/1000/500/" alt="" />
+                        </section>
+
+                        <section id="section-2">
+                            <h2>Section 2</h2>
+                            <p>Bacon strip steak ground round, tongue pastrami short ribs pork chop venison turducken sausage sirloin. Flank chicken pork chop capicola turkey turducken cow pork loin biltong meatball drumstick pancetta filet mignon ground round fatback. Ham hock jerky short ribs brisket. Meatloaf shoulder pork chop capicola, sirloin swine pig pork. Jerky ribeye hamburger pork loin sirloin kevin bresaola boudin chuck flank. Ham hock pork belly chicken jerky rump bresaola.</p>
+                        </section>
+
+                        <section id="section-3">
+                            <h2>Section 3</h2>
+                            <p>Shank fatback pastrami short loin, turkey jowl kielbasa ribeye chicken jerky drumstick flank ham. Swine shankle pork belly kielbasa shoulder flank jowl, sirloin doner. Kevin tri-tip bresaola leberkas. Swine ball tip cow strip steak. Ham filet mignon pork chop, pork fatback andouille pork loin shoulder jowl swine strip steak turducken prosciutto rump.</p>
+
+                            <img src="http://lorempixel.com/1000/400/" alt="" />
+
+                            <p>Tongue tri-tip pastrami, shoulder rump pork belly ground round. Ham hock chuck leberkas doner, strip steak corned beef tri-tip capicola. Rump turkey ham sausage shankle. Flank shankle pork chop ham hock. Shankle venison kielbasa, pancetta swine beef ball tip t-bone bacon hamburger ground round ribeye flank. Turducken bacon bresaola, chicken kevin boudin ball tip strip steak filet mignon pork turkey shank ground round. Kielbasa fatback prosciutto pork chop, jerky ground round leberkas boudin ball tip beef shankle shoulder swine brisket. </p>
+                        </section>
+
+                        <section id="section-4">
+                            <h2>Section 4</h2>
+                            <img src="http://lorempixel.com/1000/600/" alt="" />
+
+                            <p><a href="#section-1" du-smooth-scroll>To section 1</a> Shoulder cow tenderloin chuck, pork chop jerky doner leberkas. Chuck sausage hamburger, kevin beef pork chop pork shoulder ground round ball tip turducken flank. Bresaola tri-tip meatloaf, salami venison tail pig shank shankle jowl sausage brisket cow biltong turducken. Swine turducken hamburger ball tip short loin prosciutto kevin jowl tri-tip. Doner meatloaf pork brisket.</p>
+                        </section>
                     </div>
+
                 </div>
             </div>
         </div>

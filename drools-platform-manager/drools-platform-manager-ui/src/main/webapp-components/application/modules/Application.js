@@ -4,7 +4,9 @@ var droolsPlatformApp = angular.module('droolsPlatformApp', [
     'drools-platform.services',
     'drools-platform.controllers',
     'ui.select2',
-    'ng-context-menu'
+    'ui.bootstrap',
+    'ng-context-menu',
+    'duScroll'
 ]);
 
 droolsPlatformApp.config(function ($locationProvider) {

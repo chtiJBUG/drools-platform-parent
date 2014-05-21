@@ -31,6 +31,7 @@
 @footer-height: auto;
 @headerLogoWidth: 180px;
 
+
 html, body {
   height: 100%;
   color: @drools-platform-grey;
@@ -70,11 +71,16 @@ a {
   background-image:url('../images/pattern.png');
   min-height: 100%;
   height: auto !important;
-  height: 100%;
+  min-height: 100%;
   margin: 0 auto (@footer-height);
+}
+#main {
+  overflow:auto;
+  padding-bottom: 90px;
 }
 
 footer {
+  position:relative;
   height: @footer-height;
   /*background-color: #ffffff;*/
   p {
@@ -83,7 +89,7 @@ footer {
     margin: 0px;
     padding-top: 5px;
   }
-  margin-top:-100px;
+  margin-top:-90px;
 }
 /* Center the separator in the footer div*/
 .separator{
