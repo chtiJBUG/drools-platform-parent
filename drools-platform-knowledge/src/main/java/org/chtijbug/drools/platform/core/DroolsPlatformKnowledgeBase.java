@@ -10,6 +10,7 @@ import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseInitialCon
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.RuleBasePackage;
 import org.chtijbug.drools.runtime.RuleBaseSession;
+import org.chtijbug.drools.runtime.impl.JavaDialect;
 import org.chtijbug.drools.runtime.impl.RuleBaseSingleton;
 import org.chtijbug.drools.runtime.impl.RuleBaseStatefulSession;
 import org.chtijbug.drools.runtime.listener.HistoryListener;
@@ -52,12 +53,12 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
 
     private String ws_hostname;
 
-    private int ws_port=8025;
+    private int ws_port = 8025;
     private String platformServer;
 
-    private Integer platformPort=61616;
+    private Integer platformPort = 61616;
 
-    private String platformQueueName="historyEventQueue";
+    private String platformQueueName = "historyEventQueue";
 
     private boolean isReady = false;
 
@@ -65,14 +66,26 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
 
     private String guvnor_username;
     private String guvnor_password;
+    private JavaDialect javaDialect = null;
 
-    public DroolsPlatformKnowledgeBase(Integer ruleBaseID,List<DroolsResource> droolsRessourceList,
+    public DroolsPlatformKnowledgeBase(Integer ruleBaseID, List<DroolsResource> droolsRessourceList,
+                                       String ws_hostname,
+                                       String platformServer, JavaDialect javaDialect) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
+        this.ruleBaseID = ruleBaseID;
+        this.droolsResources = droolsRessourceList;
+        this.ws_hostname = ws_hostname;
+        this.platformServer = platformServer;
+        this.javaDialect = javaDialect;
+        initPlatformRuntime();
+    }
+
+    public DroolsPlatformKnowledgeBase(Integer ruleBaseID, List<DroolsResource> droolsRessourceList,
                                        String ws_hostname,
                                        String platformServer) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
-        this.ruleBaseID=ruleBaseID;
-        this.droolsResources=droolsRessourceList;
+        this.ruleBaseID = ruleBaseID;
+        this.droolsResources = droolsRessourceList;
         this.ws_hostname = ws_hostname;
-        this.platformServer=platformServer ;
+        this.platformServer = platformServer;
         initPlatformRuntime();
     }
 
@@ -107,8 +120,11 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
     public void initPlatformRuntime() throws DroolsChtijbugException, InterruptedException, UnknownHostException {
         logger.debug(">>createPackageBasePackage");
         initSocketServer();
-        this.jmsStorageHistoryListener = new JmsStorageHistoryListener(this,this.platformServer,this.platformPort,this.platformQueueName);
+        this.jmsStorageHistoryListener = new JmsStorageHistoryListener(this, this.platformServer, this.platformPort, this.platformQueueName);
         ruleBasePackage = new RuleBaseSingleton(RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, this.jmsStorageHistoryListener);
+        if (javaDialect != null) {
+            ruleBasePackage.setJavaDialect(this.javaDialect);
+        }
         PlatformKnowledgeBaseInitialConnectionEvent platformKnowledgeBaseInitialConnectionEvent = new PlatformKnowledgeBaseInitialConnectionEvent(-1, new Date(), this.ruleBaseID);
         platformKnowledgeBaseInitialConnectionEvent.setRuleBaseID(this.ruleBaseID);
         platformKnowledgeBaseInitialConnectionEvent.setSessionId(-1);
@@ -120,8 +136,8 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
             platformKnowledgeBaseInitialConnectionEvent.getResourceFiles().add(guvnorResourceFile);
             ruleBasePackage.setGuvnor_username(guvnorResourceFile.getGuvnor_userName());
             ruleBasePackage.setGuvnor_password(guvnorResourceFile.getGuvnor_password());
-            this.guvnor_username =  guvnorResourceFile.getGuvnor_userName();
-            this.guvnor_password=guvnorResourceFile.getGuvnor_password();
+            this.guvnor_username = guvnorResourceFile.getGuvnor_userName();
+            this.guvnor_password = guvnorResourceFile.getGuvnor_password();
             jmsStorageHistoryListener.fireEvent(platformKnowledgeBaseInitialConnectionEvent);
         } else {
             for (DroolsResource droolsResource : droolsResources) {
@@ -149,7 +165,7 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
         webSocketServer.run();
     }
 
-   // @Scheduled(fixedDelay = 5000)
+    // @Scheduled(fixedDelay = 5000)
     public void sendHeartBeat() {
         if (this.runtimeWebSocketServerService != null) {
             this.runtimeWebSocketServerService.sendHeartBeat();
