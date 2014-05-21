@@ -25,12 +25,12 @@ public class MainFibonacciBPMN {
             List<DroolsResource> droolsResources = new ArrayList<>();
             droolsResources.add(drlFile);
             droolsResources.add(bpmnFile);
-            droolsPlatformKnowledgeBase = new DroolsPlatformKnowledgeBase(1,droolsResources,"localhost" ,"localhost" );
+            droolsPlatformKnowledgeBase = new DroolsPlatformKnowledgeBase(11,droolsResources,"localhost" ,"localhost" );
              DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase1=(DroolsPlatformKnowledgeBase)droolsPlatformKnowledgeBase;
              while (droolsPlatformKnowledgeBase1.isReady()==false){
                  Thread.sleep(2000);
              }
-             for (int i=0;i<100;i++) {
+             for (int i=0;i<1;i++) {
                 RuleBaseSession ruleBaseSession = droolsPlatformKnowledgeBase.createRuleBaseSession();
                 Fibonacci fibonacci = new Fibonacci(0);
                 ruleBaseSession.insertObject(fibonacci);
@@ -38,7 +38,6 @@ public class MainFibonacciBPMN {
                 ruleBaseSession.fireAllRules();
                 ruleBaseSession.dispose();
                  System.out.println("i= "+i);
-//                Thread.sleep(1000);
             }
         } catch (Exception e) {
 

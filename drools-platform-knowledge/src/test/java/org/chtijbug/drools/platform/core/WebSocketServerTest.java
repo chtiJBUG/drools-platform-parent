@@ -5,8 +5,6 @@ import org.chtijbug.drools.platform.entity.RequestRuntimePlarform;
 import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.websocket.DeploymentException;
 import javax.websocket.EncodeException;
@@ -21,11 +19,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class WebSocketServerTest {
 
 
-    @Autowired
+
     DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase;
-    @Value("${ws.hostname}")
     private static String ws_hostname;
-    @Value("${ws.port}")
     private static int ws_port;
 
 

@@ -52,7 +52,7 @@ public class JmsStorageHistoryListener implements HistoryListener {
     }
 
     private void initJmsConnection() throws JMSException {
-        String url = "tcp://" + this.platformServer + ":" + this.platformPort + "?wireFormat.maxInactivityDurationInitalDelay=30000";
+        String url = "tcp://" + this.platformServer + ":" + this.platformPort;
         ConnectionFactory factory = new ActiveMQConnectionFactory(url);
         try {
             Connection connection = factory.createConnection();

@@ -53,6 +53,26 @@
           </artifactSet>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+
+        </configuration>
+        <executions>
+          <execution>
+            <id>assemble-all</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
@@ -70,7 +90,7 @@
       <groupId>org.chtijbug.drools</groupId>
       <artifactId>drools-framework-runtime-entity</artifactId>
     </dependency>
-    <dependency>
+    <!--dependency>
       <groupId>org.jencks</groupId>
       <artifactId>jencks</artifactId>
       <exclusions>
@@ -79,16 +99,16 @@
           <artifactId>commons-pool</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>
+    </dependency-->
 
     <dependency>
       <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-all</artifactId>
+      <artifactId>activemq-client</artifactId>
     </dependency>
-    <dependency>
+    <!--dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-pool</artifactId>
-    </dependency>
+    </dependency-->
 
 
     <dependency>
