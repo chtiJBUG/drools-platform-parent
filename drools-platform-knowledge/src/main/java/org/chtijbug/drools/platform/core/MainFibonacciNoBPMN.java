@@ -38,5 +38,6 @@ public class MainFibonacciNoBPMN {
 
         }
         System.out.println("Hello World");
+        System.exit(0);
     }
 }

@@ -28,6 +28,7 @@ public class MainFibonacciBPMN {
             droolsPlatformKnowledgeBase = new DroolsPlatformKnowledgeBase(11,droolsResources,"localhost",22500 ,"localhost" );
              DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase1=(DroolsPlatformKnowledgeBase)droolsPlatformKnowledgeBase;
              while (droolsPlatformKnowledgeBase1.isReady()==false){
+                 System.out.println("sleep");
                  Thread.sleep(2000);
              }
              for (int i=0;i<1;i++) {
@@ -47,5 +48,6 @@ public class MainFibonacciBPMN {
 
         }
         System.out.println("Hello World");
+        System.exit(0);
     }
 }
