@@ -121,7 +121,7 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
         logger.debug(">>createPackageBasePackage");
         initSocketServer();
         this.jmsStorageHistoryListener = new JmsStorageHistoryListener(this, this.platformServer, this.platformPort, this.platformQueueName);
-        ruleBasePackage = new RuleBaseSingleton(RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, this.jmsStorageHistoryListener);
+        ruleBasePackage = new RuleBaseSingleton(this.ruleBaseID,RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, this.jmsStorageHistoryListener);
         if (javaDialect != null) {
             ruleBasePackage.setJavaDialect(this.javaDialect);
         }
