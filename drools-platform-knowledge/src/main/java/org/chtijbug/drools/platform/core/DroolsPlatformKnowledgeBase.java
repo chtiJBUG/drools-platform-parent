@@ -80,6 +80,17 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
     }
 
     public DroolsPlatformKnowledgeBase(Integer ruleBaseID, List<DroolsResource> droolsRessourceList,
+                                          String ws_hostname,int ws_port ,
+                                          String platformServer) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
+           this.ruleBaseID = ruleBaseID;
+           this.droolsResources = droolsRessourceList;
+           this.ws_hostname = ws_hostname;
+           this.ws_port = ws_port;
+           this.platformServer = platformServer;
+           initPlatformRuntime();
+       }
+
+    public DroolsPlatformKnowledgeBase(Integer ruleBaseID, List<DroolsResource> droolsRessourceList,
                                        String ws_hostname,
                                        String platformServer) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
         this.ruleBaseID = ruleBaseID;
