@@ -48,13 +48,14 @@ public class BeforeRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
         ruleExecution.setRuleName(beforeRuleFiredHistoryEvent.getRule().getRuleName());
         ruleExecution.setPackageName(beforeRuleFiredHistoryEvent.getRule().getRulePackageName());
         for (DroolsFactObject droolsFactObject : beforeRuleFiredHistoryEvent.getWhenObjects()) {
-            Fact fact = new Fact();
-
-            fact.setJsonFact(droolsFactObject.getRealObject_JSON());
-            fact.setFactType(FactType.WHEN);
-            fact.setObjectVersion(droolsFactObject.getObjectVersion());
-            fact.setFullClassName(droolsFactObject.getFullClassName());
-            ruleExecution.getWhenFacts().add(fact);
+            if (droolsFactObject != null) {
+                Fact fact = new Fact();
+                fact.setJsonFact(droolsFactObject.getRealObject_JSON());
+                fact.setFactType(FactType.WHEN);
+                fact.setObjectVersion(droolsFactObject.getObjectVersion());
+                fact.setFullClassName(droolsFactObject.getFullClassName());
+                ruleExecution.getWhenFacts().add(fact);
+            }
         }
         ruleExecutionRepository.save(ruleExecution);
         LOG.debug("BeforeRuleFiredHistoryEvent " + historyEvent.toString());
