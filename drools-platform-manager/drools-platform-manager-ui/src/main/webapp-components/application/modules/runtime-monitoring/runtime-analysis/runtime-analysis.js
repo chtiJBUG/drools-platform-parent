@@ -1,4 +1,5 @@
 DroolsPlatformControllers.controller('runtimeAnalysisController', function ($rootScope, $scope, $document, $http, $log) {
+    $scope.isPanelCalled=false;
     $http.get('./server/rules_package/list')
         .success(function (data) {
             $scope.packagesList = data;
@@ -30,12 +31,15 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         }
     ];
     $scope.selectedRuntimeID = '32';
+
     //___ Right click management
-    $scope.onLeftClick = function(packageVersion) {
-        //alert("test");
+    $scope.scrollToPanel = function() {
+        $scope.isPanelCalled=true;
         var someElement = angular.element(document.getElementById('detailsPanel'));
         $document.scrollToElement(someElement, 0, 1000);
-    }
+        $scope.detailsPanelClass="row col-md-12 animated fadeIn";
+
+    };
 
     $scope.collapseForm = function() {
         $scope.isCollapsed=!$scope.isCollapsed;
