@@ -32,7 +32,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     ];
     $scope.selectedRuntimeID = '32';
 
-    //___ Right click management
+    //___ Scrolling to the next panel
     $scope.scrollToPanel = function() {
         $scope.isPanelCalled=true;
         var someElement = angular.element(document.getElementById('detailsPanel'));
@@ -41,6 +41,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
     };
 
+    //___ Collapsing (or not) teh form
     $scope.collapseForm = function() {
         $scope.isCollapsed=!$scope.isCollapsed;
         if($scope.isCollapsed==true){
@@ -50,10 +51,11 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         }
     }
 
+    /**********************/
+    /*  DATE & TIME MGMT  */
+    /**********************/
     $scope.today = function(dateGiven) {
         return new Date();
-       /* $scope.dt = new Date();
-        $scope.endDate = new Date();*/
     };
     $scope.today();
 
@@ -87,6 +89,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         formatYear: 'yy',
         startingDay: 1
     };
+
     $scope.startDate = new Date();
     $scope.endDate = new Date();
     $scope.initDate = new Date('2016/15/20');
@@ -97,4 +100,35 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     $scope.search = function() {
         alert($scope.startDate);
     }
+
+
+    $scope.mytime = new Date();
+
+    $scope.hstep = 1;
+    $scope.mstep = 15;
+
+    $scope.options = {
+        hstep: [1, 2, 3],
+        mstep: [1, 5, 10, 15, 25, 30]
+    };
+
+    $scope.ismeridian = true;
+    $scope.toggleMode = function() {
+        $scope.ismeridian = ! $scope.ismeridian;
+    };
+
+    $scope.update = function() {
+        var d = new Date();
+        d.setHours( 14 );
+        d.setMinutes( 0 );
+        $scope.mytime = d;
+    };
+
+    $scope.changed = function () {
+        console.log('Time changed to: ' + $scope.mytime);
+    };
+
+    $scope.clear = function() {
+        $scope.mytime = null;
+    };
 });

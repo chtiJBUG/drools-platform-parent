@@ -52,6 +52,7 @@
                                         <div class="input-group col-md-6">
                                             <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="startDate" is-open="datepickerOpened1" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'startDate')">
                                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+
                                         </div>
                                         <label>To</label>
                                         <div class="input-group col-md-6">
@@ -75,11 +76,9 @@
                 </div>
 
             </div>
-
-
         </div>
+        <!-- Result -->
         <div class="col-md-7 col-md-offset-1">
-
             <div class="row">
                 <div class="panel panel-default">
                     <div class="panel-heading panel-title">
@@ -90,39 +89,36 @@
                         <div class="table-wrapper-div">
                             <table class="table table-hover">
                                 <thead>
-                                <tr>
-                                    <th class="bold">ruleBaseID</th>
-                                    <th class="bold">runtimeURL</th>
-                                    <th class="bold">rulePackage</th>
-                                    <th class="bold">sessionId</th>
-                                    <th class="bold">status</th>
-                                    <th class="bold">startDate</th>
-                                    <th class="bold">endDate</th>
-                                </tr>
+                                    <tr>
+                                        <th class="bold">ruleBaseID</th>
+                                        <th class="bold">runtimeURL</th>
+                                        <th class="bold">rulePackage</th>
+                                        <th class="bold">sessionId</th>
+                                        <th class="bold">status</th>
+                                        <th class="bold">startDate</th>
+                                        <th class="bold">endDate</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                <!-- onRightClick will enable the change of boolean statement (isSnapshot) which allow to know if it is a snapshot version or not -->
-                                <!-- data-target links the line to the context menu -->
-                                <tr ng-repeat="runtime in allRuntimes" >
-                                    <td>{{runtime.ruleBaseID}}</td>
-                                    <td>{{runtime.runtimeURL}}</td>
-                                    <td><span popover-placement="bottom" popover-trigger="mouseenter" popover="{{runtime.rulePackage}}" popover-title="{{dynamicPopoverTitle}}">{{runtime.rulePackage}}</span></td>
-                                    <td>{{runtime.sessionId}}</td>
-                                    <td>{{runtime.status}}</td>
-                                    <td>{{runtime.startDate}}</td>
-                                    <td>{{runtime.endDate}}</td>
-                                    <td><button class="btn btn-info" ng-click="scrollToPanel()"><i class="fa fa-info-circle"></i></button></td>
-                                </tr>
+                                    <tr ng-repeat="runtime in allRuntimes" >
+                                        <td>{{runtime.ruleBaseID}}</td>
+                                        <td>{{runtime.runtimeURL}}</td>
+                                        <td><span popover-placement="bottom" popover-trigger="mouseenter" popover="{{runtime.rulePackage}}" popover-title="{{dynamicPopoverTitle}}">{{runtime.rulePackage}}</span></td>
+                                        <td>{{runtime.sessionId}}</td>
+                                        <td>{{runtime.status}}</td>
+                                        <td>{{runtime.startDate}}</td>
+                                        <td>{{runtime.endDate}}</td>
+                                        <td><button class="btn btn-info" ng-click="scrollToPanel()"><i class="fa fa-info-circle"></i></button></td>
+                                    </tr>
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
+    <!-- Details -->
     <div id="detailsPanel" ng-show="isPanelCalled" class="row col-md-12" ng-class="detailsPanelClass">
         <div class="page-header">
             <h3 style="margin-left:20px">Session Execution Details</h3>
@@ -133,17 +129,18 @@
                     <h3 class="panel-title">All Rules Execution on Runtime {{selectedRuntimeID}}</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- Search result -->
-                    <div du-scroll-container>
-                        <section id="section-1">
-                            <h2>Section 1</h2>
-                            <p><a href="#section-4" du-smooth-scroll>To section 4</a> Bacon ipsum dolor sit amet sausage tail capicola ground round hamburger ham hock. Short ribs pig andouille meatball, pastrami tri-tip fatback ham hock shank kielbasa swine. Rump pancetta jerky kielbasa doner beef ribs tongue hamburger strip steak drumstick andouille shoulder shank flank. Swine drumstick meatball pig beef sausage strip steak.</p>
+                    <tabset justified="true" type="pills">
+                        <tab heading="Tab 1">
+                            <section id="section-1">
+                                <h2>Section 1</h2>
+                                <p><a href="#section-4" du-smooth-scroll>To section 4</a> Bacon ipsum dolor sit amet sausage tail capicola ground round hamburger ham hock. Short ribs pig andouille meatball, pastrami tri-tip fatback ham hock shank kielbasa swine. Rump pancetta jerky kielbasa doner beef ribs tongue hamburger strip steak drumstick andouille shoulder shank flank. Swine drumstick meatball pig beef sausage strip steak.</p>
 
-                            <img src="http://lorempixel.com/1000/500/" alt="" />
-                        </section>
+                                <img src="http://lorempixel.com/1000/500/" alt="" />
+                            </section>
+                        </tab>
+                        <tab heading="Tab 2">Some other content</tab>
 
-                    </div>
-
+                    </tabset>
                 </div>
             </div>
         </div>
