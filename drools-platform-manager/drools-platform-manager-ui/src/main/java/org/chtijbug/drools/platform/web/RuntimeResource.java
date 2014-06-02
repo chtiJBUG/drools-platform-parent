@@ -27,7 +27,7 @@ public class RuntimeResource {
     @Autowired
     PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/activeSessions/{packageName:.+}")
+    @RequestMapping(method = RequestMethod.GET, value = "/activePlatformRuntimes/{packageName:.+}")
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
@@ -36,7 +36,7 @@ public class RuntimeResource {
 
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/allSessions/{packageName:.+}")
+    @RequestMapping(method = RequestMethod.GET, value = "/allPlatformRuntimes/{packageName:.+}")
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
