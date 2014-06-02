@@ -29,12 +29,12 @@ public class JMSHistoryEventListener implements MessageListener {
     MessageHandlerResolver messageHandlerResolver;
     @Transactional
     public void onMessage(Message message) {
-
+        HistoryEvent historyEvent=null;
         try {
             if (message instanceof ObjectMessage) {
                 ObjectMessage objectMessage = (ObjectMessage) message;
                 Object messageContent = objectMessage.getObject();
-                HistoryEvent historyEvent=(HistoryEvent)messageContent;
+                historyEvent=(HistoryEvent)messageContent;
                 try {
                     AbstractEventHandlerStrategy strategy = messageHandlerResolver.resolveMessageHandler(historyEvent);
                     strategy.handleMessage(historyEvent);
@@ -45,7 +45,10 @@ public class JMSHistoryEventListener implements MessageListener {
                 LOG.debug("Consumed message: " + msg.toString());
             }
         } catch (Exception e) {
-            LOG.error("Consumed message: " + e.toString());
+            LOG.error("Consumed message: " + e.toString()+" message content " +message.toString());
+            LOG.error("                  message  " +message.toString());
+            LOG.error("                  object content " + historyEvent.toString());
+
         }
     }
 

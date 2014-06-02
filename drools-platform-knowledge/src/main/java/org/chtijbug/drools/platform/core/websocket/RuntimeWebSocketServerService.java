@@ -119,6 +119,8 @@ public class RuntimeWebSocketServerService {
         this.droolsPlatformKnowledgeBase = (DroolsPlatformKnowledgeBase) userProperties.get("droolsPlatformKnowledgeBase");
         this.peerLoggerServer = session;
         this.droolsPlatformKnowledgeBase.setRuntimeWebSocketServerService(this);
+        this.guvnor_username = this.droolsPlatformKnowledgeBase.getGuvnor_username();
+        this.guvnor_password = this.droolsPlatformKnowledgeBase.getGuvnor_password();
         out.println("Server connected " + session + " " + endpointConfig);
     }
 

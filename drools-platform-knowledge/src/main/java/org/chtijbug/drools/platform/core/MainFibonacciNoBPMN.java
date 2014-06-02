@@ -21,7 +21,7 @@ public class MainFibonacciNoBPMN {
             DrlDroolsRessource drlFile = DrlDroolsRessource.createClassPathResource("fibonacci.drl");
              List<DroolsResource> droolsResources = new ArrayList<>();
              droolsResources.add(drlFile);
-             droolsPlatformKnowledgeBase = new DroolsPlatformKnowledgeBase(1,droolsResources,"localhost" ,"localhost" );
+             droolsPlatformKnowledgeBase = new DroolsPlatformKnowledgeBase(12,droolsResources,"localhost",22600 ,"localhost" );
             for (int i = 0; i < 2; i++) {
                 RuleBaseSession ruleBaseSession = droolsPlatformKnowledgeBase.createRuleBaseSession();
                 Fibonacci fibonacci = new Fibonacci(3);
@@ -38,5 +38,6 @@ public class MainFibonacciNoBPMN {
 
         }
         System.out.println("Hello World");
+        System.exit(0);
     }
 }
