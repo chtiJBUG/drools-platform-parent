@@ -31,10 +31,10 @@
                                    ng-pattern="/^[0-9]+.[0-9]+.[0-9]+.[0-9]+$/">
                         </div>
                         <div class="form-group">
-                            <button class="btn btn-success" ng-click="collapseForm()">
-                                <span ng-show="isCollapsed"><i class="fa fa-plus-circle"></i> More filters</span>
-                                <span ng-show="!isCollapsed"><i class="fa fa-minus-circle"></i> Less filters</span>
-                            </button>
+                            <a style="cursor:pointer" ng-click="isCollapsed=!isCollapsed">
+                                <span ng-show="isCollapsed"><i class="fa fa-plus-circle"></i> More filters : Runtime</span>
+                                <span ng-show="!isCollapsed"><i class="fa fa-minus-circle"></i> Hide filters</span>
+                            </a>
                             <hr ng-show="!isCollapsed">
                             <div collapse="isCollapsed">
                                 <h4>Runtime</h4>
@@ -44,26 +44,37 @@
                                        placeholder="Please enter the status" data-ng-model="status"
                                        ng-pattern="/^[0-9]+.[0-9]+.[0-9]+.[0-9]+$/">
                                 <br>
-                                    <button class="btn btn-success" ng-click="isCollapsed2 = !isCollapsed2" ng-show="isCollapsed2"><i class="fa fa-plus-circle"></i> More filters</span></button>
-                                    <hr ng-show="!isCollapsed2">
-                                    <div collapse="isCollapsed2">
-                                        <h4>SessionExecution</h4>
-                                        <label>From</label>
-                                        <div class="input-group col-md-6">
-                                            <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="startDate" is-open="datepickerOpened1" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'startDate')">
-                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 
-                                        </div>
-                                        <label>To</label>
-                                        <div class="input-group col-md-6">
-                                            <input type="text" class="form-control" class="form-control" datepicker-popup="{{format}}" ng-model="endDate" is-open="datepickerOpened2" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'endDate')" >
-                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                        </div>
-                                    </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <a style="cursor:pointer" ng-click="isCollapsed2=!isCollapsed2">
+                                <span ng-show="isCollapsed2"><i class="fa fa-plus-circle"></i> More filters : Session Execution</span>
+                                <span ng-show="!isCollapsed2"><i class="fa fa-minus-circle"></i> Hide filters</span>
+                            </a>
+                            <hr ng-show="!isCollapsed2">
+                            <div collapse="isCollapsed2">
+                                <h4>SessionExecution</h4>
+                                <label>From</label>
+                                <div class="input-group col-md-6">
+                                    <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="startDate" is-open="datepickerOpened1" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'startDate')">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+
+                                </div>
+                                <label>To</label>
+                                <div class="input-group col-md-6">
+                                    <input type="text" class="form-control" class="form-control" datepicker-popup="{{format}}" ng-model="endDate" is-open="datepickerOpened2" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'endDate')" >
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <button id="btn-cancel" class="btn btn-danger show-tooltip" ng-show="showCancelButton"
+                            <!-- button id="btn-cancel" class="btn btn-danger show-tooltip" ng-show="showCancelButton"
+                                    ng-click="reset()">
+                                <i class="fa fa-times"></i>
+                            </button -->
+                            <button id="btn-cancel" class="btn btn-danger show-tooltip"
                                     ng-click="reset()">
                                 <i class="fa fa-times"></i>
                             </button>
@@ -78,15 +89,15 @@
             </div>
         </div>
         <!-- Result -->
-        <div class="col-md-7 col-md-offset-1">
+        <div id="mainPanel" class="col-md-7 col-md-offset-1">
             <div class="row">
                 <div class="panel panel-default">
                     <div class="panel-heading panel-title">
-                        <h3 class="panel-title">All Runtimes <span class="label label-info">{{allRuntimes.length}}</span></h3>
+                        <h3 class="panel-title">All Runtimes <span class="label label-info" >{{allRuntimes.length}}</span></h3>
                     </div>
                     <div class="panel-body">
                         <!-- Search result -->
-                        <div class="table-wrapper-div">
+                        <div class="table-wrapper-div" style="height:auto;">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
@@ -100,7 +111,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="runtime in allRuntimes" >
+                                    <tr ng-repeat="runtime in pageItems()" >
                                         <td>{{runtime.ruleBaseID}}</td>
                                         <td>{{runtime.runtimeURL}}</td>
                                         <td><span popover-placement="bottom" popover-trigger="mouseenter" popover="{{runtime.rulePackage}}" popover-title="{{dynamicPopoverTitle}}">{{runtime.rulePackage}}</span></td>
@@ -112,6 +123,7 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <span paginator items="allRuntimes "></span>
                         </div>
                     </div>
                 </div>
@@ -119,13 +131,14 @@
         </div>
     </div>
     <!-- Details -->
-    <div id="detailsPanel" ng-show="isPanelCalled" class="row col-md-12" ng-class="detailsPanelClass">
+    <div id="detailsPanel" ng-show="isPanelCalled" class="row col-md-12 " >
         <div class="page-header">
             <h3 style="margin-left:20px">Session Execution Details</h3>
         </div>
-        <div class="col-md-10 col-md-offset-1">
+        <div class="col-md-10 col-md-offset-1" ng-show="isPanelShown">
             <div class="panel panel-default" style="min-height:800px;">
                 <div class="panel-heading panel-title">
+                    <button type="button" class="close" aria-hidden="true" ng-click="closeDetailsPanel()" >&times;</button>
                     <h3 class="panel-title">All Rules Execution on Runtime {{selectedRuntimeID}}</h3>
                 </div>
                 <div class="panel-body">

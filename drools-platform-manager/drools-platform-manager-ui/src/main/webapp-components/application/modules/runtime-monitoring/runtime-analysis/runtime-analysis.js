@@ -1,5 +1,7 @@
-DroolsPlatformControllers.controller('runtimeAnalysisController', function ($rootScope, $scope, $document, $http, $log) {
+DroolsPlatformControllers.controller('runtimeAnalysisController', function ($rootScope, $scope, $document, $http, $log, $timeout) {
     $scope.isPanelCalled=false;
+
+    //___ Fetch the list
     $http.get('./server/rules_package/list')
         .success(function (data) {
             $scope.packagesList = data;
@@ -7,10 +9,15 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         .error(function (error) {
             console.log(error);
         });
+
+    //___ Collapse
     $scope.isCollapsed = true;
     $scope.isCollapsed2 = true;
+
     $scope.dynamicPopover = 'test';
     $scope.dynamicPopoverTitle = 'Guvnor URL';
+
+    //___ Mockup
     $scope.allRuntimes= [{
         ruleBaseID:'0',
         runtimeURL:'http://192.168.1.26:8080/runtime-1',
@@ -24,7 +31,43 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             ruleBaseID:'1',
             runtimeURL:'http://192.168.1.26:8080/runtime-2',
             rulePackage:'alex.test.package',
+            sessionId:'2',
+            status:'STOPPED',
+            startDate:'2014-04-20 1:48:23 AM',
+            endDate:'2014-04-20 1:48:42 AM'
+        },
+        {
+            ruleBaseID:'2',
+            runtimeURL:'http://192.168.1.26:8080/runtime-2',
+            rulePackage:'alex.test.package',
             sessionId:'3',
+            status:'STOPPED',
+            startDate:'2014-04-20 1:48:23 AM',
+            endDate:'2014-04-20 1:48:42 AM'
+        },
+        {
+            ruleBaseID:'3',
+            runtimeURL:'http://192.168.1.26:8080/runtime-2',
+            rulePackage:'alex.test.package',
+            sessionId:'4',
+            status:'STOPPED',
+            startDate:'2014-04-20 1:48:23 AM',
+            endDate:'2014-04-20 1:48:42 AM'
+        },
+        {
+            ruleBaseID:'5',
+            runtimeURL:'http://192.168.1.26:8080/runtime-2',
+            rulePackage:'alex.test.package',
+            sessionId:'5',
+            status:'STOPPED',
+            startDate:'2014-04-20 1:48:23 AM',
+            endDate:'2014-04-20 1:48:42 AM'
+        },
+        {
+            ruleBaseID:'6',
+            runtimeURL:'http://192.168.1.26:8080/runtime-2',
+            rulePackage:'alex.test.package',
+            sessionId:'6',
             status:'STOPPED',
             startDate:'2014-04-20 1:48:23 AM',
             endDate:'2014-04-20 1:48:42 AM'
@@ -35,21 +78,22 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     //___ Scrolling to the next panel
     $scope.scrollToPanel = function() {
         $scope.isPanelCalled=true;
-        var someElement = angular.element(document.getElementById('detailsPanel'));
-        $document.scrollToElement(someElement, 0, 1000);
-        $scope.detailsPanelClass="row col-md-12 animated fadeIn";
+        $timeout(function() {
+            //alert("nulllll");
+            $scope.isPanelShown=true;
+            var someElement = angular.element(document.getElementById('detailsPanel'));
+            $document.scrollToElement(someElement, 0, 1000);
+        }, 3);
+
 
     };
 
-    //___ Collapsing (or not) teh form
-    $scope.collapseForm = function() {
-        $scope.isCollapsed=!$scope.isCollapsed;
-        if($scope.isCollapsed==true){
-            if($scope.isCollapsed2==false){
-                $scope.isCollapsed2=true;
-            }
-        }
-    }
+    $scope.closeDetailsPanel = function() {
+        $scope.isPanelCalled=false;
+        var someElement = angular.element(document.getElementById('mainPanel'));
+        $document.scrollToElement(someElement, 0, 1000);
+
+    };
 
     /**********************/
     /*  DATE & TIME MGMT  */
@@ -131,4 +175,34 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     $scope.clear = function() {
         $scope.mytime = null;
     };
+
+
+
+    /** SEARCH **/
+
+    //___ Method 1 : filters chosen
+    //___ if each fields are empty
+    //___ if all but one fields are empty
+        //___ First field
+
+    //___ if all fields are filled
+
+    $scope.search = function () {
+        var filters = $scope.filters;
+        var packageSelected=$scope.package;
+        /*
+        $http.get('.server/runtime_resource/activePlatformRuntimes/'+packageSelected)
+            .success(function (data) {
+                $scope.packageList = data;
+                console.log($scope.packageList);
+            })
+            .error(function (error, status) {
+                console.log(error);
+            });
+
+        */
+
+    };
+
+
 });
