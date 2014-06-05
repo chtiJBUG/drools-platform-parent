@@ -14,12 +14,7 @@
         "animate.css": "~3.1.1",
         "moment": "2.6.0",
         "font-awesome": "4.0.3",
-        "underscore": "1.6.0"
-
-
         "underscore": "1.6.0",
-        "ng-context-menu": "latest",
-        "animate.css": "~3.1.1",
         "angular-growl-notifications": "~0.7.0"
     },
     "devDependencies": {}

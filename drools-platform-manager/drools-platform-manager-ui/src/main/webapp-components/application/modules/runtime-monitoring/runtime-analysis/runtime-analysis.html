@@ -112,8 +112,7 @@
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="runtime in pageItems()"
-                                        style="cursor:default"
-                                        ng-style="{{setStyle}}">
+                                        style="cursor:default" class="runtime-status-{{runtime.status}}">
                                         <!--td>{{runtime.ruleBaseID}}</td-->
                                         <td>{{runtime.runtimeURL}}</td>
                                         <!--td>{{runtime.status}}</td-->

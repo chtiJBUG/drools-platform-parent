@@ -13,9 +13,9 @@
   font-family: 'FontAwesome';
   src: url('@{FontAwesomePath}/fontawesome-webfont.eot');
   src: url('@{FontAwesomePath}/fontawesome-webfont.eot?#iefix') format('embedded-opentype'),
-       url('@{FontAwesomePath}/fontawesome-webfont.woff') format('woff'),
-       url('@{FontAwesomePath}/fontawesome-webfont.ttf') format('truetype'),
-       url('@{FontAwesomePath}/fontawesome-webfont.svg#FontAwesome') format('svg');
+  url('@{FontAwesomePath}/fontawesome-webfont.woff') format('woff'),
+  url('@{FontAwesomePath}/fontawesome-webfont.ttf') format('truetype'),
+  url('@{FontAwesomePath}/fontawesome-webfont.svg#FontAwesome') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -30,7 +30,6 @@
 
 @footer-height: auto;
 @headerLogoWidth: 180px;
-
 
 html, body {
   height: 100%;
@@ -68,19 +67,20 @@ a {
 }
 
 #wrap {
-  background-image:url('../images/pattern.png');
+  background-image: url('../images/pattern.png');
   min-height: 100%;
   height: auto !important;
   min-height: 100%;
   margin: 0 auto (@footer-height);
 }
+
 #main {
-  overflow:auto;
+  overflow: auto;
   padding-bottom: 90px;
 }
 
 footer {
-  position:relative;
+  position: relative;
   height: @footer-height;
   /*background-color: #ffffff;*/
   p {
@@ -89,10 +89,11 @@ footer {
     margin: 0px;
     padding-top: 5px;
   }
-  margin-top:-90px;
+  margin-top: -90px;
 }
+
 /* Center the separator in the footer div*/
-.separator{
+.separator {
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -123,44 +124,49 @@ footer {
   }
 }
 
-
 /* Modify width and margins of jumbotron */
-.jumbotron{
+.jumbotron {
   /* Usually : background-color: #ffffff; */
-  background-color:transparent;
-  max-width:1000px;
-  margin:auto;
-  padding:auto;
+  background-color: transparent;
+  max-width: 1000px;
+  margin: auto;
+  padding: auto;
 }
-.form-signin{
+
+.form-signin {
   background: linear-gradient(to bottom, #DADADA 0%, #B1B1B1 100%) repeat scroll 0% 0% transparent;
   box-shadow: 0px 4px 4px 0px #656565;
   /*opacity:0.5;*/
 }
+
 /* Modify navbar */
-.navbar{
+.navbar {
   text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.6);
   background: linear-gradient(to bottom, #DADADA 0%, #B1B1B1 100%) repeat scroll 0% 0% transparent;
 }
+
 /* Center text in thumbnail in homepage*/
-.thumbnail h2{
-  text-align:center;
+.thumbnail h2 {
+  text-align: center;
 }
-.dropdown-menu a:hover{
+
+.dropdown-menu a:hover {
   background: #499bea; /* Old browsers */
-  background: -moz-linear-gradient(top,  #499bea 0%, #207ce5 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#499bea), color-stop(100%,#207ce5)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top,  #499bea 0%,#207ce5 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top,  #499bea 0%,#207ce5 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top,  #499bea 0%,#207ce5 100%); /* IE10+ */
-  background: linear-gradient(to bottom,  #499bea 0%,#207ce5 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#499bea', endColorstr='#207ce5',GradientType=0 ); /* IE6-9 */
+  background: -moz-linear-gradient(top, #499bea 0%, #207ce5 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #499bea), color-stop(100%, #207ce5)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #499bea 0%, #207ce5 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #499bea 0%, #207ce5 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #499bea 0%, #207ce5 100%); /* IE10+ */
+  background: linear-gradient(to bottom, #499bea 0%, #207ce5 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#499bea', endColorstr='#207ce5', GradientType=0); /* IE6-9 */
 
 }
+
 .form-control {
-  width:100%;
+  width: 100%;
 }
-.form-horizontal{
+
+.form-horizontal {
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -382,7 +388,7 @@ footer {
   background-image: -moz-linear-gradient(top, #5bc0de, #5d8ea5);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#5bc0de), to(#5d8ea5));
   background-image: -webkit-linear-gradient(top, #5bc0de, #5d8ea5);
-  background-image: -o-linear-gradient(top, #5bc0de, r#5d8ea5);
+  background-image: -o-linear-gradient(top, #5bc0de, r #5d8ea5);
   background-image: linear-gradient(to bottom, #5bc0de, #5d8ea5);
   background-repeat: repeat-x;
   border-color: #2f96b4 rgb(114, 177, 202) #5d8ea5;
@@ -406,59 +412,68 @@ footer {
 .btn-info.active {
   background-color: #24748c \9;
 }
-a, a:hover{
+
+a, a:hover {
   color: #81776d;
 }
-
 
 /* Modification panels colors */
 
 /* panel default */
 .panel-default {
   border-color: #81776d;
-  background-color: rgb(245,245,245);
+  background-color: rgb(245, 245, 245);
 }
+
 .panel-default > .panel-heading {
-  font-size:20px;
+  font-size: 20px;
   text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.6);
   background-color: #dadada;
   background-image: linear-gradient(to bottom, #dadada, #c8c8c8);
   border-color: #81776d;
 }
+
 .panel-default > .panel-heading + .panel-collapse .panel-body {
   border-top-color: #dadada;
 }
+
 .panel-default > .panel-heading > .dropdown .caret {
   border-color: #c8c8c8 transparent;
 }
+
 .panel-default > .panel-footer + .panel-collapse .panel-body {
   border-bottom-color: #ebccd1;
 }
 
 /* panel danger */
-.panel-danger{
+.panel-danger {
   border-color: #df5656;
 }
+
 .panel-danger > .panel-heading {
   text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.6);
   background-color: #dadada;
   background-image: linear-gradient(to bottom, #f3c1c1, #e78181);
   border-color: #df5656;
 }
+
 .panel-danger > .panel-heading + .panel-collapse .panel-body {
   border-top-color: #FF594A;
 }
+
 .panel-danger > .panel-heading > .dropdown .caret {
   border-color: #b94a48 transparent;
 }
+
 .panel-danger > .panel-footer + .panel-collapse .panel-body {
   border-bottom-color: #df5656;
 }
 
 /* panel warning */
-.panel-warning{
+.panel-warning {
   border-color: #ebd696
 }
+
 .panel-warning > .panel-heading {
   text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.6);
   background-color: #dadada;
@@ -467,32 +482,37 @@ a, a:hover{
 }
 
 /* panel info */
-.panel-info{
+.panel-info {
   border-color: #c2d4dd;
 }
+
 .panel-info > .panel-heading {
   text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.6);
   background-image: linear-gradient(to bottom, #c1f3f3, #c1daf3);
   border-color: #c2d4dd;
 }
+
 .panel-danger > .panel-heading + .panel-collapse .panel-body {
   border-top-color: #c2d4dd;
 }
+
 .panel-danger > .panel-heading > .dropdown .caret {
   border-color: #c2d4dd transparent;
 }
+
 .panel-danger > .panel-footer + .panel-collapse .panel-body {
   border-bottom-color: #c2d4dd;
 }
 
 /* panel success */
-.panel-success{
+.panel-success {
   border-color: #81e781
 }
+
 .panel-success > .panel-heading {
   text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.6);
   background-color: #c1f3c1;
-  background-image: linear-gradient(to bottom, #c1f3c1,#acefac);
+  background-image: linear-gradient(to bottom, #c1f3c1, #acefac);
   border-color: #81e781;
 }
 
@@ -503,11 +523,13 @@ a, a:hover{
   color: #000000;
   background-color: #dadada;
 }
+
 a.list-group-item.active > .badge, .nav-pills > .active > a > .badge {
   color: #FFFFFF;
-  background-color:#FF594A;
+  background-color: #FF594A;
   background-image: linear-gradient(to bottom, #ff7064, #FF594A);
 }
+
 .well {
   border-color: #81776d;
 }
@@ -529,44 +551,70 @@ a.list-group-item.active > .badge, .nav-pills > .active > a > .badge {
 
 }*/
 
-
-.tooltip-inner{
-  color : #81776d;
-  width:auto;
-  max-width:210px;
-  background: rgba(245,245,245,1);
-  background: -moz-linear-gradient(top, rgba(245,245,245,1) 0%, rgba(194,194,194,1) 100%);
-  background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(245,245,245,1)), color-stop(100%, rgba(194,194,194,1)));
-  background: -webkit-linear-gradient(top, rgba(245,245,245,1) 0%, rgba(194,194,194,1) 100%);
-  background: -o-linear-gradient(top, rgba(245,245,245,1) 0%, rgba(194,194,194,1) 100%);
-  background: -ms-linear-gradient(top, rgba(245,245,245,1) 0%, rgba(194,194,194,1) 100%);
-  background: linear-gradient(to bottom, rgba(245,245,245,1) 0%, rgba(194,194,194,1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f5f5', endColorstr='#c2c2c2', GradientType=0 );
+.tooltip-inner {
+  color: #81776d;
+  width: auto;
+  max-width: 210px;
+  background: rgba(245, 245, 245, 1);
+  background: -moz-linear-gradient(top, rgba(245, 245, 245, 1) 0%, rgba(194, 194, 194, 1) 100%);
+  background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(245, 245, 245, 1)), color-stop(100%, rgba(194, 194, 194, 1)));
+  background: -webkit-linear-gradient(top, rgba(245, 245, 245, 1) 0%, rgba(194, 194, 194, 1) 100%);
+  background: -o-linear-gradient(top, rgba(245, 245, 245, 1) 0%, rgba(194, 194, 194, 1) 100%);
+  background: -ms-linear-gradient(top, rgba(245, 245, 245, 1) 0%, rgba(194, 194, 194, 1) 100%);
+  background: linear-gradient(to bottom, rgba(245, 245, 245, 1) 0%, rgba(194, 194, 194, 1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f5f5f5', endColorstr='#c2c2c2', GradientType=0);
   border: 1px solid #b5b5b5;
 }
-.tooltip.bottom .tooltip-arrow{
-  border-bottom-color:#b5b5b5;
+
+.tooltip.bottom .tooltip-arrow {
+  border-bottom-color: #b5b5b5;
 }
+
 /* When eror happens in a form for a input field or select field */
 .has-error .form-control {
-  border-color:red;
-  box-shadow: 0px 0px 7px 0px  rgba(255, 0, 0, 0.50);
+  border-color: red;
+  box-shadow: 0px 0px 7px 0px rgba(255, 0, 0, 0.50);
 }
+
 .select2-container .select2-choice {
   height: 30px;
 }
 
- .pointer {
-   cursor: pointer;
- }
+.pointer {
+  cursor: pointer;
+}
+
 .highlight {
   color: #fff;
   background-color: #3498db;
 }
+
 .expanded {
   height: 400px;
 }
+
 .position-fixed {
   position: fixed;
 }
 
+// ** Class related to the Runtime Analysis page
+
+.runtime-status-INITMODE {
+  background-color: #bff073
+}
+
+.runtime-status-STARTED {
+  background-color: #92b06a
+}
+
+.runtime-status-NOT_JOIGNABLE {
+  background-color: #ff7260
+}
+
+.runtime-status-STOPPED {
+  background-color: #fb7548
+}
+
+.runtime-status-CRASHED {
+  background-color: #ff2c12
+}

@@ -61,20 +61,6 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         'output':"// no code"
     };
 
-    /* STYLES : INITMODE, STARTED, NOT_JOIGNABLE, STOPPED, CRASHED*/
-    $scope.styles= [
-
-        {'background-color': '#bff073'},
-        {'background-color': '#92b06a'},
-        {'background-color': '#ff7260'},
-        {'background-color': '#fb7548'},
-        {'background-color': '#ff2c12'}
-
-    ];
-
-    $scope.setStyle="runtime.status == 'INITMODE' && styles[0] || runtime.status == 'STARTED' && styles[1] || runtime.status == 'NOT_JOIGNABLE' && styles[2] || runtime.status == 'STOPPED' && styles[3] || runtime.status == 'CRASHED' && styles[4]";
-
-
     //___ Fetch the list
     $http.get('./server/rules_package/list')
         .success(function (data) {
