@@ -31,12 +31,12 @@
                                    ng-pattern="/^[0-9]+.[0-9]+.[0-9]+.[0-9]+$/">
                         </div>
                         <div class="form-group">
-                            <a style="cursor:pointer" ng-click="isCollapsed=!isCollapsed">
-                                <span ng-show="isCollapsed"><i class="fa fa-plus-circle"></i> More filters : Runtime</span>
-                                <span ng-show="!isCollapsed"><i class="fa fa-minus-circle"></i> Hide filters</span>
+                            <a style="cursor:pointer" ng-click="collapseStatus.firstBox=!collapseStatus.firstBox">
+                                <span ng-show="!collapseStatus.firstBox"><i class="fa fa-plus-circle"></i> More filters : Runtime</span>
+                                <span ng-show="collapseStatus.firstBox"><i class="fa fa-minus-circle"></i> Hide filters</span>
                             </a>
-                            <hr ng-show="!isCollapsed">
-                            <div collapse="isCollapsed">
+                            <hr ng-show="collapseStatus.firstBox">
+                            <div collapse="!collapseStatus.firstBox">
                                 <h4>Runtime</h4>
                                 <label for="IPaddr">Hostname</label>
                                 <small>(Optional)</small>
@@ -49,22 +49,22 @@
 
                         </div>
                         <div class="form-group">
-                            <a style="cursor:pointer" ng-click="isCollapsed2=!isCollapsed2">
-                                <span ng-show="isCollapsed2"><i class="fa fa-plus-circle"></i> More filters : Session Execution</span>
-                                <span ng-show="!isCollapsed2"><i class="fa fa-minus-circle"></i> Hide filters</span>
+                            <a style="cursor:pointer" ng-click="collapseStatus.secondBox=!collapseStatus.secondBox">
+                                <span ng-show="!collapseStatus.secondBox"><i class="fa fa-plus-circle"></i> More filters : Session Execution</span>
+                                <span ng-show="collapseStatus.secondBox"><i class="fa fa-minus-circle"></i> Hide filters</span>
                             </a>
-                            <hr ng-show="!isCollapsed2">
-                            <div collapse="isCollapsed2">
+                            <hr ng-show="collapseStatus.secondBox">
+                            <div collapse="!collapseStatus.secondBox">
                                 <h4>SessionExecution</h4>
                                 <label>From</label>
                                 <div class="input-group col-md-6">
-                                    <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="startDate" is-open="datepickerOpened1" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'startDate')">
+                                    <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dates.startDate" is-open="datePickers.firstCalendar" min-date="dates.minDate" max-date="dates.maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'startDate')">
                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 
                                 </div>
                                 <label>To</label>
                                 <div class="input-group col-md-6">
-                                    <input type="text" class="form-control" class="form-control" datepicker-popup="{{format}}" ng-model="endDate" is-open="datepickerOpened2" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'endDate')" >
+                                    <input type="text" class="form-control" class="form-control" datepicker-popup="{{format}}" ng-model="dates.endDate" is-open="datePickers.secondCalendar" min-date="dates.minDate" max-date="'2014-07-29'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'endDate')" >
                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                 </div>
                             </div>
@@ -89,41 +89,47 @@
             </div>
         </div>
         <!-- Result -->
-        <div id="mainPanel" class="col-md-7 col-md-offset-1">
+        <div  class="col-md-7 col-md-offset-1" >
             <div class="row">
-                <div class="panel panel-default">
+                <div class="panel panel-default" style="min-height: 372px;">
                     <div class="panel-heading panel-title">
-                        <h3 class="panel-title">All Runtimes <span class="label label-info" >{{allRuntimes.length}}</span></h3>
+                        <h3 class="panel-title">All Runtimes <span ng-show="allRuntimes.length != 0">({{allRuntimes.length}} runtime(s))</span></h3>
                     </div>
                     <div class="panel-body">
                         <!-- Search result -->
-                        <div class="table-wrapper-div" style="height:auto;">
+                        <div class="table-wrapper-div">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th class="bold">ruleBaseID</th>
-                                        <th class="bold">runtimeURL</th>
-                                        <th class="bold">rulePackage</th>
-                                        <th class="bold">sessionId</th>
-                                        <th class="bold">status</th>
-                                        <th class="bold">startDate</th>
-                                        <th class="bold">endDate</th>
+                                        <!--th class="bold">ruleBaseID</th-->
+                                        <th class="bold">Runtime</th>
+                                        <!--th class="bold">Status</th-->
+                                        <th class="bold">Rule Package</th>
+                                        <th class="bold">Execution</th>
+                                        <th class="bold">Started at</th>
+                                        <th class="bold">Ended at</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="runtime in pageItems()" >
-                                        <td>{{runtime.ruleBaseID}}</td>
+                                    <tr ng-repeat="runtime in pageItems()"
+                                        style="cursor:default"
+                                        ng-style="{{setStyle}}">
+                                        <!--td>{{runtime.ruleBaseID}}</td-->
                                         <td>{{runtime.runtimeURL}}</td>
-                                        <td><span popover-placement="bottom" popover-trigger="mouseenter" popover="{{runtime.rulePackage}}" popover-title="{{dynamicPopoverTitle}}">{{runtime.rulePackage}}</span></td>
+                                        <!--td>{{runtime.status}}</td-->
+                                        <!-- data-content="test content <a href='' title='test add link'>link on content</a>" -->
+                                        <td style="cursor:pointer"><span tooltip-placement="bottom" tooltip-html-unsafe="{{popoverDetails.content}}" tooltip-trigger="click" >{{runtime.rulePackage}}</span></td>
                                         <td>{{runtime.sessionId}}</td>
-                                        <td>{{runtime.status}}</td>
                                         <td>{{runtime.startDate}}</td>
                                         <td>{{runtime.endDate}}</td>
-                                        <td><button class="btn btn-info" ng-click="scrollToPanel()"><i class="fa fa-info-circle"></i></button></td>
+                                        <td><button class="btn " ng-click="scrollToPanel(runtime.ruleBaseID)"><i class="fa fa-eye"></i></button></td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <span paginator items="allRuntimes "></span>
+
+                        </div>
+                        <div>
+                            <span paginator items="allRuntimes" class="pull-right" ng-show="allRuntimes.length != 0"></span>
                         </div>
                     </div>
                 </div>
@@ -131,11 +137,11 @@
         </div>
     </div>
     <!-- Details -->
-    <div id="detailsPanel" ng-show="isPanelCalled" class="row col-md-12 " >
+    <div id="detailsPanel" ng-show="sessionExecutionDetails.area" class="row col-md-12 " >
         <div class="page-header">
             <h3 style="margin-left:20px">Session Execution Details</h3>
         </div>
-        <div class="col-md-10 col-md-offset-1" ng-show="isPanelShown">
+        <div class="col-md-10 col-md-offset-1" ng-show="sessionExecutionDetails.panel">
             <div class="panel panel-default" style="min-height:800px;">
                 <div class="panel-heading panel-title">
                     <button type="button" class="close" aria-hidden="true" ng-click="closeDetailsPanel()" >&times;</button>
@@ -143,15 +149,13 @@
                 </div>
                 <div class="panel-body">
                     <tabset justified="true" type="pills">
-                        <tab heading="Tab 1">
+                        <tab heading="Output">
                             <section id="section-1">
-                                <h2>Section 1</h2>
-                                <p><a href="#section-4" du-smooth-scroll>To section 4</a> Bacon ipsum dolor sit amet sausage tail capicola ground round hamburger ham hock. Short ribs pig andouille meatball, pastrami tri-tip fatback ham hock shank kielbasa swine. Rump pancetta jerky kielbasa doner beef ribs tongue hamburger strip steak drumstick andouille shoulder shank flank. Swine drumstick meatball pig beef sausage strip steak.</p>
-
-                                <img src="http://lorempixel.com/1000/500/" alt="" />
+                                <textarea ui-codemirror="editorOptions" ng-model="test"></textarea>
                             </section>
                         </tab>
-                        <tab heading="Tab 2">Some other content</tab>
+                        <tab heading="Input">Some other content</tab>
+                        <tab heading="Event list">List</tab>
 
                     </tabset>
                 </div>

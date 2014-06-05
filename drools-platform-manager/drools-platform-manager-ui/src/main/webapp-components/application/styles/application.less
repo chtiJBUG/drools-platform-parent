@@ -406,12 +406,10 @@ footer {
 .btn-info.active {
   background-color: #24748c \9;
 }
-a{
+a, a:hover{
   color: #81776d;
 }
-a:hover{
-  color:black;
-}
+
 
 /* Modification panels colors */
 
@@ -531,6 +529,24 @@ a.list-group-item.active > .badge, .nav-pills > .active > a > .badge {
 
 }*/
 
+
+.tooltip-inner{
+  color : #81776d;
+  width:auto;
+  max-width:210px;
+  background: rgba(245,245,245,1);
+  background: -moz-linear-gradient(top, rgba(245,245,245,1) 0%, rgba(194,194,194,1) 100%);
+  background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(245,245,245,1)), color-stop(100%, rgba(194,194,194,1)));
+  background: -webkit-linear-gradient(top, rgba(245,245,245,1) 0%, rgba(194,194,194,1) 100%);
+  background: -o-linear-gradient(top, rgba(245,245,245,1) 0%, rgba(194,194,194,1) 100%);
+  background: -ms-linear-gradient(top, rgba(245,245,245,1) 0%, rgba(194,194,194,1) 100%);
+  background: linear-gradient(to bottom, rgba(245,245,245,1) 0%, rgba(194,194,194,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f5f5', endColorstr='#c2c2c2', GradientType=0 );
+  border: 1px solid #b5b5b5;
+}
+.tooltip.bottom .tooltip-arrow{
+  border-bottom-color:#b5b5b5;
+}
 /* When eror happens in a form for a input field or select field */
 .has-error .form-control {
   border-color:red;
@@ -553,5 +569,4 @@ a.list-group-item.active > .badge, .nav-pills > .active > a > .badge {
 .position-fixed {
   position: fixed;
 }
-
 
