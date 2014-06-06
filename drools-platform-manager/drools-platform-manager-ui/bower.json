@@ -9,6 +9,7 @@
         "angular-ui-select2": "0.0.5",
         "angular-bootstrap": "~0.11.0",
         "angular-ui-codemirror":"~0.1.0",
+        "angular-animate":"latest",
         "angular-http-auth": "1.2.1",
         "ng-context-menu": "latest",
         "animate.css": "~3.1.1",

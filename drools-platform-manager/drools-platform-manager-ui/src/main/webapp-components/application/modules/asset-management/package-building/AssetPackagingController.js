@@ -1,5 +1,6 @@
-DroolsPlatformControllers.controller('assetPackagingController', function ($rootScope, $scope, $http, $log) {
+DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', '$scope', '$http', '$log', 'growlNotifications', function ($rootScope, $scope, $http, $log, growlNotifications) {
     initController();
+    /* Functions to search the package's versions */
     //___ Quick search after any modification
     $scope.searchPackageByName = function() {
         $scope.noAssetSent = false;
@@ -62,9 +63,11 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
                     console.log(error);
                 })
         }
+        growlNotifications.add('Hello world', 'warning', 2000);
+
     };
 
-    //___ Right click management
+    /* Right click management */
     $scope.onRightClick = function(packageVersion) {
         $scope.newVersion=packageVersion.version;
         if(packageVersion.isRelease==true){
@@ -73,7 +76,6 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
             $scope.isSnapshot = true;
             var existingVersions =_.where($scope.packageVersionsList, {version: $scope.newVersion, isRelease : $scope.isSnapshot});
             if (!_.isEmpty(existingVersions)) {
-                //______  --> On pete une exception
                 $scope.visibleItem=true;
             } else  {
                 $scope.visibleItem=false;
@@ -81,6 +83,8 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         }
     }
 
+    /* Modal Management */
+    //___ Modal for : Create, Rebuild, Release
     $scope.launchWizzard = function(typeOfWizzard){
         if(typeOfWizzard=="create"){
             $scope.newVersion=undefined;
@@ -109,30 +113,53 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         //___ Then show the modal window
         $('#Wizzard').modal('show');
     };
-
     $scope.closeWizzard = function() {
-        //___ Reinit fields and boolean
+        /* Reinit fields and boolean */
+        //___ Values
         $scope.newVersion='0.0.0';
         $scope.filters = undefined;
-
+        //___ Buttons
         $scope.isCreateButtonEnabled = false;
         $scope.isRebuildButtonEnabled = false;
         $scope.isReleaseButtonEnabled = false;
-
+        //___ Fields
         $scope.isVersionFieldDisabled = false;
         $scope.isASFieldDisabled=false;
-
+        //___ Checbox
         $scope.isChecked=false;
         $scope.isCheckboxFieldDisabled=false;
-
+        //___ Class
         $scope.iptNewVersion = "form-group";
         $scope.slctAssetStatus = "form-group";
-
+        //___ Version
         $scope.alreadyExist=false;
-
-        //___ The hide the modal
+        //___ Then hide the modal
         $('#Wizzard').modal('hide');
     };
+    //___ Modal for : Deploy
+    $scope.launchDeploy = function(){
+
+        var packageSelected=$scope.package;
+        //___ Get the list according to the params chosen
+        $http.get('./server/runtime/'+packageSelected)
+            .success(function (data) {
+                $scope.activeRuntimeList = data;
+                /*console.log($scope.activeRuntimeList);
+                console.log($scope.activeRuntimeList[0].url);*/
+                console.log("Get process successful");
+            })
+            .error(function (error, status) {
+                $scope.status=status;
+                console.log(error);
+            })
+
+
+        $('#Deployment').modal('show');
+    };
+    $scope.closeDeploy=function(){
+        $('#Deployment').modal('hide');
+    };
+    //___ Modal for : Confirm Message
     $scope.launchAlertMsg = function() {
         $('#AlertMsg').modal('show');
     };
@@ -140,6 +167,7 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         $('#AlertMsg').modal('hide');
     };
 
+    /* Functions */
 
     //___ Create
     $scope.createVersion = function() {
@@ -253,6 +281,12 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
         }
     };
 
+    //___ Deploy
+    $scope.deployVersion = function() {
+        $scope.closeDeploy();
+        growlNotifications.add('Deployment launched', 'info', 2000);
+    }
+
     //___ Delete
     $scope.deletePackageVersion = function() {
         $scope.closeAlertMsg();
@@ -281,8 +315,11 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
     };
 
     //___ Reset all
-    $scope.reset = function () { initController();};
+    $scope.reset = function () {
+        initController();
+    };
 
+    /* Initialistion */
     function initController() {
         $scope.isCheckedSearch = false;
         $scope.isSnapshot = false;
@@ -324,4 +361,4 @@ DroolsPlatformControllers.controller('assetPackagingController', function ($root
             });
     };
 
-});
+}]);

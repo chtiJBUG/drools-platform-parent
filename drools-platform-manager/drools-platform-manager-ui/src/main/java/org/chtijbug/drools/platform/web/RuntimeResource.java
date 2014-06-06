@@ -1,6 +1,9 @@
 package org.chtijbug.drools.platform.web;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
+import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -32,8 +36,21 @@ public class RuntimeResource {
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
-    public List<PlatformRuntimeInstance> findActivePlatformRuntimeInstance(@PathVariable String packageName) {
-        return platformRuntimeInstanceRepository.findByPackageNameActiveRuntime(packageName);
+    public List<RuntimeInstance> findActivePlatformRuntimeInstance(@PathVariable String packageName) {
+        return Lists.transform(platformRuntimeInstanceRepository.findByPackageNameActiveRuntime(packageName),
+                new Function<PlatformRuntimeInstance, RuntimeInstance>() {
+                    @Nullable
+                    @Override
+                    public RuntimeInstance apply(@Nullable PlatformRuntimeInstance platformRuntimeInstance) {
+                        String url = "http://"+platformRuntimeInstance.getHostname()+":"+platformRuntimeInstance.getPort()+platformRuntimeInstance.getEndPoint();
+                        //___ Weak code.... TODO
+                        DroolsResource guvnorResource = platformRuntimeInstance.getDroolsRessources().get(0);
+                        String rulePackage =guvnorResource.getGuvnor_packageName();
+                        String version = guvnorResource.getGuvnor_packageVersion();
+                        return new RuntimeInstance(platformRuntimeInstance.getId(), url, rulePackage, version);
+                    }
+                }
+        );
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/all/{packageName:.+}")

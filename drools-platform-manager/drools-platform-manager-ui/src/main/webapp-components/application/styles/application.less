@@ -618,3 +618,30 @@ a.list-group-item.active > .badge, .nav-pills > .active > a > .badge {
 .runtime-status-CRASHED {
   background-color: #ff2c12
 }
+
+/* notification message on the right */
+.notifications {
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  z-index: 1000;
+  width: auto;
+  padding:3px;
+
+
+
+}
+
+.notifications .ng-enter{
+  -webkit-animation: fadeInDown 1s;
+  -moz-animation: fadeInDown 1s;
+  -ms-animation: fadeInDown 1s;
+  animation: fadeInDown 1s;
+
+}
+.notifications .ng-leave{
+  -webkit-animation: fadeOut 1s;
+  -moz-animation: fadeOut 1s;
+  -ms-animation: fadeOut 1s;
+  animation: fadeOut 1s;
+}
