@@ -15,8 +15,8 @@ import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseInitialCon
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepository;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeDefinition;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstanceStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -94,7 +94,7 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
             }
             platformRuntimeInstance = new PlatformRuntimeInstance();
             platformRuntimeInstance.setRuleBaseID(platformKnowledgeBaseInitialConnectionEvent.getRuleBaseID());
-            platformRuntimeInstance.setEventID(platformKnowledgeBaseInitialConnectionEvent.getEventID());
+            platformRuntimeInstance.setStartEventID(platformKnowledgeBaseInitialConnectionEvent.getEventID());
             platformRuntimeInstance.setStartDate(platformKnowledgeBaseInitialConnectionEvent.getStartDate());
             platformRuntimeInstance.setHostname(platformKnowledgeBaseInitialConnectionEvent.getHostname());
             platformRuntimeInstance.setPort(platformKnowledgeBaseInitialConnectionEvent.getPort());

@@ -14,13 +14,11 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration()
-@ContextConfiguration(locations = {"classpath:test-beans.xml"})
+@ContextConfiguration(locations = {"classpath:test-beans.xml", "classpath:/spring/spring-test-persistence-config.xml"})
 public class RulesPackageResourceTest {
     protected MockMvc mockMvc;
     @SuppressWarnings("SpringJavaAutowiringInspection")

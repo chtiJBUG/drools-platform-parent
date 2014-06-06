@@ -31,7 +31,7 @@
 
     <hibernate.version>4.3.4.Final</hibernate.version>
     <tyrus.version>1.5</tyrus.version>
-    <cxf.version>2.4.4</cxf.version>
+    <cxf.version>2.7.10</cxf.version>
     <activemq-version>5.8.0</activemq-version>
 
     <drools.version>5.6.0.Final</drools.version>
@@ -134,7 +134,6 @@
     </dependency>
 
 
-
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
@@ -195,9 +194,9 @@
         <version>${org.springframework.version}</version>
       </dependency>
       <dependency>
-      	<groupId>org.springframework</groupId>
-      	<artifactId>spring-jms</artifactId>
-      	<version>${org.springframework.version}</version>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jms</artifactId>
+        <version>${org.springframework.version}</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.data</groupId>
@@ -229,26 +228,26 @@
         <artifactId>spring-context-support</artifactId>
         <version>${org.springframework.version}</version>
       </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-            <version>${org.springframework.security.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-            <version>${org.springframework.security.version}</version>
-        </dependency>
       <dependency>
-       <groupId>org.springframework</groupId>
-       <artifactId>spring-messaging</artifactId>
-       <version>${org.springframework.version}</version>
-       </dependency>
-       <dependency>
-       <groupId>org.springframework</groupId>
-       <artifactId>spring-websocket</artifactId>
-       <version>${org.springframework.version}</version>
-       </dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-web</artifactId>
+        <version>${org.springframework.security.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-config</artifactId>
+        <version>${org.springframework.security.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-messaging</artifactId>
+        <version>${org.springframework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-websocket</artifactId>
+        <version>${org.springframework.version}</version>
+      </dependency>
       <!-- Logging deps -->
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -268,9 +267,9 @@
 
       <!-- tomcat websocket -->
       <dependency>
-         <groupId>org.apache.tomcat.embed</groupId>
-         <artifactId>tomcat-embed-websocket</artifactId>
-         <version>${tomcat.version}</version>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-websocket</artifactId>
+        <version>${tomcat.version}</version>
       </dependency>
 
       <!-- persistence deps -->
@@ -331,7 +330,7 @@
       <dependency>
         <groupId>org.apache.cxf</groupId>
         <artifactId>cxf-bundle-jaxrs</artifactId>
-        <version>2.7.10</version>
+        <version>${cxf.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.xmlbeans</groupId>
@@ -461,14 +460,14 @@
       </dependency>
       <!-- Apache CXF dependencies -->
       <dependency>
-          <groupId>org.apache.cxf</groupId>
-          <artifactId>cxf-rt-frontend-jaxws</artifactId>
-          <version>${cxf.version}</version>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-frontend-jaxws</artifactId>
+        <version>${cxf.version}</version>
       </dependency>
       <dependency>
-          <groupId>org.apache.cxf</groupId>
-          <artifactId>cxf-rt-transports-http</artifactId>
-          <version>${cxf.version}</version>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-transports-http</artifactId>
+        <version>${cxf.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -491,10 +490,6 @@
         <env-name>release</env-name>
       </properties>
     </profile>
-
-
-
-
 
 
   </profiles>

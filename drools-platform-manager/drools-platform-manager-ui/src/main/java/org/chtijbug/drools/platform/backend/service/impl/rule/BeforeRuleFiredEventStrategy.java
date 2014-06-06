@@ -5,8 +5,8 @@ import org.chtijbug.drools.entity.DroolsFactObject;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.rule.BeforeRuleFiredHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.RuleflowGroupRepository;
 import org.chtijbug.drools.platform.persistence.RuleExecutionRepository;
+import org.chtijbug.drools.platform.persistence.RuleflowGroupRepository;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
 import org.chtijbug.drools.platform.persistence.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +47,7 @@ public class BeforeRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
         ruleExecution.setStartDate(beforeRuleFiredHistoryEvent.getDateEvent());
         ruleExecution.setRuleName(beforeRuleFiredHistoryEvent.getRule().getRuleName());
         ruleExecution.setPackageName(beforeRuleFiredHistoryEvent.getRule().getRulePackageName());
+        ruleExecution.setStartEventID(beforeRuleFiredHistoryEvent.getEventID());
         for (DroolsFactObject droolsFactObject : beforeRuleFiredHistoryEvent.getWhenObjects()) {
             if (droolsFactObject != null) {
                 Fact fact = new Fact();
@@ -54,6 +55,7 @@ public class BeforeRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
                 fact.setFactType(FactType.WHEN);
                 fact.setObjectVersion(droolsFactObject.getObjectVersion());
                 fact.setFullClassName(droolsFactObject.getFullClassName());
+                fact.setEventid(beforeRuleFiredHistoryEvent.getEventID());
                 ruleExecution.getWhenFacts().add(fact);
             }
         }

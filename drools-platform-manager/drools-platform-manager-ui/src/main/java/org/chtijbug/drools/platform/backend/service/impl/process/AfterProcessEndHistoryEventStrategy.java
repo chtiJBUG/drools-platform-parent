@@ -32,6 +32,7 @@ public class AfterProcessEndHistoryEventStrategy extends AbstractEventHandlerStr
 
         ProcessExecution processExecution = processExecutionRepository.findStartedProcessByRuleBaseIDBySessionIDAndProcessInstanceId(afterProcessEndHistoryEvent.getRuleBaseID(), afterProcessEndHistoryEvent.getSessionId(), afterProcessEndHistoryEvent.getProcessInstance().getId());
         processExecution.setEndDate(afterProcessEndHistoryEvent.getDateEvent());
+        processExecution.setStopEventID(afterProcessEndHistoryEvent.getEventID());
         processExecution.setProcessExecutionStatus(ProcessExecutionStatus.JBPMSTOPPED);
         processExecutionRepository.save(processExecution);
         LOG.debug("AfterProcessEndHistoryEvent " + historyEvent.toString());

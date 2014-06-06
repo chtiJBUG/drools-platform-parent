@@ -1,5 +1,6 @@
 package org.chtijbug.drools.platform.runtime.builder;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -104,6 +105,7 @@ public class MavenProjectFactoryTest {
 
 
     @Test
+    @Ignore
     public void should_get_full_maven_project_generated() throws IOException {
         File originalWsdl = getFile("classpath:newWSDL1.wsdl");
         File originalXsd = getFile("classpath:model.xsd");

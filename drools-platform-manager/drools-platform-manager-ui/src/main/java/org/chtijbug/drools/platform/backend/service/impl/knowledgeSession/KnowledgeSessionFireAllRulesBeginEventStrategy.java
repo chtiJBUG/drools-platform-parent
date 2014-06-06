@@ -4,10 +4,10 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionFireAllRulesBeginEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.pojo.FireAllRulesExecutionStatus;
 import org.chtijbug.drools.platform.persistence.FireAllRulesExecutionRepository;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
 import org.chtijbug.drools.platform.persistence.pojo.FireAllRulesExecution;
+import org.chtijbug.drools.platform.persistence.pojo.FireAllRulesExecutionStatus;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,7 +39,7 @@ public class KnowledgeSessionFireAllRulesBeginEventStrategy extends AbstractEven
         SessionFireAllRulesBeginEvent sessionFireAllRulesBeginEvent = (SessionFireAllRulesBeginEvent) historyEvent;
 
         List<FireAllRulesExecution> fireAllRulesExecutions = fireAllRulesExecutionRepository.findAllStartedFireAllRulesBySessionID(historyEvent.getSessionId());
-        for (FireAllRulesExecution runningFireAllRulesExecution : fireAllRulesExecutions){
+        for (FireAllRulesExecution runningFireAllRulesExecution : fireAllRulesExecutions) {
             runningFireAllRulesExecution.setEndDate(new Date());
             runningFireAllRulesExecution.setFireAllRulesExecutionStatus(FireAllRulesExecutionStatus.CRASHED);
             fireAllRulesExecutionRepository.save(runningFireAllRulesExecution);
@@ -48,7 +48,7 @@ public class KnowledgeSessionFireAllRulesBeginEventStrategy extends AbstractEven
 
         FireAllRulesExecution fireAllRulesExecution = new FireAllRulesExecution();
         fireAllRulesExecution.setSessionExecution(existingSessionRutime);
-        fireAllRulesExecution.setEventID(sessionFireAllRulesBeginEvent.getEventID());
+        fireAllRulesExecution.setStartEventID(sessionFireAllRulesBeginEvent.getEventID());
         fireAllRulesExecution.setStartDate(sessionFireAllRulesBeginEvent.getDateEvent());
         fireAllRulesExecution.setFireAllRulesExecutionStatus(FireAllRulesExecutionStatus.STARTED);
         fireAllRulesExecutionRepository.save(fireAllRulesExecution);

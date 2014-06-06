@@ -35,6 +35,8 @@ public class Fact {
     @Enumerated(EnumType.STRING)
     private FactType factType;
 
+    private Integer eventid;
+
     public Fact() {
     }
 
@@ -84,6 +86,14 @@ public class Fact {
 
     public void setModificationDate(Date modificationDate) {
         this.modificationDate = modificationDate;
+    }
+
+    public Integer getEventid() {
+        return eventid;
+    }
+
+    public void setEventid(Integer eventid) {
+        this.eventid = eventid;
     }
 
     @Override
