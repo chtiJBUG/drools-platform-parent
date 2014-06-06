@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration()
+@WebAppConfiguration(value = "/src/main/webapp-filtered")
 @ContextConfiguration(locations = {"classpath:test-beans.xml"})
 public class RulesPackageResourceTest {
     protected MockMvc mockMvc;

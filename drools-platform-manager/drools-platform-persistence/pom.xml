@@ -58,11 +58,11 @@
       <artifactId>ehcache</artifactId>
     </dependency>
     <!-- Test -->
-    <!--dependency>
+    <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <scope>test</scope>
-    </dependency-->
+    </dependency>
     <dependency>
       <groupId>com.github.springtestdbunit</groupId>
       <artifactId>spring-test-dbunit</artifactId>
