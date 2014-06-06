@@ -31,10 +31,11 @@ public class KnowledgeBaseDisposeEventStrategy extends AbstractEventHandlerStrat
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         KnowledgeBaseDisposeEvent knowledgeBaseDisposeEvent = (KnowledgeBaseDisposeEvent) historyEvent;
         List<PlatformRuntimeInstance> existingPlatformRuntimeInstances = platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(knowledgeBaseDisposeEvent.getRuleBaseID());
-        if (existingPlatformRuntimeInstances.size()==1) {
+        if (existingPlatformRuntimeInstances.size() == 1) {
             existingPlatformRuntimeInstances.get(0).setEndDate(knowledgeBaseDisposeEvent.getDateEvent());
             existingPlatformRuntimeInstances.get(0).setShutdowDate(knowledgeBaseDisposeEvent.getDateEvent());
-            platformRuntimeInstanceRepository.save( existingPlatformRuntimeInstances.get(0));
+            existingPlatformRuntimeInstances.get(0).setStopEventID(knowledgeBaseDisposeEvent.getEventID());
+            platformRuntimeInstanceRepository.save(existingPlatformRuntimeInstances.get(0));
         }
     }
 

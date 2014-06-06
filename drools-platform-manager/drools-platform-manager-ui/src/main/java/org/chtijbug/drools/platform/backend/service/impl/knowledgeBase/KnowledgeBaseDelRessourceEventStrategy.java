@@ -26,7 +26,6 @@ public class KnowledgeBaseDelRessourceEventStrategy extends AbstractEventHandler
     private static final Logger LOG = Logger.getLogger(KnowledgeBaseDelRessourceEventStrategy.class);
 
 
-
     @Autowired
     PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
@@ -36,7 +35,7 @@ public class KnowledgeBaseDelRessourceEventStrategy extends AbstractEventHandler
         KnowledgeBaseDelRessourceEvent knowledgeBaseDelRessourceEvent = (KnowledgeBaseDelRessourceEvent) historyEvent;
         List<PlatformRuntimeInstance> existingPlatformRuntimeInstances = platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(knowledgeBaseDelRessourceEvent.getRuleBaseID());
 
-        if (existingPlatformRuntimeInstances.size()==1) {
+        if (existingPlatformRuntimeInstances.size() == 1) {
             PlatformRuntimeInstance existingPlatformRuntimeInstance = existingPlatformRuntimeInstances.get(0);
             DroolsResource droolsResource = null;
             if (knowledgeBaseDelRessourceEvent.getResourceFiles().size() == 1 && knowledgeBaseDelRessourceEvent.getResourceFiles().get(0) instanceof GuvnorResourceFile) {
@@ -49,6 +48,7 @@ public class KnowledgeBaseDelRessourceEventStrategy extends AbstractEventHandler
             for (DroolsResource existingResource : existingPlatformRuntimeInstance.getDroolsRessources()) {
                 if (existingResource.equals(droolsResource)) {
                     existingResource.setEndDate(knowledgeBaseDelRessourceEvent.getDateEvent());
+                    existingPlatformRuntimeInstance.setStopEventID(knowledgeBaseDelRessourceEvent.getEventID());
                 }
             }
             platformRuntimeInstanceRepository.save(existingPlatformRuntimeInstance);

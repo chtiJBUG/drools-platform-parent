@@ -1,4 +1,4 @@
-<div>
+<div data-ng-controller="runtimeAnalysisController">
     <div class="page-header">
         <h3 style="margin-left:20px">Runtime Analysis</h3>
     </div>
@@ -11,9 +11,70 @@
                 <div class="panel-body">
                     <!-- Search form -->
                     <form role="form" name="SearchForm">
-
+                        <h4>Guvnor</h4>
+                        <div class="form-group" ng-class="namePackageSelectClass">
+                            <label for="package-name-select">Rule Package Name</label>
+                            <select id="package-name-select" ui-select2="selectPackage" ng-model="package"
+                                    class="form-control"
+                                    style="padding:0;height:auto;width:auto;"
+                                    data-placeholder="Select a package">
+                                <option value=""></option>
+                                <option ng-repeat="p in packagesList" value="{{p}}">{{p}}
+                                </option>
+                            </select>
+                        </div>
                         <div class="form-group">
-                            <button id="btn-cancel" class="btn btn-danger show-tooltip" ng-show="showCancelButton"
+                            <label for="iptstatus">Status</label>
+                            <small>(Optional)</small>
+                            <input id="iptstatus" class="form-control" name="status" type="text"
+                                   placeholder="Please enter the status" data-ng-model="status"
+                                   ng-pattern="/^[0-9]+.[0-9]+.[0-9]+.[0-9]+$/">
+                        </div>
+                        <div class="form-group">
+                            <a style="cursor:pointer" ng-click="collapseStatus.firstBox=!collapseStatus.firstBox">
+                                <span ng-show="!collapseStatus.firstBox"><i class="fa fa-plus-circle"></i> More filters : Runtime</span>
+                                <span ng-show="collapseStatus.firstBox"><i class="fa fa-minus-circle"></i> Hide filters</span>
+                            </a>
+                            <hr ng-show="collapseStatus.firstBox">
+                            <div collapse="!collapseStatus.firstBox">
+                                <h4>Runtime</h4>
+                                <label for="IPaddr">Hostname</label>
+                                <small>(Optional)</small>
+                                <input id="IPaddr" class="form-control" name="status" type="text"
+                                       placeholder="Please enter the status" data-ng-model="status"
+                                       ng-pattern="/^[0-9]+.[0-9]+.[0-9]+.[0-9]+$/">
+                                <br>
+
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <a style="cursor:pointer" ng-click="collapseStatus.secondBox=!collapseStatus.secondBox">
+                                <span ng-show="!collapseStatus.secondBox"><i class="fa fa-plus-circle"></i> More filters : Session Execution</span>
+                                <span ng-show="collapseStatus.secondBox"><i class="fa fa-minus-circle"></i> Hide filters</span>
+                            </a>
+                            <hr ng-show="collapseStatus.secondBox">
+                            <div collapse="!collapseStatus.secondBox">
+                                <h4>SessionExecution</h4>
+                                <label>From</label>
+                                <div class="input-group col-md-6">
+                                    <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dates.startDate" is-open="datePickers.firstCalendar" min-date="dates.minDate" max-date="dates.maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'startDate')">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+
+                                </div>
+                                <label>To</label>
+                                <div class="input-group col-md-6">
+                                    <input type="text" class="form-control" class="form-control" datepicker-popup="{{format}}" ng-model="dates.endDate" is-open="datePickers.secondCalendar" min-date="dates.minDate" max-date="'2014-07-29'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'endDate')" >
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <!-- button id="btn-cancel" class="btn btn-danger show-tooltip" ng-show="showCancelButton"
+                                    ng-click="reset()">
+                                <i class="fa fa-times"></i>
+                            </button -->
+                            <button id="btn-cancel" class="btn btn-danger show-tooltip"
                                     ng-click="reset()">
                                 <i class="fa fa-times"></i>
                             </button>
@@ -21,35 +82,82 @@
                                 <i class="fa fa-search"></i> Search
                             </button>
                         </div>
+
                     </form>
                 </div>
 
             </div>
-
         </div>
-        <div class="col-md-7 col-md-offset-1">
-
+        <!-- Result -->
+        <div  class="col-md-7 col-md-offset-1" >
             <div class="row">
-                <div class="panel panel-default">
+                <div class="panel panel-default" style="min-height: 372px;">
                     <div class="panel-heading panel-title">
-                        All Rules Execution on Runtime {{selectedRuntimeID}}
+                        <h3 class="panel-title">All Runtimes <span ng-show="allRuntimes.length != 0">({{allRuntimes.length}} runtime(s))</span></h3>
                     </div>
                     <div class="panel-body">
                         <!-- Search result -->
+                        <div class="table-wrapper-div">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <!--th class="bold">ruleBaseID</th-->
+                                        <th class="bold">Runtime</th>
+                                        <!--th class="bold">Status</th-->
+                                        <th class="bold">Rule Package</th>
+                                        <th class="bold">Execution</th>
+                                        <th class="bold">Started at</th>
+                                        <th class="bold">Ended at</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="runtime in pageItems()"
+                                        style="cursor:default"
+                                        ng-style="{{setStyle}}">
+                                        <!--td>{{runtime.ruleBaseID}}</td-->
+                                        <td>{{runtime.runtimeURL}}</td>
+                                        <!--td>{{runtime.status}}</td-->
+                                        <!-- data-content="test content <a href='' title='test add link'>link on content</a>" -->
+                                        <td style="cursor:pointer"><span tooltip-placement="bottom" tooltip-html-unsafe="{{popoverDetails.content}}" tooltip-trigger="click" >{{runtime.rulePackage}}</span></td>
+                                        <td>{{runtime.sessionId}}</td>
+                                        <td>{{runtime.startDate}}</td>
+                                        <td>{{runtime.endDate}}</td>
+                                        <td><button class="btn " ng-click="scrollToPanel(runtime.ruleBaseID)"><i class="fa fa-eye"></i></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
 
+                        </div>
+                        <div>
+                            <span paginator items="allRuntimes" class="pull-right" ng-show="allRuntimes.length != 0"></span>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <!-- Details -->
+    <div id="detailsPanel" ng-show="sessionExecutionDetails.area" class="row col-md-12 " >
+        <div class="page-header">
+            <h3 style="margin-left:20px">Session Execution Details</h3>
+        </div>
+        <div class="col-md-10 col-md-offset-1" ng-show="sessionExecutionDetails.panel">
+            <div class="panel panel-default" style="min-height:800px;">
+                <div class="panel-heading panel-title">
+                    <button type="button" class="close" aria-hidden="true" ng-click="closeDetailsPanel()" >&times;</button>
+                    <h3 class="panel-title">All Rules Execution on Runtime {{selectedRuntimeID}}</h3>
+                </div>
+                <div class="panel-body">
+                    <tabset justified="true" type="pills">
+                        <tab heading="Output">
+                            <section id="section-1">
+                                <textarea ui-codemirror="editorOptions" ng-model="test"></textarea>
+                            </section>
+                        </tab>
+                        <tab heading="Input">Some other content</tab>
+                        <tab heading="Event list">List</tab>
 
-            <div class="row">
-                <div class="panel panel-default">
-                    <div class="panel-heading panel-title">
-                        All Rules Execution on Runtime {{selectedRuntimeID}}
-                    </div>
-                    <div class="panel-body">
-                        <!-- Search result -->
-
-                    </div>
+                    </tabset>
                 </div>
             </div>
         </div>

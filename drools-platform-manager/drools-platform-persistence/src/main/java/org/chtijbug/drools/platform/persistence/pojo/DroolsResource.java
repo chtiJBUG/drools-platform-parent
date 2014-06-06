@@ -34,6 +34,10 @@ public class DroolsResource {
     private Date startDate;
     @Column
     private Date endDate;
+    private Integer startEventID;
+
+    private Integer stopEventID;
+
 
     public DroolsResource() {
     }
@@ -100,6 +104,22 @@ public class DroolsResource {
 
     public void setGuvnor_packageVersion(String guvnor_packageVersion) {
         this.guvnor_packageVersion = guvnor_packageVersion;
+    }
+
+    public Integer getStartEventID() {
+        return startEventID;
+    }
+
+    public void setStartEventID(Integer startEventID) {
+        this.startEventID = startEventID;
+    }
+
+    public Integer getStopEventID() {
+        return stopEventID;
+    }
+
+    public void setStopEventID(Integer stopEventID) {
+        this.stopEventID = stopEventID;
     }
 
     @Override
