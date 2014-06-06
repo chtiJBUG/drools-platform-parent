@@ -19,7 +19,7 @@ public class SessionExecution {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "session_execution_id_seq")
     private Long id;
     @ManyToOne
-    @JoinColumn(name="platform_runtime_instance_id_fk")
+    @JoinColumn(name = "platform_runtime_instance_id_fk")
     private PlatformRuntimeInstance platformRuntimeInstance;
 
     private Integer sessionId;
@@ -29,18 +29,20 @@ public class SessionExecution {
 
     private Date endDate;
 
-    private Integer eventID;
+    private Integer startEventID;
+
+    private Integer stopEventID;
 
     @Enumerated(EnumType.STRING)
     private SessionExecutionStatus sessionExecutionStatus;
 
-    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "session_execution_id_fk")
     private List<RuleExecution> ruleExecutions = new ArrayList<RuleExecution>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "session_execution_id_fk")
-    private List<Fact> facts = new ArrayList<Fact>() ;
+    private List<Fact> facts = new ArrayList<Fact>();
 
     public SessionExecution() {
     }
@@ -85,12 +87,20 @@ public class SessionExecution {
         this.endDate = endDate;
     }
 
-    public Integer getEventID() {
-        return eventID;
+    public Integer getStartEventID() {
+        return startEventID;
     }
 
-    public void setEventID(Integer eventID) {
-        this.eventID = eventID;
+    public void setStartEventID(Integer startEventID) {
+        this.startEventID = startEventID;
+    }
+
+    public Integer getStopEventID() {
+        return stopEventID;
+    }
+
+    public void setStopEventID(Integer stopEventID) {
+        this.stopEventID = stopEventID;
     }
 
     public SessionExecutionStatus getSessionExecutionStatus() {

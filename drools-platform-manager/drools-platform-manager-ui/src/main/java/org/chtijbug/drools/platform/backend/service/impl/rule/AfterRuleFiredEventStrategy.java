@@ -25,24 +25,23 @@ public class AfterRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
     private RuleExecutionRepository ruleExecutionRepository;
 
 
-
-
     @Override
     @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         AfterRuleFiredHistoryEvent afterRuleFiredHistoryEvent = (AfterRuleFiredHistoryEvent) historyEvent;
 
-        RuleExecution ruleExecution =null;
+        RuleExecution ruleExecution = null;
 
 
-
-        ruleExecution = ruleExecutionRepository.findByRuleBaseIDAndSessionIDAndRuleFlowNameAndRuleName(afterRuleFiredHistoryEvent.getRuleBaseID(),afterRuleFiredHistoryEvent.getSessionId(),afterRuleFiredHistoryEvent.getRule().getRuleFlowGroup(),afterRuleFiredHistoryEvent.getRule().getRuleName());
+        ruleExecution = ruleExecutionRepository.findByRuleBaseIDAndSessionIDAndRuleFlowNameAndRuleName(afterRuleFiredHistoryEvent.getRuleBaseID(), afterRuleFiredHistoryEvent.getSessionId(), afterRuleFiredHistoryEvent.getRule().getRuleFlowGroup(), afterRuleFiredHistoryEvent.getRule().getRuleName());
         if (ruleExecution != null) {
             ruleExecution.setEndDate(afterRuleFiredHistoryEvent.getDateEvent());
+            ruleExecution.setStopEventID(afterRuleFiredHistoryEvent.getEventID());
             ruleExecutionRepository.save(ruleExecution);
         } else {
-            ruleExecution = ruleExecutionRepository.findActiveRuleByRuleBaseIDAndSessionIDAndRuleName(afterRuleFiredHistoryEvent.getRuleBaseID(),afterRuleFiredHistoryEvent.getSessionId(),afterRuleFiredHistoryEvent.getRule().getRuleName());
+            ruleExecution = ruleExecutionRepository.findActiveRuleByRuleBaseIDAndSessionIDAndRuleName(afterRuleFiredHistoryEvent.getRuleBaseID(), afterRuleFiredHistoryEvent.getSessionId(), afterRuleFiredHistoryEvent.getRule().getRuleName());
             ruleExecution.setEndDate(afterRuleFiredHistoryEvent.getDateEvent());
+            ruleExecution.setStopEventID(afterRuleFiredHistoryEvent.getEventID());
             ruleExecutionRepository.save(ruleExecution);
         }
         LOG.debug("AfterRuleFiredHistoryEvent " + historyEvent.toString());

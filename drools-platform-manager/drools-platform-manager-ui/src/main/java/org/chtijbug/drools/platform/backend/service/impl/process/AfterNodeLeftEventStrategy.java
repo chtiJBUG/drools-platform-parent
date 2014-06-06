@@ -33,7 +33,8 @@ public class AfterNodeLeftEventStrategy extends AbstractEventHandlerStrategy {
         if (afterNodeLeftHistoryEvent.getNodeInstance().getNode().getNodeType() == DroolsNodeType.RuleNode) {
 
             RuleflowGroup ruleflowGroup = ruleflowGroupRepository.findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(afterNodeLeftHistoryEvent.getRuleBaseID(), afterNodeLeftHistoryEvent.getSessionId(), afterNodeLeftHistoryEvent.getProcessInstance().getId(), afterNodeLeftHistoryEvent.getNodeInstance().getNode().getRuleflowGroupName());
-             ruleflowGroup.setEndDate(afterNodeLeftHistoryEvent.getDateEvent());
+            ruleflowGroup.setEndDate(afterNodeLeftHistoryEvent.getDateEvent());
+            ruleflowGroup.setStopEventID(afterNodeLeftHistoryEvent.getEventID());
             ruleflowGroup.setRuleflowGroupStatus(RuleflowGroupStatus.STOPPED);
             ruleflowGroupRepository.save(ruleflowGroup);
         }

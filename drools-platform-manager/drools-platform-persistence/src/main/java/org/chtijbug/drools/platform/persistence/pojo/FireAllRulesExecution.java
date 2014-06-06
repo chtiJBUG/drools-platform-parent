@@ -29,10 +29,15 @@ public class FireAllRulesExecution {
     @ManyToOne
     private SessionExecution sessionExecution;
 
-    private Integer eventID;
+    private Integer startEventID;
 
     @Enumerated(EnumType.STRING)
     private FireAllRulesExecutionStatus fireAllRulesExecutionStatus;
+
+
+    private Integer stopEventID;
+
+    private Integer maxRulesEventID;
 
     public FireAllRulesExecution() {
     }
@@ -61,12 +66,12 @@ public class FireAllRulesExecution {
         this.endDate = endDate;
     }
 
-    public Integer getEventID() {
-        return eventID;
+    public Integer getStartEventID() {
+        return startEventID;
     }
 
-    public void setEventID(Integer eventID) {
-        this.eventID = eventID;
+    public void setStartEventID(Integer startEventID) {
+        this.startEventID = startEventID;
     }
 
     public SessionExecution getSessionExecution() {
@@ -109,6 +114,23 @@ public class FireAllRulesExecution {
         this.maxNbreRulesDefinedForSession = maxNbreRulesDefinedForSession;
     }
 
+
+    public Integer getStopEventID() {
+        return stopEventID;
+    }
+
+    public void setStopEventID(Integer stopEventID) {
+        this.stopEventID = stopEventID;
+    }
+
+    public Integer getMaxRulesEventID() {
+        return maxRulesEventID;
+    }
+
+    public void setMaxRulesEventID(Integer maxRulesEventID) {
+        this.maxRulesEventID = maxRulesEventID;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("FireRulesRuntime{");
@@ -118,7 +140,7 @@ public class FireAllRulesExecution {
         sb.append(", nbreRulesFired=").append(nbreRulesFired);
         sb.append(", maxNbreRulesDefinedForSession=").append(maxNbreRulesDefinedForSession);
         sb.append(", executionTime=").append(executionTime);
-        sb.append(", eventID=").append(eventID);
+        sb.append(", startEventID=").append(startEventID);
         sb.append(", fireRulesRuntimeStatus=").append(fireAllRulesExecutionStatus);
         sb.append('}');
         return sb.toString();

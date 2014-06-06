@@ -50,6 +50,7 @@ public class AfterNodeInstanceTriggeredEventStrategy extends AbstractEventHandle
             RuleflowGroup ruleflowGroup = new RuleflowGroup();
             ruleflowGroup.setProcessExecution(processExecution);
             ruleflowGroup.setStartDate(afterNodeInstanceTriggeredHistoryEvent.getDateEvent());
+            ruleflowGroup.setStartEventID(afterNodeInstanceTriggeredHistoryEvent.getEventID());
             ruleflowGroup.setRuleflowGroupStatus(RuleflowGroupStatus.STARTED);
             ruleflowGroup.setRuleflowGroup(afterNodeInstanceTriggeredHistoryEvent.getNodeInstance().getNode().getRuleflowGroupName());
             ruleflowGroupRepository.save(ruleflowGroup);

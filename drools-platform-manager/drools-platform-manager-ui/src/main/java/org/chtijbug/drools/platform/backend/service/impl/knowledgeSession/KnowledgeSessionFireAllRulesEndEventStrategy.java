@@ -4,10 +4,10 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionFireAllRulesEndEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.pojo.FireAllRulesExecutionStatus;
 import org.chtijbug.drools.platform.persistence.FireAllRulesExecutionRepository;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
 import org.chtijbug.drools.platform.persistence.pojo.FireAllRulesExecution;
+import org.chtijbug.drools.platform.persistence.pojo.FireAllRulesExecutionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +34,7 @@ public class KnowledgeSessionFireAllRulesEndEventStrategy extends AbstractEventH
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         SessionFireAllRulesEndEvent sessionFireAllRulesEndEvent = (SessionFireAllRulesEndEvent) historyEvent;
         FireAllRulesExecution fireAllRulesExecution = fireAllRulesExecutionRepository.findStartedFireAllRulesBySessionID(historyEvent.getSessionId());
-        fireAllRulesExecution.setEventID(sessionFireAllRulesEndEvent.getEventID());
+        fireAllRulesExecution.setStopEventID(sessionFireAllRulesEndEvent.getEventID());
         fireAllRulesExecution.setEndDate(sessionFireAllRulesEndEvent.getDateEvent());
         fireAllRulesExecution.setFireAllRulesExecutionStatus(FireAllRulesExecutionStatus.STOPPED);
         fireAllRulesExecution.setNbreRulesFired(Long.valueOf(sessionFireAllRulesEndEvent.getNumberRulesExecuted()));
