@@ -25,20 +25,24 @@ public class RuleExecution {
     private Date startDate;
     private Date endDate;
 
+    private Integer startEventID;
+
+    private Integer stopEventID;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "rule_execution_whenFacts")
-    private List<Fact> whenFacts = new ArrayList<Fact>() ;
+    private List<Fact> whenFacts = new ArrayList<Fact>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "rule_execution_thenFacts")
-    private List<Fact> thenFacts = new ArrayList<Fact>() ;
+    private List<Fact> thenFacts = new ArrayList<Fact>();
 
     @ManyToOne
-    @JoinColumn(name="ruleflowgroup_execution_id_fk")
+    @JoinColumn(name = "ruleflowgroup_execution_id_fk")
     private RuleflowGroup ruleflowGroup;
 
     @ManyToOne
-    @JoinColumn(name="session_execution_id_fk")
+    @JoinColumn(name = "session_execution_id_fk")
     private SessionExecution sessionExecution;
 
     public String getRuleName() {
@@ -87,6 +91,22 @@ public class RuleExecution {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getStartEventID() {
+        return startEventID;
+    }
+
+    public void setStartEventID(Integer startEventID) {
+        this.startEventID = startEventID;
+    }
+
+    public Integer getStopEventID() {
+        return stopEventID;
+    }
+
+    public void setStopEventID(Integer stopEventID) {
+        this.stopEventID = stopEventID;
     }
 
     public List<Fact> getWhenFacts() {

@@ -51,7 +51,7 @@ public class BeforeProcessStartEventStrategy extends AbstractEventHandlerStrateg
         processExecution.setProcessPackageName(beforeProcessStartHistoryEvent.getProcessInstance().getPackageName());
         processExecution.setProcessType(beforeProcessStartHistoryEvent.getProcessInstance().getType());
         processExecution.setProcessVersion(beforeProcessStartHistoryEvent.getProcessInstance().getVersion());
-        processExecution.setEventID(beforeProcessStartHistoryEvent.getEventID());
+        processExecution.setStartEventID(beforeProcessStartHistoryEvent.getEventID());
         processExecution.setStartDate(beforeProcessStartHistoryEvent.getDateEvent());
         processExecution.setProcessExecutionStatus(ProcessExecutionStatus.JBPMSTARTED);
         processExecutionRepository.save(processExecution);

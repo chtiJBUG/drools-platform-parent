@@ -36,6 +36,10 @@ public class RuleflowGroup {
 
     private Date endDate;
 
+    private Integer startEventID;
+
+    private Integer stopEventID;
+
     @Enumerated(EnumType.STRING)
     private RuleflowGroupStatus ruleflowGroupStatus;
 
@@ -93,6 +97,22 @@ public class RuleflowGroup {
 
     public void setRuleflowGroupStatus(RuleflowGroupStatus ruleflowGroupStatus) {
         this.ruleflowGroupStatus = ruleflowGroupStatus;
+    }
+
+    public Integer getStartEventID() {
+        return startEventID;
+    }
+
+    public void setStartEventID(Integer startEventID) {
+        this.startEventID = startEventID;
+    }
+
+    public Integer getStopEventID() {
+        return stopEventID;
+    }
+
+    public void setStopEventID(Integer stopEventID) {
+        this.stopEventID = stopEventID;
     }
 
     @Override

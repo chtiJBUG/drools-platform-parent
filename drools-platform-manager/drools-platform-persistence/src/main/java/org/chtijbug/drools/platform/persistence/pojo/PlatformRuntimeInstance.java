@@ -31,7 +31,8 @@ public class PlatformRuntimeInstance implements Serializable {
     private Date shutdowDate;
     @Enumerated(EnumType.STRING)
     private PlatformRuntimeInstanceStatus status;
-    private Integer eventID;
+    private Integer startEventID;
+    private Integer stopEventID;
     private Integer ruleBaseID;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -118,12 +119,20 @@ public class PlatformRuntimeInstance implements Serializable {
         this.status = status;
     }
 
-    public Integer getEventID() {
-        return eventID;
+    public Integer getStartEventID() {
+        return startEventID;
     }
 
-    public void setEventID(Integer eventID) {
-        this.eventID = eventID;
+    public void setStartEventID(Integer startEventID) {
+        this.startEventID = startEventID;
+    }
+
+    public Integer getStopEventID() {
+        return stopEventID;
+    }
+
+    public void setStopEventID(Integer stopEventID) {
+        this.stopEventID = stopEventID;
     }
 
     public Integer getRuleBaseID() {
@@ -165,7 +174,7 @@ public class PlatformRuntimeInstance implements Serializable {
 
         PlatformRuntimeInstance that = (PlatformRuntimeInstance) o;
 
-        if (!eventID.equals(that.eventID)) return false;
+        if (!startEventID.equals(that.startEventID)) return false;
         if (!hostname.equals(that.hostname)) return false;
         if (!port.equals(that.port)) return false;
         if (!ruleBaseID.equals(that.ruleBaseID)) return false;
@@ -179,7 +188,7 @@ public class PlatformRuntimeInstance implements Serializable {
         int result = hostname.hashCode();
         result = 31 * result + port.hashCode();
         result = 31 * result + startDate.hashCode();
-        result = 31 * result + eventID.hashCode();
+        result = 31 * result + startEventID.hashCode();
         result = 31 * result + ruleBaseID.hashCode();
         return result;
     }
@@ -194,7 +203,7 @@ public class PlatformRuntimeInstance implements Serializable {
                 append("startDate", startDate).
                 append("endDate", endDate).
                 append("status", status).
-                append("eventID", eventID).
+                append("startEventID", startEventID).
                 append("ruleBaseID", ruleBaseID).
 
                 toString();

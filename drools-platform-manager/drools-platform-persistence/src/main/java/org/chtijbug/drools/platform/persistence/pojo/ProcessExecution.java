@@ -30,7 +30,9 @@ public class ProcessExecution {
     @Enumerated(EnumType.STRING)
     private ProcessExecutionStatus processExecutionStatus;
 
-    private Integer eventID;
+    private Integer startEventID;
+
+    private Integer stopEventID;
 
     @ManyToOne
     private SessionExecution sessionExecution;
@@ -48,7 +50,6 @@ public class ProcessExecution {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "process_execution_id_fk")
     private List<RuleflowGroup> ruleflowGroups = new ArrayList<RuleflowGroup>();
-
 
 
     public Long getId() {
@@ -83,12 +84,20 @@ public class ProcessExecution {
         this.endDate = endDate;
     }
 
-    public Integer getEventID() {
-        return eventID;
+    public Integer getStartEventID() {
+        return startEventID;
     }
 
-    public void setEventID(Integer eventID) {
-        this.eventID = eventID;
+    public void setStartEventID(Integer startEventID) {
+        this.startEventID = startEventID;
+    }
+
+    public Integer getStopEventID() {
+        return stopEventID;
+    }
+
+    public void setStopEventID(Integer stopEventID) {
+        this.stopEventID = stopEventID;
     }
 
     public SessionExecution getSessionExecution() {
@@ -164,7 +173,7 @@ public class ProcessExecution {
         sb.append(", startDate=").append(startDate);
         sb.append(", endDate=").append(endDate);
         sb.append(", processRuntimeStatus=").append(processExecutionStatus);
-        sb.append(", eventID=").append(eventID);
+        sb.append(", startEventID=").append(startEventID);
         sb.append(", ProcessInstanceId='").append(ProcessInstanceId).append('\'');
         sb.append(", processPackageName='").append(processPackageName).append('\'');
         sb.append(", processVersion='").append(processVersion).append('\'');

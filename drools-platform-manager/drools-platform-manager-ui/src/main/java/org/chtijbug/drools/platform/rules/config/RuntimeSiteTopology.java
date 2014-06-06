@@ -22,7 +22,9 @@ import static java.util.Arrays.asList;
 
 @Component
 public class RuntimeSiteTopology {
-    /** Default values */
+    /**
+     * Default values
+     */
     private String guvnorUrl = "http://localhost:8080";
     private String guvnorApplicationName = "drools-guvnor";
     private String guvnorPackageName = "default";
@@ -93,7 +95,7 @@ public class RuntimeSiteTopology {
     }
 
     public String getGuvnorUserName() {
-            return guvnorUserName;
+        return guvnorUserName;
     }
 
     public void setGuvnorUserName(String guvnorUserName) {
@@ -101,7 +103,7 @@ public class RuntimeSiteTopology {
     }
 
     public String getGuvnorPassword() {
-            return guvnorPassword;
+        return guvnorPassword;
     }
 
     public void setGuvnorPassword(String guvnorPassword) {

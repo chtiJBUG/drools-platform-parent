@@ -44,12 +44,12 @@ public class KnowledgeSessionCreateEventStrategy extends AbstractEventHandlerStr
             sessionExecutionRepository.save(existingSessionRutime);
         }
         List<PlatformRuntimeInstance> platformRuntimeInstances = platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(sessionCreatedEvent.getRuleBaseID());
-        if (platformRuntimeInstances.size()==1) {
+        if (platformRuntimeInstances.size() == 1) {
             SessionExecution sessionExecution = new SessionExecution();
             sessionExecution.setPlatformRuntimeInstance(platformRuntimeInstances.get(0));
             sessionExecution.setStartDate(sessionCreatedEvent.getDateEvent());
             sessionExecution.setSessionId(sessionCreatedEvent.getSessionId());
-            sessionExecution.setEventID(sessionCreatedEvent.getEventID());
+            sessionExecution.setStartEventID(sessionCreatedEvent.getEventID());
             sessionExecution.setSessionExecutionStatus(SessionExecutionStatus.STARTED);
             sessionExecutionRepository.save(sessionExecution);
         }

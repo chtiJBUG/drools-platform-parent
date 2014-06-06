@@ -4,10 +4,10 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionDisposedEvent;
 import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.pojo.SessionExecutionStatus;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
+import org.chtijbug.drools.platform.persistence.pojo.SessionExecutionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +36,7 @@ public class KnowledgeSessionDisposeEventStrategy extends AbstractEventHandlerSt
         SessionExecution existingSessionRutime = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
 
         existingSessionRutime.setEndDate(sessionDisposedEvent.getDateEvent());
+        existingSessionRutime.setStopEventID(sessionDisposedEvent.getEventID());
         existingSessionRutime.setSessionExecutionStatus(SessionExecutionStatus.DISPOSED);
         sessionExecutionRepository.save(existingSessionRutime);
         LOG.debug("SessionDisposedEvent " + historyEvent.toString());
