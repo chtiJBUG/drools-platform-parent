@@ -22,27 +22,26 @@ import java.util.List;
  */
 
 @Controller
-@RequestMapping(value = "/runtime_resource")
+@RequestMapping(value = "/runtime")
 public class RuntimeResource {
+
     @Autowired
     PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/activePlatformRuntimes/{packageName:.+}")
+    @RequestMapping(method = RequestMethod.GET, value = "/{packageName:.+}")
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
     public List<PlatformRuntimeInstance> findActivePlatformRuntimeInstance(@PathVariable String packageName) {
         return platformRuntimeInstanceRepository.findByPackageNameActiveRuntime(packageName);
-
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/allPlatformRuntimes/{packageName:.+}")
+    @RequestMapping(method = RequestMethod.GET, value = "/all/{packageName:.+}")
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
     public List<PlatformRuntimeInstance> findAllPlatformRuntimeInstance(@PathVariable String packageName) {
         return platformRuntimeInstanceRepository.findByPackageNameAllRuntime(packageName);
-
     }
 
 }
