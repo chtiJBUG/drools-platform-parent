@@ -31,9 +31,6 @@
     <property name="ruleBasePackage" ref="platformRunner"/>
   </bean>
 
-
-
-
   <!-- JAX-WS Service Endpoint -->
   <jaxws:endpoint id="personService" implementor="#calculateService" address="/calculateService"/>
 

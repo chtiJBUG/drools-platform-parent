@@ -32,9 +32,4 @@ public class ServiceCalculate implements IServiceCalculate {
         }
         return ticket;
     }
-    @Override
-    public String reloadPackageVersion() throws DroolsChtijbugException {
-        ruleBasePackage.ReloadWithSameRessources();
-        return "New Rule Base Package version  loaded";
-    }
 }
