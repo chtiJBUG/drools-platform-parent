@@ -68,6 +68,8 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
     private String guvnor_password;
     private JavaDialect javaDialect = null;
 
+    public DroolsPlatformKnowledgeBase() {/* nop*/}
+
     public DroolsPlatformKnowledgeBase(Integer ruleBaseID, List<DroolsResource> droolsRessourceList,
                                        String ws_hostname,
                                        String platformServer, JavaDialect javaDialect) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
