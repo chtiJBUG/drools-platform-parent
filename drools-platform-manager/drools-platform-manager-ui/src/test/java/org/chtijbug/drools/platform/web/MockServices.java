@@ -36,7 +36,7 @@ public class MockServices {
     }
 
     @Bean
-    public RuntimeSiteTopology aladsWebClient() throws MalformedURLException {
+    public RuntimeSiteTopology runtimeSiteTopology() throws MalformedURLException {
         RuntimeSiteTopology mock = mock(RuntimeSiteTopology.class);
         Collection<Environment> envs = asList(
                 new Environment("env1",new URL("http://url1")),
