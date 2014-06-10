@@ -15,7 +15,7 @@
     <packaging>war</packaging>
 
     <properties>
-        <tomcat.deployment.url>http://192.168.1.26:8080/manager</tomcat.deployment.url>
+        <tomcat.deployment.url>http://192.168.1.26:8080/manager/text</tomcat.deployment.url>
         <tomcat.deployment.username>tomcat</tomcat.deployment.username>
         <tomcat.deployment.password>tomcat</tomcat.deployment.password>
     </properties>
