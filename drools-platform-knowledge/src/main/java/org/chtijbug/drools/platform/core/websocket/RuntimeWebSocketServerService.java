@@ -6,8 +6,8 @@ import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.entity.PlatformResourceFile;
 import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
-import org.chtijbug.drools.runtime.resource.Bpmn2DroolsRessource;
-import org.chtijbug.drools.runtime.resource.DrlDroolsRessource;
+import org.chtijbug.drools.runtime.resource.Bpmn2DroolsResource;
+import org.chtijbug.drools.runtime.resource.DrlDroolsResource;
 import org.chtijbug.drools.runtime.resource.DroolsResource;
 import org.chtijbug.drools.runtime.resource.GuvnorDroolsResource;
 
@@ -32,9 +32,9 @@ public class RuntimeWebSocketServerService {
     private DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase;
 
 
-    private String guvnor_username;
+    private String guvnorUsername;
 
-    private String guvnor_password;
+    private String guvnorPassword;
 
     @OnMessage
     public void receiveMessage(PlatformManagementKnowledgeBean bean, Session peer) throws IOException, EncodeException {
@@ -55,9 +55,9 @@ public class RuntimeWebSocketServerService {
                         GuvnorDroolsResource guvnorDroolsResource = (GuvnorDroolsResource) droolsResource;
                         PlatformResourceFile platformResourceFile = new PlatformResourceFile(guvnorDroolsResource.getBaseUrl(), guvnorDroolsResource.getWebappName(), guvnorDroolsResource.getPackageName(), guvnorDroolsResource.getPackageVersion(), null, null);
                         bean.getResourceFileList().add(platformResourceFile);
-                    } else if (droolsResource instanceof DrlDroolsRessource) {
-                        DrlDroolsRessource drlDroolsRessource = (DrlDroolsRessource) droolsResource;
-                        PlatformResourceFile platformResourceFile = new PlatformResourceFile(drlDroolsRessource.getFileName(), drlDroolsRessource.getFileContent());
+                    } else if (droolsResource instanceof DrlDroolsResource) {
+                        DrlDroolsResource drlDroolsResource = (DrlDroolsResource) droolsResource;
+                        PlatformResourceFile platformResourceFile = new PlatformResourceFile(drlDroolsResource.getFileName(), drlDroolsResource.getFileContent());
                         bean.getResourceFileList().add(platformResourceFile);
                     }
                 }
@@ -72,15 +72,15 @@ public class RuntimeWebSocketServerService {
                 List<DroolsResource> droolsResources = new ArrayList<>();
                 for (PlatformResourceFile resourceFile : resourceFiles) {
                     if (resourceFile.getGuvnor_url() != null) {
-                        DroolsResource droolsResource = GuvnorDroolsResource.createGuvnorRessource(resourceFile.getGuvnor_url(), resourceFile.getGuvnor_appName(), resourceFile.getGuvnor_packageName(), resourceFile.getGuvnor_packageVersion(), guvnor_username, guvnor_password);
+                        DroolsResource droolsResource = GuvnorDroolsResource.createGuvnorRessource(resourceFile.getGuvnor_url(), resourceFile.getGuvnor_appName(), resourceFile.getGuvnor_packageName(), resourceFile.getGuvnor_packageVersion(), guvnorUsername, guvnorPassword);
                         droolsResources.add(droolsResource);
                     } else {
                         String extension = getFileExtension(resourceFile.getFileName());
                         if ("bpmn2".equals(extension)) {
-                            Bpmn2DroolsRessource bpmn2DroolsRessource = Bpmn2DroolsRessource.createClassPathResource(resourceFile.getFileName());
-                            droolsResources.add(bpmn2DroolsRessource);
+                            Bpmn2DroolsResource bpmn2DroolsResource = Bpmn2DroolsResource.createClassPathResource(resourceFile.getFileName());
+                            droolsResources.add(bpmn2DroolsResource);
                         } else if ("drl".equals(extension)) {
-                            DroolsResource droolsResource = DrlDroolsRessource.createClassPathResource(resourceFile.getFileName());
+                            DroolsResource droolsResource = DrlDroolsResource.createClassPathResource(resourceFile.getFileName());
                             droolsResources.add(droolsResource);
                         }
                     }
@@ -119,8 +119,8 @@ public class RuntimeWebSocketServerService {
         this.droolsPlatformKnowledgeBase = (DroolsPlatformKnowledgeBase) userProperties.get("droolsPlatformKnowledgeBase");
         this.peerLoggerServer = session;
         this.droolsPlatformKnowledgeBase.setRuntimeWebSocketServerService(this);
-        this.guvnor_username = this.droolsPlatformKnowledgeBase.getGuvnor_username();
-        this.guvnor_password = this.droolsPlatformKnowledgeBase.getGuvnor_password();
+        this.guvnorUsername = this.droolsPlatformKnowledgeBase.getGuvnorUsername();
+        this.guvnorPassword = this.droolsPlatformKnowledgeBase.getGuvnorPassword();
         out.println("Server connected " + session + " " + endpointConfig);
     }
 

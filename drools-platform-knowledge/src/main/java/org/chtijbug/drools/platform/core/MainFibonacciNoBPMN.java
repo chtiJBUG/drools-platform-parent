@@ -2,7 +2,7 @@ package org.chtijbug.drools.platform.core;
 
 import org.chtijbug.drools.runtime.RuleBasePackage;
 import org.chtijbug.drools.runtime.RuleBaseSession;
-import org.chtijbug.drools.runtime.resource.DrlDroolsRessource;
+import org.chtijbug.drools.runtime.resource.DrlDroolsResource;
 import org.chtijbug.drools.runtime.resource.DroolsResource;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class MainFibonacciNoBPMN {
     public static void main(String[] args) {
          RuleBasePackage droolsPlatformKnowledgeBase = null;
         try {
-            DrlDroolsRessource drlFile = DrlDroolsRessource.createClassPathResource("fibonacci.drl");
+            DrlDroolsResource drlFile = DrlDroolsResource.createClassPathResource("fibonacci.drl");
              List<DroolsResource> droolsResources = new ArrayList<>();
              droolsResources.add(drlFile);
              droolsPlatformKnowledgeBase = new DroolsPlatformKnowledgeBase(12,droolsResources,"localhost",22600 ,"localhost" );

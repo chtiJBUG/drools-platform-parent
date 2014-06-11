@@ -24,6 +24,13 @@
 
   <bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase"
         init-method="initPlatformRuntime">
+      <property name="webSocketHostname" value="${ws.hostname}"/>
+      <property name="webSocketPort" value="${ws.port}"/>
+      <property name="droolsResources">
+          <list>
+              <ref bean="guvnorResource"/>
+          </list>
+      </property>
 
   </bean>
 

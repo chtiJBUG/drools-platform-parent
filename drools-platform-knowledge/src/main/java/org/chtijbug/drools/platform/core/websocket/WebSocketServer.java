@@ -16,29 +16,19 @@ import java.util.HashMap;
  */
 
 public class WebSocketServer  {
-
-
+    private static final Logger LOG = Logger.getLogger(WebSocketServer.class);
+    protected static HashMap<String, Object> userProperties = new HashMap<>();
     private String ws_hostname;
-
     private int ws_port;
-
-    public static HashMap<String, Object> userProperties = new HashMap<String, Object>();
-
     Server localWebSocketServer;
 
-    private static final Logger LOG = Logger.getLogger(WebSocketServer.class);
-
     public DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase;
-
-
-
 
     public WebSocketServer(String ws_hostname, int ws_port, DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase) throws UnknownHostException {
         this.ws_hostname = ws_hostname;
         this.ws_port = ws_port;
         this.droolsPlatformKnowledgeBase = droolsPlatformKnowledgeBase;
         userProperties.put("droolsPlatformKnowledgeBase", droolsPlatformKnowledgeBase);
-
     }
 
     public void run(){
@@ -50,13 +40,10 @@ public class WebSocketServer  {
         }
     }
 
-
-
     public void end() {
         this.localWebSocketServer.stop();
         this.localWebSocketServer = null;
     }
-
 
     public String getWs_hostname() {
         return ws_hostname;
@@ -65,7 +52,5 @@ public class WebSocketServer  {
     public int getWs_port() {
         return ws_port;
     }
-
-
 
 }
