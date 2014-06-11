@@ -55,11 +55,23 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     //___ ID of the runtime selected
     $scope.selectedRuntimeID = undefined;
 
+    $scope.selectedTab=1;
+
     $scope.test="// test code";
     $scope.code = {
-        'input':"// no code",
-        'output':"// no code"
+        'input':"// input",
+        'output':'// output'
     };
+    $scope.editorOptions = {
+        lineWrapping : true,
+        lineNumbers: true,
+        styleActiveLine: true,
+        matchBrackets: true,
+        readOnly: false,
+        mode: {name: "javascript", json: true},
+        theme :'ambiance'
+    };
+
 
     //___ Fetch the list
     $http.get('./server/rules_package/list')
@@ -70,15 +82,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             console.log(error);
         });
 
-    $scope.editorOptions = {
-        lineWrapping : true,
-        lineNumbers: true,
-        styleActiveLine: true,
-        matchBrackets: true,
-        readOnly: true,
-        mode: {name: "javascript", json: true},
-        theme :'ambiance'
-    };
+
 
 
     //___ Scrolling to the next panel
@@ -93,6 +97,12 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
 
     };
+
+    // Toggle to another tab
+    $scope.selectedTab = '';
+    $scope.toggleTab=function(item){
+        $scope.selectedTab = item;
+    }
 
     $scope.closeDetailsPanel = function() {
         var someElement = angular.element(document.getElementById('wrap'));
@@ -244,3 +254,5 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
 
 });
+
+
