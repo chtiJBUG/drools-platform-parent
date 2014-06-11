@@ -63,7 +63,7 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
                     console.log(error);
                 })
         }
-        growlNotifications.add('Hello world', 'warning', 2000);
+        // growlNotifications.add('Hello world', 'warning', 2000);
 
     };
 
@@ -233,6 +233,7 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
                     $scope.showCancelButton=true;
                     console.log("Build successful");
                     $scope.searchPackageByName();
+                    growlNotifications.add('Version created', 'success', 2000);
                 })
                 .error(function (error, status) {
                     $scope.showCancelButton=true;
@@ -271,6 +272,7 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
                     //___ reload the list
                     $scope.searchPackageByName();
                        $scope.closeWizzard();
+                    growlNotifications.add('Version rebuilded', 'success', 2000);
                 })
                 .error(function (error, status) {
                     $scope.showCancelButton=true;
@@ -285,6 +287,8 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
     $scope.deployVersion = function() {
         $scope.closeDeploy();
         growlNotifications.add('Deployment launched', 'info', 2000);
+
+
     }
 
     //___ Delete
@@ -305,6 +309,7 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
                 $scope.showCancelButton=true;
                 console.log("Delete process successful");
                 $scope.searchPackageByName();
+                growlNotifications.add('Version deleted', 'info', 2000);
             })
             .error(function (error, status) {
                 $scope.showCancelButton=true;

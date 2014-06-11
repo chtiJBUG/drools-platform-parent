@@ -11,13 +11,15 @@ var droolsPlatformApp = angular.module('droolsPlatformApp', [
     'growlNotifications',
     'ngSanitize',
     'paginator',
-    'ngAnimate'
+    'ngAnimate',
+    'AngularStomp'
 
 ]);
 
 droolsPlatformApp.config(function ($locationProvider) {
     //___ Enable Html5 mode
     $locationProvider.html5Mode(true);
+    Stomp.WebSocketClass = SockJS;
 });
 
 droolsPlatformApp.run(['$animate', function($animate){
@@ -141,8 +143,8 @@ var DroolsPlatformControllers = angular.module('drools-platform.controllers', []
 
 var ServicesModule = angular.module('drools-platform.services', []);
 
-DroolsPlatformControllers.controller('MainCtrl', ['$rootScope', '$scope', '$window', '$http', 'LoginService','$log',
-    function ($rootScope, $scope, $window, $http, LoginService, $log) {
+DroolsPlatformControllers.controller('MainCtrl', ['$rootScope', '$scope', '$window', '$http', 'LoginService','$log', '$location',
+    function ($rootScope, $scope, $window, $http, LoginService, $log, $location) {
         $scope.logout = function () {
             var loginRequired = function () {
                 $rootScope.loginRequired = true;
@@ -169,6 +171,19 @@ DroolsPlatformControllers.controller('MainCtrl', ['$rootScope', '$scope', '$wind
                 $log.log("Error. Caused by : " + cause);
                 $rootScope.username = "default";
             });
+        console.log($location); //complete location
+        console.log($location.absUrl()); //complete URL
+        console.log($location.host()); // hostname
+        console.log($location.port()); //port
+        console.log($location.path()); //path
+
+        /*$scope.messages = [];
+        $scope.client = ngstomp($location.absUrl());
+        $scope.client.connect("guest", "guest", function() {
+            $scope.client.subscribe("/topic/test", function (message) {
+                $scope.messages.push(message.body);
+            });
+        });*/
     }
 ]);
 
