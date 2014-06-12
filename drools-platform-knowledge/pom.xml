@@ -87,10 +87,10 @@
             <groupId>org.chtijbug.drools</groupId>
             <artifactId>drools-framework-runtime-entity</artifactId>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-        </dependency>
+        </dependency-->
         <!--dependency>
           <groupId>org.jencks</groupId>
           <artifactId>jencks</artifactId>

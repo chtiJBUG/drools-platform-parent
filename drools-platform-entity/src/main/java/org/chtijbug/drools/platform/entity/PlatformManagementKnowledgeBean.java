@@ -15,10 +15,10 @@ import java.util.List;
 public class PlatformManagementKnowledgeBean {
 
 
-    public class PlatformManagementKnowledgeBeanCode extends JSONCoder<PlatformManagementKnowledgeBean> {
+    public static class PlatformManagementKnowledgeBeanCode extends JSONCoder<PlatformManagementKnowledgeBean> {
     }
 
-    private Heartbeat heartbeat;
+    private Heartbeat heartbeat = new Heartbeat();
 
 
     private boolean isAlive = false;
@@ -36,7 +36,7 @@ public class PlatformManagementKnowledgeBean {
 
     private RequestStatus requestStatus;
 
-    private JMXInfo jmxInfo;
+    private JMXInfo jmxInfo = new JMXInfo();
 
     private List<PlatformResourceFile> resourceFileList = new ArrayList<>();
 

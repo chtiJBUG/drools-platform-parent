@@ -18,27 +18,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.System.out;
-
 @ServerEndpoint(value = "/runtime",
         encoders = {PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class},
         decoders = {PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class})
 public class RuntimeWebSocketServerService {
-
-    private Session peerLoggerServer;
-
     private static final Logger LOG = Logger.getLogger(RuntimeWebSocketServerService.class);
 
+    private Session peerLoggerServer;
     private DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase;
-
-
     private String guvnorUsername;
-
     private String guvnorPassword;
 
     @OnMessage
     public void receiveMessage(PlatformManagementKnowledgeBean bean, Session peer) throws IOException, EncodeException {
-        //  
+        //
         switch (bean.getRequestRuntimePlarform()) {
             case isAlive:
                 bean.setAlive(true);
@@ -62,9 +55,9 @@ public class RuntimeWebSocketServerService {
                     }
                 }
                 bean.setRequestStatus(RequestStatus.SUCCESS);
-                System.out.println("Server Side before sent" + bean.toString());
+                LOG.info("Server Side before sent" + bean.toString());
                 peer.getBasicRemote().sendObject(bean);
-                System.out.println("Server Side after sent");
+                LOG.info("Server Side after sent");
 
                 break;
             case loadNewRuleVersion:
@@ -104,7 +97,6 @@ public class RuntimeWebSocketServerService {
 
     public void sendMessage(PlatformManagementKnowledgeBean bean) throws IOException, EncodeException {
         this.peerLoggerServer.getBasicRemote().sendObject(bean);
-
     }
 
      public void sendHeartBeat(){
@@ -121,7 +113,7 @@ public class RuntimeWebSocketServerService {
         this.droolsPlatformKnowledgeBase.setRuntimeWebSocketServerService(this);
         this.guvnorUsername = this.droolsPlatformKnowledgeBase.getGuvnorUsername();
         this.guvnorPassword = this.droolsPlatformKnowledgeBase.getGuvnorPassword();
-        out.println("Server connected " + session + " " + endpointConfig);
+        LOG.info("Server connected " + session + " " + endpointConfig);
     }
 
     @OnClose
