@@ -15,14 +15,13 @@ import java.util.List;
 public class PlatformManagementKnowledgeBean {
 
 
-    public static class PlatformManagementKnowledgeBeanCode extends
-            JSONCoder<PlatformManagementKnowledgeBean> {
-     }
+    public class PlatformManagementKnowledgeBeanCode extends JSONCoder<PlatformManagementKnowledgeBean> {
+    }
 
     private Heartbeat heartbeat;
 
 
-    private boolean isAlive=false;
+    private boolean isAlive = false;
 
     public boolean isAlive() {
         return isAlive;

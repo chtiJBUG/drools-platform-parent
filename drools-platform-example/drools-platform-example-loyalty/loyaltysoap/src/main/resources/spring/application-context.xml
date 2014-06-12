@@ -24,15 +24,19 @@
 
   <bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase"
         init-method="initPlatformRuntime">
+      <property name="webSocketHostname" value="${ws.hostname}"/>
+      <property name="webSocketPort" value="${ws.port}"/>
+      <property name="droolsResources">
+          <list>
+              <ref bean="guvnorResource"/>
+          </list>
+      </property>
 
   </bean>
 
   <bean id="calculateService" class="loyalty.service.ServiceCalculate">
     <property name="ruleBasePackage" ref="platformRunner"/>
   </bean>
-
-
-
 
   <!-- JAX-WS Service Endpoint -->
   <jaxws:endpoint id="personService" implementor="#calculateService" address="/calculateService"/>

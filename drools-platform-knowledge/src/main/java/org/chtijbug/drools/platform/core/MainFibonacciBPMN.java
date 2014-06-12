@@ -2,8 +2,8 @@ package org.chtijbug.drools.platform.core;
 
 import org.chtijbug.drools.runtime.RuleBasePackage;
 import org.chtijbug.drools.runtime.RuleBaseSession;
-import org.chtijbug.drools.runtime.resource.Bpmn2DroolsRessource;
-import org.chtijbug.drools.runtime.resource.DrlDroolsRessource;
+import org.chtijbug.drools.runtime.resource.Bpmn2DroolsResource;
+import org.chtijbug.drools.runtime.resource.DrlDroolsResource;
 import org.chtijbug.drools.runtime.resource.DroolsResource;
 
 import java.util.ArrayList;
@@ -20,8 +20,8 @@ public class MainFibonacciBPMN {
 
          RuleBasePackage droolsPlatformKnowledgeBase =null;
         try {
-            DrlDroolsRessource drlFile = DrlDroolsRessource.createClassPathResource("ruleflow2.drl");
-            Bpmn2DroolsRessource bpmnFile = Bpmn2DroolsRessource.createClassPathResource("RuleFlowProcess2.bpmn2");;
+            DrlDroolsResource drlFile = DrlDroolsResource.createClassPathResource("ruleflow2.drl");
+            Bpmn2DroolsResource bpmnFile = Bpmn2DroolsResource.createClassPathResource("RuleFlowProcess2.bpmn2");;
             List<DroolsResource> droolsResources = new ArrayList<>();
             droolsResources.add(drlFile);
             droolsResources.add(bpmnFile);

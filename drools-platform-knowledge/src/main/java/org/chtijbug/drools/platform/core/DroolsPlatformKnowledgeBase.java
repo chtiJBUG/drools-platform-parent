@@ -14,8 +14,8 @@ import org.chtijbug.drools.runtime.impl.JavaDialect;
 import org.chtijbug.drools.runtime.impl.RuleBaseSingleton;
 import org.chtijbug.drools.runtime.impl.RuleBaseStatefulSession;
 import org.chtijbug.drools.runtime.listener.HistoryListener;
-import org.chtijbug.drools.runtime.resource.Bpmn2DroolsRessource;
-import org.chtijbug.drools.runtime.resource.DrlDroolsRessource;
+import org.chtijbug.drools.runtime.resource.Bpmn2DroolsResource;
+import org.chtijbug.drools.runtime.resource.DrlDroolsResource;
 import org.chtijbug.drools.runtime.resource.DroolsResource;
 import org.chtijbug.drools.runtime.resource.GuvnorDroolsResource;
 import org.slf4j.Logger;
@@ -34,99 +34,67 @@ import java.util.List;
  */
 
 public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseReady {
-    /**
-     * Class Logger
-     */
+    /** Class Logger */
     private static Logger logger = LoggerFactory.getLogger(DroolsPlatformKnowledgeBase.class);
-
-
+    /** Rule base ID (UID for the runtime */
     private Integer ruleBaseID;
-
-
+    /** Rule base singleton (Knwledge session factory) */
     private RuleBaseSingleton ruleBasePackage;
-
+    /** */
     private JmsStorageHistoryListener jmsStorageHistoryListener;
-
+    /** */
     private RuntimeWebSocketServerService runtimeWebSocketServerService;
 
     private List<DroolsResource> droolsResources = new ArrayList<>();
-
-    private String ws_hostname;
-
-    private int ws_port = 8025;
+    /** Instant messaging channel **/
+    private String webSocketHostname;
+    private WebSocketServer webSocketServer;
+    private int webSocketPort = 8025;
+    /** Event Messaging channel settings */
     private String platformServer;
-
     private Integer platformPort = 61616;
-
     private String platformQueueName = "historyEventQueue";
-
+    /** Runtime internal Status */
     private boolean isReady = false;
 
-    private WebSocketServer webSocketServer;
-
-    private String guvnor_username;
-    private String guvnor_password;
+    private String guvnorUsername;
+    private String guvnorPassword;
     private JavaDialect javaDialect = null;
 
-    public DroolsPlatformKnowledgeBase(Integer ruleBaseID, List<DroolsResource> droolsRessourceList,
-                                       String ws_hostname,
+    public DroolsPlatformKnowledgeBase() {/* nop*/}
+
+    public DroolsPlatformKnowledgeBase(Integer ruleBaseID, List<DroolsResource> droolsResources,
+                                       String webSocketHostname,
                                        String platformServer, JavaDialect javaDialect) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
         this.ruleBaseID = ruleBaseID;
-        this.droolsResources = droolsRessourceList;
-        this.ws_hostname = ws_hostname;
+        this.droolsResources = droolsResources;
+        this.webSocketHostname = webSocketHostname;
         this.platformServer = platformServer;
         this.javaDialect = javaDialect;
         initPlatformRuntime();
     }
 
-    public DroolsPlatformKnowledgeBase(Integer ruleBaseID, List<DroolsResource> droolsRessourceList,
-                                          String ws_hostname,int ws_port ,
+    public DroolsPlatformKnowledgeBase(Integer ruleBaseID, List<DroolsResource> droolsResources,
+                                          String webSocketHostname,int webSocketPort,
                                           String platformServer) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
            this.ruleBaseID = ruleBaseID;
-           this.droolsResources = droolsRessourceList;
-           this.ws_hostname = ws_hostname;
-           this.ws_port = ws_port;
+           this.droolsResources = droolsResources;
+           this.webSocketHostname = webSocketHostname;
+           this.webSocketPort = webSocketPort;
            this.platformServer = platformServer;
            initPlatformRuntime();
        }
 
-    public DroolsPlatformKnowledgeBase(Integer ruleBaseID, List<DroolsResource> droolsRessourceList,
-                                       String ws_hostname,
+    public DroolsPlatformKnowledgeBase(Integer ruleBaseID, List<DroolsResource> droolsResources,
+                                       String webSocketHostname,
                                        String platformServer) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
         this.ruleBaseID = ruleBaseID;
-        this.droolsResources = droolsRessourceList;
-        this.ws_hostname = ws_hostname;
+        this.droolsResources = droolsResources;
+        this.webSocketHostname = webSocketHostname;
         this.platformServer = platformServer;
         initPlatformRuntime();
     }
 
-    public void setWs_port(int ws_port) {
-        this.ws_port = ws_port;
-    }
-
-    public void setPlatformPort(Integer platformPort) {
-        this.platformPort = platformPort;
-    }
-
-    public String getWs_hostname() {
-        return ws_hostname;
-    }
-
-    public int getWs_port() {
-        return ws_port;
-    }
-
-    public String getPlatformServer() {
-        return platformServer;
-    }
-
-    public Integer getPlatformPort() {
-        return platformPort;
-    }
-
-    public String getPlatformQueueName() {
-        return platformQueueName;
-    }
 
     public void initPlatformRuntime() throws DroolsChtijbugException, InterruptedException, UnknownHostException {
         logger.debug(">>createPackageBasePackage");
@@ -139,26 +107,26 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
         PlatformKnowledgeBaseInitialConnectionEvent platformKnowledgeBaseInitialConnectionEvent = new PlatformKnowledgeBaseInitialConnectionEvent(-1, new Date(), this.ruleBaseID);
         platformKnowledgeBaseInitialConnectionEvent.setRuleBaseID(this.ruleBaseID);
         platformKnowledgeBaseInitialConnectionEvent.setSessionId(-1);
-        platformKnowledgeBaseInitialConnectionEvent.setHostname(this.ws_hostname);
-        platformKnowledgeBaseInitialConnectionEvent.setPort(this.ws_port);
+        platformKnowledgeBaseInitialConnectionEvent.setHostname(this.webSocketHostname);
+        platformKnowledgeBaseInitialConnectionEvent.setPort(this.webSocketPort);
         if (droolsResources.size() == 1 && droolsResources.get(0) instanceof GuvnorDroolsResource) {
             GuvnorDroolsResource guvnorDroolsResource = (GuvnorDroolsResource) droolsResources.get(0);
             GuvnorResourceFile guvnorResourceFile = new GuvnorResourceFile(guvnorDroolsResource.getBaseUrl(), guvnorDroolsResource.getWebappName(), guvnorDroolsResource.getPackageName(), guvnorDroolsResource.getPackageVersion(), guvnorDroolsResource.getUsername(), guvnorDroolsResource.getPassword());
             platformKnowledgeBaseInitialConnectionEvent.getResourceFiles().add(guvnorResourceFile);
             ruleBasePackage.setGuvnor_username(guvnorResourceFile.getGuvnor_userName());
             ruleBasePackage.setGuvnor_password(guvnorResourceFile.getGuvnor_password());
-            this.guvnor_username = guvnorResourceFile.getGuvnor_userName();
-            this.guvnor_password = guvnorResourceFile.getGuvnor_password();
+            this.guvnorUsername = guvnorResourceFile.getGuvnor_userName();
+            this.guvnorPassword = guvnorResourceFile.getGuvnor_password();
             jmsStorageHistoryListener.fireEvent(platformKnowledgeBaseInitialConnectionEvent);
         } else {
             for (DroolsResource droolsResource : droolsResources) {
-                if (droolsResource instanceof DrlDroolsRessource) {
-                    DrlDroolsRessource drlDroolsRessource = (DrlDroolsRessource) droolsResource;
+                if (droolsResource instanceof DrlDroolsResource) {
+                    DrlDroolsResource drlDroolsResource = (DrlDroolsResource) droolsResource;
                     DrlResourceFile drlResourceFile = new DrlResourceFile();
-                    drlResourceFile.setFileName(drlDroolsRessource.getFileName());
+                    drlResourceFile.setFileName(drlDroolsResource.getFileName());
                     platformKnowledgeBaseInitialConnectionEvent.getResourceFiles().add(drlResourceFile);
-                } else if (droolsResource instanceof Bpmn2DroolsRessource) {
-                    Bpmn2DroolsRessource drlDroolsRessource = (Bpmn2DroolsRessource) droolsResource;
+                } else if (droolsResource instanceof Bpmn2DroolsResource) {
+                    Bpmn2DroolsResource drlDroolsRessource = (Bpmn2DroolsResource) droolsResource;
                     DrlResourceFile drlResourceFile = new DrlResourceFile();
                     drlResourceFile.setFileName(drlDroolsRessource.getFileName());
                     platformKnowledgeBaseInitialConnectionEvent.getResourceFiles().add(drlResourceFile);
@@ -172,7 +140,7 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
     }
 
     private void initSocketServer() throws UnknownHostException, InterruptedException {
-        webSocketServer = new WebSocketServer(ws_hostname, ws_port, this);
+        webSocketServer = new WebSocketServer(webSocketHostname, webSocketPort, this);
         webSocketServer.run();
     }
 
@@ -198,26 +166,10 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
         this.webSocketServer.end();
     }
 
-    private String getFileExtension(String ressourceName) {
-        int mid = ressourceName.lastIndexOf(".");
-        String ext = ressourceName.substring(mid + 1, ressourceName.length()).toUpperCase();
-        return ext;
-    }
-
-
-    public List<DroolsResource> getDroolsResources() {
-        return droolsResources;
-    }
-
-    public void setRuntimeWebSocketServerService(RuntimeWebSocketServerService runtimeWebSocketServerService) {
-        this.runtimeWebSocketServerService = runtimeWebSocketServerService;
-    }
-
-
     @Override
     public RuleBaseSession createRuleBaseSession() throws DroolsChtijbugException {
         DroolsPlatformSession droolsPlatformSession = null;
-        if (isReady == true) {
+        if (isReady) {
             RuleBaseStatefulSession created = (RuleBaseStatefulSession) this.ruleBasePackage.createRuleBaseSession();
             droolsPlatformSession = new DroolsPlatformSession();
             droolsPlatformSession.setRuntimeWebSocketServerService(this.runtimeWebSocketServerService);
@@ -229,7 +181,7 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
     @Override
     public RuleBaseSession createRuleBaseSession(int maxNumberRulesToExecute) throws DroolsChtijbugException {
         DroolsPlatformSession droolsPlatformSession = null;
-        if (isReady == true) {
+        if (isReady) {
             RuleBaseStatefulSession created = (RuleBaseStatefulSession) this.ruleBasePackage.createRuleBaseSession(maxNumberRulesToExecute);
             droolsPlatformSession = new DroolsPlatformSession();
             droolsPlatformSession.setRuntimeWebSocketServerService(this.runtimeWebSocketServerService);
@@ -291,22 +243,85 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("DroolsPlatformKnowledgeBase{");
-
         sb.append(", ruleBasePackage=").append(ruleBasePackage);
         sb.append('}');
         return sb.toString();
     }
 
-    public String getGuvnor_username() {
-        return guvnor_username;
-    }
-
-    public String getGuvnor_password() {
-        return guvnor_password;
-    }
-
     @Override
     public void setRuleBaseStatus(boolean ready) {
         this.isReady = ready;
+    }
+
+    public void setRuleBaseID(Integer ruleBaseID) {
+        this.ruleBaseID = ruleBaseID;
+    }
+
+    public String getWebSocketHostname() {
+        return webSocketHostname;
+    }
+
+    public void setWebSocketHostname(String webSocketHostname) {
+        this.webSocketHostname = webSocketHostname;
+    }
+
+    public int getWebSocketPort() {
+        return webSocketPort;
+    }
+
+    public void setWebSocketPort(int webSocketPort) {
+        this.webSocketPort = webSocketPort;
+    }
+
+    public String getPlatformServer() {
+        return platformServer;
+    }
+
+    public void setPlatformServer(String platformServer) {
+        this.platformServer = platformServer;
+    }
+
+    public Integer getPlatformPort() {
+        return platformPort;
+    }
+
+    public void setPlatformPort(Integer platformPort) {
+        this.platformPort = platformPort;
+    }
+
+    public String getPlatformQueueName() {
+        return platformQueueName;
+    }
+
+    public void setPlatformQueueName(String platformQueueName) {
+        this.platformQueueName = platformQueueName;
+    }
+
+    public List<DroolsResource> getDroolsResources() {
+        return droolsResources;
+    }
+
+    public void setDroolsResources(List<DroolsResource> droolsResources) {
+        this.droolsResources = droolsResources;
+    }
+
+    public String getGuvnorUsername() {
+        return guvnorUsername;
+    }
+
+    public void setGuvnorUsername(String guvnorUsername) {
+        this.guvnorUsername = guvnorUsername;
+    }
+
+    public String getGuvnorPassword() {
+        return guvnorPassword;
+    }
+
+    public void setGuvnorPassword(String guvnorPassword) {
+        this.guvnorPassword = guvnorPassword;
+    }
+
+    public void setRuntimeWebSocketServerService(RuntimeWebSocketServerService runtimeWebSocketServerService) {
+        this.runtimeWebSocketServerService = runtimeWebSocketServerService;
     }
 }
