@@ -140,12 +140,14 @@
             <h3 style="margin-left:20px">Session Execution Details</h3>
         </div>
         <div class="col-md-10 col-md-offset-1" ng-show="sessionExecutionDetails.panel">
-            <div class="panel panel-default" style="min-height:800px;">
+            <div class="panel panel-default">
                 <div class="panel-heading panel-title">
                     <button type="button" class="close" aria-hidden="true" ng-click="closeDetailsPanel()" >&times;</button>
                     <h3 class="panel-title">All Rules Execution on Runtime {{selectedRuntimeID}}</h3>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" style="min-height:700px;">
+
+
 
                     <!-- Choix du statut -->
                     <form>
@@ -160,11 +162,12 @@
                     <div ng-switch="selectedTab">
                         <div ng-switch-when="output">
                             <h3>OUTPUT</h3>
-                            <textarea ui-codemirror="editorOptions" ng-model="code.output"></textarea>
+                            <div hljs source="code.output"></div>
+
                         </div>
                         <div ng-switch-when="input">
                             <h3>INPUT</h3>
-                            <textarea ui-codemirror="editorOptions" ng-model="code.input"></textarea>
+                            <div hljs source="code.input"></div>
                         </div>
                         <div ng-switch-when="listing">
                             <h3>LIST</h3>
@@ -185,25 +188,13 @@
                                 eget pellentesque erat. Sed ornare euismod congue. Etiam posuere volutpat vestibulum. Aenean congue orci at lectus faucibus, at venenatis eros gravida.</p>
                         </div>
                     </div>
-                   <!-- <textarea ui-codemirror="editorOptions" ng-model="code.output"></textarea>-->
-                    <!-- tabset justified="true" type="pills">
-                        <tab heading="Output" ng-click="selectedInnerTab(1)">
-                            <div>
-                                <ui-codemirror ui-codemirror-opts="editorOptions" ng-model="code.output" ></ui-codemirror>
-                            </div>
-                            <!--ui-codemirror ng-model="code.output"></ui-codemirror-->
-                        <!-- /tab>
-                        <tab heading="Input" ng-click="selectedInnerTab(2)">
 
-                        </tab>
-                        <tab heading="Event list" ng-click="selectedInnerTab(3)"></tab>
-                    </tabset -->
+                    <!-- <textarea ui-codemirror="editorOptions" ng-model="code.output"></textarea> -->
+                    <!-- <ui-codemirror ui-codemirror-opts="editorOptions" ng-model="code.output" ></ui-codemirror> -->
 
-                    <!--ui-codemirror ui-codemirror-opts="editorOptions" ng-model="code.output"></ui-codemirror-->
-
-                    <!-- textarea ng-show = "selectedTab == 2" ui-codemirror="editorOptions" ng-model="code.input"></textarea -->
 
                 </div>
+                <div class="panel-footer"></div>
             </div>
         </div>
     </div>

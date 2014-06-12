@@ -441,6 +441,11 @@ a, a:hover {
   border-color: #c8c8c8 transparent;
 }
 
+.panel-default .panel-footer{
+  background-color: #dadada;
+  background-image: linear-gradient(to bottom, #dadada, #c8c8c8);
+  border-color: #81776d;
+}
 .panel-default > .panel-footer + .panel-collapse .panel-body {
   border-bottom-color: #ebccd1;
 }
@@ -646,4 +651,10 @@ a.list-group-item.active > .badge, .nav-pills > .active > a > .badge {
   -moz-animation: fadeOut 1s;
   -ms-animation: fadeOut 1s;
   animation: fadeOut 1s;
+}
+
+/* Hide border for code area*/
+pre{
+  padding:0px;
+  border:0px;
 }

@@ -5,14 +5,14 @@ var droolsPlatformApp = angular.module('droolsPlatformApp', [
     'drools-platform.controllers',
     'ui.select2',
     'ui.bootstrap',
-    'ui.codemirror',
     'ng-context-menu',
     'duScroll',
     'growlNotifications',
     'ngSanitize',
     'paginator',
     'ngAnimate',
-    'AngularStomp'
+    'AngularStomp',
+    'hljs'
 
 ]);
 

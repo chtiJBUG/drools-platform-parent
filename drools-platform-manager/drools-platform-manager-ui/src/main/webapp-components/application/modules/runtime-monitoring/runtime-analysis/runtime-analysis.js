@@ -57,11 +57,11 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
     $scope.selectedTab=1;
 
-    $scope.test="// test code";
     $scope.code = {
         'input':"// input",
         'output':'// output'
     };
+    $scope.refresh=true;
     $scope.editorOptions = {
         lineWrapping : true,
         lineNumbers: true,
@@ -99,7 +99,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     };
 
     // Toggle to another tab
-    $scope.selectedTab = '';
+    $scope.selectedTab = 'output';
     $scope.toggleTab=function(item){
         $scope.selectedTab = item;
     }
