@@ -117,7 +117,7 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
                     }
                 }
                 platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.loadNewRuleVersion);
-                webSocketClient.getSession().getBasicRemote().sendObject(platformManagementKnowledgeBean);
+                webSocketClient.sendMessage(platformManagementKnowledgeBean);
                 platformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.STARTED);
             } catch (DeploymentException | IOException e) {
                 platformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.NOT_JOINGNABLE);

@@ -1,8 +1,7 @@
 package org.chtijbug.drools.platform.backend.wsclient;
 
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.platform.backend.wsclient.endpoint.DefaultSocketMessageListenerImpl;
-import org.chtijbug.drools.platform.backend.wsclient.endpoint.WebSocketMessageListener;
+import org.chtijbug.drools.platform.backend.wsclient.impl.DefaultSocketMessageListenerImpl;
 import org.chtijbug.drools.platform.entity.Heartbeat;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.springframework.stereotype.Component;
@@ -32,11 +31,11 @@ public class WebSocketSessionManager {
 
         Heartbeat heartbeat = new Heartbeat();
         heartbeat.setLastAlive(new Date());
-        WebSocketMessageListener webSocketMessageListener = new DefaultSocketMessageListenerImpl(platformRuntimeInstance,heartbeat);
-        WebSocketClient webSocketClient = new WebSocketClient(platformRuntimeInstance,webSocketMessageListener);
+        WebSocketMessageListener webSocketMessageListener = new DefaultSocketMessageListenerImpl(platformRuntimeInstance, heartbeat);
+        WebSocketClient webSocketClient = new WebSocketClient(platformRuntimeInstance, webSocketMessageListener);
         this.webSocketClientList.put(platformRuntimeInstance.getRuleBaseID(), webSocketClient);
         this.webSocketClientMessageListenerList.put(platformRuntimeInstance.getRuleBaseID(), webSocketMessageListener);
-        this.webSocketClientHeartBeatList.put(platformRuntimeInstance.getRuleBaseID(),heartbeat);
+        this.webSocketClientHeartBeatList.put(platformRuntimeInstance.getRuleBaseID(), heartbeat);
 
         return webSocketClient;
 
@@ -44,7 +43,7 @@ public class WebSocketSessionManager {
 
     public void removeClient(PlatformRuntimeInstance platformRuntimeInstance) throws IOException {
         WebSocketClient webSocketClient = this.webSocketClientList.get(platformRuntimeInstance.getRuleBaseID());
-        if (webSocketClient != null){
+        if (webSocketClient != null) {
             webSocketClient.closeSession();
         }
         this.webSocketClientList.remove(platformRuntimeInstance.getRuleBaseID());
@@ -65,11 +64,11 @@ public class WebSocketSessionManager {
     public Boolean isAlive(Integer ruleBaseID) {
         boolean result = false;
         Heartbeat heartbeat = this.webSocketClientHeartBeatList.get(ruleBaseID);
-        Date dateLastHearBeat  = heartbeat.getLastAlive();
+        Date dateLastHearBeat = heartbeat.getLastAlive();
         Date currentDate = new Date();
         long diff = currentDate.getTime() - dateLastHearBeat.getTime();
-        if (diff< 60000) {
-            result=true;
+        if (diff < 60000) {
+            result = true;
         }
         return result;
     }

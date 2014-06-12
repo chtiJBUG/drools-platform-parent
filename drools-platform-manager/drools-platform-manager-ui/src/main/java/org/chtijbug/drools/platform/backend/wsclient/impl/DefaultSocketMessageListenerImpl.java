@@ -1,7 +1,8 @@
-package org.chtijbug.drools.platform.backend.wsclient.endpoint;
+package org.chtijbug.drools.platform.backend.wsclient.impl;
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.platform.backend.AppContext;
+import org.chtijbug.drools.platform.backend.wsclient.WebSocketMessageListener;
 import org.chtijbug.drools.platform.backend.wsclient.listener.*;
 import org.chtijbug.drools.platform.entity.Heartbeat;
 import org.chtijbug.drools.platform.entity.JMXInfo;
