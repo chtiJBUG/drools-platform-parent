@@ -9,6 +9,7 @@ import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
 import org.chtijbug.drools.platform.rules.management.AssetStatus;
 import org.chtijbug.drools.platform.rules.management.RuleManager;
 import org.chtijbug.drools.platform.rules.management.RuntimeManager;
+import org.chtijbug.drools.platform.web.model.PackageSnapshot;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 

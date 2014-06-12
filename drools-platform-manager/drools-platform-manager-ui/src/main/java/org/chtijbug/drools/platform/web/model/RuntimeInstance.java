@@ -1,4 +1,4 @@
-package org.chtijbug.drools.platform.web;
+package org.chtijbug.drools.platform.web.model;
 
 /**
  * Created by alexandre on 06/06/2014.

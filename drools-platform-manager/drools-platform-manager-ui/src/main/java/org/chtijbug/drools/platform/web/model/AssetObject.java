@@ -1,4 +1,4 @@
-package org.chtijbug.drools.platform.web;
+package org.chtijbug.drools.platform.web.model;
 
 public class AssetObject {
     private String name;
