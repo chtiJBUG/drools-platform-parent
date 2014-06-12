@@ -84,9 +84,12 @@ public class JmsStorageHistoryListener implements HistoryListener {
         final PlatformKnowledgeBaseShutdownEvent platformKnowledgeBaseShutdownEvent = new PlatformKnowledgeBaseShutdownEvent(-1,new Date(), Integer.valueOf(this.ruleBaseID).intValue(), new Date());
 
         try {
+            this.fireEvent(platformKnowledgeBaseShutdownEvent);
             session.close();
         } catch (JMSException e) {
             LOG.error("Session Could not be closed",e);
+        } catch (DroolsChtijbugException e) {
+            LOG.error("Session Could not be closed", e);
         }
 
     }
