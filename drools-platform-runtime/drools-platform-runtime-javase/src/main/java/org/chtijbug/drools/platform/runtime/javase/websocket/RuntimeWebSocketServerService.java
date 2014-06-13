@@ -1,16 +1,17 @@
-package org.chtijbug.drools.platform.core.websocket;
+package org.chtijbug.drools.platform.runtime.javase.websocket;
 
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.entity.PlatformResourceFile;
 import org.chtijbug.drools.platform.entity.RequestStatus;
+import org.chtijbug.drools.platform.runtime.javase.DroolsPlatformKnowledgeBaseJavaSE;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.resource.Bpmn2DroolsResource;
 import org.chtijbug.drools.runtime.resource.DrlDroolsResource;
 import org.chtijbug.drools.runtime.resource.DroolsResource;
 import org.chtijbug.drools.runtime.resource.GuvnorDroolsResource;
 
+import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class RuntimeWebSocketServerService {
     private static final Logger LOG = Logger.getLogger(RuntimeWebSocketServerService.class);
 
     private Session peerLoggerServer;
-    private DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase;
+    private DroolsPlatformKnowledgeBaseJavaSE droolsPlatformKnowledgeBaseJavaSE;
     private String guvnorUsername;
     private String guvnorPassword;
 
@@ -39,10 +40,10 @@ public class RuntimeWebSocketServerService {
                 LOG.info("Runtime is alive");
                 break;
             case duplicateRuleBaseID:
-                this.droolsPlatformKnowledgeBase.dispose();
+                this.droolsPlatformKnowledgeBaseJavaSE.dispose();
                 break;
             case ruleVersionInfos:
-                for (DroolsResource droolsResource : droolsPlatformKnowledgeBase.getDroolsResources()) {
+                for (DroolsResource droolsResource : droolsPlatformKnowledgeBaseJavaSE.getDroolsResources()) {
                     if (droolsResource instanceof GuvnorDroolsResource) {
                         GuvnorDroolsResource guvnorDroolsResource = (GuvnorDroolsResource) droolsResource;
                         PlatformResourceFile platformResourceFile = new PlatformResourceFile(guvnorDroolsResource.getBaseUrl(), guvnorDroolsResource.getWebappName(), guvnorDroolsResource.getPackageName(), guvnorDroolsResource.getPackageVersion(), null, null);
@@ -78,10 +79,10 @@ public class RuntimeWebSocketServerService {
                     }
                 }
                 try {
-                    droolsPlatformKnowledgeBase.RecreateKBaseWithNewRessources(droolsResources);
+                    droolsPlatformKnowledgeBaseJavaSE.RecreateKBaseWithNewRessources(droolsResources);
                     bean.setRequestStatus(RequestStatus.SUCCESS);
                     peer.getBasicRemote().sendObject(bean);
-                    this.droolsPlatformKnowledgeBase.setRuleBaseStatus(true);
+                    this.droolsPlatformKnowledgeBaseJavaSE.setRuleBaseStatus(true);
                 } catch (Exception e) {
                     DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("RELOAD", "Could not reload Rule Package From Guvnor", e);
                     bean.setDroolsChtijbugException(droolsChtijbugException);
@@ -107,11 +108,10 @@ public class RuntimeWebSocketServerService {
     @OnOpen
     public void onOpen(final Session session, EndpointConfig endpointConfig) {
         Map<String, Object> userProperties = WebSocketServer.userProperties;
-        this.droolsPlatformKnowledgeBase = (DroolsPlatformKnowledgeBase) userProperties.get("droolsPlatformKnowledgeBase");
+        this.droolsPlatformKnowledgeBaseJavaSE = (DroolsPlatformKnowledgeBaseJavaSE) userProperties.get("droolsPlatformKnowledgeBase");
         this.peerLoggerServer = session;
-        this.droolsPlatformKnowledgeBase.setRuntimeWebSocketServerService(this);
-        this.guvnorUsername = this.droolsPlatformKnowledgeBase.getGuvnorUsername();
-        this.guvnorPassword = this.droolsPlatformKnowledgeBase.getGuvnorPassword();
+        this.guvnorUsername = this.droolsPlatformKnowledgeBaseJavaSE.getGuvnorUsername();
+        this.guvnorPassword = this.droolsPlatformKnowledgeBaseJavaSE.getGuvnorPassword();
         LOG.info("Server connected " + session + " " + endpointConfig);
     }
 

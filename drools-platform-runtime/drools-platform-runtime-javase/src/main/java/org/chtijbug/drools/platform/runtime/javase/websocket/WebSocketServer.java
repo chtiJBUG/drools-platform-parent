@@ -1,7 +1,8 @@
-package org.chtijbug.drools.platform.core.websocket;
+package org.chtijbug.drools.platform.runtime.javase.websocket;
 
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
+import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBaseRuntime;
+import org.chtijbug.drools.platform.core.websocket.WebSocketServerInstance;
 import org.glassfish.tyrus.server.Server;
 
 import javax.websocket.DeploymentException;
@@ -15,16 +16,16 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 
-public class WebSocketServer {
+public class WebSocketServer extends WebSocketServerInstance {
     private static final Logger LOG = Logger.getLogger(WebSocketServer.class);
     protected static HashMap<String, Object> userProperties = new HashMap<>();
     private String ws_hostname;
     private int ws_port;
     Server localWebSocketServer;
 
-    public DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase;
+    public DroolsPlatformKnowledgeBaseRuntime droolsPlatformKnowledgeBase;
 
-    public WebSocketServer(String ws_hostname, int ws_port, DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase) throws UnknownHostException {
+    public WebSocketServer(String ws_hostname, int ws_port, DroolsPlatformKnowledgeBaseRuntime droolsPlatformKnowledgeBase) throws UnknownHostException {
         this.ws_hostname = ws_hostname;
         this.ws_port = ws_port;
         this.droolsPlatformKnowledgeBase = droolsPlatformKnowledgeBase;
@@ -38,6 +39,16 @@ public class WebSocketServer {
         } catch (DeploymentException e) {
             LOG.error("WebSocketServer.run", e);
         }
+    }
+
+    @Override
+    public String getHostName() {
+        return ws_hostname;
+    }
+
+    @Override
+    public int getPort() {
+        return ws_port;
     }
 
     public void end() {

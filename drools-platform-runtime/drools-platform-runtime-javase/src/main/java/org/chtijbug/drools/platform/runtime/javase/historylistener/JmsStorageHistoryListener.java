@@ -1,14 +1,16 @@
-package org.chtijbug.drools.platform.core.droolslistener;
+package org.chtijbug.drools.platform.runtime.javase.historylistener;
 
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
-import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
+import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBaseRuntime;
+import org.chtijbug.drools.platform.core.droolslistener.PlatformHistoryListener;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEvent;
+import org.chtijbug.drools.platform.runtime.javase.DroolsPlatformKnowledgeBaseJavaSE;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
-import org.chtijbug.drools.runtime.listener.HistoryListener;
 
+import javax.jms.*;
 import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.Date;
@@ -19,7 +21,7 @@ import java.util.Date;
  * Time: 14:30
  * To change this template use File | Settings | File Templates.
  */
-public class JmsStorageHistoryListener implements HistoryListener {
+public class JmsStorageHistoryListener implements PlatformHistoryListener {
 
     private String platformQueueName;
     private Integer platformPort;
@@ -33,9 +35,9 @@ public class JmsStorageHistoryListener implements HistoryListener {
 
     private Session session;
 
-    private DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase;
+    private DroolsPlatformKnowledgeBaseRuntime droolsPlatformKnowledgeBase;
 
-    public JmsStorageHistoryListener(DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase, String platformServer, Integer platformPort, String platformQueueName) throws DroolsChtijbugException {
+    public JmsStorageHistoryListener(DroolsPlatformKnowledgeBaseRuntime droolsPlatformKnowledgeBase, String platformServer, Integer platformPort, String platformQueueName) throws DroolsChtijbugException {
         this.droolsPlatformKnowledgeBase = droolsPlatformKnowledgeBase;
         this.platformServer = platformServer;
         this.platformPort = platformPort;
@@ -103,8 +105,8 @@ public class JmsStorageHistoryListener implements HistoryListener {
     }
 
 
-    public void setDroolsPlatformKnowledgeBase(DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase) throws UnknownHostException {
-        this.droolsPlatformKnowledgeBase = droolsPlatformKnowledgeBase;
+    public void setDroolsPlatformKnowledgeBase(DroolsPlatformKnowledgeBaseJavaSE droolsPlatformKnowledgeBaseJavaSE) throws UnknownHostException {
+        this.droolsPlatformKnowledgeBase = droolsPlatformKnowledgeBaseJavaSE;
 
 
     }

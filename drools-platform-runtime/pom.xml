@@ -13,6 +13,7 @@
   <packaging>pom</packaging>
   <modules>
     <module>drools-platform-knowledge</module>
+    <module>drools-platform-runtime-javase</module>
   </modules>
 
 </project>

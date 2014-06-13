@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.chtijbug.drools.platform.core;
+package org.chtijbug.drools.platform.runtime.javase;
 
 /**
  * @author Bertrand Gressier

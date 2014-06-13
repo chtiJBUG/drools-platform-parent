@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>drools-platform-runtime</artifactId>
+    <groupId>org.chtijbug.drools</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>drools-platform-runtime-javase</artifactId>
+  <dependencies>
+    <dependency>
+      <groupId>org.chtijbug.drools</groupId>
+      <artifactId>drools-platform-entity</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.chtijbug.drools</groupId>
+      <artifactId>drools-platform-knowledge</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.chtijbug.drools</groupId>
+      <artifactId>drools-framework-runtime-base</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.chtijbug.drools</groupId>
+      <artifactId>drools-framework-runtime-entity</artifactId>
+    </dependency>
+    <!--dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-beans</artifactId>
+    </dependency-->
+    <!--dependency>
+      <groupId>org.jencks</groupId>
+      <artifactId>jencks</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-pool</groupId>
+          <artifactId>commons-pool</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency-->
+
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-client</artifactId>
+    </dependency>
+    <!--dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-pool</artifactId>
+    </dependency-->
+
+
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.tyrus</groupId>
+      <artifactId>tyrus-server</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.tyrus</groupId>
+      <artifactId>tyrus-container-grizzly-server</artifactId>
+    </dependency>
+  </dependencies>
+
+</project>

@@ -1,6 +1,6 @@
-package org.chtijbug.drools.platform.core;
+package org.chtijbug.drools.platform.runtime.javase;
 
-import org.chtijbug.drools.runtime.RuleBasePackage;
+import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBaseRuntime;
 import org.chtijbug.drools.runtime.RuleBaseSession;
 import org.chtijbug.drools.runtime.resource.Bpmn2DroolsResource;
 import org.chtijbug.drools.runtime.resource.DrlDroolsResource;
@@ -18,17 +18,15 @@ import java.util.List;
 public class MainFibonacciBPMN {
     public static void main(String[] args) {
 
-        RuleBasePackage droolsPlatformKnowledgeBase = null;
+        DroolsPlatformKnowledgeBaseRuntime droolsPlatformKnowledgeBase = null;
         try {
             DrlDroolsResource drlFile = DrlDroolsResource.createClassPathResource("ruleflow2.drl");
             Bpmn2DroolsResource bpmnFile = Bpmn2DroolsResource.createClassPathResource("RuleFlowProcess2.bpmn2");
-            ;
             List<DroolsResource> droolsResources = new ArrayList<>();
             droolsResources.add(drlFile);
             droolsResources.add(bpmnFile);
-            droolsPlatformKnowledgeBase = new DroolsPlatformKnowledgeBase(11, droolsResources, "localhost", 22500, "localhost");
-            DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase1 = (DroolsPlatformKnowledgeBase) droolsPlatformKnowledgeBase;
-            while (droolsPlatformKnowledgeBase1.isReady() == false) {
+            droolsPlatformKnowledgeBase = new DroolsPlatformKnowledgeBaseJavaSE(11, droolsResources, "localhost", 22500, "localhost");
+            while (droolsPlatformKnowledgeBase.isReady() == false) {
                 System.out.println("sleep");
                 Thread.sleep(2000);
             }

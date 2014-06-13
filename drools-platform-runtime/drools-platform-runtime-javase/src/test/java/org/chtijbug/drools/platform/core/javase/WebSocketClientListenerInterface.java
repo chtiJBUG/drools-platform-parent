@@ -1,4 +1,4 @@
-package org.chtijbug.drools.platform.core;
+package org.chtijbug.drools.platform.core.javase;
 
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 

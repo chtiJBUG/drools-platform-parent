@@ -3,7 +3,7 @@ package org.chtijbug.drools.platform.core;
 import org.chtijbug.drools.entity.DroolsFactObject;
 import org.chtijbug.drools.entity.DroolsRuleObject;
 import org.chtijbug.drools.entity.history.HistoryContainer;
-import org.chtijbug.drools.platform.core.websocket.RuntimeWebSocketServerService;
+import org.chtijbug.drools.platform.core.websocket.WebSocketServerInstance;
 import org.chtijbug.drools.platform.entity.JMXInfo;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.entity.RequestRuntimePlarform;
@@ -25,7 +25,7 @@ public class DroolsPlatformSession implements RuleBaseSession {
 
     private RuleBaseStatefulSession ruleBaseStatefulSession;
 
-    private RuntimeWebSocketServerService runtimeWebSocketServerService;
+    private WebSocketServerInstance runtimeWebSocketServerService;
 
     public RuleBaseStatefulSession getRuleBaseStatefulSession() {
         return ruleBaseStatefulSession;
@@ -35,11 +35,11 @@ public class DroolsPlatformSession implements RuleBaseSession {
         this.ruleBaseStatefulSession = ruleBaseStatefulSession;
     }
 
-    public RuntimeWebSocketServerService getRuntimeWebSocketServerService() {
+    public WebSocketServerInstance getRuntimeWebSocketServerService() {
         return runtimeWebSocketServerService;
     }
 
-    public void setRuntimeWebSocketServerService(RuntimeWebSocketServerService runtimeWebSocketServerService) {
+    public void setRuntimeWebSocketServerService(WebSocketServerInstance runtimeWebSocketServerService) {
         this.runtimeWebSocketServerService = runtimeWebSocketServerService;
     }
 
@@ -94,6 +94,7 @@ public class DroolsPlatformSession implements RuleBaseSession {
         try {
             this.runtimeWebSocketServerService.sendMessage(platformManagementKnowledgeBean);
         } catch (Exception e) {
+
             DroolsChtijbugException ee = new DroolsChtijbugException("JMXInfo", "Not Possible to send Infos", e);
             throw ee;
         }

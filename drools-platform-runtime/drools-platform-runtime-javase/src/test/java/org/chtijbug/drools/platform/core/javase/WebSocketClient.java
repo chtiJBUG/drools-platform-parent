@@ -1,9 +1,10 @@
-package org.chtijbug.drools.platform.core;
+package org.chtijbug.drools.platform.core.javase;
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.glassfish.tyrus.client.ClientManager;
 
+import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
