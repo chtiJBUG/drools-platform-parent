@@ -1,6 +1,7 @@
-package org.chtijbug.drools.platform.runtime.javase;
+package org.chtijbug.platform.example.simplebpmn;
 
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBaseRuntime;
+import org.chtijbug.drools.platform.runtime.javase.DroolsPlatformKnowledgeBaseJavaSE;
 import org.chtijbug.drools.runtime.RuleBaseSession;
 import org.chtijbug.drools.runtime.resource.Bpmn2DroolsResource;
 import org.chtijbug.drools.runtime.resource.DrlDroolsResource;
@@ -15,7 +16,7 @@ import java.util.List;
  * Time: 18:05
  * To change this template use File | Settings | File Templates.
  */
-public class MainFibonacciBPMN {
+public class SimpleBPMNClient {
     public static void main(String[] args) {
 
         DroolsPlatformKnowledgeBaseRuntime droolsPlatformKnowledgeBase = null;
@@ -25,7 +26,7 @@ public class MainFibonacciBPMN {
             List<DroolsResource> droolsResources = new ArrayList<>();
             droolsResources.add(drlFile);
             droolsResources.add(bpmnFile);
-            droolsPlatformKnowledgeBase = new DroolsPlatformKnowledgeBaseJavaSE(11, droolsResources, "localhost", 22500, "localhost");
+            droolsPlatformKnowledgeBase = new DroolsPlatformKnowledgeBaseJavaSE(12, droolsResources, "localhost", 22500, "localhost");
             while (droolsPlatformKnowledgeBase.isReady() == false) {
                 System.out.println("sleep");
                 Thread.sleep(2000);

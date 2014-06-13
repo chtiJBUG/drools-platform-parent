@@ -1,6 +1,6 @@
 package org.chtijbug.drools.runtime.test
 
-import org.chtijbug.drools.platform.runtime.javase.Fibonacci;
+import org.chtijbug.platform.example.simplebpmn.Fibonacci;
 
 
 rule "Account group1"

@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.chtijbug.drools.platform.runtime.javase;
+package org.chtijbug.platform.example.simplebpmn;
 
 /**
  * @author Bertrand Gressier
