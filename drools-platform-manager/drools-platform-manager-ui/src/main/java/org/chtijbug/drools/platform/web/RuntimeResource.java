@@ -61,5 +61,13 @@ public class RuntimeResource {
     public List<PlatformRuntimeInstance> findAllPlatformRuntimeInstance(@PathVariable String packageName) {
         return platformRuntimeInstanceRepository.findByPackageNameAllRuntime(packageName);
     }
+/*
+    @RequestMapping(method = RequestMethod.GET, value = "/all/{filters:.+}")
+    @Consumes(value = MediaType.APPLICATION_JSON)
+    @Produces(value = MediaType.APPLICATION_JSON)
+    @ResponseBody
+    public List<PlatformRuntimeInstance> findPlatformRuntimeInstanceByFilters(@PathVariable String filters) {
+        return platformRuntimeInstanceRepository.findByPackageNameAllRuntime(filters.package);
+    }*/
 
 }

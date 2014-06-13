@@ -4,6 +4,14 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
     $scope.allRuntimes=[];
 
+    $scope.filters={
+        packageName:'undefined',
+        status:'undefined',
+        hostname:'undefined',
+        startDate:new Date(),
+        endDate:new Date()
+    };
+
     //___ Collapse status for each box from the "Search panel"
     $scope.collapseStatus = {
         "firstBox":false,
@@ -55,23 +63,14 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     //___ ID of the runtime selected
     $scope.selectedRuntimeID = undefined;
 
+    //___ Tab mgmt
     $scope.selectedTab=1;
 
+    //___ Code JSON
     $scope.code = {
         'input':"// input",
         'output':'// output'
     };
-    $scope.refresh=true;
-    $scope.editorOptions = {
-        lineWrapping : true,
-        lineNumbers: true,
-        styleActiveLine: true,
-        matchBrackets: true,
-        readOnly: false,
-        mode: {name: "javascript", json: true},
-        theme :'ambiance'
-    };
-
 
     //___ Fetch the list
     $http.get('./server/rules_package/list')
@@ -84,38 +83,6 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
 
 
-
-    //___ Scrolling to the next panel
-    $scope.scrollToPanel = function(ruleBaseID) {
-        $scope.selectedRuntimeID=ruleBaseID;
-        $scope.sessionExecutionDetails.area=true;
-        $timeout(function() {
-            $scope.sessionExecutionDetails.panel=true;
-            var someElement = angular.element(document.getElementById('detailsPanel'));
-            $document.scrollToElement(someElement, 0, 1000);
-        }, 3);
-
-
-    };
-
-    // Toggle to another tab
-    $scope.selectedTab = 'output';
-    $scope.toggleTab=function(item){
-        $scope.selectedTab = item;
-    }
-
-    $scope.closeDetailsPanel = function() {
-        var someElement = angular.element(document.getElementById('wrap'));
-        $document.scrollToElement(someElement, 0, 1000);
-        $timeout(function() {
-            $scope.sessionExecutionDetails.area=false;
-            $scope.sessionExecutionDetails.panel=false;
-        }, 1000);
-
-
-
-    };
-
     /**********************/
     /*  DATE & TIME MGMT  */
     /**********************/
@@ -125,7 +92,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     $scope.today();
 
     $scope.clear = function () {
-        $scope.dates.startDate = new Date();
+        $scope.filters.startDate = new Date();
     };
 
     // Disable weekend selection
@@ -165,19 +132,42 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         console.log('Time changed to: ' + $scope.dates.myTime);
     };
 
+    /** SESSION EXECUTION DETAILS **/
 
+    //___ Scrolling to the next panel
+    $scope.scrollToPanel = function(ruleBaseID) {
+        $scope.selectedRuntimeID=ruleBaseID;
+        $scope.sessionExecutionDetails.area=true;
+        $timeout(function() {
+            $scope.sessionExecutionDetails.panel=true;
+            var someElement = angular.element(document.getElementById('detailsPanel'));
+            $document.scrollToElement(someElement, 0, 1000);
+        }, 3);
+    };
+
+    // Toggle to another tab
+    $scope.selectedTab = 'output';
+    $scope.toggleTab=function(item){
+        $scope.selectedTab = item;
+    }
+
+    $scope.closeDetailsPanel = function() {
+        var someElement = angular.element(document.getElementById('wrap'));
+        $document.scrollToElement(someElement, 0, 1000);
+        $timeout(function() {
+            $scope.sessionExecutionDetails.area=false;
+            $scope.sessionExecutionDetails.panel=false;
+        }, 1000);
+    };
 
     /** EVENTS ASSOCIATED WITH BUTTONS **/
 
+
+
     /** SEARCH **/
-
-    //___ Method 1 : filters chosen
-    //___ if each fields are empty
-    //___ if all but one fields are empty
-        //___ First field
-
-    //___ if all fields are filled
-
+    //___ Method :
+    //___ Retrieve filters
+    //___ Then launch the http get request
     $scope.search = function () {
         $scope.allRuntimes= [{
             ruleBaseID:'0',
@@ -234,6 +224,20 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                 endDate:'2014-04-20 1:48:42 AM'
             }
         ];
+
+        var filters = $scope.filters;
+        console.log(filters.lenght);
+
+
+        /*$http.get('.server/runtime_resource/activePlatformRuntimes/'+filters)
+            .success(function (data) {
+                $scope.packageList = data;
+                console.log($scope.packageList);
+            })
+            .error(function (error, status) {
+                console.log(error);
+            })*/
+
         /*
         $http.get('.server/runtime_resource/activePlatformRuntimes/'+packageSelected)
             .success(function (data) {

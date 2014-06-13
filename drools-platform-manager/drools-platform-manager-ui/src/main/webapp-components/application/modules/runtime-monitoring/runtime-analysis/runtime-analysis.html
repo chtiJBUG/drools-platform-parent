@@ -58,13 +58,13 @@
                                 <h4>SessionExecution</h4>
                                 <label>From</label>
                                 <div class="input-group col-md-6">
-                                    <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dates.startDate" is-open="datePickers.firstCalendar" min-date="dates.minDate" max-date="dates.maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'startDate')">
+                                    <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="filters.startDate" is-open="datePickers.firstCalendar" min-date="dates.minDate" max-date="dates.maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'startDate')">
                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 
                                 </div>
                                 <label>To</label>
                                 <div class="input-group col-md-6">
-                                    <input type="text" class="form-control" class="form-control" datepicker-popup="{{format}}" ng-model="dates.endDate" is-open="datePickers.secondCalendar" min-date="dates.minDate" max-date="'2014-07-29'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'endDate')" >
+                                    <input type="text" class="form-control" class="form-control" datepicker-popup="{{format}}" ng-model="filters.endDate" is-open="datePickers.secondCalendar" min-date="dates.minDate" max-date="'2014-07-29'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'endDate')" >
                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                 </div>
                             </div>
