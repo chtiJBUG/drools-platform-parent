@@ -11,7 +11,6 @@ import org.chtijbug.drools.runtime.resource.DrlDroolsResource;
 import org.chtijbug.drools.runtime.resource.DroolsResource;
 import org.chtijbug.drools.runtime.resource.GuvnorDroolsResource;
 
-import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -99,11 +98,11 @@ public class RuntimeWebSocketServerService {
         this.peerLoggerServer.getBasicRemote().sendObject(bean);
     }
 
-     public void sendHeartBeat(){
-          if (this.peerLoggerServer != null) {
-              PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
-          }
-     }
+    public void sendHeartBeat() {
+        if (this.peerLoggerServer != null) {
+            PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
+        }
+    }
 
     @OnOpen
     public void onOpen(final Session session, EndpointConfig endpointConfig) {
@@ -122,7 +121,7 @@ public class RuntimeWebSocketServerService {
     }
 
     private String getFileExtension(String fileName) {
-        String extension=null;
+        String extension = null;
         int i = fileName.lastIndexOf('.');
         int p = Math.max(fileName.lastIndexOf('/'), fileName.lastIndexOf('\\'));
 

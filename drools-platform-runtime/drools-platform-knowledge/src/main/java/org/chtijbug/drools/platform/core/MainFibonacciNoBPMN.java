@@ -2,7 +2,6 @@ package org.chtijbug.drools.platform.core;
 
 import org.chtijbug.drools.runtime.RuleBasePackage;
 import org.chtijbug.drools.runtime.RuleBaseSession;
-import org.chtijbug.drools.runtime.resource.Bpmn2DroolsResource;
 import org.chtijbug.drools.runtime.resource.DrlDroolsResource;
 import org.chtijbug.drools.runtime.resource.DroolsResource;
 
@@ -15,30 +14,21 @@ import java.util.List;
  * Time: 18:05
  * To change this template use File | Settings | File Templates.
  */
-public class MainFibonacciBPMN {
+public class MainFibonacciNoBPMN {
     public static void main(String[] args) {
-
-         RuleBasePackage droolsPlatformKnowledgeBase =null;
+        RuleBasePackage droolsPlatformKnowledgeBase = null;
         try {
-            DrlDroolsResource drlFile = DrlDroolsResource.createClassPathResource("ruleflow2.drl");
-            Bpmn2DroolsResource bpmnFile = Bpmn2DroolsResource.createClassPathResource("RuleFlowProcess2.bpmn2");;
+            DrlDroolsResource drlFile = DrlDroolsResource.createClassPathResource("fibonacci.drl");
             List<DroolsResource> droolsResources = new ArrayList<>();
             droolsResources.add(drlFile);
-            droolsResources.add(bpmnFile);
-            droolsPlatformKnowledgeBase = new DroolsPlatformKnowledgeBase(11,droolsResources,"localhost",22500 ,"localhost" );
-             DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase1=(DroolsPlatformKnowledgeBase)droolsPlatformKnowledgeBase;
-             while (droolsPlatformKnowledgeBase1.isReady()==false){
-                 System.out.println("sleep");
-                 Thread.sleep(2000);
-             }
-             for (int i=0;i<1;i++) {
+            droolsPlatformKnowledgeBase = new DroolsPlatformKnowledgeBase(12, droolsResources, "localhost", 22600, "localhost");
+            for (int i = 0; i < 2; i++) {
                 RuleBaseSession ruleBaseSession = droolsPlatformKnowledgeBase.createRuleBaseSession();
-                Fibonacci fibonacci = new Fibonacci(0);
+                Fibonacci fibonacci = new Fibonacci(3);
                 ruleBaseSession.insertObject(fibonacci);
-                ruleBaseSession.startProcess("P1");
                 ruleBaseSession.fireAllRules();
                 ruleBaseSession.dispose();
-                 System.out.println("i= "+i);
+                Thread.sleep(10000);
             }
         } catch (Exception e) {
 

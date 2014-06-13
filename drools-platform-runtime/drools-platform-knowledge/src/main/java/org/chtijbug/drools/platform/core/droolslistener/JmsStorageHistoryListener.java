@@ -9,7 +9,6 @@ import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEv
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.listener.HistoryListener;
 
-import javax.jms.*;
 import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.Date;
@@ -75,21 +74,21 @@ public class JmsStorageHistoryListener implements HistoryListener {
             ObjectMessage msg = session.createObjectMessage(historyEvent);
             producer.send(msg);
         } catch (JMSException e) {
-            DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("JMSHistoryEvent","FireEvent",e);
+            DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("JMSHistoryEvent", "FireEvent", e);
             throw droolsChtijbugException;
         }
 
 
     }
 
-    public void shutdown()  {
-        final PlatformKnowledgeBaseShutdownEvent platformKnowledgeBaseShutdownEvent = new PlatformKnowledgeBaseShutdownEvent(-1,new Date(), Integer.valueOf(this.ruleBaseID).intValue(), new Date());
+    public void shutdown() {
+        final PlatformKnowledgeBaseShutdownEvent platformKnowledgeBaseShutdownEvent = new PlatformKnowledgeBaseShutdownEvent(-1, new Date(), Integer.valueOf(this.ruleBaseID).intValue(), new Date());
 
         try {
             this.fireEvent(platformKnowledgeBaseShutdownEvent);
             session.close();
         } catch (JMSException e) {
-            LOG.error("Session Could not be closed",e);
+            LOG.error("Session Could not be closed", e);
         } catch (DroolsChtijbugException e) {
             LOG.error("Session Could not be closed", e);
         }
@@ -102,9 +101,6 @@ public class JmsStorageHistoryListener implements HistoryListener {
         super.finalize();
 
     }
-
-
-
 
 
     public void setDroolsPlatformKnowledgeBase(DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase) throws UnknownHostException {

@@ -3,7 +3,6 @@ package org.chtijbug.drools.platform.core;
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 
-import javax.websocket.*;
 import java.io.IOException;
 
 /**
@@ -18,8 +17,6 @@ import java.io.IOException;
 public class WebSocketClientBean
         extends Endpoint {
     private static final Logger LOG = Logger.getLogger(WebSocketClient.class);
-
-
 
 
     private Session peerLoggerClient;
@@ -41,8 +38,6 @@ public class WebSocketClientBean
     public void sendMessage(PlatformManagementKnowledgeBean bean) throws IOException, EncodeException {
         this.peerLoggerClient.getBasicRemote().sendObject(bean);
     }
-
-
 
 
     @Override

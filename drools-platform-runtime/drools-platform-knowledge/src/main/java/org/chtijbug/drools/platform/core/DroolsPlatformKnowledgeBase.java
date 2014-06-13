@@ -34,11 +34,17 @@ import java.util.List;
  */
 
 public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseReady {
-    /** Class Logger */
+    /**
+     * Class Logger
+     */
     private static Logger logger = LoggerFactory.getLogger(DroolsPlatformKnowledgeBase.class);
-    /** Rule base ID (UID for the runtime */
+    /**
+     * Rule base ID (UID for the runtime
+     */
     private Integer ruleBaseID;
-    /** Rule base singleton (Knwledge session factory) */
+    /**
+     * Rule base singleton (Knwledge session factory)
+     */
     private RuleBaseSingleton ruleBasePackage;
     /** */
     private JmsStorageHistoryListener jmsStorageHistoryListener;
@@ -46,15 +52,21 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
     private RuntimeWebSocketServerService runtimeWebSocketServerService;
 
     private List<DroolsResource> droolsResources = new ArrayList<>();
-    /** Instant messaging channel **/
+    /**
+     * Instant messaging channel *
+     */
     private String webSocketHostname;
     private WebSocketServer webSocketServer;
     private int webSocketPort = 8025;
-    /** Event Messaging channel settings */
+    /**
+     * Event Messaging channel settings
+     */
     private String platformServer;
     private Integer platformPort = 61616;
     private String platformQueueName = "historyEventQueue";
-    /** Runtime internal Status */
+    /**
+     * Runtime internal Status
+     */
     private boolean isReady = false;
 
     private String guvnorUsername;
@@ -75,15 +87,15 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
     }
 
     public DroolsPlatformKnowledgeBase(Integer ruleBaseID, List<DroolsResource> droolsResources,
-                                          String webSocketHostname,int webSocketPort,
-                                          String platformServer) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
-           this.ruleBaseID = ruleBaseID;
-           this.droolsResources = droolsResources;
-           this.webSocketHostname = webSocketHostname;
-           this.webSocketPort = webSocketPort;
-           this.platformServer = platformServer;
-           initPlatformRuntime();
-       }
+                                       String webSocketHostname, int webSocketPort,
+                                       String platformServer) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
+        this.ruleBaseID = ruleBaseID;
+        this.droolsResources = droolsResources;
+        this.webSocketHostname = webSocketHostname;
+        this.webSocketPort = webSocketPort;
+        this.platformServer = platformServer;
+        initPlatformRuntime();
+    }
 
     public DroolsPlatformKnowledgeBase(Integer ruleBaseID, List<DroolsResource> droolsResources,
                                        String webSocketHostname,
@@ -100,7 +112,7 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
         logger.debug(">>createPackageBasePackage");
         initSocketServer();
         this.jmsStorageHistoryListener = new JmsStorageHistoryListener(this, this.platformServer, this.platformPort, this.platformQueueName);
-        ruleBasePackage = new RuleBaseSingleton(this.ruleBaseID,RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, this.jmsStorageHistoryListener);
+        ruleBasePackage = new RuleBaseSingleton(this.ruleBaseID, RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, this.jmsStorageHistoryListener);
         if (javaDialect != null) {
             ruleBasePackage.setJavaDialect(this.javaDialect);
         }

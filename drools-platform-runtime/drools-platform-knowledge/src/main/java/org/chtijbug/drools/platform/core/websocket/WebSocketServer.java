@@ -15,7 +15,7 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 
-public class WebSocketServer  {
+public class WebSocketServer {
     private static final Logger LOG = Logger.getLogger(WebSocketServer.class);
     protected static HashMap<String, Object> userProperties = new HashMap<>();
     private String ws_hostname;
@@ -31,7 +31,7 @@ public class WebSocketServer  {
         userProperties.put("droolsPlatformKnowledgeBase", droolsPlatformKnowledgeBase);
     }
 
-    public void run(){
+    public void run() {
         this.localWebSocketServer = new Server(ws_hostname, ws_port, "/", userProperties, RuntimeWebSocketServerService.class);
         try {
             localWebSocketServer.start();

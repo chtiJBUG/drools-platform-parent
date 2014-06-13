@@ -84,6 +84,7 @@
         <module>drools-platform-governance</module>
         <module>drools-platform-manager</module>
         <module>drools-platform-example</module>
+      <module>drools-platform-runtime</module>
     </modules>
 
 

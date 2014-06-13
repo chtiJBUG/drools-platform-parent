@@ -15,9 +15,7 @@ import java.util.concurrent.TimeUnit;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-
 public class WebSocketServerTest {
-
 
 
     DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase;
@@ -31,28 +29,26 @@ public class WebSocketServerTest {
         doWait.acquire();
 
         WebSocketClientBean.webSocketClientListenerInterface = new WebSocketClientListenerInterface() {
-              @Override
-              public void answer(PlatformManagementKnowledgeBean platformManagementKnowledgeBean) {
-                  System.out.println("Client Side event Listener");
-                  System.out.println(platformManagementKnowledgeBean.toString());
-                  assertThat(platformManagementKnowledgeBean.getRequestStatus()).isEqualTo(RequestStatus.SUCCESS);
-                  doWait.release();
-                  /** assertThat(platformManagementKnowledgeBean.getResourceFileList().size()==1).isNotNull();
-                   assertThat(platformManagementKnowledgeBean.getgetGuvnorVersion()).isNotNull();
-                   assertThat(platformManagementKnowledgeBean.getGuvnorVersion().getGuvnor_url()).isEqualTo("http://localhost:8080/");
-                   assertThat(platformManagementKnowledgeBean.getGuvnorVersion().getGuvnor_appName()).isEqualTo("drools-guvnor");
-                   assertThat(platformManagementKnowledgeBean.getGuvnorVersion().getGuvnor_packageName()).isEqualTo("test");
-                   assertThat(platformManagementKnowledgeBean.getGuvnorVersion().getGuvnor_packageVersion()).isEqualTo("LATEST"); **/
+            @Override
+            public void answer(PlatformManagementKnowledgeBean platformManagementKnowledgeBean) {
+                System.out.println("Client Side event Listener");
+                System.out.println(platformManagementKnowledgeBean.toString());
+                assertThat(platformManagementKnowledgeBean.getRequestStatus()).isEqualTo(RequestStatus.SUCCESS);
+                doWait.release();
+                /** assertThat(platformManagementKnowledgeBean.getResourceFileList().size()==1).isNotNull();
+                 assertThat(platformManagementKnowledgeBean.getgetGuvnorVersion()).isNotNull();
+                 assertThat(platformManagementKnowledgeBean.getGuvnorVersion().getGuvnor_url()).isEqualTo("http://localhost:8080/");
+                 assertThat(platformManagementKnowledgeBean.getGuvnorVersion().getGuvnor_appName()).isEqualTo("drools-guvnor");
+                 assertThat(platformManagementKnowledgeBean.getGuvnorVersion().getGuvnor_packageName()).isEqualTo("test");
+                 assertThat(platformManagementKnowledgeBean.getGuvnorVersion().getGuvnor_packageVersion()).isEqualTo("LATEST"); **/
 
-              }
-          };
+            }
+        };
 
         WebSocketClient webSocketClient = new WebSocketClient();
         webSocketClient.setName("WebSocketClient");
         webSocketClient.start();
         //webSocketClient.run();
-
-
 
 
         PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
@@ -69,7 +65,7 @@ public class WebSocketServerTest {
     }
 
 
-     @Test
+    @Test
     public void testBPMN2WorkFlowGroup() throws DroolsChtijbugException {
 
         ;

@@ -13,6 +13,4 @@ public interface WebSocketClientListenerInterface {
     public void answer(PlatformManagementKnowledgeBean platformManagementKnowledgeBean);
 
 
-
-
 }
