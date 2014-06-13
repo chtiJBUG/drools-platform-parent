@@ -1,5 +1,6 @@
 package org.chtijbug.drools.platform.runtime.javase;
 
+import com.google.common.base.Throwables;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBaseRuntime;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServerInstance;
@@ -58,6 +59,8 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
 
     private JavaDialect javaDialect = null;
 
+    public DroolsPlatformKnowledgeBaseJavaSE() {
+    }
 
     public DroolsPlatformKnowledgeBaseJavaSE(Integer ruleBaseID, List<DroolsResource> droolsResources,
                                              String webSocketHostname,
@@ -72,7 +75,7 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
 
     public DroolsPlatformKnowledgeBaseJavaSE(Integer ruleBaseID, List<DroolsResource> droolsResources,
                                              String webSocketHostname, int webSocketPort,
-                                             String platformServer) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
+                                             String platformServer) {
         this.ruleBaseID = ruleBaseID;
         this.droolsResources = droolsResources;
         this.webSocketHostname = webSocketHostname;
@@ -83,7 +86,7 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
 
     public DroolsPlatformKnowledgeBaseJavaSE(Integer ruleBaseID, List<DroolsResource> droolsResources,
                                              String webSocketHostname,
-                                             String platformServer) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
+                                             String platformServer) {
         this.ruleBaseID = ruleBaseID;
         this.droolsResources = droolsResources;
         this.webSocketHostname = webSocketHostname;
@@ -91,13 +94,20 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
         initPlatformRuntime();
     }
 
-    public void initPlatformRuntime() throws DroolsChtijbugException, InterruptedException, UnknownHostException {
+    public void initPlatformRuntime() {
         logger.debug(">>createPackageBasePackage");
-        webSocketServer = new WebSocketServer(webSocketHostname, webSocketPort, this);
-        webSocketServer.run();
-        this.jmsStorageHistoryListener = new JmsStorageHistoryListener(this, this.platformServer, this.platformPort, this.platformQueueName);
-        ruleBasePackage = new DroolsPlatformKnowledgeBase(this.ruleBaseID, this.droolsResources, this.javaDialect, this.webSocketServer, this.jmsStorageHistoryListener);
+        try {
+            webSocketServer = new WebSocketServer(webSocketHostname, webSocketPort, this);
+            webSocketServer.run();
+            this.jmsStorageHistoryListener = new JmsStorageHistoryListener(this, this.platformServer, this.platformPort, this.platformQueueName);
+            ruleBasePackage = new DroolsPlatformKnowledgeBase(this.ruleBaseID, this.droolsResources, this.javaDialect, this.webSocketServer, this.jmsStorageHistoryListener);
+        } catch (DroolsChtijbugException | InterruptedException | UnknownHostException e) {
+            logger.error("Error while initialisazing caused by {}", e);
+            throw Throwables.propagate(e);
+        } finally {
+            logger.debug("<<<createPackageBasePackage");
 
+        }
 
     }
 
@@ -184,5 +194,27 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
         return ruleBasePackage.getGuvnorPassword();
     }
 
+    public void setRuleBaseID(Integer ruleBaseID) {
+        this.ruleBaseID = ruleBaseID;
+    }
 
+    public void setWebSocketHostname(String webSocketHostname) {
+        this.webSocketHostname = webSocketHostname;
+    }
+
+    public void setWebSocketPort(int webSocketPort) {
+        this.webSocketPort = webSocketPort;
+    }
+
+    public void setPlatformServer(String platformServer) {
+        this.platformServer = platformServer;
+    }
+
+    public void setPlatformPort(Integer platformPort) {
+        this.platformPort = platformPort;
+    }
+
+    public void setDroolsResources(List<DroolsResource> droolsResources) {
+        this.droolsResources = droolsResources;
+    }
 }

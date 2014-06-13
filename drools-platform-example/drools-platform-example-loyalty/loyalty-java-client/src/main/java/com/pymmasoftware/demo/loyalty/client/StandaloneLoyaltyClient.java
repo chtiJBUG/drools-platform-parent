@@ -2,7 +2,7 @@ package com.pymmasoftware.demo.loyalty.client;
 
 import com.google.common.base.Throwables;
 import loyalty.domains.*;
-import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
+import org.chtijbug.drools.platform.runtime.javase.DroolsPlatformKnowledgeBaseJavaSE;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.RuleBaseSession;
 import org.slf4j.Logger;
@@ -17,7 +17,7 @@ import static java.lang.Thread.sleep;
 
 public class StandaloneLoyaltyClient {
     private static Logger logger = LoggerFactory.getLogger(StandaloneLoyaltyClient.class);
-    private DroolsPlatformKnowledgeBase ruleBasePackage = null;
+    private DroolsPlatformKnowledgeBaseJavaSE ruleBasePackage = null;
 
 
     public Ticket fireAllRules(Ticket ticket) throws InterruptedException {
@@ -38,7 +38,7 @@ public class StandaloneLoyaltyClient {
         return ticket;
     }
 
-    public void setRuleBasePackage(DroolsPlatformKnowledgeBase ruleBasePackage) {
+    public void setRuleBasePackage(DroolsPlatformKnowledgeBaseJavaSE ruleBasePackage) {
         this.ruleBasePackage = ruleBasePackage;
     }
 

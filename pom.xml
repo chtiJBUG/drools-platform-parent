@@ -164,6 +164,11 @@
       </dependency>
       <dependency>
         <groupId>org.chtijbug.drools</groupId>
+        <artifactId>drools-platform-runtime-javase</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.chtijbug.drools</groupId>
         <artifactId>drools-platform-entity</artifactId>
         <version>${project.version}</version>
       </dependency>

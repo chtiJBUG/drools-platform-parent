@@ -41,9 +41,17 @@
             <artifactId>loyalty-model</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- Apache CXF dependencies -->
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
+      <dependency>
+        <groupId>org.chtijbug.drools</groupId>
+        <artifactId>drools-platform-runtime-javase</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>org.chtijbug.drools</groupId>
+        <artifactId>drools-framework-runtime-base</artifactId>
+      </dependency>
+      <!-- Apache CXF dependencies -->
+      <dependency>
+      <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
         </dependency>
         <dependency>
