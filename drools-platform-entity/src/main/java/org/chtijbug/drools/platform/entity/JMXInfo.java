@@ -1,7 +1,5 @@
 package org.chtijbug.drools.platform.entity;
 
-import org.chtijbug.drools.platform.entity.coder.JSONCoder;
-
 /**
  * Created by IntelliJ IDEA.
  * Date: 24/03/14
@@ -9,10 +7,6 @@ import org.chtijbug.drools.platform.entity.coder.JSONCoder;
  * To change this template use File | Settings | File Templates.
  */
 public class JMXInfo {
-    public static class PlatformManagementKnowledgeBeanCode extends
-                JSONCoder<PlatformManagementKnowledgeBean> {
-
-     }
 
     private long averageTimeExecution;
     private long minTimeExecution = 1000000;

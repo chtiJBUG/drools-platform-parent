@@ -14,7 +14,8 @@ import javax.jws.WebService;
 public class ServiceCalculate implements IServiceCalculate {
     private static Logger logger = LoggerFactory.getLogger(ServiceCalculate.class);
     private RuleBasePackage ruleBasePackage = null;
-     public void setRuleBasePackage(RuleBasePackage ruleBasePackage) {
+
+    public void setRuleBasePackage(RuleBasePackage ruleBasePackage) {
         this.ruleBasePackage = ruleBasePackage;
     }
 

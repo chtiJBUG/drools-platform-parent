@@ -1,4 +1,4 @@
-package org.chtijbug.drools.platform.backend.wsclient.endpoint;
+package org.chtijbug.drools.platform.backend.wsclient;
 
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 
@@ -9,6 +9,6 @@ import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
  * To change this template use File | Settings | File Templates.
  */
 public interface WebSocketMessageListener {
-    public void beanReceived(PlatformManagementKnowledgeBean platformManagementKnowledgeBean) ;
+    public void beanReceived(PlatformManagementKnowledgeBean platformManagementKnowledgeBean);
 
 }
