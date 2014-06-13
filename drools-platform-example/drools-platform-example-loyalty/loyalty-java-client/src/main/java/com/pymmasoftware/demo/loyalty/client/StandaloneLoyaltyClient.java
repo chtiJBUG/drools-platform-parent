@@ -1,8 +1,9 @@
 package com.pymmasoftware.demo.loyalty.client;
 
+import com.google.common.base.Throwables;
 import loyalty.domains.*;
+import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
-import org.chtijbug.drools.runtime.RuleBasePackage;
 import org.chtijbug.drools.runtime.RuleBaseSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +17,15 @@ import static java.lang.Thread.sleep;
 
 public class StandaloneLoyaltyClient {
     private static Logger logger = LoggerFactory.getLogger(StandaloneLoyaltyClient.class);
-    private RuleBasePackage ruleBasePackage = null;
+    private DroolsPlatformKnowledgeBase ruleBasePackage = null;
 
 
-    public Ticket fireAllRules(Ticket ticket) {
+    public Ticket fireAllRules(Ticket ticket) throws InterruptedException {
         try {
+            while (!ruleBasePackage.isReady()){
+                logger.info("Rule base package is not ready yet. Sleeping in the meantime.");
+                Thread.sleep(2000);
+            }
             RuleBaseSession sessionStatefull = ruleBasePackage.createRuleBaseSession();
             sessionStatefull.insertByReflection(ticket);
             sessionStatefull.startProcess("P1");
@@ -28,11 +33,12 @@ public class StandaloneLoyaltyClient {
             sessionStatefull.dispose();
         } catch (DroolsChtijbugException e) {
             logger.error("Error in fireallrules", e);
+            throw Throwables.propagate(e);
         }
         return ticket;
     }
 
-    public void setRuleBasePackage(RuleBasePackage ruleBasePackage) {
+    public void setRuleBasePackage(DroolsPlatformKnowledgeBase ruleBasePackage) {
         this.ruleBasePackage = ruleBasePackage;
     }
 

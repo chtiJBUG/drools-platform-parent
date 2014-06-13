@@ -246,6 +246,7 @@ public class DroolsPlatformKnowledgeBase implements RuleBasePackage, RuleBaseRea
     @Override
     public void cleanup() {
         this.ruleBasePackage.cleanup();
+        this.webSocketServer.end();
     }
 
     public boolean isReady() {
