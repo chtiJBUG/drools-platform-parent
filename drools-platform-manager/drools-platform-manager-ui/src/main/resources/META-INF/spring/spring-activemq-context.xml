@@ -13,7 +13,7 @@
     <!--  lets create an embedded ActiveMQ Broker -->
 
 
-    <amq:broker brokerName="brokerService" persistent="false" useShutdownHook="false" xmlns="http://activemq.apache.org/schema/core">
+    <amq:broker brokerName="brokerService" persistent="false" useShutdownHook="true" xmlns="http://activemq.apache.org/schema/core">
         <amq:persistenceAdapter >
             <amq:amqPersistenceAdapter directory="${jms.basedir}" maxFileLength="32mb" />
         </amq:persistenceAdapter>
@@ -25,14 +25,14 @@
 
     <!-- A JMS connection factory for ActiveMQ -->
     <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory"
-          p:brokerURL="tcp://${jms.server}:${jms.port}"/>
+          p:brokerURL="tcp://${jms.server}:${jms.port}" />
 
     <!-- The Spring message listener container configuration -->
     <jms:listener-container
             container-type="default"
             connection-factory="connectionFactory"
             acknowledge="transacted">
-        <jms:listener destination="historyEventQueue" ref="simpleMessageListener"/>
+        <jms:listener destination="historyEventQueue" ref="simpleMessageListener" />
     </jms:listener-container>
 
 

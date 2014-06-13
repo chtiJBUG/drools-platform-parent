@@ -61,6 +61,8 @@ public class JmsStorageHistoryListener implements HistoryListener {
             Queue queue = session.createQueue(this.platformQueueName);
             producer = session.createProducer(queue);
         } catch (JMSException exp) {
+            // TODO handle properly exception
+            exp.printStackTrace();
         }
     }
 
