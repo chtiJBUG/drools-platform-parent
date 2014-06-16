@@ -1,20 +1,16 @@
 package org.chtijbug.drools.platform.runtime.javase.websocket;
 
 import org.apache.log4j.Logger;
+import org.chtijbug.drools.platform.core.PlatformManagementKnowledgeBeanServiceFactory;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
-import org.chtijbug.drools.platform.entity.PlatformResourceFile;
 import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.platform.runtime.javase.DroolsPlatformKnowledgeBaseJavaSE;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
-import org.chtijbug.drools.runtime.resource.Bpmn2DroolsResource;
-import org.chtijbug.drools.runtime.resource.DrlDroolsResource;
 import org.chtijbug.drools.runtime.resource.DroolsResource;
-import org.chtijbug.drools.runtime.resource.GuvnorDroolsResource;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,50 +30,21 @@ public class RuntimeWebSocketServerService {
         //
         switch (bean.getRequestRuntimePlarform()) {
             case isAlive:
-                bean.setAlive(true);
-                bean.setRequestStatus(RequestStatus.SUCCESS);
-                peer.getBasicRemote().sendObject(bean);
+                peer.getBasicRemote().sendObject(PlatformManagementKnowledgeBeanServiceFactory.isAlive(bean));
                 LOG.info("Runtime is alive");
                 break;
             case duplicateRuleBaseID:
                 this.droolsPlatformKnowledgeBaseJavaSE.dispose();
                 break;
             case ruleVersionInfos:
-                for (DroolsResource droolsResource : droolsPlatformKnowledgeBaseJavaSE.getDroolsResources()) {
-                    if (droolsResource instanceof GuvnorDroolsResource) {
-                        GuvnorDroolsResource guvnorDroolsResource = (GuvnorDroolsResource) droolsResource;
-                        PlatformResourceFile platformResourceFile = new PlatformResourceFile(guvnorDroolsResource.getBaseUrl(), guvnorDroolsResource.getWebappName(), guvnorDroolsResource.getPackageName(), guvnorDroolsResource.getPackageVersion(), null, null);
-                        bean.getResourceFileList().add(platformResourceFile);
-                    } else if (droolsResource instanceof DrlDroolsResource) {
-                        DrlDroolsResource drlDroolsResource = (DrlDroolsResource) droolsResource;
-                        PlatformResourceFile platformResourceFile = new PlatformResourceFile(drlDroolsResource.getFileName(), drlDroolsResource.getFileContent());
-                        bean.getResourceFileList().add(platformResourceFile);
-                    }
-                }
-                bean.setRequestStatus(RequestStatus.SUCCESS);
+                bean = PlatformManagementKnowledgeBeanServiceFactory.generateRuleVersionsInfo(bean, droolsPlatformKnowledgeBaseJavaSE.getDroolsResources());
                 LOG.info("Server Side before sent" + bean.toString());
                 peer.getBasicRemote().sendObject(bean);
                 LOG.info("Server Side after sent");
 
                 break;
             case loadNewRuleVersion:
-                List<PlatformResourceFile> resourceFiles = bean.getResourceFileList();
-                List<DroolsResource> droolsResources = new ArrayList<>();
-                for (PlatformResourceFile resourceFile : resourceFiles) {
-                    if (resourceFile.getGuvnor_url() != null) {
-                        DroolsResource droolsResource = GuvnorDroolsResource.createGuvnorRessource(resourceFile.getGuvnor_url(), resourceFile.getGuvnor_appName(), resourceFile.getGuvnor_packageName(), resourceFile.getGuvnor_packageVersion(), guvnorUsername, guvnorPassword);
-                        droolsResources.add(droolsResource);
-                    } else {
-                        String extension = getFileExtension(resourceFile.getFileName());
-                        if ("bpmn2".equals(extension)) {
-                            Bpmn2DroolsResource bpmn2DroolsResource = Bpmn2DroolsResource.createClassPathResource(resourceFile.getFileName());
-                            droolsResources.add(bpmn2DroolsResource);
-                        } else if ("drl".equals(extension)) {
-                            DroolsResource droolsResource = DrlDroolsResource.createClassPathResource(resourceFile.getFileName());
-                            droolsResources.add(droolsResource);
-                        }
-                    }
-                }
+                List<DroolsResource> droolsResources = PlatformManagementKnowledgeBeanServiceFactory.extract(bean.getResourceFileList(), guvnorUsername, guvnorPassword);
                 try {
                     droolsPlatformKnowledgeBaseJavaSE.RecreateKBaseWithNewRessources(droolsResources);
                     bean.setRequestStatus(RequestStatus.SUCCESS);
@@ -101,7 +68,12 @@ public class RuntimeWebSocketServerService {
 
     public void sendHeartBeat() {
         if (this.peerLoggerServer != null) {
-            PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
+            PlatformManagementKnowledgeBean platformManagementKnowledgeBean = PlatformManagementKnowledgeBeanServiceFactory.generateHearBeatBean();
+            try {
+                this.sendMessage(platformManagementKnowledgeBean);
+            } catch (IOException | EncodeException e) {
+                LOG.error("sendHeartBeat not possible", e);
+            }
         }
     }
 
@@ -109,6 +81,7 @@ public class RuntimeWebSocketServerService {
     public void onOpen(final Session session, EndpointConfig endpointConfig) {
         Map<String, Object> userProperties = WebSocketServer.userProperties;
         this.droolsPlatformKnowledgeBaseJavaSE = (DroolsPlatformKnowledgeBaseJavaSE) userProperties.get("droolsPlatformKnowledgeBase");
+        userProperties.put("activeWebSocketService", this);
         this.peerLoggerServer = session;
         this.guvnorUsername = this.droolsPlatformKnowledgeBaseJavaSE.getGuvnorUsername();
         this.guvnorPassword = this.droolsPlatformKnowledgeBaseJavaSE.getGuvnorPassword();
@@ -120,14 +93,5 @@ public class RuntimeWebSocketServerService {
         //prepare the endpoint for closing.
     }
 
-    private String getFileExtension(String fileName) {
-        String extension = null;
-        int i = fileName.lastIndexOf('.');
-        int p = Math.max(fileName.lastIndexOf('/'), fileName.lastIndexOf('\\'));
 
-        if (i > p) {
-            extension = fileName.substring(i + 1);
-        }
-        return extension;
-    }
 }  

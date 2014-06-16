@@ -3,9 +3,12 @@ package org.chtijbug.drools.platform.runtime.javase.websocket;
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBaseRuntime;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServerInstance;
+import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.glassfish.tyrus.server.Server;
 
 import javax.websocket.DeploymentException;
+import javax.websocket.EncodeException;
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 
@@ -16,7 +19,7 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 
-public class WebSocketServer extends WebSocketServerInstance {
+public class WebSocketServer implements WebSocketServerInstance {
     private static final Logger LOG = Logger.getLogger(WebSocketServer.class);
     protected static HashMap<String, Object> userProperties = new HashMap<>();
     private String ws_hostname;
@@ -39,6 +42,23 @@ public class WebSocketServer extends WebSocketServerInstance {
         } catch (DeploymentException e) {
             LOG.error("WebSocketServer.run", e);
         }
+    }
+
+    @Override
+    public void sendHeartBeat() {
+        RuntimeWebSocketServerService runtimeWebSocketServerService = (RuntimeWebSocketServerService) userProperties.get("activeWebSocketService");
+        if (runtimeWebSocketServerService != null) {
+            runtimeWebSocketServerService.sendHeartBeat();
+        }
+    }
+
+    @Override
+    public void sendMessage(PlatformManagementKnowledgeBean platformManagementKnowledgeBean) throws IOException, EncodeException {
+        RuntimeWebSocketServerService runtimeWebSocketServerService = (RuntimeWebSocketServerService) userProperties.get("activeWebSocketService");
+        if (runtimeWebSocketServerService != null) {
+            runtimeWebSocketServerService.sendMessage(platformManagementKnowledgeBean);
+        }
+
     }
 
     @Override

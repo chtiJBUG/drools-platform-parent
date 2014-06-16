@@ -14,6 +14,7 @@
   <modules>
     <module>drools-platform-knowledge</module>
     <module>drools-platform-runtime-javase</module>
+    <module>drools-platform-runtime-servlet</module>
   </modules>
 
 </project>

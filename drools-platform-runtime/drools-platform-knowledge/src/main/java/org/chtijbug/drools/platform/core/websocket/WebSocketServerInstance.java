@@ -11,18 +11,14 @@ import java.io.IOException;
  * Time: 13:15
  * To change this template use File | Settings | File Templates.
  */
-public abstract class WebSocketServerInstance {
-    public void end() {
-    }
+public interface WebSocketServerInstance {
+    public void end();
 
-    public void run() {
-    }
+    public void run();
 
-    public void sendHeartBeat() {
-    }
+    public void sendHeartBeat();
 
-    public void sendMessage(PlatformManagementKnowledgeBean platformManagementKnowledgeBean) throws IOException, EncodeException {
-    }
+    public void sendMessage(PlatformManagementKnowledgeBean platformManagementKnowledgeBean) throws IOException, EncodeException;
 
     public abstract String getHostName();
 
