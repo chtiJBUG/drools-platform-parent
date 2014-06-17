@@ -12,8 +12,10 @@ import org.chtijbug.drools.runtime.listener.HistoryListener;
 import org.chtijbug.drools.runtime.resource.DroolsResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.jms.JMSException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +37,15 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
      * Rule base ID (UID for the runtime
      */
     private Integer ruleBaseID;
+
+
     /**
      * Rule base singleton (Knwledge session factory)
      */
     private DroolsPlatformKnowledgeBaseRuntime ruleBasePackage;
     /** */
 
-
+    @Autowired
     private ServletJmsStorageHistoryListener servletJmsStorageHistoryListener;
     /** */
     private WebSocketServerInstance runtimeWebSocketServerService;
@@ -51,8 +55,10 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
      * Instant messaging channel *
      */
     private String webSocketHostname;
+
     private WebSocketServerInstance webSocketServer;
-    private int webSocketPort = 8025;
+
+    private int webSocketPort = 8080;
     /**
      * Event Messaging channel settings
      */
@@ -100,9 +106,13 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
     public void initPlatformRuntime() {
         logger.debug(">>createPackageBasePackage");
         try {
+            servletJmsStorageHistoryListener.setPlatformServer(this.platformServer);
+            servletJmsStorageHistoryListener.setRuleBaseID(this.ruleBaseID);
+            servletJmsStorageHistoryListener.initJmsConnection();
+
 
             ruleBasePackage = new DroolsPlatformKnowledgeBase(this.ruleBaseID, this.droolsResources, this.javaDialect, this.webSocketServer, this.servletJmsStorageHistoryListener);
-        } catch (DroolsChtijbugException | InterruptedException | UnknownHostException e) {
+        } catch (DroolsChtijbugException | JMSException | InterruptedException | UnknownHostException e) {
             logger.error("Error while initialisazing caused by {}", e);
             throw Throwables.propagate(e);
         } finally {
