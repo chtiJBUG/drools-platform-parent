@@ -11,8 +11,7 @@
 
 
   <bean id="jmsclient"
-        class="org.chtijbug.drools.platform.runtime.servlet.historylistener.ServletJmsStorageHistoryListener"
-        init-method="initJmsConnection">
+        class="org.chtijbug.drools.platform.runtime.servlet.historylistener.ServletJmsStorageHistoryListener">
 
   </bean>
 

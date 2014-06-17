@@ -66,5 +66,18 @@
       <artifactId>spring-web</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat7-websocket</artifactId>
+      <version>7.0.53</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-websocket-api</artifactId>
+      <version>7.0.53</version>
+      <scope>provided</scope>
+    </dependency>
+
   </dependencies>
 </project>
