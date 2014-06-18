@@ -28,6 +28,11 @@ public class SpringWebSocketServer extends TextWebSocketHandler implements WebSo
     private WebSocketSession serverSession;
 
     @Override
+    public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+        super.handleTransportError(session, exception);
+    }
+
+    @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 
         this.serverSession = session;
@@ -36,7 +41,6 @@ public class SpringWebSocketServer extends TextWebSocketHandler implements WebSo
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode stream = new PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode();
-        session.sendMessage(message);
         try {
             PlatformManagementKnowledgeBean bean = stream.decode(new StringReader(message.getPayload()));
             switch (bean.getRequestRuntimePlarform()) {

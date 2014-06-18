@@ -7,7 +7,7 @@
         http://www.springframework.org/schema/websocket
         http://www.springframework.org/schema/websocket/spring-websocket-4.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-<context:component-scan base-package="org.chtijbug.drools.platform.runtime.servlet"/>
+  <context:component-scan base-package="org.chtijbug.drools.platform.runtime.servlet"/>
 
 
   <bean id="jmsclient"
