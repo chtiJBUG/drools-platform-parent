@@ -112,7 +112,7 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
             ruleBasePackage.setGuvnor_password(guvnorResourceFile.getGuvnor_password());
             this.guvnorUsername = guvnorResourceFile.getGuvnor_userName();
             this.guvnorPassword = guvnorResourceFile.getGuvnor_password();
-            historyListener.fireEvent(platformKnowledgeBaseInitialConnectionEvent);
+            //historyListener.fireEvent(platformKnowledgeBaseInitialConnectionEvent);
         } else {
             for (DroolsResource droolsResource : droolsResources) {
                 if (droolsResource instanceof DrlDroolsResource) {

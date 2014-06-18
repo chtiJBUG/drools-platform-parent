@@ -3,8 +3,8 @@ package org.chtijbug.drools.platform.runtime.servlet;
 import com.google.common.base.Throwables;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBaseRuntime;
-import org.chtijbug.drools.platform.core.websocket.WebSocketServerInstance;
 import org.chtijbug.drools.platform.runtime.servlet.historylistener.ServletJmsStorageHistoryListener;
+import org.chtijbug.drools.platform.runtime.servlet.websocket.SpringWebSocketServer;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.RuleBaseSession;
 import org.chtijbug.drools.runtime.impl.JavaDialect;
@@ -37,10 +37,8 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
      * Rule base ID (UID for the runtime
      */
     private Integer ruleBaseID;
-
-
     /**
-     * Rule base singleton (Knwledge session factory)
+     * Rule base singleton (Knowledge session factory)
      */
     private DroolsPlatformKnowledgeBaseRuntime ruleBasePackage;
     /** */
@@ -48,22 +46,23 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
     @Autowired
     private ServletJmsStorageHistoryListener servletJmsStorageHistoryListener;
     /** */
-    private WebSocketServerInstance runtimeWebSocketServerService;
-
     private List<DroolsResource> droolsResources = new ArrayList<>();
     /**
      * Instant messaging channel *
      */
     private String webSocketHostname;
 
-    private WebSocketServerInstance webSocketServer;
+    @Autowired
+    private SpringWebSocketServer webSocketServer;
 
     private int webSocketPort = 8080;
     /**
      * Event Messaging channel settings
      */
     private String platformServer;
+
     private Integer platformPort = 61616;
+
     private String platformQueueName = "historyEventQueue";
 
     private JavaDialect javaDialect = null;
@@ -110,7 +109,7 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
             servletJmsStorageHistoryListener.setRuleBaseID(this.ruleBaseID);
             servletJmsStorageHistoryListener.initJmsConnection();
 
-
+            this.webSocketServer.setDroolsPlatformKnowledgeBaseJavaEE(this);
             ruleBasePackage = new DroolsPlatformKnowledgeBase(this.ruleBaseID, this.droolsResources, this.javaDialect, this.webSocketServer, this.servletJmsStorageHistoryListener);
         } catch (DroolsChtijbugException | JMSException | InterruptedException | UnknownHostException e) {
             logger.error("Error while initialisazing caused by {}", e);
@@ -230,5 +229,13 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
 
     public void setDroolsResources(List<DroolsResource> droolsResources) {
         this.droolsResources = droolsResources;
+    }
+
+    public String getWebSocketHostname() {
+        return webSocketHostname;
+    }
+
+    public int getWebSocketPort() {
+        return webSocketPort;
     }
 }
