@@ -18,8 +18,8 @@
         "angular-growl-notifications": "~0.7.0",
         "AngularStomp": "latest",
         "stomp-websocket": "~2.3.1",
-        "sockjs-client": "~0.3.4",
-        "angular-highlightjs": "latest"
+        "angular-highlightjs": "latest",
+        "sockjs": "~0.3.4"
     },
     "devDependencies": {}
 }

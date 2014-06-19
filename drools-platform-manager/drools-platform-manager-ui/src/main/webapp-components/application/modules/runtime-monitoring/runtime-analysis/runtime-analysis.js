@@ -4,6 +4,15 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
     $scope.allRuntimes=[];
 
+    //___ Fetch the list
+    $http.get('./server/rules_package/list')
+        .success(function (data) {
+            $scope.packagesList = data;
+        })
+        .error(function (error) {
+            console.log(error);
+        });
+
     $scope.filters={
         packageName:'undefined',
         status:'undefined',
@@ -72,14 +81,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         'output':'// output'
     };
 
-    //___ Fetch the list
-    $http.get('./server/rules_package/list')
-        .success(function (data) {
-            $scope.packagesList = data;
-        })
-        .error(function (error) {
-            console.log(error);
-        });
+
 
 
 
@@ -169,6 +171,15 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     //___ Retrieve filters
     //___ Then launch the http get request
     $scope.search = function () {
+        $http.get('./server/runtime/filter', $scope.filters)
+            .success(function (data) {
+                $scope.allRuntimes = data;
+            })
+            .error(function (error) {
+                console.log(error);
+                //____ TODO Send error notification....
+            });
+
         $scope.allRuntimes= [{
             ruleBaseID:'0',
             runtimeURL:'http://192.168.1.26:8080/runtime-1',

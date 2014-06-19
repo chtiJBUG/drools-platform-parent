@@ -1,5 +1,6 @@
-DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', '$scope', '$http', '$log', 'growlNotifications', function ($rootScope, $scope, $http, $log, growlNotifications) {
+DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', '$scope', '$http', '$log', 'growlNotifications', 'StompService', function ($rootScope, $scope, $http, $log, growlNotifications, StompService) {
     initController();
+    var unchecked=true;
     /* Functions to search the package's versions */
     //___ Quick search after any modification
     $scope.searchPackageByName = function() {
@@ -283,13 +284,40 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
         }
     };
 
+    $scope.check = function() {
+        // TODO
+        if(unchecked==true){
+            _.each($scope.activeRuntimeList, function(runtime) {
+               runtime.isSelected = true;
+            });
+            unchecked=false;
+        }else{
+            _.each($scope.activeRuntimeList, function(runtime) {
+                runtime.isSelected = false;
+            });
+            unchecked=true;
+        }
+
+    };
+
+
     //___ Deploy
     $scope.deployVersion = function() {
-        $scope.closeDeploy();
+        var packageVersion=$scope.package;
+        //alert(packageVersion);
+        _.each(
+            _.where($scope.activeRuntimeList, {isSelected:true}),
+            function(runtime) {
+                StompService.deployRuntime(runtime.id, packageVersion);
+            }
+        );
         growlNotifications.add('Deployment launched', 'info', 2000);
+        $scope.closeDeploy();
+    };
 
 
-    }
+
+
 
     //___ Delete
     $scope.deletePackageVersion = function() {
@@ -345,6 +373,10 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
         $scope.noAssetSent = false;
         $scope.isChecked=false;
         $scope.searchNotSuccessful=true;
+
+        $scope.checkedActiveRuntimeList = {
+            item:[]
+        };
 
         //___ After resetting the values, get values from the server
         //___ Get the list of the existed package from the server

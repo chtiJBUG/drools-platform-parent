@@ -4,26 +4,26 @@ package org.chtijbug.drools.platform.web.model;
  * Created by alexandre on 12/06/2014.
  */
 public class RuntimeFilter {
-    private String rulePackage;
+    private String packageName;
     private String status;
     private String hostname;
     private String startDate;
     private String endDate;
 
-    public RuntimeFilter(String rulePackage, String status, String hostname, String startDate, String endDate) {
-        this.rulePackage = rulePackage;
+    public RuntimeFilter(String packageName, String status, String hostname, String startDate, String endDate) {
+        this.packageName = packageName;
         this.status = status;
         this.hostname = hostname;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public String getRulePackage() {
-        return rulePackage;
+    public String getpackageName() {
+        return packageName;
     }
 
-    public void setRulePackage(String rulePackage) {
-        this.rulePackage = rulePackage;
+    public void setpackageName(String packageName) {
+        this.packageName = packageName;
     }
 
     public String getStatus() {

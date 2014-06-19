@@ -1,7 +1,6 @@
 var droolsPlatformApp = angular.module('droolsPlatformApp', [
     'ngRoute',
     'http-auth-interceptor',
-    'drools-platform.services',
     'drools-platform.controllers',
     'ui.select2',
     'ui.bootstrap',
@@ -11,7 +10,6 @@ var droolsPlatformApp = angular.module('droolsPlatformApp', [
     'ngSanitize',
     'paginator',
     'ngAnimate',
-    'AngularStomp',
     'hljs'
 
 ]);
@@ -141,7 +139,39 @@ paginator.directive('paginator', function () {
 
 var DroolsPlatformControllers = angular.module('drools-platform.controllers', []);
 
-var ServicesModule = angular.module('drools-platform.services', []);
+//___ STOMP Service
+droolsPlatformApp.service('StompService', function(){
+    var stompClient = null;
+    function connect(){
+        var socket = new SockJS('/server/update');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            setConnected(true);
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/pojo', function (deploymentStatus) {
+                //____ TODO Handle ERROR cases + etc..
+            });
+        });
+    }
+
+    this.disconnect = function () {
+        stompClient.disconnect();
+        setConnected(false);
+        console.log("Disconnected");
+    };
+
+    this.deployRuntime = function (ruleBaseID, packageVersion) {
+        stompClient.send("/app/update", {},  JSON.stringify({'ruleBaseID': ''+ruleBaseID, 'packageVersion':''+packageVersion}));
+    };
+    connect();
+
+    /*this.infosPackage = function (ruleBaseID, packageVersion) {
+
+        //stompClient.send("/app/update", {},  );
+    }*/
+
+
+});
 
 DroolsPlatformControllers.controller('MainCtrl', ['$rootScope', '$scope', '$window', '$http', 'LoginService','$log', '$location',
     function ($rootScope, $scope, $window, $http, LoginService, $log, $location) {
