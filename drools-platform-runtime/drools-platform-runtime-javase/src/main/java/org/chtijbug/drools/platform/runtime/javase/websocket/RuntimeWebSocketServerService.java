@@ -90,7 +90,12 @@ public class RuntimeWebSocketServerService {
 
     @OnClose
     public void onClose(Session session, CloseReason reason) throws IOException {
-        //prepare the endpoint for closing.
+        LOG.info("Server closed " + session + " " + reason);
+    }
+
+    @OnError
+    public void onError(Session session, Throwable t) {
+        LOG.info("Server Error " + session + " " + t);
     }
 
 
