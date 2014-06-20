@@ -26,6 +26,7 @@ public class PlatformManagementKnowledgeBean {
 
     private boolean isAlive = false;
 
+
     public boolean isAlive() {
         return isAlive;
     }

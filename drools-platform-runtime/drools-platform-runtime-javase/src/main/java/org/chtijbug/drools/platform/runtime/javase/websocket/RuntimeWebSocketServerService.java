@@ -39,7 +39,7 @@ public class RuntimeWebSocketServerService {
             case ruleVersionInfos:
                 bean = PlatformManagementKnowledgeBeanServiceFactory.generateRuleVersionsInfo(bean, droolsPlatformKnowledgeBaseJavaSE.getDroolsResources());
                 LOG.info("Server Side before sent" + bean.toString());
-                peer.getBasicRemote().sendObject(bean);
+                this.sendMessage(bean);
                 LOG.info("Server Side after sent");
 
                 break;
@@ -48,13 +48,13 @@ public class RuntimeWebSocketServerService {
                 try {
                     droolsPlatformKnowledgeBaseJavaSE.RecreateKBaseWithNewRessources(droolsResources);
                     bean.setRequestStatus(RequestStatus.SUCCESS);
-                    peer.getBasicRemote().sendObject(bean);
+                    this.sendMessage(bean);
                     this.droolsPlatformKnowledgeBaseJavaSE.setRuleBaseStatus(true);
                 } catch (Exception e) {
                     DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("RELOAD", "Could not reload Rule Package From Guvnor", e);
                     bean.setDroolsChtijbugException(droolsChtijbugException);
                     bean.setRequestStatus(RequestStatus.FAILURE);
-                    peer.getBasicRemote().sendObject(bean);
+                    this.sendMessage(bean);
                 }
                 break;
         }
@@ -90,7 +90,12 @@ public class RuntimeWebSocketServerService {
 
     @OnClose
     public void onClose(Session session, CloseReason reason) throws IOException {
-        //prepare the endpoint for closing.
+        LOG.info("Server closed " + session + " " + reason);
+    }
+
+    @OnError
+    public void onError(Session session, Throwable t) {
+        LOG.info("Server Error " + session + " " + t);
     }
 
 

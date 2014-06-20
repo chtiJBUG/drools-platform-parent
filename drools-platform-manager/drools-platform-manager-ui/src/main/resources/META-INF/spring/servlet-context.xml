@@ -10,36 +10,39 @@
                            http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.0.xsd">
 
 
-  <!-- TODO need to support the externalization of the authentication manager
-  <import resource="classpath:META-INF/spring/drools-platform-properties-resolver.xml"/>
-  <import resource="classpath*:META-INF/spring/security-context.xml"/>
-  <import resource="classpath*:META-INF/spring/spring-persistence-context.xml"/>
-  <import resource="classpath*:META-INF/spring/spring-logger-context.xml"/>
-   -->
-  <!--import resource="classpath:META-INF/spring/spring-logger-context.xml"/-->
-  <context:component-scan base-package="org.chtijbug.drools.platform.web" />
+    <!-- TODO need to support the externalization of the authentication manager
+    <import resource="classpath:META-INF/spring/drools-platform-properties-resolver.xml"/>
+    <import resource="classpath*:META-INF/spring/security-context.xml"/>
+    <import resource="classpath*:META-INF/spring/spring-persistence-context.xml"/>
+    <import resource="classpath*:META-INF/spring/spring-logger-context.xml"/>
+     -->
+    <!--import resource="classpath:META-INF/spring/spring-logger-context.xml"/-->
+    <context:component-scan base-package="org.chtijbug.drools.platform.web"/>
 
-  <mvc:annotation-driven>
-    <mvc:message-converters>
-      <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
-    </mvc:message-converters>
-    <mvc:argument-resolvers>
-      <bean class="org.chtijbug.drools.platform.web.annotation.JsonPathArgumentResolver"/>
-    </mvc:argument-resolvers>
-  </mvc:annotation-driven>
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+        </mvc:message-converters>
+        <mvc:argument-resolvers>
+            <bean class="org.chtijbug.drools.platform.web.annotation.JsonPathArgumentResolver"/>
+        </mvc:argument-resolvers>
+    </mvc:annotation-driven>
 
-  <!--
-      http://raymondhlee.wordpress.com/2014/01/19/using-spring-4-websocket-sockjs-and-stomp-support-to-implement-two-way-server-client-communication/
-  -->
+    <!--
+        http://raymondhlee.wordpress.com/2014/01/19/using-spring-4-websocket-sockjs-and-stomp-support-to-implement-two-way-server-client-communication/
+    -->
 
 
-  <websocket:message-broker application-destination-prefix="/app">
-    <websocket:stomp-endpoint path="/update">
-      <websocket:sockjs/>
-    </websocket:stomp-endpoint>
-    <websocket:simple-broker prefix="/topic"/>
+    <websocket:message-broker application-destination-prefix="/app">
+        <websocket:stomp-endpoint path="/update">
+            <websocket:sockjs/>
+        </websocket:stomp-endpoint>
+        <websocket:simple-broker prefix="/topic"/>
+    </websocket:message-broker>
 
-  </websocket:message-broker>
-
+    <bean id="serverFactory" class="org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean">
+        <property name="maxTextMessageBufferSize" value="8192"/>
+        <property name="maxBinaryMessageBufferSize" value="8192"/>
+    </bean>
 
 </beans>
