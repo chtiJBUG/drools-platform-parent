@@ -168,7 +168,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
 
         var str = ''+$scope.filters.startDate;
-        var suffix="(CET)";
+        var suffix="(CEST)";
 
         if(str.indexOf(suffix, str.length - suffix.length) !== -1){
             $scope.filters.startDate=''+$scope.filters.startDate.getFullYear()+'-'+$scope.filters.startDate.getMonth()+'-'+$scope.filters.startDate.getDate();
