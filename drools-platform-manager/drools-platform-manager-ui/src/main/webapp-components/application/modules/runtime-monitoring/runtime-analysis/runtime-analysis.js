@@ -1,9 +1,10 @@
-DroolsPlatformControllers.controller('assetStatusController', function ($rootScope, $scope, $http) {
-    /* Select package */
-    $scope.selectPackage = {
-        allowClear: true
-    };
+DroolsPlatformControllers.controller('runtimeAnalysisController', function ($rootScope, $scope, $document, $http, $log, $timeout, growlNotifications) {
 
+    /** SCOPE DEFINITION **/
+
+    $scope.allRuntimes=[];
+
+    //___ Fetch the list
     $http.get('./server/rules_package/list')
         .success(function (data) {
             $scope.packagesList = data;
@@ -12,90 +13,262 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
             console.log(error);
         });
 
-    /* Input select */
-    $scope.filters = {};
-    $scope.assets = undefined;
-    $http.get('./server/rule_status/all')
-        .success(function (data) {
-            $scope.statuses = data;
-        })
-        .error(function (error) {
-            console.log(error);
-        });
-
-    $scope.filtersOptions = {
-        selectOnBlur: true
+    $scope.filters={
+        packageName : undefined,
+        status : undefined,
+        hostname : undefined,
+        startDate:new Date(),
+        endDate:new Date()
     };
 
-    $scope.search = function () {
-        var filters = $scope.filters;
-        var packageSelected=$scope.package;
-        if(filters==undefined){
-            $scope.assetStatusSelectClass="form-group has-error has-feedback";
-        }
-        else if(packageSelected == "" && filters.length == 0 ) {
-            $scope.namePackageSelectClass="form-group has-error has-feedback";
-            $scope.assetStatusSelectClass="form-group has-error has-feedback";
-        }else if (filters.length == 0) {
-            /* When mistake happens display the tooltip */
-            $scope.assetStatusSelectClass="form-group has-error has-feedback";
-            return;
-        }else if (packageSelected == "") {
-            /* When mistake happens display the tooltip */
-            $scope.namePackageSelectClass="form-group has-error has-feedback";
-            $scope.assetStatusSelectClass="form-group";
-            return;
-        }else{
-            $scope.namePackageSelectClass="form-group";
-            $scope.assetStatusSelectClass="form-group";
-            //$("#popoverBtn").popover('destroy');
-            $http.post('./server/rule_status/'+packageSelected, JSON.stringify(filters))
-                .success(function (data) {
-                    $scope.showCancelButton=true;
-                    $scope.assets = data;
-                    console.log(data);
-                })
-                .error(function (error, status) {
-                    $scope.showCancelButton=true;
-                    $scope.noAssetSent = true;
-                    $scope.status=status;
-                    console.log(error);
-                });
-        }
+    //___ Collapse status for each box from the "Search panel"
+    $scope.collapseStatus = {
+        "firstBox":false,
+        "secondBox":false
     };
-    $scope.reset = function () {
-        $scope.showCancelButton=false;
-        $scope.package=undefined;
-        $scope.filters = undefined;
-        $scope.assets = undefined;
-        $scope.namePackageSelectClass="form-group";
-        $scope.assetStatusSelectClass="form-group";
+
+    //___ Popover details (when you move the mouse over the rulePackage)
+    $scope.popoverDetails={
+        'title':'Guvnor URL',
+        'content':'<b>Guvnor URL</b><br/><a href="http://192.168.1.26:8080/drools-guvnor" target="_blank">192.168.1.26:8080/drools-guvnor</a>'
+
+    };
+
+    //___ Session Execution Details area
+    $scope.sessionExecutionDetails={
+        'area':false,
+        'panel':false
+    };
+
+    //___ Dates
+    $scope.format = 'yyyy/MM/dd';
+    $scope.dates={
+        'initDate':new Date('2016/12/20'),
+        'minDate':'1993-07-29',
+        'maxDate':'2050-07-29',
+        'myTime':new Date()
+    };
+    $scope.dateOptions = {
+        formatYear: 'yy',
+        startingDay: 1
+    };
+
+    $scope.datePickers={
+        'firstCalendar':false,
+        'secondCalendar':false
+    };
+    $scope.hstep = 1;
+    $scope.mstep = 15;
+
+    $scope.options = {
+        hstep: [1, 2, 3],
+        mstep: [1, 5, 10, 15, 25, 30]
+    };
+
+    $scope.ismeridian = true;
+
+    //___ ID of the runtime selected
+    $scope.selectedRuntimeID = undefined;
+
+    //___ Tab mgmt
+    $scope.selectedTab=1;
+
+    //___ Code JSON
+    $scope.code = {
+        'input':"// input",
+        'output':'// output'
+    };
+
+    /**********************/
+    /*  DATE & TIME MGMT  */
+    /**********************/
+    $scope.today = function(dateGiven) {
+        return new Date();
+    };
+    $scope.today();
+
+    $scope.clear = function () {
+        $scope.filters.startDate = new Date();
+    };
+
+    // Disable weekend selection
+    $scope.disabled = function(date, mode) {
+        return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+    };
+/*
+    $scope.toggleMin = function() {
+        $scope.dates.minDate = $scope.dates.minDate ? null : new Date();
+    };
+    $scope.toggleMin();*/
+
+    $scope.open = function($event, inputConcerned) {
+        $event.preventDefault();
+        $event.stopPropagation();
+         if(inputConcerned=="startDate"){
+             $scope.datePickers.firstCalendar=true;
+
+         }else{
+             $scope.datePickers.secondCalendar=true;
+         }
+
+    };
+
+    $scope.toggleMode = function() {
+        $scope.ismeridian = ! $scope.ismeridian;
+    };
+
+    $scope.update = function() {
+        var d = new Date();
+        d.setHours( 14 );
+        d.setMinutes( 0 );
+        $scope.dates.mytime = d;
+    };
+
+    $scope.changed = function () {
+        console.log('Time changed to: ' + $scope.dates.myTime);
+    };
+
+    /** SESSION EXECUTION DETAILS **/
+
+    //___ Scrolling to the next panel
+    $scope.scrollToPanel = function(ruleBaseID) {
+        $scope.selectedRuntimeID=ruleBaseID;
+        $scope.sessionExecutionDetails.area=true;
+        $timeout(function() {
+            $scope.sessionExecutionDetails.panel=true;
+            var someElement = angular.element(document.getElementById('detailsPanel'));
+            $document.scrollToElement(someElement, 0, 1000);
+        }, 3);
+    };
+
+    // Toggle to another tab
+    $scope.selectedTab = 'output';
+    $scope.toggleTab=function(item){
+        $scope.selectedTab = item;
     }
 
-    $scope.promoteAssetsStatus = function () {
-        var packageSelected=$scope.package;
-        var assetsToPromote = _.where($scope.assets, {selected: true});
-        var data = {assetsToPromote: assetsToPromote, assetStatuses: $scope.filters};
-        $http.post('./server/rule_status/'+packageSelected+'/promote', data)
-            .success(function (data) {
-                $scope.assets = data;
-            })
-            .error(function (error) {
-                console.log(error);
-            });
+    $scope.closeDetailsPanel = function() {
+        var someElement = angular.element(document.getElementById('wrap'));
+        $document.scrollToElement(someElement, 0, 1000);
+        $timeout(function() {
+            $scope.sessionExecutionDetails.area=false;
+            $scope.sessionExecutionDetails.panel=false;
+        }, 1000);
     };
 
-    $scope.demoteAssetsStatus = function () {
-        var packageSelected=$scope.package;
-        var assetsToDemote = _.where($scope.assets, {selected: true});
-        var data = {assetsToDemote: assetsToDemote, assetStatuses: $scope.filters};
-        $http.post('./server/rule_status/'+packageSelected+'/demote', data)
-            .success(function (data) {
-                $scope.assets = data;
-            })
-            .error(function (error) {
-                console.log(error);
-            });
+    /** EVENTS ASSOCIATED WITH BUTTONS **/
+
+
+
+    /** SEARCH **/
+    //___ Method :
+    //___ Retrieve filters
+    //___ Then launch the http get request
+    $scope.search = function () {
+
+
+        var str = ''+$scope.filters.startDate;
+        var suffix="(CET)";
+
+        if(str.indexOf(suffix, str.length - suffix.length) !== -1){
+            $scope.filters.startDate=''+$scope.filters.startDate.getFullYear()+'-'+$scope.filters.startDate.getMonth()+'-'+$scope.filters.startDate.getDate();
+        }
+        str = ''+$scope.filters.endDate;
+         if(str.indexOf(suffix, str.length - suffix.length) !== -1){
+            $scope.filters.endDate=''+$scope.filters.endDate.getFullYear()+'-'+$scope.filters.endDate.getMonth()+'-'+$scope.filters.endDate.getDate();
+         }
+
+        console.log($scope.filters.startDate);
+        console.log($scope.filters.endDate);
+
+
+        var filters = $scope.filters;
+        console.log(filters);
+
+        if ($scope.filters.packageName == null) {
+            console.log("then do sthing");
+            $scope.namePackageSelectClass = "form-group has-error has-feedback";
+
+        } else {
+            $scope.namePackageSelectClass = "form-group";
+            $http.get('./server/runtime/filter', $scope.filters)
+                .success(function (data) {
+                    $scope.allRuntimes = data;
+                })
+                .error(function (error, status) {
+                    console.log(error);
+                    //____ TODO Send an appropriate message
+                    growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
+                });
+        }
+        $scope.showCancelButton = true;
+
+
+        //___ Mockup values
+        $scope.allRuntimes= [{
+            ruleBaseID:'0',
+            runtimeURL:'http://192.168.1.26:8080/runtime-1',
+            rulePackage:'loyalty',
+            sessionId:'1',
+            status:'INITMODE',
+            startDate:'2014-04-20 1:48:23 AM',
+            endDate:'2014-04-20 1:48:42 AM'
+            },
+            {
+                ruleBaseID:'1',
+                runtimeURL:'http://192.168.1.26:8080/runtime-2',
+                rulePackage:'loyalty',
+                sessionId:'2',
+                status:'STARTED',
+                startDate:'2014-04-20 1:48:23 AM',
+                endDate:'2014-04-20 1:48:42 AM'
+            },
+            {
+                ruleBaseID:'2',
+                runtimeURL:'http://192.168.1.26:8080/runtime-2',
+                rulePackage:'loyalty',
+                sessionId:'3',
+                status:'NOT_JOIGNABLE',
+                startDate:'2014-04-20 1:48:23 AM',
+                endDate:'2014-04-20 1:48:42 AM'
+            },
+            {
+                ruleBaseID:'3',
+                runtimeURL:'http://192.168.1.26:8080/runtime-2',
+                rulePackage:'loyalty',
+                sessionId:'4',
+                status:'STOPPED',
+                startDate:'2014-04-20 1:48:23 AM',
+                endDate:'2014-04-20 1:48:42 AM'
+            },
+            {
+                ruleBaseID:'5',
+                runtimeURL:'http://192.168.1.26:8080/runtime-2',
+                rulePackage:'loyalty',
+                sessionId:'5',
+                status:'CRASHED',
+                startDate:'2014-04-20 1:48:23 AM',
+                endDate:'2014-04-20 1:48:42 AM'
+            },
+            {
+                ruleBaseID:'6',
+                runtimeURL:'http://192.168.1.26:8080/runtime-2',
+                rulePackage:'loyalty',
+                sessionId:'6',
+                status:'STOPPED',
+                startDate:'2014-04-20 1:48:23 AM',
+                endDate:'2014-04-20 1:48:42 AM'
+            }
+        ];
     };
+
+    $scope.reset = function(){
+        $scope.allRuntimes= [];
+        $scope.namePackageSelectClass = "form-group";
+        $scope.showCancelButton=false;
+    };
+
 
 });
+
+
