@@ -16,6 +16,7 @@
     <filter>
         <filter-name>characterEncodingFilter</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <async-supported>true</async-supported>
         <init-param>
             <param-name>encoding</param-name>
             <param-value>UTF-8</param-value>
@@ -24,7 +25,6 @@
             <param-name>forceEncoding</param-name>
             <param-value>true</param-value>
         </init-param>
-        <async-supported>true</async-supported>
     </filter>
     <filter-mapping>
         <filter-name>characterEncodingFilter</filter-name>
@@ -44,19 +44,20 @@
     </filter-mapping>
 
     <!-- Compress the HTTP response -->
-    <filter>
+    <!--filter>
         <filter-name>GZIPFilter</filter-name>
         <filter-class>org.chtijbug.drools.platform.web.filter.GZIPFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>GZIPFilter</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>
+    </filter-mapping-->
 
     <!-- Rewrite for Angular HTML5 mode -->
     <filter>
         <filter-name>UrlRewriteFilter</filter-name>
         <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+        <async-supported>true</async-supported>
         <init-param>
             <param-name>logLevel</param-name>
             <param-value>slf4j</param-value>
@@ -72,6 +73,7 @@
     <filter>
         <filter-name>DynamicBaseFilter</filter-name>
         <filter-class>org.chtijbug.drools.platform.web.filter.DynamicBaseFilter</filter-class>
+        <async-supported>true</async-supported>
     </filter>
     <filter-mapping>
         <filter-name>DynamicBaseFilter</filter-name>
