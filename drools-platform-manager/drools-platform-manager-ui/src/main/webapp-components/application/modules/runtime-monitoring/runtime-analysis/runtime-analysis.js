@@ -14,9 +14,9 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         });
 
     $scope.filters={
-        packageName:'undefined',
-        status:'undefined',
-        hostname:'undefined',
+        packageName : undefined,
+        status : undefined,
+        hostname : undefined,
         startDate:new Date(),
         endDate:new Date()
     };
@@ -78,13 +78,6 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         'input':"// input",
         'output':'// output'
     };
-
-
-
-
-
-
-
 
     /**********************/
     /*  DATE & TIME MGMT  */
@@ -173,50 +166,42 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     //___ Then launch the http get request
     $scope.search = function () {
 
-        /*$scope.filters={
-         packageName:'undefined',
-         status:'undefined',
-         hostname:'undefined',
-         startDate:new Date(),
-         endDate:new Date()
-         };*/
+
+        var str = ''+$scope.filters.startDate;
+        var suffix="(CEST)";
+
+        if(str.indexOf(suffix, str.length - suffix.length) !== -1){
+            $scope.filters.startDate=''+$scope.filters.startDate.getFullYear()+'-'+$scope.filters.startDate.getMonth()+'-'+$scope.filters.startDate.getDate();
+        }
+        str = ''+$scope.filters.endDate;
+         if(str.indexOf(suffix, str.length - suffix.length) !== -1){
+            $scope.filters.endDate=''+$scope.filters.endDate.getFullYear()+'-'+$scope.filters.endDate.getMonth()+'-'+$scope.filters.endDate.getDate();
+         }
+
+        console.log($scope.filters.startDate);
+        console.log($scope.filters.endDate);
 
 
         var filters = $scope.filters;
-
-        console.log($scope.filters.packageName);
-        console.log($scope.filters.status);
-        console.log($scope.filters.hostname);
-        console.log($scope.filters.startDate);
-        /*
-        $scope.filters.startDate=''+$scope.filters.startDate.getFullYear()+'-'+$scope.filters.startDate.getMonth()+'-'+$scope.filters.startDate.getDate();
-        console.log($scope.filters.startDate);
-        console.log($scope.filters.endDate);
-        $scope.filters.endDate=''+$scope.filters.endDate.getFullYear()+'-'+$scope.filters.endDate.getMonth()+'-'+$scope.filters.endDate.getDate();
-        console.log($scope.filters.endDate);
-        */
-
-        //$scope.filters.startDate =
+        console.log(filters);
 
         if ($scope.filters.packageName == null) {
             console.log("then do sthing");
             $scope.namePackageSelectClass = "form-group has-error has-feedback";
-            $scope.showCancelButton = true;
+
         } else {
             $scope.namePackageSelectClass = "form-group";
             $http.get('./server/runtime/filter', $scope.filters)
                 .success(function (data) {
-                    $scope.showCancelButton = true;
                     $scope.allRuntimes = data;
                 })
                 .error(function (error, status) {
-                    $scope.showCancelButton = true;
                     console.log(error);
                     //____ TODO Send an appropriate message
                     growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
                 });
         }
-
+        $scope.showCancelButton = true;
 
 
         //___ Mockup values

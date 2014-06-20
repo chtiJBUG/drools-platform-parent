@@ -11,7 +11,7 @@
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse">
+    <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav" ng-hide="loginRequired">
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown">Rules Package & Runtime <b class="caret"></b></a>
@@ -48,3 +48,11 @@
     </div>
     <!-- /.navbar-collapse -->
 </nav>
+<script type="text/javascript">
+    $('.dropdown-toggle').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        return false;
+    });
+</script>
