@@ -1,4 +1,4 @@
-package org.chtijbug.drools.platform.web;
+package org.chtijbug.drools.platform.web.model;
 
 import org.chtijbug.drools.platform.rules.management.AssetStatus;
 

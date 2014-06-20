@@ -36,8 +36,8 @@
                             </label>
                         </div>
                         <div class="form-group">
-                            <button id="btn-cancel" class="btn btn-danger show-tooltip" ng-show="showCancelButton"
-                                    ng-click="reset()"><i class="fa fa-times"></i></button>
+                            <button id="btn-cancel" class="btn btn-warning pull-left" ng-show="showCancelButton"
+                                    ng-click="reset()"><i class="fa fa-reply"></i></button>
                             <button id="btn-search" class="btn btn-info pull-right"
                                     data-ng-click="searchPackage()"><i class="fa fa-search"></i> Search
                             </button>
@@ -95,19 +95,24 @@
                                         </small></span>
                                     </td>
                                 </tr>
-                                <!-- Context menu applied to snapshot versions -->
-                                <div ng-show="isSnapshot" class="dropdown position-fixed ng-scope" id="myMenu">
+                                <!-- Context menu -->
+                                <div  class="dropdown position-fixed ng-scope" id="myMenu">
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                        <li ng-class="{true:'disabled'} [visibleItem]" role="presentation">
+                                        <li ng-show="isSnapshot" ng-class="{true:'disabled'} [visibleItem]" role="presentation">
                                             <a class="pointer" role="menuitem" tabindex="-1"
                                                ng-click="launchWizzard('rebuild')">Rebuild</a>
                                         </li>
-                                        <li ng-class="{true:'disabled'} [visibleItem]" role="presentation">
+                                        <li ng-show="isSnapshot" ng-class="{true:'disabled'} [visibleItem]" role="presentation">
                                             <a class="pointer" role="menuitem" tabindex="-1"
                                                ng-click="launchWizzard('release')">Release</a>
                                         </li>
-                                        <li class="divider"></li>
+                                        <li ng-show="isSnapshot" class="divider"></li>
                                         <li role="presentation">
+                                            <a class="pointer" role="menuitem" tabindex="-1"
+                                               ng-click="launchDeploy()">Deploy</a>
+                                        </li>
+                                        <li ng-show="isSnapshot" class="divider"></li>
+                                        <li ng-show="isSnapshot" role="presentation">
                                             <a class="pointer" role="menuitem" tabindex="-1"
                                                ng-click="launchAlertMsg()">Delete</a>
                                         </li>
@@ -125,12 +130,14 @@
                             ng-click="launchWizzard('create')">
                         <i class="fa fa-plus"></i> Add a new version
                     </button>
-                    <!-- Modal -->
+                    <!-- Modal : Wizzard -->
                     <div id="Wizzard" class="modal fade" data-backdrop="static">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title">Add a new version</h4>
+                                    <h4 ng-show="isCreateButtonEnabled" class="modal-title">Add a new version</h4>
+                                    <h4 ng-show="isRebuildButtonEnabled" class="modal-title">Rebuild this version</h4>
+                                    <h4 ng-show="isReleaseButtonEnabled" class="modal-title">Release the version</h4>
                                 </div>
                                 <div class="modal-body">
                                     <form role="form" name="NewVersionPackageForm">
@@ -184,6 +191,69 @@
                                             class="btn btn-success pull-right" ng-click="createVersion()">
                                         <span>Release</span>
                                     </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal :  Deployment -->
+                    <div id="Deployment" class="modal fade" data-backdrop="static">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Asset Package Deployment</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        Package name : <code>{{package}}</code>    Version : <code>{{newVersion}}</code>
+                                    <span ng-show="isSnapshot" class="label label-warning"><small>
+                                        SNAPSHOT
+                                    </small></span>
+                                        <span ng-show="!isSnapshot" class="label label-success"><small>
+                                            RELEASE
+                                        </small></span>
+                                    </p>
+                                    <div>
+                                        All active runtimes
+                                        <div ng-show="activeRuntimeList.length == 0" class="alert alert-info">
+                                            <strong>Apparently, there are no active runtimes</strong>
+                                        </div>
+                                        <table class="table table-hover" ng-show="activeRuntimeList.length != 0">
+                                            <thead>
+                                                <tr>
+                                                    <th><input type="checkbox" ng-click="check()"></th>
+                                                    <th class="bold">Rulebase ID</th>
+                                                    <th class="bold">Runtime</th>
+                                                    <th class="bold">Execution</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="runtime in activeRuntimeList"
+                                                    style="cursor:default" class="runtime-status-{{runtime.status}}">
+
+                                                    <td>
+                                                        <input type="checkbox" ng-model="runtime.isSelected"><!-- checklist-model="checkedActiveRuntimeList.item" checklist-value="runtime"-->
+                                                    </td>
+                                                    <td>{{runtime.id}}</td>
+                                                    <td>{{runtime.url}}</td>
+                                                    <td>{{runtime.version}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="btn-closeDeploy" class="btn btn-danger pull-left"
+                                            ng-click="closeDeploy()">
+                                        Cancel
+                                    </button>
+                                    <button id="btn-deploy"
+                                            class="btn btn-success pull-right" ng-click="deployVersion()">
+                                        <span>Deploy</span>
+                                    </button>
+
                                 </div>
                             </div>
                         </div>

@@ -1,5 +1,6 @@
 package org.chtijbug.drools.platform.web;
 
+import org.chtijbug.drools.platform.web.model.PackageSnapshot;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
