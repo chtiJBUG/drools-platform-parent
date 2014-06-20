@@ -1,4 +1,4 @@
-DroolsPlatformControllers.controller('runtimeAnalysisController', function ($rootScope, $scope, $document, $http, $log, $timeout) {
+DroolsPlatformControllers.controller('runtimeAnalysisController', function ($rootScope, $scope, $document, $http, $log, $timeout, growlNotifications) {
 
     /** SCOPE DEFINITION **/
 
@@ -44,8 +44,6 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     $scope.format = 'yyyy/MM/dd';
     $scope.dates={
         'initDate':new Date('2016/12/20'),
-        'startDate':new Date(),
-        'endDate':new Date(),
         'minDate':'1993-07-29',
         'maxDate':'2050-07-29',
         'myTime':new Date()
@@ -80,6 +78,9 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         'input':"// input",
         'output':'// output'
     };
+
+
+
 
 
 
@@ -171,19 +172,58 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     //___ Retrieve filters
     //___ Then launch the http get request
     $scope.search = function () {
-        $http.get('./server/runtime/filter', $scope.filters)
-            .success(function (data) {
-                $scope.allRuntimes = data;
-            })
-            .error(function (error) {
-                console.log(error);
-                //____ TODO Send error notification....
-            });
 
+        /*$scope.filters={
+         packageName:'undefined',
+         status:'undefined',
+         hostname:'undefined',
+         startDate:new Date(),
+         endDate:new Date()
+         };*/
+
+
+        var filters = $scope.filters;
+
+        console.log($scope.filters.packageName);
+        console.log($scope.filters.status);
+        console.log($scope.filters.hostname);
+        console.log($scope.filters.startDate);
+        /*
+        $scope.filters.startDate=''+$scope.filters.startDate.getFullYear()+'-'+$scope.filters.startDate.getMonth()+'-'+$scope.filters.startDate.getDate();
+        console.log($scope.filters.startDate);
+        console.log($scope.filters.endDate);
+        $scope.filters.endDate=''+$scope.filters.endDate.getFullYear()+'-'+$scope.filters.endDate.getMonth()+'-'+$scope.filters.endDate.getDate();
+        console.log($scope.filters.endDate);
+        */
+
+        //$scope.filters.startDate =
+
+        if ($scope.filters.packageName == null) {
+            console.log("then do sthing");
+            $scope.namePackageSelectClass = "form-group has-error has-feedback";
+            $scope.showCancelButton = true;
+        } else {
+            $scope.namePackageSelectClass = "form-group";
+            $http.get('./server/runtime/filter', $scope.filters)
+                .success(function (data) {
+                    $scope.showCancelButton = true;
+                    $scope.allRuntimes = data;
+                })
+                .error(function (error, status) {
+                    $scope.showCancelButton = true;
+                    console.log(error);
+                    //____ TODO Send an appropriate message
+                    growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
+                });
+        }
+
+
+
+        //___ Mockup values
         $scope.allRuntimes= [{
             ruleBaseID:'0',
             runtimeURL:'http://192.168.1.26:8080/runtime-1',
-            rulePackage:'alex.test.package',
+            rulePackage:'loyalty',
             sessionId:'1',
             status:'INITMODE',
             startDate:'2014-04-20 1:48:23 AM',
@@ -192,7 +232,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             {
                 ruleBaseID:'1',
                 runtimeURL:'http://192.168.1.26:8080/runtime-2',
-                rulePackage:'alex.test.package',
+                rulePackage:'loyalty',
                 sessionId:'2',
                 status:'STARTED',
                 startDate:'2014-04-20 1:48:23 AM',
@@ -201,7 +241,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             {
                 ruleBaseID:'2',
                 runtimeURL:'http://192.168.1.26:8080/runtime-2',
-                rulePackage:'alex.test.package',
+                rulePackage:'loyalty',
                 sessionId:'3',
                 status:'NOT_JOIGNABLE',
                 startDate:'2014-04-20 1:48:23 AM',
@@ -210,7 +250,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             {
                 ruleBaseID:'3',
                 runtimeURL:'http://192.168.1.26:8080/runtime-2',
-                rulePackage:'alex.test.package',
+                rulePackage:'loyalty',
                 sessionId:'4',
                 status:'STOPPED',
                 startDate:'2014-04-20 1:48:23 AM',
@@ -219,7 +259,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             {
                 ruleBaseID:'5',
                 runtimeURL:'http://192.168.1.26:8080/runtime-2',
-                rulePackage:'alex.test.package',
+                rulePackage:'loyalty',
                 sessionId:'5',
                 status:'CRASHED',
                 startDate:'2014-04-20 1:48:23 AM',
@@ -228,43 +268,19 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             {
                 ruleBaseID:'6',
                 runtimeURL:'http://192.168.1.26:8080/runtime-2',
-                rulePackage:'alex.test.package',
+                rulePackage:'loyalty',
                 sessionId:'6',
                 status:'STOPPED',
                 startDate:'2014-04-20 1:48:23 AM',
                 endDate:'2014-04-20 1:48:42 AM'
             }
         ];
-
-        var filters = $scope.filters;
-        console.log(filters.lenght);
-
-
-        /*$http.get('.server/runtime_resource/activePlatformRuntimes/'+filters)
-            .success(function (data) {
-                $scope.packageList = data;
-                console.log($scope.packageList);
-            })
-            .error(function (error, status) {
-                console.log(error);
-            })*/
-
-        /*
-        $http.get('.server/runtime_resource/activePlatformRuntimes/'+packageSelected)
-            .success(function (data) {
-                $scope.packageList = data;
-                console.log($scope.packageList);
-            })
-            .error(function (error, status) {
-                console.log(error);
-            });
-
-        */
-
     };
+
     $scope.reset = function(){
         $scope.allRuntimes= [];
-
+        $scope.namePackageSelectClass = "form-group";
+        $scope.showCancelButton=false;
     };
 
 

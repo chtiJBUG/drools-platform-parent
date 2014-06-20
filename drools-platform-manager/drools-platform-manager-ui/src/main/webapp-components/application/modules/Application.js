@@ -150,10 +150,26 @@ droolsPlatformApp.service('StompService', function(){
             console.log('Connected: ' + frame);
             stompClient.subscribe('/topic/pojo', function (deploymentStatus) {
                 //____ TODO Handle ERROR cases + etc..
+
+                //___ TODO Get content from deploymentStatus
+
+                //___ TODO Status display mode
+                //___ if(status == "INITMODE"){
+                    //____ growlNotifications.add(... , 'info', 2000);
+                //___ }else if(status == "STARTED"){
+                    //___ growlNotifications.add(... , 'success', 2000);
+                //___ }else if(status == "NOT_JOIGNABLE"){
+                    //___ growlNotifications.add(... , 'warning', 2000);
+                //___ }else if(status == "STOPPED"){
+                    //___ growlNotifications.add(... , 'warning', 2000);
+                //___ }else if(status == "CRASHED")
+                    //growlNotifications.add(... , 'danger', 2000);
+                //___ }
             });
         });
     }
 
+    //____ Is it useful ??
     this.disconnect = function () {
         stompClient.disconnect();
         setConnected(false);
@@ -163,13 +179,10 @@ droolsPlatformApp.service('StompService', function(){
     this.deployRuntime = function (ruleBaseID, packageVersion) {
         stompClient.send("/app/update", {},  JSON.stringify({'ruleBaseID': ''+ruleBaseID, 'packageVersion':''+packageVersion}));
     };
+
     connect();
 
-    /*this.infosPackage = function (ruleBaseID, packageVersion) {
-
-        //stompClient.send("/app/update", {},  );
-    }*/
-
+    //___ TODO Get back infos about the Monitoring ?
 
 });
 
@@ -201,19 +214,14 @@ DroolsPlatformControllers.controller('MainCtrl', ['$rootScope', '$scope', '$wind
                 $log.log("Error. Caused by : " + cause);
                 $rootScope.username = "default";
             });
+
+        console.log("Details about $location :");
         console.log($location); //complete location
         console.log($location.absUrl()); //complete URL
         console.log($location.host()); // hostname
         console.log($location.port()); //port
         console.log($location.path()); //path
 
-        /*$scope.messages = [];
-        $scope.client = ngstomp($location.absUrl());
-        $scope.client.connect("guest", "guest", function() {
-            $scope.client.subscribe("/topic/test", function (message) {
-                $scope.messages.push(message.body);
-            });
-        });*/
     }
 ]);
 

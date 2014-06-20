@@ -14,7 +14,7 @@
                         <h4>Guvnor</h4>
                         <div class="form-group" ng-class="namePackageSelectClass">
                             <label for="package-name-select">Rule Package Name</label>
-                            <select id="package-name-select" ui-select2="selectPackage" ng-model="filters.package"
+                            <select id="package-name-select" ui-select2="selectPackage" ng-model="filters.packageName"
                                     class="form-control"
                                     style="padding:0;height:auto;width:auto;"
                                     data-placeholder="Select a package">
@@ -70,15 +70,11 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <!-- button id="btn-cancel" class="btn btn-danger show-tooltip" ng-show="showCancelButton"
-                                    ng-click="reset()">
-                                <i class="fa fa-times"></i>
-                            </button -->
-                            <button id="btn-cancel" class="btn btn-danger show-tooltip"
-                                    ng-click="reset()">
-                                <i class="fa fa-times"></i>
+                            <button id="btn-cancel" class="btn btn-warning pull-left" ng-show="showCancelButton" ng-click="reset()">
+                                <i class="fa fa-reply"></i>
                             </button>
-                            <button id="btn-search" class="btn btn-info show-tooltip pull-right" ng-click="search()">
+
+                            <button id="btn-search" class="btn btn-info pull-right" ng-click="search()">
                                 <i class="fa fa-search"></i> Search
                             </button>
                         </div>
@@ -121,7 +117,7 @@
                                         <td>{{runtime.sessionId}}</td>
                                         <td>{{runtime.startDate}}</td>
                                         <td>{{runtime.endDate}}</td>
-                                        <td><button class="btn " ng-click="scrollToPanel(runtime.ruleBaseID)"><i class="fa fa-eye"></i></button></td>
+                                        <td><button class="btn " ng-click="scrollToPanel(runtime.ruleBaseID);"><i class="fa fa-eye"></i></button></td>
                                     </tr>
                                 </tbody>
                             </table>
