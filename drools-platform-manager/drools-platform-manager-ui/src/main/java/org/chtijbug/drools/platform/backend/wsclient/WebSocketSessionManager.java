@@ -1,7 +1,6 @@
 package org.chtijbug.drools.platform.backend.wsclient;
 
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.platform.backend.wsclient.impl.DefaultSocketMessageListenerImpl;
 import org.chtijbug.drools.platform.entity.Heartbeat;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.springframework.stereotype.Component;
@@ -24,17 +23,14 @@ public class WebSocketSessionManager {
     private static final Logger LOG = Logger.getLogger(WebSocketSessionManager.class);
 
     private Map<Integer, WebSocketClient> webSocketClientList = new HashMap<>();
-    private Map<Integer, WebSocketMessageListener> webSocketClientMessageListenerList = new HashMap<>();
     private Map<Integer, Heartbeat> webSocketClientHeartBeatList = new HashMap<>();
 
     public WebSocketClient AddClient(PlatformRuntimeInstance platformRuntimeInstance) throws DeploymentException, IOException {
 
         Heartbeat heartbeat = new Heartbeat();
         heartbeat.setLastAlive(new Date());
-        WebSocketMessageListener webSocketMessageListener = new DefaultSocketMessageListenerImpl(platformRuntimeInstance, heartbeat);
-        WebSocketClient webSocketClient = new WebSocketClient(platformRuntimeInstance, webSocketMessageListener);
+        WebSocketClient webSocketClient = new WebSocketClient(platformRuntimeInstance, heartbeat);
         this.webSocketClientList.put(platformRuntimeInstance.getRuleBaseID(), webSocketClient);
-        this.webSocketClientMessageListenerList.put(platformRuntimeInstance.getRuleBaseID(), webSocketMessageListener);
         this.webSocketClientHeartBeatList.put(platformRuntimeInstance.getRuleBaseID(), heartbeat);
 
         return webSocketClient;
@@ -47,7 +43,6 @@ public class WebSocketSessionManager {
             webSocketClient.closeSession();
         }
         this.webSocketClientList.remove(platformRuntimeInstance.getRuleBaseID());
-        this.webSocketClientMessageListenerList.remove(platformRuntimeInstance.getRuleBaseID());
         this.webSocketClientHeartBeatList.remove(platformRuntimeInstance.getRuleBaseID());
     }
 

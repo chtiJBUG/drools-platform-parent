@@ -55,6 +55,7 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
     public void updateRulePackage(Integer ruleBaseID, String packageVersion) throws DroolsChtijbugException {
 
         WebSocketClient clientSocket = webSocketSessionManager.getWebSocketClient(ruleBaseID);
+
         if (clientSocket == null) {
             DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("updateRulePackage-unknowrulebaseid", ruleBaseID.toString(), null);
             throw droolsChtijbugException;

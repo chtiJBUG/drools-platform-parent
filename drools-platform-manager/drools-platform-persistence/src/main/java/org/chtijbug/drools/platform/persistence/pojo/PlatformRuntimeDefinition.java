@@ -31,6 +31,7 @@ public class PlatformRuntimeDefinition implements Serializable {
     @JoinColumn(name = "platform_runtime_definition_id_fk")
     private List<DroolsResource> droolsRessourcesDefinition = new ArrayList<>();
 
+    private String couldInstanceStartWithNewRuleVersion;
 
     public PlatformRuntimeDefinition() {
     }
@@ -67,5 +68,13 @@ public class PlatformRuntimeDefinition implements Serializable {
 
     public void setDroolsRessourcesDefinition(List<DroolsResource> droolsRessourcesDefinition) {
         this.droolsRessourcesDefinition = droolsRessourcesDefinition;
+    }
+
+    public String getCouldInstanceStartWithNewRuleVersion() {
+        return couldInstanceStartWithNewRuleVersion;
+    }
+
+    public void setCouldInstanceStartWithNewRuleVersion(String couldInstanceStartWithNewRuleVersion) {
+        this.couldInstanceStartWithNewRuleVersion = couldInstanceStartWithNewRuleVersion;
     }
 }
