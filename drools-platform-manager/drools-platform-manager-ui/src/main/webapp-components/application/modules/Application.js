@@ -8,7 +8,10 @@ var droolsPlatformApp = angular.module('droolsPlatformApp', [
     'ui.codemirror',
     'ng-context-menu',
     'duScroll',
-    'paginator'
+    'growlNotifications',
+    'ngSanitize',
+    'paginator',
+    'ngAnimate'
 
 ]);
 
@@ -17,6 +20,10 @@ droolsPlatformApp.config(function ($locationProvider) {
     $locationProvider.html5Mode(true);
 });
 
+droolsPlatformApp.run(['$animate', function($animate){
+    $animate.enabled(true);
+    console.log('Animation enabled: ' + $animate.enabled());
+}]);
 
 droolsPlatformApp.factory('httpInterceptor', ['$q', '$rootScope', function ($q, $rootScope) {
 
