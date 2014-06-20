@@ -16,6 +16,9 @@ public class PlatformManagementKnowledgeBean {
 
 
     public static class PlatformManagementKnowledgeBeanCode extends JSONCoder<PlatformManagementKnowledgeBean> {
+        public void PlatformManagementKnowledgeBeanCode() {
+            set_type(PlatformManagementKnowledgeBean.class);
+        }
     }
 
     private Heartbeat heartbeat = new Heartbeat();

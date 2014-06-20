@@ -9,12 +9,12 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>drools-platform-example</artifactId>
+  <artifactId>drools-platform-runtime</artifactId>
   <packaging>pom</packaging>
   <modules>
-    <module>drools-platform-example-loyalty</module>
-    <module>drools-platform-example-SimpleBPMN</module>
+    <module>drools-platform-knowledge</module>
+    <module>drools-platform-runtime-javase</module>
+    <module>drools-platform-runtime-servlet</module>
   </modules>
-
 
 </project>

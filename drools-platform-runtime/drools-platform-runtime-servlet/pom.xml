@@ -2,39 +2,42 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-
   <parent>
+    <artifactId>drools-platform-runtime</artifactId>
     <groupId>org.chtijbug.drools</groupId>
-    <artifactId>drools-platform-example-loyalty</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
+  <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>loyalty-java-client</artifactId>
+  <artifactId>drools-platform-runtime-servlet</artifactId>
+
 
   <dependencies>
-    <dependency>
-      <groupId>org.chtijbug.drools</groupId>
-      <artifactId>loyalty-model</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.chtijbug.drools</groupId>
-      <artifactId>drools-platform-runtime-javase</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.chtijbug.drools</groupId>
-      <artifactId>drools-framework-runtime-base</artifactId>
-    </dependency>
 
-    <!-- Spring Dependencies -->
+
+  <dependency>
+      <groupId>org.chtijbug.drools</groupId>
+      <artifactId>drools-platform-knowledge</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-client</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
-      <artifactId>spring-core</artifactId>
+      <artifactId>spring-websocket</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
     </dependency>
   </dependencies>
 
