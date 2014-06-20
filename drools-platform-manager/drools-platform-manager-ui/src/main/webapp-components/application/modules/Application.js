@@ -146,7 +146,7 @@ droolsPlatformApp.service('StompService', function(){
         var socket = new SockJS('/server/update');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
-            setConnected(true);
+            //setConnected(true);
             console.log('Connected: ' + frame);
             stompClient.subscribe('/topic/pojo', function (deploymentStatus) {
                 //____ TODO Handle ERROR cases + etc..
@@ -172,7 +172,7 @@ droolsPlatformApp.service('StompService', function(){
     //____ Is it useful ??
     this.disconnect = function () {
         stompClient.disconnect();
-        setConnected(false);
+        //setConnected(false);
         console.log("Disconnected");
     };
 
