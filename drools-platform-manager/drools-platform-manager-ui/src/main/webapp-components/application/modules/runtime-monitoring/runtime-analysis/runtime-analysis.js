@@ -1,8 +1,25 @@
-DroolsPlatformControllers.controller('runtimeAnalysisController', function ($rootScope, $scope, $document, $http, $log, $timeout) {
+DroolsPlatformControllers.controller('runtimeAnalysisController', function ($rootScope, $scope, $document, $http, $log, $timeout, growlNotifications) {
 
     /** SCOPE DEFINITION **/
 
     $scope.allRuntimes=[];
+
+    //___ Fetch the list
+    $http.get('./server/rules_package/list')
+        .success(function (data) {
+            $scope.packagesList = data;
+        })
+        .error(function (error) {
+            console.log(error);
+        });
+
+    $scope.filters={
+        packageName:'undefined',
+        status:'undefined',
+        hostname:'undefined',
+        startDate:new Date(),
+        endDate:new Date()
+    };
 
     //___ Collapse status for each box from the "Search panel"
     $scope.collapseStatus = {
@@ -27,8 +44,6 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     $scope.format = 'yyyy/MM/dd';
     $scope.dates={
         'initDate':new Date('2016/12/20'),
-        'startDate':new Date(),
-        'endDate':new Date(),
         'minDate':'1993-07-29',
         'maxDate':'2050-07-29',
         'myTime':new Date()
@@ -55,56 +70,21 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     //___ ID of the runtime selected
     $scope.selectedRuntimeID = undefined;
 
-    $scope.test="// test code";
+    //___ Tab mgmt
+    $scope.selectedTab=1;
+
+    //___ Code JSON
     $scope.code = {
-        'input':"// no code",
-        'output':"// no code"
-    };
-
-    //___ Fetch the list
-    $http.get('./server/rules_package/list')
-        .success(function (data) {
-            $scope.packagesList = data;
-        })
-        .error(function (error) {
-            console.log(error);
-        });
-
-    $scope.editorOptions = {
-        lineWrapping : true,
-        lineNumbers: true,
-        styleActiveLine: true,
-        matchBrackets: true,
-        readOnly: true,
-        mode: {name: "javascript", json: true},
-        theme :'ambiance'
+        'input':"// input",
+        'output':'// output'
     };
 
 
-    //___ Scrolling to the next panel
-    $scope.scrollToPanel = function(ruleBaseID) {
-        $scope.selectedRuntimeID=ruleBaseID;
-        $scope.sessionExecutionDetails.area=true;
-        $timeout(function() {
-            $scope.sessionExecutionDetails.panel=true;
-            var someElement = angular.element(document.getElementById('detailsPanel'));
-            $document.scrollToElement(someElement, 0, 1000);
-        }, 3);
-
-
-    };
-
-    $scope.closeDetailsPanel = function() {
-        var someElement = angular.element(document.getElementById('wrap'));
-        $document.scrollToElement(someElement, 0, 1000);
-        $timeout(function() {
-            $scope.sessionExecutionDetails.area=false;
-            $scope.sessionExecutionDetails.panel=false;
-        }, 1000);
 
 
 
-    };
+
+
 
     /**********************/
     /*  DATE & TIME MGMT  */
@@ -115,7 +95,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     $scope.today();
 
     $scope.clear = function () {
-        $scope.dates.startDate = new Date();
+        $scope.filters.startDate = new Date();
     };
 
     // Disable weekend selection
@@ -155,24 +135,95 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         console.log('Time changed to: ' + $scope.dates.myTime);
     };
 
+    /** SESSION EXECUTION DETAILS **/
 
+    //___ Scrolling to the next panel
+    $scope.scrollToPanel = function(ruleBaseID) {
+        $scope.selectedRuntimeID=ruleBaseID;
+        $scope.sessionExecutionDetails.area=true;
+        $timeout(function() {
+            $scope.sessionExecutionDetails.panel=true;
+            var someElement = angular.element(document.getElementById('detailsPanel'));
+            $document.scrollToElement(someElement, 0, 1000);
+        }, 3);
+    };
+
+    // Toggle to another tab
+    $scope.selectedTab = 'output';
+    $scope.toggleTab=function(item){
+        $scope.selectedTab = item;
+    }
+
+    $scope.closeDetailsPanel = function() {
+        var someElement = angular.element(document.getElementById('wrap'));
+        $document.scrollToElement(someElement, 0, 1000);
+        $timeout(function() {
+            $scope.sessionExecutionDetails.area=false;
+            $scope.sessionExecutionDetails.panel=false;
+        }, 1000);
+    };
 
     /** EVENTS ASSOCIATED WITH BUTTONS **/
 
+
+
     /** SEARCH **/
-
-    //___ Method 1 : filters chosen
-    //___ if each fields are empty
-    //___ if all but one fields are empty
-        //___ First field
-
-    //___ if all fields are filled
-
+    //___ Method :
+    //___ Retrieve filters
+    //___ Then launch the http get request
     $scope.search = function () {
+
+        /*$scope.filters={
+         packageName:'undefined',
+         status:'undefined',
+         hostname:'undefined',
+         startDate:new Date(),
+         endDate:new Date()
+         };*/
+
+
+        var filters = $scope.filters;
+
+        console.log($scope.filters.packageName);
+        console.log($scope.filters.status);
+        console.log($scope.filters.hostname);
+        console.log($scope.filters.startDate);
+        /*
+        $scope.filters.startDate=''+$scope.filters.startDate.getFullYear()+'-'+$scope.filters.startDate.getMonth()+'-'+$scope.filters.startDate.getDate();
+        console.log($scope.filters.startDate);
+        console.log($scope.filters.endDate);
+        $scope.filters.endDate=''+$scope.filters.endDate.getFullYear()+'-'+$scope.filters.endDate.getMonth()+'-'+$scope.filters.endDate.getDate();
+        console.log($scope.filters.endDate);
+        */
+
+        //$scope.filters.startDate =
+
+        if ($scope.filters.packageName == null) {
+            console.log("then do sthing");
+            $scope.namePackageSelectClass = "form-group has-error has-feedback";
+            $scope.showCancelButton = true;
+        } else {
+            $scope.namePackageSelectClass = "form-group";
+            $http.get('./server/runtime/filter', $scope.filters)
+                .success(function (data) {
+                    $scope.showCancelButton = true;
+                    $scope.allRuntimes = data;
+                })
+                .error(function (error, status) {
+                    $scope.showCancelButton = true;
+                    console.log(error);
+                    //____ TODO Send an appropriate message
+                    growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
+                });
+        }
+
+
+
+        //___ Mockup values
         $scope.allRuntimes= [{
             ruleBaseID:'0',
             runtimeURL:'http://192.168.1.26:8080/runtime-1',
-            rulePackage:'alex.test.package',
+            rulePackage:'loyalty',
             sessionId:'1',
             status:'INITMODE',
             startDate:'2014-04-20 1:48:23 AM',
@@ -181,7 +232,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             {
                 ruleBaseID:'1',
                 runtimeURL:'http://192.168.1.26:8080/runtime-2',
-                rulePackage:'alex.test.package',
+                rulePackage:'loyalty',
                 sessionId:'2',
                 status:'STARTED',
                 startDate:'2014-04-20 1:48:23 AM',
@@ -190,7 +241,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             {
                 ruleBaseID:'2',
                 runtimeURL:'http://192.168.1.26:8080/runtime-2',
-                rulePackage:'alex.test.package',
+                rulePackage:'loyalty',
                 sessionId:'3',
                 status:'NOT_JOIGNABLE',
                 startDate:'2014-04-20 1:48:23 AM',
@@ -199,7 +250,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             {
                 ruleBaseID:'3',
                 runtimeURL:'http://192.168.1.26:8080/runtime-2',
-                rulePackage:'alex.test.package',
+                rulePackage:'loyalty',
                 sessionId:'4',
                 status:'STOPPED',
                 startDate:'2014-04-20 1:48:23 AM',
@@ -208,7 +259,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             {
                 ruleBaseID:'5',
                 runtimeURL:'http://192.168.1.26:8080/runtime-2',
-                rulePackage:'alex.test.package',
+                rulePackage:'loyalty',
                 sessionId:'5',
                 status:'CRASHED',
                 startDate:'2014-04-20 1:48:23 AM',
@@ -217,30 +268,22 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             {
                 ruleBaseID:'6',
                 runtimeURL:'http://192.168.1.26:8080/runtime-2',
-                rulePackage:'alex.test.package',
+                rulePackage:'loyalty',
                 sessionId:'6',
                 status:'STOPPED',
                 startDate:'2014-04-20 1:48:23 AM',
                 endDate:'2014-04-20 1:48:42 AM'
             }
         ];
-        /*
-        $http.get('.server/runtime_resource/activePlatformRuntimes/'+packageSelected)
-            .success(function (data) {
-                $scope.packageList = data;
-                console.log($scope.packageList);
-            })
-            .error(function (error, status) {
-                console.log(error);
-            });
-
-        */
-
     };
+
     $scope.reset = function(){
         $scope.allRuntimes= [];
-
+        $scope.namePackageSelectClass = "form-group";
+        $scope.showCancelButton=false;
     };
 
 
 });
+
+

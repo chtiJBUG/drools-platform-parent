@@ -1,4 +1,4 @@
-ServicesModule.service('LoginService', ['$http', '$q', function ($http, $q) {
+droolsPlatformApp.service('LoginService', ['$http', '$q', function ($http, $q) {
     this.login = function (username, password) {
         var deferred = $q.defer();
         var data = $.param({username: username, password: password});

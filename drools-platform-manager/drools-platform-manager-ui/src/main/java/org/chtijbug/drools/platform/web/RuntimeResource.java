@@ -5,12 +5,11 @@ import com.google.common.collect.Lists;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
+import org.chtijbug.drools.platform.web.model.RuntimeFilter;
+import org.chtijbug.drools.platform.web.model.RuntimeInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
@@ -59,6 +58,14 @@ public class RuntimeResource {
     @ResponseBody
     public List<PlatformRuntimeInstance> findAllPlatformRuntimeInstance(@PathVariable String packageName) {
         return platformRuntimeInstanceRepository.findByPackageNameAllRuntime(packageName);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/filter")
+    @Consumes(value = MediaType.APPLICATION_JSON)
+    @Produces(value = MediaType.APPLICATION_JSON)
+    @ResponseBody
+    public List<PlatformRuntimeInstance> findPlatformRuntimeInstanceByFilters(@RequestBody RuntimeFilter runtimeFilter) {
+        return platformRuntimeInstanceRepository.findByPackageNameAllRuntime(runtimeFilter.getpackageName());
     }
 
 }

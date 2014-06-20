@@ -36,8 +36,8 @@
                             </label>
                         </div>
                         <div class="form-group">
-                            <button id="btn-cancel" class="btn btn-danger show-tooltip" ng-show="showCancelButton"
-                                    ng-click="reset()"><i class="fa fa-times"></i></button>
+                            <button id="btn-cancel" class="btn btn-warning pull-left" ng-show="showCancelButton"
+                                    ng-click="reset()"><i class="fa fa-reply"></i></button>
                             <button id="btn-search" class="btn btn-info pull-right"
                                     data-ng-click="searchPackage()"><i class="fa fa-search"></i> Search
                             </button>
@@ -221,27 +221,21 @@
                                         <table class="table table-hover" ng-show="activeRuntimeList.length != 0">
                                             <thead>
                                                 <tr>
-                                                    <th>Selected</th>
+                                                    <th><input type="checkbox" ng-click="check()"></th>
+                                                    <th class="bold">Rulebase ID</th>
                                                     <th class="bold">Runtime</th>
-                                                    <th class="bold">Rule Package</th>
                                                     <th class="bold">Execution</th>
-                                                    <th class="bold">Started at</th>
-                                                    <th class="bold">Ended at</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr ng-repeat="runtime in activeRuntimeList"
                                                     style="cursor:default" class="runtime-status-{{runtime.status}}">
-                                                    <!--td>{{runtime.ruleBaseID}}</td-->
+
                                                     <td>
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input type="checkbox"> Check me out
-                                                            </label>
-                                                        </div>
+                                                        <input type="checkbox" ng-model="runtime.isSelected"><!-- checklist-model="checkedActiveRuntimeList.item" checklist-value="runtime"-->
                                                     </td>
+                                                    <td>{{runtime.id}}</td>
                                                     <td>{{runtime.url}}</td>
-                                                    <td >{{runtime.rulePackage}}</td>
                                                     <td>{{runtime.version}}</td>
                                                 </tr>
                                             </tbody>

@@ -7,6 +7,8 @@ import org.chtijbug.drools.guvnor.rest.model.Asset;
 import org.chtijbug.drools.platform.rules.management.AssetStatus;
 import org.chtijbug.drools.platform.rules.management.RuleManager;
 import org.chtijbug.drools.platform.web.annotation.JsonArg;
+import org.chtijbug.drools.platform.web.model.AssetObject;
+import org.chtijbug.drools.platform.web.model.AssetStatusObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;

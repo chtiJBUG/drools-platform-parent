@@ -14,7 +14,7 @@
                         <h4>Guvnor</h4>
                         <div class="form-group" ng-class="namePackageSelectClass">
                             <label for="package-name-select">Rule Package Name</label>
-                            <select id="package-name-select" ui-select2="selectPackage" ng-model="package"
+                            <select id="package-name-select" ui-select2="selectPackage" ng-model="filters.packageName"
                                     class="form-control"
                                     style="padding:0;height:auto;width:auto;"
                                     data-placeholder="Select a package">
@@ -58,27 +58,23 @@
                                 <h4>SessionExecution</h4>
                                 <label>From</label>
                                 <div class="input-group col-md-6">
-                                    <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dates.startDate" is-open="datePickers.firstCalendar" min-date="dates.minDate" max-date="dates.maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'startDate')">
+                                    <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="filters.startDate" is-open="datePickers.firstCalendar" min-date="dates.minDate" max-date="dates.maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'startDate')">
                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 
                                 </div>
                                 <label>To</label>
                                 <div class="input-group col-md-6">
-                                    <input type="text" class="form-control" class="form-control" datepicker-popup="{{format}}" ng-model="dates.endDate" is-open="datePickers.secondCalendar" min-date="dates.minDate" max-date="'2014-07-29'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'endDate')" >
+                                    <input type="text" class="form-control" class="form-control" datepicker-popup="{{format}}" ng-model="filters.endDate" is-open="datePickers.secondCalendar" min-date="dates.minDate" max-date="'2014-07-29'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'endDate')" >
                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <!-- button id="btn-cancel" class="btn btn-danger show-tooltip" ng-show="showCancelButton"
-                                    ng-click="reset()">
-                                <i class="fa fa-times"></i>
-                            </button -->
-                            <button id="btn-cancel" class="btn btn-danger show-tooltip"
-                                    ng-click="reset()">
-                                <i class="fa fa-times"></i>
+                            <button id="btn-cancel" class="btn btn-warning pull-left" ng-show="showCancelButton" ng-click="reset()">
+                                <i class="fa fa-reply"></i>
                             </button>
-                            <button id="btn-search" class="btn btn-info show-tooltip pull-right" ng-click="search()">
+
+                            <button id="btn-search" class="btn btn-info pull-right" ng-click="search()">
                                 <i class="fa fa-search"></i> Search
                             </button>
                         </div>
@@ -121,11 +117,10 @@
                                         <td>{{runtime.sessionId}}</td>
                                         <td>{{runtime.startDate}}</td>
                                         <td>{{runtime.endDate}}</td>
-                                        <td><button class="btn " ng-click="scrollToPanel(runtime.ruleBaseID)"><i class="fa fa-eye"></i></button></td>
+                                        <td><button class="btn " ng-click="scrollToPanel(runtime.ruleBaseID);"><i class="fa fa-eye"></i></button></td>
                                     </tr>
                                 </tbody>
                             </table>
-
                         </div>
                         <div>
                             <span paginator items="allRuntimes" class="pull-right" ng-show="allRuntimes.length != 0"></span>
@@ -141,23 +136,61 @@
             <h3 style="margin-left:20px">Session Execution Details</h3>
         </div>
         <div class="col-md-10 col-md-offset-1" ng-show="sessionExecutionDetails.panel">
-            <div class="panel panel-default" style="min-height:800px;">
+            <div class="panel panel-default">
                 <div class="panel-heading panel-title">
                     <button type="button" class="close" aria-hidden="true" ng-click="closeDetailsPanel()" >&times;</button>
                     <h3 class="panel-title">All Rules Execution on Runtime {{selectedRuntimeID}}</h3>
                 </div>
-                <div class="panel-body">
-                    <tabset justified="true" type="pills">
-                        <tab heading="Output">
-                            <section id="section-1">
-                                <textarea ui-codemirror="editorOptions" ng-model="test"></textarea>
-                            </section>
-                        </tab>
-                        <tab heading="Input">Some other content</tab>
-                        <tab heading="Event list">List</tab>
+                <div class="panel-body" style="min-height:700px;">
 
-                    </tabset>
+
+
+                    <!-- Choix du statut -->
+                    <form>
+                        <button class="btn" ng-click="toggleTab('output')">Output</button>
+                        <button class="btn" ng-click="toggleTab('input')">Input</button>
+                        <button class="btn" ng-click="toggleTab('listing')">Event list</button>
+                    </form>
+
+                    <hr>
+
+                    <!-- Afficher la section qui correspond au statut -->
+                    <div ng-switch="selectedTab">
+                        <div ng-switch-when="output">
+                            <h3>OUTPUT</h3>
+                            <div hljs source="code.output"></div>
+
+                        </div>
+                        <div ng-switch-when="input">
+                            <h3>INPUT</h3>
+                            <div hljs source="code.input"></div>
+                        </div>
+                        <div ng-switch-when="listing">
+                            <h3>LIST</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam id suscipit dui, a eleifend justo. Pellentesque metus magna, congue sed tempus congue, tempus quis diam. Curabitur sagittis sit amet nibh eget gravida. Etiam eu pharetra elit. Integer
+                                consequat semper turpis, sollicitudin viverra massa rhoncus ac. Etiam malesuada tempor enim, at euismod nibh sollicitudin non. Aliquam id malesuada urna. Integer commodo vehicula mauris id porttitor. Quisque fermentum lectus eu faucibus vehicula.
+                                Maecenas cursus nibh enim, ultricies aliquam dolor aliquam id. Vestibulum ac lorem eu ante ultrices ultrices. Sed sagittis sapien quis suscipit congue. Fusce nunc augue, ultricies ut nunc vel, sollicitudin feugiat sapien. Duis sit amet magna
+                                in quam porttitor rutrum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras ac commodo est. Vivamus lorem mauris, cursus ac accumsan ut, rutrum vel neque. Curabitur blandit mauris id neque condimentum,
+                                a facilisis lacus faucibus. Curabitur pharetra nunc est, nec tincidunt eros eleifend non. Praesent a faucibus orci, in sodales turpis. Suspendisse convallis in massa a sollicitudin. Donec ante sapien, fermentum accumsan dui sed, posuere accumsan
+                                velit. Curabitur vehicula nisl sed urna fermentum, id aliquet magna convallis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris nulla dolor, blandit sed quam sit amet, convallis consequat orci.
+                                Integer sit amet aliquam velit. Nunc cursus eleifend nisi, auctor ornare sem feugiat at. Suspendisse at congue nunc, et pulvinar odio. Vestibulum nisi mauris, tristique nec faucibus eu, adipiscing vitae eros. Proin eu enim vitae libero dignissim
+                                convallis. Ut porta nisl sollicitudin tincidunt rhoncus. Praesent pulvinar mattis tellus non porttitor. Sed ipsum orci, malesuada non venenatis ut, iaculis non sem. Nunc at sapien sed magna commodo auctor vitae non lorem. Suspendisse nec elit
+                                id dolor auctor semper sit amet vitae quam. Pellentesque a venenatis tortor. Donec at vehicula nisl, eu pretium turpis. Donec tristique lacus ac erat dapibus porttitor. Integer elit justo, tempus vitae vulputate vitae, lacinia id nisl. Fusce
+                                posuere elit quis nunc semper, nec iaculis neque luctus. Praesent a mauris sodales, pellentesque ligula non, auctor turpis. Duis adipiscing, nisl sed dignissim consectetur, sapien velit dictum mauris, quis vehicula odio odio ut quam. Duis mollis
+                                libero felis, non blandit justo aliquet vel. Duis semper sem in bibendum vulputate. Etiam elementum varius auctor. Nulla vehicula felis in varius vulputate. Proin est lorem, scelerisque at mollis quis, euismod quis nisi. Donec et nisl vel ante
+                                feugiat fermentum. Sed in ligula massa. Aliquam varius ligula a turpis sagittis lobortis. Duis elementum dolor vitae metus rhoncus adipiscing. Sed lacus justo, accumsan id mauris non, pulvinar suscipit turpis. Donec dictum nisl et lectus hendrerit,
+                                nec eleifend libero suscipit. Vivamus tincidunt at nisl ut convallis. Curabitur sagittis diam pellentesque, consectetur metus suscipit, ultricies leo. Aliquam sit amet lectus velit. Pellentesque habitant morbi tristique senectus et netus et
+                                malesuada fames ac turpis egestas. Donec nec sapien eu nibh venenatis elementum eu non mi. Maecenas ullamcorper, nulla id egestas placerat, quam eros blandit nisi, et molestie odio libero eu leo. Integer tempus placerat dui at condimentum. Cras
+                                eget pellentesque erat. Sed ornare euismod congue. Etiam posuere volutpat vestibulum. Aenean congue orci at lectus faucibus, at venenatis eros gravida.</p>
+                        </div>
+                    </div>
+
+                    <!-- <textarea ui-codemirror="editorOptions" ng-model="code.output"></textarea> -->
+                    <!-- <ui-codemirror ui-codemirror-opts="editorOptions" ng-model="code.output" ></ui-codemirror> -->
+
+
                 </div>
+                <div class="panel-footer"></div>
             </div>
         </div>
     </div>

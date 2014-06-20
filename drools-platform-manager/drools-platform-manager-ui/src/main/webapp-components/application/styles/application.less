@@ -144,6 +144,9 @@ footer {
   text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.6);
   background: linear-gradient(to bottom, #DADADA 0%, #B1B1B1 100%) repeat scroll 0% 0% transparent;
 }
+.navbar-nav > li > a {
+  cursor:pointer;
+}
 
 /* Center text in thumbnail in homepage*/
 .thumbnail h2 {
@@ -441,6 +444,11 @@ a, a:hover {
   border-color: #c8c8c8 transparent;
 }
 
+.panel-default .panel-footer{
+  background-color: #dadada;
+  background-image: linear-gradient(to bottom, #dadada, #c8c8c8);
+  border-color: #81776d;
+}
 .panel-default > .panel-footer + .panel-collapse .panel-body {
   border-bottom-color: #ebccd1;
 }
@@ -646,4 +654,10 @@ a.list-group-item.active > .badge, .nav-pills > .active > a > .badge {
   -moz-animation: fadeOut 1s;
   -ms-animation: fadeOut 1s;
   animation: fadeOut 1s;
+}
+
+/* Hide border for code area*/
+pre{
+  padding:0px;
+  border:0px;
 }
