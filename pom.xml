@@ -408,11 +408,6 @@
                 <version>2.1</version>
             </dependency>
             <!--    Web Socket -->
-            <dependency>
-                <groupId>javax.websocket</groupId>
-                <artifactId>javax.websocket-api</artifactId>
-                <version>1.0</version>
-            </dependency>
 
             <dependency>
                 <groupId>org.glassfish.tyrus</groupId>
