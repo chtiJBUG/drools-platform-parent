@@ -136,10 +136,10 @@
             <artifactId>tyrus-client</artifactId>
         </dependency>
 
-        <dependency>
+        <!--dependency>
             <groupId>org.glassfish.tyrus</groupId>
             <artifactId>tyrus-container-grizzly-server</artifactId>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-jaxrs</artifactId>
