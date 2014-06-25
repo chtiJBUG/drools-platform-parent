@@ -89,40 +89,15 @@
             <groupId>org.chtijbug.drools</groupId>
             <artifactId>drools-framework-runtime-entity</artifactId>
         </dependency>
-        <!--dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-        </dependency-->
-        <!--dependency>
-          <groupId>org.jencks</groupId>
-          <artifactId>jencks</artifactId>
-          <exclusions>
-            <exclusion>
-              <groupId>commons-pool</groupId>
-              <artifactId>commons-pool</artifactId>
-            </exclusion>
-          </exclusions>
-        </dependency-->
 
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-client</artifactId>
         </dependency>
-        <!--dependency>
-          <groupId>org.apache.activemq</groupId>
-          <artifactId>activemq-pool</artifactId>
-        </dependency-->
-
 
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.websocket</groupId>
-            <artifactId>javax.websocket-api</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.tyrus</groupId>
@@ -132,6 +107,12 @@
         <dependency>
             <groupId>org.glassfish.tyrus</groupId>
             <artifactId>tyrus-container-grizzly-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

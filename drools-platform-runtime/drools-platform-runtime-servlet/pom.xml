@@ -13,6 +13,8 @@
 
 
     <dependencies>
+
+
         <dependency>
             <groupId>org.chtijbug.drools</groupId>
             <artifactId>drools-platform-knowledge</artifactId>
