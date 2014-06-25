@@ -17,7 +17,7 @@
     <import resource="classpath*:META-INF/spring/spring-logger-context.xml"/>
      -->
     <!--import resource="classpath:META-INF/spring/spring-logger-context.xml"/-->
-    <context:component-scan base-package="org.chtijbug.drools.platform.web"/>
+    <context:component-scan base-package="org.chtijbug.drools.platform.web, org.chtijbug.drools.platform.backend.topic"/>
 
     <mvc:annotation-driven>
         <mvc:message-converters>

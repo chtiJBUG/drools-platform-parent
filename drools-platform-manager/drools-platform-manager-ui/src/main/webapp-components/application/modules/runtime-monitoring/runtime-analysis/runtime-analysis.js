@@ -166,7 +166,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     //___ Then launch the http get request
     $scope.search = function () {
 
-
+        //___ TODO date filters
         var str = ''+$scope.filters.startDate;
         var suffix="(CEST)";
 

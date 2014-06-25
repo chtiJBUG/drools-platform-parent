@@ -148,7 +148,7 @@ droolsPlatformApp.service('StompService', function(){
         stompClient.connect({}, function (frame) {
             //setConnected(true);
             console.log('Connected: ' + frame);
-            stompClient.subscribe('/topic/pojo', function (deploymentStatus) {
+            stompClient.subscribe('/topic/newpackageVersiondeployed', function (deploymentStatus) {
                 //____ TODO Handle ERROR cases + etc..
 
                 //___ TODO Get content from deploymentStatus
@@ -177,7 +177,7 @@ droolsPlatformApp.service('StompService', function(){
     };
 
     this.deployRuntime = function (ruleBaseID, packageVersion) {
-        stompClient.send("/app/update", {},  JSON.stringify({'ruleBaseID': ''+ruleBaseID, 'packageVersion':''+packageVersion}));
+        stompClient.send("/app/update", {},  JSON.stringify({'ruleBaseID': ruleBaseID, 'packageVersion': packageVersion}));
     };
 
     connect();

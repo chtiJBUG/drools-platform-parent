@@ -158,6 +158,9 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
         $('#Deployment').modal('show');
     };
     $scope.closeDeploy=function(){
+        _.each($scope.activeRuntimeList, function(runtime) {
+            runtime.isSelected = false;
+        });
         $('#Deployment').modal('hide');
     };
     //___ Modal for : Confirm Message
@@ -303,20 +306,15 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
 
     //___ Deploy
     $scope.deployVersion = function() {
-        var packageVersion=$scope.package;
-        //alert(packageVersion);
         _.each(
             _.where($scope.activeRuntimeList, {isSelected:true}),
             function(runtime) {
-                StompService.deployRuntime(runtime.id, packageVersion);
+                StompService.deployRuntime(runtime.id, runtime.version);
             }
         );
         growlNotifications.add('Deployment launched', 'info', 2000);
         $scope.closeDeploy();
     };
-
-
-
 
 
     //___ Delete

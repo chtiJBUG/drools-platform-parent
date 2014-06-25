@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstanceStatus;
 import org.chtijbug.drools.platform.web.model.RuntimeFilter;
 import org.chtijbug.drools.platform.web.model.RuntimeInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,11 +42,14 @@ public class RuntimeResource {
                     @Nullable
                     @Override
                     public RuntimeInstance apply(@Nullable PlatformRuntimeInstance platformRuntimeInstance) {
-                        String url = "http://"+platformRuntimeInstance.getHostname()+":"+platformRuntimeInstance.getPort()+platformRuntimeInstance.getEndPoint();
-                        //___ Weak code.... TODO
-                        DroolsResource guvnorResource = platformRuntimeInstance.getDroolsRessources().get(0);
-                        String rulePackage =guvnorResource.getGuvnor_packageName();
-                        String version = guvnorResource.getGuvnor_packageVersion();
+                        String url = "http://" + platformRuntimeInstance.getHostname() + ":" + platformRuntimeInstance.getPort() + platformRuntimeInstance.getEndPoint();
+                        String rulePackage = null;
+                        String version = null;
+                        if (!platformRuntimeInstance.getDroolsRessources().isEmpty()) {
+                            DroolsResource guvnorResource = platformRuntimeInstance.getDroolsRessources().get(0);
+                            rulePackage = guvnorResource.getGuvnor_packageName();
+                            version = guvnorResource.getGuvnor_packageVersion();
+                        }
                         return new RuntimeInstance(platformRuntimeInstance.getId(), url, rulePackage, version);
                     }
                 }
@@ -67,5 +71,13 @@ public class RuntimeResource {
     public List<PlatformRuntimeInstance> findPlatformRuntimeInstanceByFilters(@RequestBody RuntimeFilter runtimeFilter) {
         return platformRuntimeInstanceRepository.findByPackageNameAllRuntime(runtimeFilter.getpackageName());
     }
+
+    /*@RequestMapping(method = RequestMethod.GET, value = "/status")
+    @Produces(value = MediaType.APPLICATION_JSON)
+    @ResponseBody
+    public List<PlatformRuntimeInstanceStatus> getAllStatuses() {
+
+        return Arrays.asList(dev, integration, prod);
+    }*/
 
 }
