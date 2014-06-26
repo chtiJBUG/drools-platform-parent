@@ -14,12 +14,13 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
                 $scope.showCancelButton=true;
                 $scope.isCreateButtonVisible = true;
                 $scope.packageVersionsList = data;
-                console.log("Get process successful");
+                console.log("[Success] Package version list got successfully");
             })
             .error(function (error, status) {
                 $scope.showCancelButton=true;
                 $scope.noAssetSent = true;
                 $scope.status=status;
+                console.log("[Error] Error HTTP " + status);
                 console.log(error);
             })
     };
@@ -29,24 +30,28 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
         //___ Recovering the values
         var packageSelected=$scope.package;
         var versionSelected=$scope.version;
-        console.log(versionSelected);
 
         //___ Test if the field is not empty
         if(packageSelected == "" || packageSelected==undefined) {
             //___ Red halo to show there's a mistake or an omission
             $scope.namePackageSelectClass="form-group has-error has-feedback";
+            console.log("[Error] Package name is mandatory for filtering");
         }else{
             //___ No red halo
             $scope.namePackageSelectClass="form-group";
+            console.log("[Info] Package selected : " + packageSelected);
             //___ Test if the field is empty
             if(versionSelected == "undefined" || versionSelected == ""){
-                console.log("No version chosen");
+                console.log("[Info] No version chosen");
                 //___ if it is, value by default attributed
                 versionSelected="default";
-                console.log("keyword applied : "+ versionSelected);
+                console.log("[Info] Keyword applied : "+ versionSelected);
+            }else{
+                console.log("[Info] Version selected : "+ versionSelected);
             }
             if($scope.isCheckedSearch){
                 versionSelected+="-SNAPSHOT";
+                console.log("[Info] Prefix added : " + versionSelected);
             }
             //___ Get the list according to the params chosen
             $http.get('./server/rules_package/'+packageSelected+'/'+versionSelected)
@@ -55,12 +60,13 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
                     $scope.isCreateButtonVisible = true;
                     $scope.searchNotSuccessful=false;
                     $scope.packageVersionsList = data;
-                    console.log("Get process successful");
+                    console.log("[Success] Package version list got successfully");
                 })
                 .error(function (error, status) {
                     $scope.showCancelButton=true;
                     $scope.noAssetSent = true;
                     $scope.status=status;
+                    console.log("[Error] " + status);
                     console.log(error);
                 })
         }
@@ -70,11 +76,14 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
 
     /* Right click management */
     $scope.onRightClick = function(packageVersion) {
+        console.log("[Info] onRightClick Event - version selected : " +packageVersion.version);
         $scope.newVersion=packageVersion.version;
         if(packageVersion.isRelease==true){
+            console.log("[Info] onRightClick Event - release version");
             $scope.isSnapshot = false;
         }else{
             $scope.isSnapshot = true;
+            console.log("[Info] onRightClick Event - snapshot version");
             var existingVersions =_.where($scope.packageVersionsList, {version: $scope.newVersion, isRelease : $scope.isSnapshot});
             if (!_.isEmpty(existingVersions)) {
                 $scope.visibleItem=true;
@@ -145,9 +154,7 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
         $http.get('./server/runtime/'+packageSelected)
             .success(function (data) {
                 $scope.activeRuntimeList = data;
-                /*console.log($scope.activeRuntimeList);
-                console.log($scope.activeRuntimeList[0].url);*/
-                console.log("Get process successful");
+                console.log("[Success] Active runtime list got successfully");
             })
             .error(function (error, status) {
                 $scope.status=status;
@@ -204,16 +211,18 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
                 $scope.iptNewVersion = "form-group has-error has-feedback animated shake";
                 allowToCreate = false;
                 $scope.alreadyExist = true;
+                console.log("[Error] Version already created");
             } else {
-                //___ Si la release existe déjà et la checkbox SNPASHOT cochée
+                //___ Si la release existe déjà et la checkbox SNAPSHOT cochée
                 if (!_.isEmpty(versionsRelease) && $scope.isChecked) {
                     //______  --> On pete une exception
                     $scope.iptNewVersion = "form-group has-error has-feedback animated shake";
                     allowToCreate = false;
                     $scope.alreadyExist = true;
+                    console.log("[Error] Version already created");
                 } else {
                     //____ Si non, et bien on peut continuer
-                    console.log("kowabunga");
+                    console.log("[Success] KOWABUNGA");
                     $scope.iptNewVersion = "form-group";
                     $scope.slctAssetStatus = "form-group";
                     allowToCreate = true;
@@ -243,6 +252,7 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
                     $scope.showCancelButton=true;
                     $scope.noAssetSent = true;
                     $scope.status=status;
+                    console.log("[Error] Error HTTP " + status);
                     console.log(error);
                 })
         }
@@ -328,7 +338,7 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
         var packageSelected=$scope.package;
         var NewVersion=$scope.newVersion;
 
-        console.log("Package : "+packageSelected +", Version chosen : "+ NewVersion);
+        console.log("[Info] Package selected : "+packageSelected +", version chosen : "+ NewVersion);
 
         $http.post('./server/rules_package/delete/'+packageSelected+'/'+NewVersion)
             .success(function (data) {
@@ -382,7 +392,8 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
             .success(function (data) {
                 $scope.packagesList = data;
             })
-            .error(function (error) {
+            .error(function (error, status) {
+                console.log("[Error] Error HTTP " + status);
                 console.log(error);
             });
 
@@ -391,7 +402,8 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
             .success(function (data) {
                 $scope.statuses = data;
             })
-            .error(function (error) {
+            .error(function (error, status) {
+                console.log("[Error] Error HTTP " + status);
                 console.log(error);
             });
     };

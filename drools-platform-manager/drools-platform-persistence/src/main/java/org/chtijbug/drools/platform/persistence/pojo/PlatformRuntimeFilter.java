@@ -1,22 +1,16 @@
-package org.chtijbug.drools.platform.web.model;
+package org.chtijbug.drools.platform.persistence.pojo;
 
 /**
- * Created by alexandre on 12/06/2014.
+ * Created by alexandre on 26/06/2014.
  */
-public class RuntimeFilter {
+public class PlatformRuntimeFilter {
     private String packageName;
     private String status;
     private String hostname;
     private String startDate;
     private String endDate;
 
-    public RuntimeFilter(String packageName, String status, String hostname, String startDate, String endDate) {
-        this.packageName = packageName;
-        this.status = status;
-        this.hostname = hostname;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
+    public PlatformRuntimeFilter() {/** nop */}
 
     public String getpackageName() {
         return packageName;

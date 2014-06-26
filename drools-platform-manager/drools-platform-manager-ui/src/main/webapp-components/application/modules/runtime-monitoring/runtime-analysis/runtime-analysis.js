@@ -13,10 +13,19 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             console.log(error);
         });
 
+
+    $http.get('./server/runtime/all/statuses')
+        .success(function (data) {
+            $scope.statusesList = data;
+        })
+        .error(function (error) {
+            console.log(error);
+        });
+
     $scope.filters={
-        packageName : undefined,
-        status : undefined,
-        hostname : undefined,
+        packageName : null,
+        status : null,
+        hostname : null,
         startDate:new Date(),
         endDate:new Date()
     };
@@ -41,7 +50,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     };
 
     //___ Dates
-    $scope.format = 'yyyy/MM/dd';
+    $scope.format = 'dd/MM/yyyy';
     $scope.dates={
         'initDate':new Date('2016/12/20'),
         'minDate':'1993-07-29',
@@ -166,7 +175,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     //___ Then launch the http get request
     $scope.search = function () {
 
-        //___ TODO date filters
+        //___ TODO date filters >> USE MOMENT.JS
         var str = ''+$scope.filters.startDate;
         var suffix="(CEST)";
 
@@ -182,37 +191,53 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         console.log($scope.filters.endDate);
 
 
-        var filters = $scope.filters;
-        console.log(filters);
-
-        if ($scope.filters.packageName == null) {
-            console.log("then do sthing");
+        //___ You must chose the package
+        if ($scope.filters.packageName == null || $scope.filters.packageName == "") {
+            console.log("[Error] Package name is mandatory for filtering");
             $scope.namePackageSelectClass = "form-group has-error has-feedback";
 
         } else {
+            if($scope.filters.status == ""){
+                $scope.filters.status = null;
+            }
+            console.log('[Info] Filters chosen : ');
+            console.log($scope.filters);
+            //___ Put $scope into var
+            var filters = $scope.filters;
+            console.log(JSON.stringify(filters));
             $scope.namePackageSelectClass = "form-group";
-            $http.get('./server/runtime/filter', $scope.filters)
+            $http.get('./server/runtime/filter', JSON.stringify(filters))
                 .success(function (data) {
                     $scope.allRuntimes = data;
                 })
                 .error(function (error, status) {
+                    console.log("[Error] Error HTTP " + status);
                     console.log(error);
                     //____ TODO Send an appropriate message
                     growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
+                    mockValues();
                 });
         }
         $scope.showCancelButton = true;
+    };
 
+    $scope.reset = function(){
+        $scope.allRuntimes= [];
+        $scope.namePackageSelectClass = "form-group";
+        $scope.showCancelButton=false;
+    };
 
-        //___ Mockup values
-        $scope.allRuntimes= [{
-            ruleBaseID:'0',
-            runtimeURL:'http://192.168.1.26:8080/runtime-1',
-            rulePackage:'loyalty',
-            sessionId:'1',
-            status:'INITMODE',
-            startDate:'2014-04-20 1:48:23 AM',
-            endDate:'2014-04-20 1:48:42 AM'
+    //___ Temporary function to mock values because search function is not working
+    function mockValues() {
+        $scope.allRuntimes= [
+            {
+                ruleBaseID:'0',
+                runtimeURL:'http://192.168.1.26:8080/runtime-1',
+                rulePackage:'loyalty',
+                sessionId:'1',
+                status:'INITMODE',
+                startDate:'2014-04-20 1:48:23 AM',
+                endDate:'2014-04-20 1:48:42 AM'
             },
             {
                 ruleBaseID:'1',
@@ -260,14 +285,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                 endDate:'2014-04-20 1:48:42 AM'
             }
         ];
-    };
-
-    $scope.reset = function(){
-        $scope.allRuntimes= [];
-        $scope.namePackageSelectClass = "form-group";
-        $scope.showCancelButton=false;
-    };
-
+    }
 
 });
 

@@ -8,7 +8,8 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
         .success(function (data) {
             $scope.packagesList = data;
         })
-        .error(function (error) {
+        .error(function (error, status) {
+            console.log("[Error] Error HTTP " + status);
             console.log(error);
         });
 
@@ -19,7 +20,8 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
         .success(function (data) {
             $scope.statuses = data;
         })
-        .error(function (error) {
+        .error(function (error, status) {
+            console.log("[Error] Error HTTP " + status);
             console.log(error);
         });
 
@@ -32,10 +34,12 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
         var packageSelected=$scope.package;
         if(filters==undefined){
             $scope.assetStatusSelectClass="form-group has-error has-feedback";
+            console.log("'[Error] filters : any filters chosen");
         }
         else if(packageSelected == "" && filters.length == 0 ) {
             $scope.namePackageSelectClass="form-group has-error has-feedback";
             $scope.assetStatusSelectClass="form-group has-error has-feedback";
+            console.log("'[Error] filters : you must choose the package");
         }else if (filters.length == 0) {
             /* When mistake happens display the tooltip */
             $scope.assetStatusSelectClass="form-group has-error has-feedback";
@@ -53,12 +57,13 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
                 .success(function (data) {
                     $scope.showCancelButton=true;
                     $scope.assets = data;
-                    console.log(data);
+                    console.log('[Success] '+data);
                 })
                 .error(function (error, status) {
                     $scope.showCancelButton=true;
                     $scope.noAssetSent = true;
                     $scope.status=status;
+                    console.log("[Error] Error HTTP " + status);
                     console.log(error);
                 });
         }
@@ -70,6 +75,7 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
         $scope.assets = undefined;
         $scope.namePackageSelectClass="form-group";
         $scope.assetStatusSelectClass="form-group";
+        console.log("[Info] Values reset");
     }
 
     $scope.promoteAssetsStatus = function () {
@@ -80,7 +86,8 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
             .success(function (data) {
                 $scope.assets = data;
             })
-            .error(function (error) {
+            .error(function (error, status) {
+                console.log("[Error] Error HTTP " + status + " (Promote Asset status)");
                 console.log(error);
             });
     };
@@ -93,7 +100,8 @@ DroolsPlatformControllers.controller('assetStatusController', function ($rootSco
             .success(function (data) {
                 $scope.assets = data;
             })
-            .error(function (error) {
+            .error(function (error, status) {
+                console.log("[Error] Error HTTP " + status + " (Demote Asset status)");
                 console.log(error);
             });
     };

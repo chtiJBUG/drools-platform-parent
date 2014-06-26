@@ -4,10 +4,12 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeFilter;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstanceStatus;
 import org.chtijbug.drools.platform.web.model.RuntimeFilter;
 import org.chtijbug.drools.platform.web.model.RuntimeInstance;
+import org.chtijbug.drools.platform.web.model.RuntimeStatusObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -68,16 +71,21 @@ public class RuntimeResource {
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
-    public List<PlatformRuntimeInstance> findPlatformRuntimeInstanceByFilters(@RequestBody RuntimeFilter runtimeFilter) {
-        return platformRuntimeInstanceRepository.findByPackageNameAllRuntime(runtimeFilter.getpackageName());
+    public List<PlatformRuntimeInstance> findPlatformRuntimeInstanceByFilters(@RequestBody PlatformRuntimeFilter runtimeFilter) {
+        return platformRuntimeInstanceRepository.findAllPlatformRuntimeInstanceByFilter(runtimeFilter);
     }
 
-    /*@RequestMapping(method = RequestMethod.GET, value = "/status")
+    @RequestMapping(method = RequestMethod.GET, value = "/all/statuses")
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
-    public List<PlatformRuntimeInstanceStatus> getAllStatuses() {
+    public List<RuntimeStatusObject> getAllStatuses() {
+        RuntimeStatusObject initmode = new RuntimeStatusObject(PlatformRuntimeInstanceStatus.INITMODE, "INITMODE");
+        RuntimeStatusObject started = new RuntimeStatusObject(PlatformRuntimeInstanceStatus.STARTED, "STARTED");
+        RuntimeStatusObject notJoignable = new RuntimeStatusObject(PlatformRuntimeInstanceStatus.NOT_JOINGNABLE, "NOT_JOIGNABLE");
+        RuntimeStatusObject stopped = new RuntimeStatusObject(PlatformRuntimeInstanceStatus.STOPPED, "STOPPED");
+        RuntimeStatusObject crashed = new RuntimeStatusObject(PlatformRuntimeInstanceStatus.CRASHED, "CRASHED");
 
-        return Arrays.asList(dev, integration, prod);
-    }*/
+        return Arrays.asList(initmode, started, notJoignable, stopped, crashed);
+    }
 
 }

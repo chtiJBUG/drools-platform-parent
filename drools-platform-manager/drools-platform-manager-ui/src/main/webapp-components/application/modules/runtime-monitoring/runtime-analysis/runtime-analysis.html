@@ -26,8 +26,16 @@
                         <div class="form-group">
                             <label for="iptstatus">Status</label>
                             <small>(Optional)</small>
-                            <input id="iptstatus" class="form-control" name="status" type="text"
-                                   placeholder="Please enter the status" data-ng-model="filters.status">
+                            <select id="iptstatus" ui-select2="selectStatus" ng-model="filters.status"
+                                    class="form-control"
+                                    style="padding:0;height:auto;width:auto;"
+                                    data-placeholder="Select a runtime status">
+                                <option value=""></option>
+                                <option ng-repeat="s in statusesList" value="{{s.runtimeStatus}}">{{s.description}}
+                                </option>
+                            </select>
+                            <!-- input id="iptstatus" class="form-control" name="status" type="text"
+                                   placeholder="Please enter the status" data-ng-model="filters.status" -->
                         </div>
                         <div class="form-group">
                             <a style="cursor:pointer" ng-click="collapseStatus.firstBox=!collapseStatus.firstBox">
