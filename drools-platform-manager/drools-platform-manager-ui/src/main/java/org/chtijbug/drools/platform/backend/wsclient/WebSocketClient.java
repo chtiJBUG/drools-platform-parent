@@ -60,15 +60,20 @@ public class WebSocketClient
         this.platformRuntimeDefinitionRepository = applicationContext.getBean(PlatformRuntimeDefinitionRepository.class);
         this.heartbeat = heartbeat;
         this.platformRuntimeInstance = platformRuntimeInstance;
-        ClientManager client = ClientManager.createClient();
-        this.session = client.connectToServer(
-                this,
-                ClientEndpointConfig.Builder.create()
-                        .encoders(Arrays.<Class<? extends Encoder>>asList(PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class))
-                        .decoders(Arrays.<Class<? extends Decoder>>asList(PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class))
-                        .build(),
-                URI.create("ws://" + platformRuntimeInstance.getHostname() + ":" + platformRuntimeInstance.getPort() + platformRuntimeInstance.getEndPoint())
-        );
+        try {
+            ClientManager client = ClientManager.createClient();
+            this.session = client.connectToServer(
+                    this,
+                    ClientEndpointConfig.Builder.create()
+                            .encoders(Arrays.<Class<? extends Encoder>>asList(PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class))
+                            .decoders(Arrays.<Class<? extends Decoder>>asList(PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class))
+                            .build(),
+                    URI.create("ws://" + platformRuntimeInstance.getHostname() + ":" + platformRuntimeInstance.getPort() + platformRuntimeInstance.getEndPoint())
+            );
+        } catch (Exception e) {
+            throw e;
+
+        }
     }
 
 
@@ -137,7 +142,7 @@ public class WebSocketClient
                         }
                         heartBeatListner.messageReceived(platformRuntimeInstance.getRuleBaseID(), bean.getHeartbeat().getLastAlive());
                         break;
-            }
+                }
             }
         });
 
@@ -145,12 +150,16 @@ public class WebSocketClient
 
     public void closeSession() throws IOException {
         if (this.session != null) {
-            if (this.session.getMessageHandlers().size() > 0) {
-                for (MessageHandler messageHandler : this.session.getMessageHandlers()) {
-                    this.session.removeMessageHandler(messageHandler);
+            if (this.session.isOpen() == true) {
+                if (this.session.getMessageHandlers().size() > 0) {
+                    for (MessageHandler messageHandler : this.session.getMessageHandlers()) {
+                        this.session.removeMessageHandler(messageHandler);
+                    }
                 }
+                this.session.close();
             }
-            this.session.close();
+
+
         }
     }
 

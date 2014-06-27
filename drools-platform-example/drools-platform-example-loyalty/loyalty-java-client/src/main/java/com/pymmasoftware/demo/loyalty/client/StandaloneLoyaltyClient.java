@@ -65,28 +65,19 @@ public class StandaloneLoyaltyClient {
         customer.setGender(Gender.Mr);
         loyaltyCard.setCustomer(customer);
         ticket.setLoyaltyCard(loyaltyCard);
-        TicketLine line1 = new TicketLine();
-        line1.setLineNumber(1);
-        line1.setLineTotal(100f);
-        line1.setPrice(120f);
-        line1.setProductID("12");
-        line1.setQuantity(5);
-        line1.setTicket(ticket);
-        line1.setTicketID(ticket.getId());
-        line1.setValid(true);
-        Product product = new Product();
-        product.setId("12");
-        product.setName("pampers");
+        Provider provider = new Provider();
+        provider.setName("Pymma Software");
+        provider.setCountry("fr");
         Price price = new Price();
         price.setCurrency(Currency.Euro);
-        price.setPrice(12.0f);
+        price.setPrice(new Float("100.0"));
+        Product product = new Product();
         product.setPrice(price);
-        Provider provider = new Provider();
-        provider.setName("Nobleprog");
-        provider.setCountry("GB");
         product.setProvider(provider);
+        product.setId("100-100");
+        product.setName("Pampers");
+        ticket.AddLine(product, new Float("100.0"), 10);
 
-        line1.setProduct(product);
 
 
         while (true) {

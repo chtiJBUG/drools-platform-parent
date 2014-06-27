@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBaseRuntime;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServerInstance;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
+import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.glassfish.tyrus.server.Server;
 
 import javax.websocket.DeploymentException;
@@ -53,10 +54,15 @@ public class WebSocketServer implements WebSocketServerInstance {
     }
 
     @Override
-    public void sendMessage(PlatformManagementKnowledgeBean platformManagementKnowledgeBean) throws IOException, EncodeException {
+    public void sendMessage(PlatformManagementKnowledgeBean platformManagementKnowledgeBean) throws DroolsChtijbugException {
         RuntimeWebSocketServerService runtimeWebSocketServerService = (RuntimeWebSocketServerService) userProperties.get("activeWebSocketService");
         if (runtimeWebSocketServerService != null) {
-            runtimeWebSocketServerService.sendMessage(platformManagementKnowledgeBean);
+            try {
+                runtimeWebSocketServerService.sendMessage(platformManagementKnowledgeBean);
+            } catch (IOException | EncodeException e) {
+                DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("WebSocketServer.sendMessage", platformManagementKnowledgeBean.toString(), e);
+                throw droolsChtijbugException;
+            }
         }
 
     }

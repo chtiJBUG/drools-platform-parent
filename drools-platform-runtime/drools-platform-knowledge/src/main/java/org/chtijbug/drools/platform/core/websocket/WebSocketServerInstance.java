@@ -1,9 +1,7 @@
 package org.chtijbug.drools.platform.core.websocket;
 
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
-
-import javax.websocket.EncodeException;
-import java.io.IOException;
+import org.chtijbug.drools.runtime.DroolsChtijbugException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,7 +16,7 @@ public interface WebSocketServerInstance {
 
     public void sendHeartBeat();
 
-    public void sendMessage(PlatformManagementKnowledgeBean platformManagementKnowledgeBean) throws IOException, EncodeException;
+    public void sendMessage(PlatformManagementKnowledgeBean platformManagementKnowledgeBean) throws DroolsChtijbugException;
 
     public abstract String getHostName();
 

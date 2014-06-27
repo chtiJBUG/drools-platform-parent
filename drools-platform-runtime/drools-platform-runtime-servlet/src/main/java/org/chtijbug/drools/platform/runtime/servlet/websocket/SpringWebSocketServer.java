@@ -12,7 +12,6 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import javax.websocket.DecodeException;
 import javax.websocket.EncodeException;
 import java.io.IOException;
 import java.io.StringReader;
@@ -41,43 +40,40 @@ public class SpringWebSocketServer extends TextWebSocketHandler implements WebSo
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode stream = new PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode();
-        try {
-            PlatformManagementKnowledgeBean bean = stream.decode(new StringReader(message.getPayload()));
-            switch (bean.getRequestRuntimePlarform()) {
-                case isAlive:
-                    this.sendMessage(PlatformManagementKnowledgeBeanServiceFactory.isAlive(bean));
-                    LOG.info("Runtime is alive");
-                    break;
-                case duplicateRuleBaseID:
-                    this.platformKnowledgeBaseJavaEE.dispose();
-                    break;
-                case ruleVersionInfos:
-                    bean = PlatformManagementKnowledgeBeanServiceFactory.generateRuleVersionsInfo(bean, platformKnowledgeBaseJavaEE.getDroolsResources());
-                    LOG.info("Server Side before sent" + bean.toString());
+
+        PlatformManagementKnowledgeBean bean = stream.decode(new StringReader(message.getPayload()));
+        switch (bean.getRequestRuntimePlarform()) {
+            case isAlive:
+                this.sendMessage(PlatformManagementKnowledgeBeanServiceFactory.isAlive(bean));
+                LOG.info("Runtime is alive");
+                break;
+            case duplicateRuleBaseID:
+                this.platformKnowledgeBaseJavaEE.dispose();
+                break;
+            case ruleVersionInfos:
+                bean = PlatformManagementKnowledgeBeanServiceFactory.generateRuleVersionsInfo(bean, platformKnowledgeBaseJavaEE.getDroolsResources());
+                LOG.info("Server Side before sent" + bean.toString());
+                this.sendMessage(bean);
+                LOG.info("Server Side after sent");
+
+                break;
+            case loadNewRuleVersion:
+                List<DroolsResource> droolsResources = PlatformManagementKnowledgeBeanServiceFactory.extract(bean.getResourceFileList(), platformKnowledgeBaseJavaEE.getGuvnorUsername(), platformKnowledgeBaseJavaEE.getGuvnorPassword());
+                try {
+                    platformKnowledgeBaseJavaEE.RecreateKBaseWithNewRessources(droolsResources);
+                    bean.setRequestStatus(RequestStatus.SUCCESS);
                     this.sendMessage(bean);
-                    LOG.info("Server Side after sent");
-
-                    break;
-                case loadNewRuleVersion:
-                    List<DroolsResource> droolsResources = PlatformManagementKnowledgeBeanServiceFactory.extract(bean.getResourceFileList(), platformKnowledgeBaseJavaEE.getGuvnorUsername(), platformKnowledgeBaseJavaEE.getGuvnorPassword());
-                    try {
-                        platformKnowledgeBaseJavaEE.RecreateKBaseWithNewRessources(droolsResources);
-                        bean.setRequestStatus(RequestStatus.SUCCESS);
-                        this.sendMessage(bean);
-                        this.platformKnowledgeBaseJavaEE.setRuleBaseStatus(true);
-                    } catch (Exception e) {
-                        DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("RELOAD", "Could not reload Rule Package From Guvnor", e);
-                        bean.setDroolsChtijbugException(droolsChtijbugException);
-                        bean.setRequestStatus(RequestStatus.FAILURE);
-                        this.sendMessage(bean);
-                    }
-                    break;
-            }
-
-
-        } catch (DecodeException | EncodeException e) {
-            LOG.error("handleTextMessage", e);
+                    this.platformKnowledgeBaseJavaEE.setRuleBaseStatus(true);
+                } catch (Exception e) {
+                    DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("RELOAD", "Could not reload Rule Package From Guvnor", e);
+                    bean.setDroolsChtijbugException(droolsChtijbugException);
+                    bean.setRequestStatus(RequestStatus.FAILURE);
+                    this.sendMessage(bean);
+                }
+                break;
         }
+
+
     }
 
     @Override
@@ -95,20 +91,27 @@ public class SpringWebSocketServer extends TextWebSocketHandler implements WebSo
         PlatformManagementKnowledgeBean bean = PlatformManagementKnowledgeBeanServiceFactory.generateHearBeatBean();
         try {
             this.sendMessage(bean);
-        } catch (EncodeException | IOException e) {
-                LOG.error("sendHeartBeat not possible", e);
-            }
+        } catch (DroolsChtijbugException e) {
+            LOG.error("sendHeartBeat not possible", e);
+        }
     }
 
     @Override
-    public void sendMessage(final PlatformManagementKnowledgeBean platformManagementKnowledgeBean) throws IOException, EncodeException {
+    public void sendMessage(final PlatformManagementKnowledgeBean platformManagementKnowledgeBean) throws DroolsChtijbugException {
         PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode stream = new PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode();
         if (serverSession != null && serverSession.isOpen()) {
             StringWriter writer = new StringWriter();
-            stream.encode(platformManagementKnowledgeBean, writer);
-            TextMessage response = new TextMessage(writer.toString());
-            LOG.info(">> Server : " + response);
-            serverSession.sendMessage(response);
+            try {
+                stream.encode(platformManagementKnowledgeBean, writer);
+                TextMessage response = new TextMessage(writer.toString());
+                LOG.info(">> Server : " + response);
+                serverSession.sendMessage(response);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (EncodeException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 

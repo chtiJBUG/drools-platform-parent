@@ -37,13 +37,13 @@ public class WebSocketSessionManager {
 
     }
 
-    public void removeClient(PlatformRuntimeInstance platformRuntimeInstance) throws IOException {
-        WebSocketClient webSocketClient = this.webSocketClientList.get(platformRuntimeInstance.getRuleBaseID());
+    public void removeClient(Integer ruleBaseID) throws IOException {
+        WebSocketClient webSocketClient = this.webSocketClientList.get(ruleBaseID);
         if (webSocketClient != null) {
             webSocketClient.closeSession();
         }
-        this.webSocketClientList.remove(platformRuntimeInstance.getRuleBaseID());
-        this.webSocketClientHeartBeatList.remove(platformRuntimeInstance.getRuleBaseID());
+        this.webSocketClientList.remove(ruleBaseID);
+        this.webSocketClientHeartBeatList.remove(ruleBaseID);
     }
 
     public Boolean exists(Integer ruleBaseID) {

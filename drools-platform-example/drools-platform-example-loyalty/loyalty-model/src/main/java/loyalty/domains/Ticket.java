@@ -6,80 +6,80 @@ import java.util.List;
 
 public class Ticket {
 
-	private String Id;
-	private Date dateTicket;
-	private Float amount;
-	private Card loyaltyCard;
-	private Customer customer;
-	
-	public Customer getCustomer() {
-		return customer;
-	}
+    private String Id;
+    private Date dateTicket;
+    private Float amount;
+    private Card loyaltyCard;
+    private Customer customer;
 
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
+    public Customer getCustomer() {
+        return customer;
+    }
 
-	public Card getLoyaltyCard() {
-		return loyaltyCard;
-	}
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 
-	public void setLoyaltyCard(Card loyaltyCard) {
-		this.loyaltyCard = loyaltyCard;
-	}
+    public Card getLoyaltyCard() {
+        return loyaltyCard;
+    }
 
-	public String getId() {
-		return Id;
-	}
+    public void setLoyaltyCard(Card loyaltyCard) {
+        this.loyaltyCard = loyaltyCard;
+    }
 
-	public void setId(String id) {
-		Id = id;
-	}
+    public String getId() {
+        return Id;
+    }
 
-	public Date getDateTicket() {
-		return dateTicket;
-	}
+    public void setId(String id) {
+        Id = id;
+    }
 
-	public void setDateTicket(Date date) {
-		this.dateTicket = date;
-	}
+    public Date getDateTicket() {
+        return dateTicket;
+    }
 
-	private List<TicketLine> ticketLines = new ArrayList<TicketLine>();
+    public void setDateTicket(Date date) {
+        this.dateTicket = date;
+    }
 
-	public long AddLine(Product product, Float price, long quantity) {
-		TicketLine newLine = new TicketLine(this, product, quantity, price);
-		ticketLines.add(newLine);
-		this.amount = this.amount + newLine.getLineTotal();
-		return newLine.getLineNumber();
-	}
+    private List<TicketLine> ticketLines = new ArrayList<TicketLine>();
 
-	public void delLine(int lineNumber) {
-		if (lineNumber <= this.ticketLines.size()) {
-			TicketLine lineToDel = this.ticketLines.get(lineNumber);
-			lineToDel.setValid(false);
-			this.amount = this.amount-lineToDel.getLineTotal();
-		}
-	}
+    public long AddLine(Product product, Float price, long quantity) {
+        TicketLine newLine = new TicketLine(null, product, quantity, price);
+        ticketLines.add(newLine);
+        this.amount = this.amount + newLine.getLineTotal();
+        return newLine.getLineNumber();
+    }
 
-	public Ticket() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    public void delLine(int lineNumber) {
+        if (lineNumber <= this.ticketLines.size()) {
+            TicketLine lineToDel = this.ticketLines.get(lineNumber);
+            lineToDel.setValid(false);
+            this.amount = this.amount - lineToDel.getLineTotal();
+        }
+    }
 
-	public Float getAmount() {
-		return amount;
-	}
+    public Ticket() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
-	public void setAmount(Float amount) {
-		this.amount = amount;
-	}
+    public Float getAmount() {
+        return amount;
+    }
 
-	public List<TicketLine> getTicketLines() {
-		return ticketLines;
-	}
+    public void setAmount(Float amount) {
+        this.amount = amount;
+    }
 
-	public void setTicketLines(List<TicketLine> ticketLines) {
-		this.ticketLines = ticketLines;
-	}
-	
+    public List<TicketLine> getTicketLines() {
+        return ticketLines;
+    }
+
+    public void setTicketLines(List<TicketLine> ticketLines) {
+        this.ticketLines = ticketLines;
+    }
+
 }

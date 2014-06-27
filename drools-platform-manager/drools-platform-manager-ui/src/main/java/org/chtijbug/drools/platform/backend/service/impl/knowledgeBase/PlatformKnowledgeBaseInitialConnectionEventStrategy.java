@@ -57,6 +57,7 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
             if (existingWebSocketClient1 != null) {
                 try {
                     existingWebSocketClient1.closeSession();
+                    webSocketSessionManager.removeClient(ruleBaseId);
                 } catch (IOException e) {
                     LOG.debug("could not close session", e);
                 }
