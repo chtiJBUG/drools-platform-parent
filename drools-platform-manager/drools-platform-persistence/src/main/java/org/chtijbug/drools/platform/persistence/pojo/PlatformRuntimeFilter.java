@@ -1,8 +1,5 @@
 package org.chtijbug.drools.platform.persistence.pojo;
 
-/**
- * Created by alexandre on 26/06/2014.
- */
 public class PlatformRuntimeFilter {
     private String packageName;
     private String status;

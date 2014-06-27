@@ -7,7 +7,6 @@ import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeFilter;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstanceStatus;
-import org.chtijbug.drools.platform.web.model.RuntimeFilter;
 import org.chtijbug.drools.platform.web.model.RuntimeInstance;
 import org.chtijbug.drools.platform.web.model.RuntimeStatusObject;
 import org.springframework.beans.factory.annotation.Autowired;

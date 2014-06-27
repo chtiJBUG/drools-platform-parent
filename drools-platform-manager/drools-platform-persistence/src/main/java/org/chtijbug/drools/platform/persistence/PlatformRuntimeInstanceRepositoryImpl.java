@@ -1,27 +1,27 @@
-package org.chtijbug.drools.platform.persistence.internals;
+package org.chtijbug.drools.platform.persistence;
 
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceCustomRepository;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeFilter;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.slf4j.Logger;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceUnit;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.Collection;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.*;
 
-public class PlatformRuntimeInstanceCustomRepositoryImpl implements PlatformRuntimeInstanceCustomRepository {
-    private static Logger logger = getLogger(PlatformRuntimeInstanceCustomRepositoryImpl.class);
+@Component
+public class PlatformRuntimeInstanceRepositoryImpl implements PlatformRuntimeInstanceCustomRepository {
+    private static Logger logger = getLogger(PlatformRuntimeInstanceRepositoryImpl.class);
     private static final String BASE_JPA_QUERY = "select pri " +
             "from PlatformRuntimeInstance pri,PlatformRuntimeDefinition prd ,DroolsResource drs " +
             "where pri.platformRuntimeDefinition = prd " +
             "and drs member of prd.droolsRessourcesDefinition " +
             "and drs.guvnor_packageName=:packageName ";
 
-    @PersistenceUnit
+    @PersistenceContext
     private EntityManager entityManager;
 
     @Override
@@ -48,10 +48,10 @@ public class PlatformRuntimeInstanceCustomRepositoryImpl implements PlatformRunt
 
             Query query = entityManager.createQuery(jpaQuery);
             query.setParameter("packageName", filter.getpackageName());
-            query.setParameter("status", filter.getStatus());
+            /*query.setParameter("status", filter.getStatus());
             query.setParameter("hostname", filter.getHostname());
             query.setParameter("startDate", filter.getStartDate());
-            query.setParameter("endDate", filter.getEndDate());
+            query.setParameter("endDate", filter.getEndDate());*/
 
 
 
