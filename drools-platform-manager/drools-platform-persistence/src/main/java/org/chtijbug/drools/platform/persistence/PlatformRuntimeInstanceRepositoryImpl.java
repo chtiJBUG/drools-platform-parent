@@ -3,16 +3,15 @@ package org.chtijbug.drools.platform.persistence;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeFilter;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.slf4j.Logger;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
 
-import static org.slf4j.LoggerFactory.*;
+import static org.slf4j.LoggerFactory.getLogger;
 
-@Component
+
 public class PlatformRuntimeInstanceRepositoryImpl implements PlatformRuntimeInstanceCustomRepository {
     private static Logger logger = getLogger(PlatformRuntimeInstanceRepositoryImpl.class);
     private static final String BASE_JPA_QUERY = "select pri " +
