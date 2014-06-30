@@ -69,9 +69,8 @@ public class RuntimeResource {
         return platformRuntimeInstanceRepository.findByPackageNameAllRuntime(packageName);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/filter", consumes = MediaType.APPLICATION_JSON)
-    @Consumes(value = MediaType.APPLICATION_JSON)
-    @Produces(value = MediaType.APPLICATION_JSON)
+    @RequestMapping(method = RequestMethod.POST, value = "/filter")
+    @Consumes(MediaType.APPLICATION_JSON)
     @ResponseBody
     public List<PlatformRuntimeInstance> findPlatformRuntimeInstanceByFilters(@RequestBody PlatformRuntimeFilter runtimeFilter) {
         logger.debug(">> findAllPlatformRuntimeInstanceByFilter(runtimeFilter= {})", runtimeFilter);

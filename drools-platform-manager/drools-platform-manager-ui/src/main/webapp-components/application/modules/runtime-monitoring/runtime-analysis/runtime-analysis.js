@@ -202,13 +202,9 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             console.log('[Info] Filters chosen : ');
             //___ Put $scope into var
             var filters = $scope.filters;
-            console.log(JSON.stringify(filters));
+            console.log(filters);
             $scope.namePackageSelectClass = "form-group";
-            $http.get('./server/runtime/filter', {
-                headers: {
-                    'Content-type': 'application/json'
-                }
-            }, JSON.stringify(filters))
+            $http.post('./server/runtime/filter', filters)
                 .success(function (data) {
                     $scope.allRuntimes = data;
                 })
