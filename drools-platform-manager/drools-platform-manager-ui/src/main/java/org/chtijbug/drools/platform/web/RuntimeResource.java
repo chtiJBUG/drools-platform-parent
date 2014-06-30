@@ -9,6 +9,8 @@ import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstanceStatus;
 import org.chtijbug.drools.platform.web.model.RuntimeInstance;
 import org.chtijbug.drools.platform.web.model.RuntimeStatusObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +32,7 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/runtime")
 public class RuntimeResource {
+    private static Logger logger = LoggerFactory.getLogger(RuntimeResource.class);
 
     @Autowired
     PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
@@ -66,12 +69,17 @@ public class RuntimeResource {
         return platformRuntimeInstanceRepository.findByPackageNameAllRuntime(packageName);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/filter")
+    @RequestMapping(method = RequestMethod.GET, value = "/filter", consumes = MediaType.APPLICATION_JSON)
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
     public List<PlatformRuntimeInstance> findPlatformRuntimeInstanceByFilters(@RequestBody PlatformRuntimeFilter runtimeFilter) {
-        return platformRuntimeInstanceRepository.findAllPlatformRuntimeInstanceByFilter(runtimeFilter);
+        logger.debug(">> findAllPlatformRuntimeInstanceByFilter(runtimeFilter= {})", runtimeFilter);
+        try {
+            return platformRuntimeInstanceRepository.findAllPlatformRuntimeInstanceByFilter(runtimeFilter);
+        } finally {
+            logger.debug("<< findAllPlatformRuntimeInstanceByFilter()");
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/all/statuses")

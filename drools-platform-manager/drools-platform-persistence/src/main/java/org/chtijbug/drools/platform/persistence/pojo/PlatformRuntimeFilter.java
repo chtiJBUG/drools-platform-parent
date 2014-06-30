@@ -1,5 +1,7 @@
 package org.chtijbug.drools.platform.persistence.pojo;
 
+import com.google.common.base.Objects;
+
 public class PlatformRuntimeFilter {
     private String packageName;
     private String status;
@@ -9,11 +11,11 @@ public class PlatformRuntimeFilter {
 
     public PlatformRuntimeFilter() {/** nop */}
 
-    public String getpackageName() {
+    public String getPackageName() {
         return packageName;
     }
 
-    public void setpackageName(String packageName) {
+    public void setPackageName(String packageName) {
         this.packageName = packageName;
     }
 
@@ -47,5 +49,16 @@ public class PlatformRuntimeFilter {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("packageName", packageName)
+                .add("status", status)
+                .add("hostname", hostname)
+                .add("startDate", startDate)
+                .add("endDate", endDate)
+                .toString();
     }
 }

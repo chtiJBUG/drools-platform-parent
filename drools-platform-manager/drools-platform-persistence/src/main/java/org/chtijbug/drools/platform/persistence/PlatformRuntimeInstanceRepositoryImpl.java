@@ -28,7 +28,7 @@ public class PlatformRuntimeInstanceRepositoryImpl implements PlatformRuntimeIns
         logger.debug(">> findAllPlatformRuntimeInstanceByFilter(filter={})", filter);
         try {
 
-            if (filter.getpackageName() == null)
+            if (filter.getPackageName() == null)
                 throw new RuntimeException("The Package name is mandatory for filtering PlatformRuntimeInstance");
             String jpaQuery = BASE_JPA_QUERY;
 
@@ -46,7 +46,7 @@ public class PlatformRuntimeInstanceRepositoryImpl implements PlatformRuntimeIns
                 jpaQuery = jpaQuery.concat("and drs.endDate=:endDate ");
 
             Query query = entityManager.createQuery(jpaQuery);
-            query.setParameter("packageName", filter.getpackageName());
+            query.setParameter("packageName", filter.getPackageName());
             /*query.setParameter("status", filter.getStatus());
             query.setParameter("hostname", filter.getHostname());
             query.setParameter("startDate", filter.getStartDate());
