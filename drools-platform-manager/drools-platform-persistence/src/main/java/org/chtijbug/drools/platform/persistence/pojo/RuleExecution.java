@@ -45,6 +45,10 @@ public class RuleExecution {
     @JoinColumn(name = "session_execution_id_fk")
     private SessionExecution sessionExecution;
 
+    @ManyToOne
+    @JoinColumn(name = "rule_asset_id_fk")
+    private RuleAsset ruleAsset;
+
     public String getRuleName() {
         return ruleName;
     }
@@ -131,5 +135,13 @@ public class RuleExecution {
 
     public void setThenFacts(List<Fact> thenFacts) {
         this.thenFacts = thenFacts;
+    }
+
+    public RuleAsset getRuleAsset() {
+        return ruleAsset;
+    }
+
+    public void setRuleAsset(RuleAsset ruleAsset) {
+        this.ruleAsset = ruleAsset;
     }
 }

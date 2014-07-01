@@ -2,8 +2,8 @@ package org.chtijbug.drools.platform.rules;
 
 import com.google.common.base.Throwables;
 import org.chtijbug.drools.entity.history.HistoryEvent;
-import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.backend.service.MessageHandlerResolver;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.MessageHandlerResolver;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.listener.HistoryListener;
 import org.springframework.beans.factory.annotation.Autowired;
