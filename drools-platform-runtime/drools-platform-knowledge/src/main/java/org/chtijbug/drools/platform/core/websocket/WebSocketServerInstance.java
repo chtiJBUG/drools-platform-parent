@@ -14,8 +14,6 @@ public interface WebSocketServerInstance {
 
     public void run();
 
-    public void sendHeartBeat();
-
     public void sendMessage(PlatformManagementKnowledgeBean platformManagementKnowledgeBean) throws DroolsChtijbugException;
 
     public abstract String getHostName();

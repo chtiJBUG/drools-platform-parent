@@ -135,14 +135,6 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
     }
 
 
-    // @Scheduled(fixedDelay = 5000)
-    public void sendHeartBeat() {
-        if (this.webSocketServer != null) {
-            this.webSocketServer.sendHeartBeat();
-        }
-
-    }
-
     public void shutdown() {
         this.historyListener.shutdown();
         this.historyListener = null;
