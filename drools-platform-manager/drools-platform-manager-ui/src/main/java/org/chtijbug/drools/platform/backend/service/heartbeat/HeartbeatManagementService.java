@@ -29,10 +29,12 @@ public class HeartbeatManagementService {
 
         for (Integer ruleBaseID : webSocketSessionManager.getAllRuleBaseID()) {
             WebSocketClient webSocketClient = webSocketSessionManager.getWebSocketClient(ruleBaseID);
-            PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
-            platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.isAlive);
             try {
-                webSocketClient.sendMessage(platformManagementKnowledgeBean);
+                if (webSocketClient.getSession().isOpen()) {
+                    PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
+                    platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.isAlive);
+                    webSocketClient.sendMessage(platformManagementKnowledgeBean);
+                }
             } catch (EncodeException e) {
                 //Do NOTHING
             } catch (IOException e) {
