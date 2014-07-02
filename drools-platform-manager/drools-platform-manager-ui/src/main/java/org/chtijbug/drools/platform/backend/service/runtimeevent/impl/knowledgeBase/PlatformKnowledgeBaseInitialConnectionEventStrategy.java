@@ -72,6 +72,17 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
                         existingPlatformRuntimeInstance.setEndDate(new Date());
                         existingPlatformRuntimeInstance.setShutdowDate(new Date());
                         existingPlatformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.CRASHED);
+                        /**
+                         * In case a runtime instance is started without having beeing stop correctly
+                         * So we have to set the previous drools ressources as ended
+                         */
+                        for (DroolsResource existingResource : existingPlatformRuntimeInstance.getDroolsRessources()) {
+
+                            existingResource.setEndDate(platformKnowledgeBaseInitialConnectionEvent.getDateEvent());
+                            existingResource.setStopEventID(platformKnowledgeBaseInitialConnectionEvent.getEventID());
+
+
+                        }
                         platformRuntimeInstanceRepository.save(existingPlatformRuntimeInstance);
                     }
                 }
@@ -83,10 +94,12 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
                     if (resourceFile instanceof DrlResourceFile) {
                         DrlResourceFile drlResourceFile = (DrlResourceFile) resourceFile;
                         droolsResource = new DroolsResource(drlResourceFile.getFileName(), drlResourceFile.getContent());
+                        droolsResource.setStartEventID(platformKnowledgeBaseInitialConnectionEvent.getEventID());
                         platformRuntimeDefinition.getDroolsRessourcesDefinition().add(droolsResource);
                     } else if (resourceFile instanceof GuvnorResourceFile) {
                         GuvnorResourceFile guvnorResourceFile = (GuvnorResourceFile) resourceFile;
                         droolsResource = new DroolsResource(guvnorResourceFile.getGuvnor_url(), guvnorResourceFile.getGuvnor_appName(), guvnorResourceFile.getGuvnor_packageName(), guvnorResourceFile.getGuvnor_packageVersion());
+                        droolsResource.setStartEventID(platformKnowledgeBaseInitialConnectionEvent.getEventID());
                         platformRuntimeDefinition.getDroolsRessourcesDefinition().add(droolsResource);
                     }
                 }
