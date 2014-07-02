@@ -8,7 +8,6 @@ import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseAddRessourceEve
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeDefinition;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,7 +36,6 @@ public class KnowledgeBaseAddRessourceEventStrategy extends AbstractEventHandler
         List<PlatformRuntimeInstance> existingPlatformRuntimeInstances = platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(knowledgeBaseAddRessourceEvent.getRuleBaseID());
         if (existingPlatformRuntimeInstances.size() == 1) {
             PlatformRuntimeInstance existingPlatformRuntimeInstance = existingPlatformRuntimeInstances.get(0);
-            PlatformRuntimeDefinition existingPlatformRuntimeDefinition = existingPlatformRuntimeInstance.getPlatformRuntimeDefinition();
 
             DroolsResource droolsResource;
             /**
@@ -53,7 +51,6 @@ public class KnowledgeBaseAddRessourceEventStrategy extends AbstractEventHandler
             droolsResource.setStartDate(knowledgeBaseAddRessourceEvent.getDateEvent());
             droolsResource.setStartEventID(knowledgeBaseAddRessourceEvent.getEventID());
             existingPlatformRuntimeInstance.getDroolsRessources().add(droolsResource);
-            existingPlatformRuntimeDefinition.getDroolsRessourcesDefinition().add(droolsResource);
             platformRuntimeInstanceRepository.save(existingPlatformRuntimeInstance);
         }
     }

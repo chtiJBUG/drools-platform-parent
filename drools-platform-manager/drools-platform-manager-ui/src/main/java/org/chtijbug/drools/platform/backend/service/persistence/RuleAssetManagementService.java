@@ -63,8 +63,7 @@ public class RuleAssetManagementService {
                 }
                 if (ruleAsset.getRuleAssetCategory().size() == 0) {
                     for (String categoryName : categoryNameList) {
-                        RuleAssetCategory ruleAssetCategory = new RuleAssetCategory(categoryName);
-                        ruleAsset.getRuleAssetCategory().add(ruleAssetCategory);
+                        RuleAssetCategoryToInsertForRuleAsset(ruleAsset, categoryName);
                     }
                     ruleAssetRepository.save(ruleAsset);
                 } else {

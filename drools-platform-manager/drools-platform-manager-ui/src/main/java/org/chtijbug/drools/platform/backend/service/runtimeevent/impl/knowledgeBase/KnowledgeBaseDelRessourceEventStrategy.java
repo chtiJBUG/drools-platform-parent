@@ -8,7 +8,6 @@ import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseDelRessourceEve
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeDefinition;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,29 +36,21 @@ public class KnowledgeBaseDelRessourceEventStrategy extends AbstractEventHandler
         List<PlatformRuntimeInstance> existingPlatformRuntimeInstances = platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(knowledgeBaseDelRessourceEvent.getRuleBaseID());
         if (existingPlatformRuntimeInstances.size() == 1) {
             PlatformRuntimeInstance existingPlatformRuntimeInstance = existingPlatformRuntimeInstances.get(0);
-            PlatformRuntimeDefinition existingPlatformRuntimeDefinition = existingPlatformRuntimeInstance.getPlatformRuntimeDefinition();
 
             if (knowledgeBaseDelRessourceEvent.getResourceFiles().size() == 1 && knowledgeBaseDelRessourceEvent.getResourceFiles().get(0) instanceof GuvnorResourceFile) {
                 for (DroolsResource existingResource : existingPlatformRuntimeInstance.getDroolsRessources()) {
                     existingResource.setEndDate(knowledgeBaseDelRessourceEvent.getDateEvent());
                     existingPlatformRuntimeInstance.setStopEventID(knowledgeBaseDelRessourceEvent.getEventID());
                 }
-                existingPlatformRuntimeDefinition.getDroolsRessourcesDefinition().clear();
 
             } else {
                 DrlResourceFile drlResourceFile = (DrlResourceFile) knowledgeBaseDelRessourceEvent.getResourceFiles().get(0);
                 for (DroolsResource existingResource : existingPlatformRuntimeInstance.getDroolsRessources()) {
                     if (existingResource.getFileName().equals(drlResourceFile.getFileName())) {
                         existingResource.setEndDate(knowledgeBaseDelRessourceEvent.getDateEvent());
-                        existingPlatformRuntimeInstance.setStopEventID(knowledgeBaseDelRessourceEvent.getEventID());
+                        existingResource.setStopEventID(knowledgeBaseDelRessourceEvent.getEventID());
                     }
 
-                }
-                for (DroolsResource existingResource : existingPlatformRuntimeDefinition.getDroolsRessourcesDefinition()) {
-                    if (existingResource.getFileName().equals(drlResourceFile.getFileName())) {
-                        existingResource.setEndDate(knowledgeBaseDelRessourceEvent.getDateEvent());
-                        existingPlatformRuntimeInstance.setStopEventID(knowledgeBaseDelRessourceEvent.getEventID());
-                    }
                 }
             }
             platformRuntimeInstanceRepository.save(existingPlatformRuntimeInstance);

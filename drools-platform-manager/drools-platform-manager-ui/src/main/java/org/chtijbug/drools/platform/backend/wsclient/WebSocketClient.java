@@ -40,14 +40,14 @@ public class WebSocketClient
     private PlatformRuntimeDefinitionRepository platformRuntimeDefinitionRepository;
     private SessionExecutionRepository sessionExecutionRepository;
     private RealTimeParametersRepository realTimeParametersRepository;
-    private Heartbeat heartbeat;
+    final private Heartbeat heartbeat = new Heartbeat();
     private JMXInfosListener jmxInfosListeners;
     private HeartBeatListner heartBeatListner;
     private IsAliveListener isAliveListener;
     private LoadNewRuleVersionListener loadNewRuleVersionListener;
     private VersionInfosListener versionInfosListener;
 
-    public WebSocketClient(PlatformRuntimeInstance platformRuntimeInstance, Heartbeat heartbeat) throws DeploymentException, IOException {
+    public WebSocketClient(PlatformRuntimeInstance platformRuntimeInstance) throws DeploymentException, IOException {
         ApplicationContext applicationContext = AppContext.getApplicationContext();
         this.platformRuntimeInstanceRepository = applicationContext.getBean(PlatformRuntimeInstanceRepository.class);
         this.sessionExecutionRepository = applicationContext.getBean(SessionExecutionRepository.class);
@@ -58,7 +58,6 @@ public class WebSocketClient
         this.loadNewRuleVersionListener = applicationContext.getBean(LoadNewRuleVersionListener.class);
         this.versionInfosListener = applicationContext.getBean(VersionInfosListener.class);
         this.platformRuntimeDefinitionRepository = applicationContext.getBean(PlatformRuntimeDefinitionRepository.class);
-        this.heartbeat = heartbeat;
         this.platformRuntimeInstance = platformRuntimeInstance;
         try {
             ClientManager client = ClientManager.createClient();
@@ -128,6 +127,9 @@ public class WebSocketClient
                         break;
                     case isAlive:
                         isAliveListener.messageReceived(platformRuntimeInstance.getRuleBaseID());
+
+                        heartBeatListner.messageReceived(platformRuntimeInstance.getRuleBaseID(), bean.getHeartbeat().getLastAlive());
+                        heartbeat.setLastAlive(bean.getHeartbeat().getLastAlive());
                         break;
 
                     case loadNewRuleVersion:
@@ -136,16 +138,15 @@ public class WebSocketClient
                         platformRuntimeDefinitionRepository.save(platformRuntimeDefinitionloadNewRuleVersion);
                         loadNewRuleVersionListener.messageReceived(platformRuntimeInstance.getRuleBaseID(), bean.getRequestStatus(), bean.getResourceFileList());
                         break;
-                    case heartbeat:
-                        if (bean.getHeartbeat() != null) {
-                            heartbeat.setLastAlive(bean.getHeartbeat().getLastAlive());
-                        }
-                        heartBeatListner.messageReceived(platformRuntimeInstance.getRuleBaseID(), bean.getHeartbeat().getLastAlive());
-                        break;
                 }
             }
         });
 
+    }
+
+
+    public Heartbeat getHeartbeat() {
+        return heartbeat;
     }
 
     public void closeSession() throws IOException {

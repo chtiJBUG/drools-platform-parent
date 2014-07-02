@@ -45,13 +45,6 @@ public class WebSocketServer implements WebSocketServerInstance {
         }
     }
 
-    @Override
-    public void sendHeartBeat() {
-        RuntimeWebSocketServerService runtimeWebSocketServerService = (RuntimeWebSocketServerService) userProperties.get("activeWebSocketService");
-        if (runtimeWebSocketServerService != null) {
-            runtimeWebSocketServerService.sendHeartBeat();
-        }
-    }
 
     @Override
     public void sendMessage(PlatformManagementKnowledgeBean platformManagementKnowledgeBean) throws DroolsChtijbugException {

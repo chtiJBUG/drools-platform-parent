@@ -1,6 +1,9 @@
 package org.chtijbug.drools.platform.core;
 
-import org.chtijbug.drools.platform.entity.*;
+import org.chtijbug.drools.platform.entity.Heartbeat;
+import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
+import org.chtijbug.drools.platform.entity.PlatformResourceFile;
+import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.runtime.resource.Bpmn2DroolsResource;
 import org.chtijbug.drools.runtime.resource.DrlDroolsResource;
 import org.chtijbug.drools.runtime.resource.DroolsResource;
@@ -18,18 +21,12 @@ import java.util.List;
  */
 public class PlatformManagementKnowledgeBeanServiceFactory {
 
-    public static PlatformManagementKnowledgeBean generateHearBeatBean() {
-        PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
-        Heartbeat heartbeat = new Heartbeat();
-        heartbeat.setLastAlive(new Date());
-        platformManagementKnowledgeBean.setHeartbeat(heartbeat);
-        platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.heartbeat);
-        return platformManagementKnowledgeBean;
-    }
-
     public static PlatformManagementKnowledgeBean isAlive(PlatformManagementKnowledgeBean bean) {
         bean.setAlive(true);
         bean.setRequestStatus(RequestStatus.SUCCESS);
+        Heartbeat heartbeat = new Heartbeat();
+        heartbeat.setLastAlive(new Date());
+        bean.setHeartbeat(heartbeat);
         return bean;
     }
 
