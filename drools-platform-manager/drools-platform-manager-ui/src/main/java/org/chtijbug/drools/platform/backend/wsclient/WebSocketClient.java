@@ -149,6 +149,10 @@ public class WebSocketClient
         return heartbeat;
     }
 
+    public Session getSession() {
+        return this.session;
+    }
+
     public void closeSession() throws IOException {
         if (this.session != null) {
             if (this.session.isOpen() == true) {

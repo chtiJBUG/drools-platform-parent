@@ -22,14 +22,12 @@ public class StandaloneLoyaltyClient {
 
     public Ticket fireAllRules(Ticket ticket) throws InterruptedException {
         try {
-            while (!ruleBasePackage.isReady()){
+            while (!ruleBasePackage.isReady()) {
                 logger.info("Rule base package is not ready yet. Sleeping in the meantime.");
                 Thread.sleep(2000);
             }
             RuleBaseSession sessionStatefull = ruleBasePackage.createRuleBaseSession();
-            sessionStatefull.insertByReflection(ticket);
-            sessionStatefull.startProcess("P1");
-            sessionStatefull.fireAllRules();
+            sessionStatefull.fireAllRulesAndStartProcess(ticket, "P1");
             sessionStatefull.dispose();
         } catch (DroolsChtijbugException e) {
             logger.error("Error in fireallrules", e);
@@ -77,7 +75,6 @@ public class StandaloneLoyaltyClient {
         product.setId("100-100");
         product.setName("Pampers");
         ticket.AddLine(product, new Float("100.0"), 10);
-
 
 
         while (true) {
