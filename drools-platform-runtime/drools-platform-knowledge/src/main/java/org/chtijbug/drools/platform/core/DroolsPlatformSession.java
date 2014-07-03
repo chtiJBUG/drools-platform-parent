@@ -68,9 +68,7 @@ public class DroolsPlatformSession implements RuleBaseSession {
         this.ruleBaseStatefulSession.retractObject(oldObject);
     }
 
-    @Override
-    public void fireAllRules() throws DroolsChtijbugException {
-        this.ruleBaseStatefulSession.fireAllRules();
+    private void sentJMXInfo() throws DroolsChtijbugException {
         PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
         platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.jmxInfos);
         platformManagementKnowledgeBean.setAlive(true);
@@ -98,6 +96,19 @@ public class DroolsPlatformSession implements RuleBaseSession {
             DroolsChtijbugException ee = new DroolsChtijbugException("JMXInfo", "Not Possible to send Infos", e);
             throw ee;
         }
+    }
+
+    @Override
+    public void fireAllRules() throws DroolsChtijbugException {
+        this.ruleBaseStatefulSession.fireAllRules();
+        this.sentJMXInfo();
+    }
+
+    @Override
+    public Object fireAllRulesAndStartProcess(Object inputObject, String processName) throws DroolsChtijbugException {
+        Object returnObject = this.fireAllRulesAndStartProcess(inputObject, processName);
+        this.sentJMXInfo();
+        return returnObject;
     }
 
     @Override

@@ -40,6 +40,11 @@ public class SessionExecution {
     @JoinColumn(name = "session_execution_id_fk")
     private List<RuleExecution> ruleExecutions = new ArrayList<RuleExecution>();
 
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "process_execution_id_fk")
+    private List<ProcessExecution> processExecutions = new ArrayList<ProcessExecution>();
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "process_execution_id_fk")
     private List<ProcessExecution> processExecutions = new ArrayList<ProcessExecution>();
