@@ -64,13 +64,13 @@
                                 <h4>SessionExecution</h4>
                                 <label>From</label>
                                 <div class="input-group col-md-6">
-                                    <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="filters.startDate" is-open="datePickers.firstCalendar" min-date="dates.minDate" max-date="dates.maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close">
+                                    <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="filters.startDate" is-open="datePickers.firstCalendar" min-date="dates.minDate" max-date="dates.maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close">
                                     <span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="open($event, 'startDate')"><i class="fa fa-calendar"></i></button></span>
 
                                 </div>
                                 <label>To</label>
                                 <div class="input-group col-md-6">
-                                    <input type="text" class="form-control" class="form-control" datepicker-popup="{{format}}" ng-model="filters.endDate" is-open="datePickers.secondCalendar" min-date="dates.minDate" max-date="'2014-07-29'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" ng-click="open($event, 'endDate')" >
+                                    <input type="text" class="form-control" class="form-control" datepicker-popup="{{format}}" ng-model="filters.endDate" is-open="datePickers.secondCalendar" min-date="dates.minDate" max-date="'2014-07-29'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" ng-click="open($event, 'endDate')" >
                                     <span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="open($event, 'endDate')"><i class="fa fa-calendar"></i></button></span>
                                 </div>
                             </div>
