@@ -6,13 +6,9 @@ import org.chtijbug.drools.entity.history.session.SessionFireAllRulesMaxNumberRe
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
-import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
-import org.chtijbug.drools.platform.persistence.pojo.SessionExecutionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,12 +31,12 @@ public class KnowledgeSessionFireAllRulesAndStartProcessEventStrategy extends Ab
     @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         SessionFireAllRulesMaxNumberReachedEvent sessionFireAllRulesMaxNumberReachedEvent = (SessionFireAllRulesMaxNumberReachedEvent) historyEvent;
-        SessionExecution existingSessionRutime = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
-        if (existingSessionRutime != null) {
-            existingSessionRutime.setEndDate(new Date());
-            existingSessionRutime.setSessionExecutionStatus(SessionExecutionStatus.CRASHED);
-            sessionExecutionRepository.save(existingSessionRutime);
-        }
+        //  SessionExecution existingSessionRutime = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
+        //  if (existingSessionRutime != null) {
+        //      existingSessionRutime.setEndDate(new Date());
+        //      existingSessionRutime.setSessionExecutionStatus(SessionExecutionStatus.CRASHED);
+        //      sessionExecutionRepository.save(existingSessionRutime);
+        //}
 
         LOG.debug("SessionFireAllRulesMaxNumberReachedEvent " + sessionFireAllRulesMaxNumberReachedEvent.toString());
     }
