@@ -24,9 +24,7 @@ public class ServiceCalculate implements IServiceCalculate {
         RuleBaseSession sessionStatefull = null;
         try {
             sessionStatefull = platformKnowledgeBaseJavaEE.createRuleBaseSession();
-            sessionStatefull.insertByReflection(ticket);
-            sessionStatefull.startProcess("P1");
-            sessionStatefull.fireAllRules();
+            sessionStatefull.fireAllRulesAndStartProcess(ticket, "P1");
             sessionStatefull.dispose();
         } catch (DroolsChtijbugException e) {
             logger.error("Error in fireallrules", e);
