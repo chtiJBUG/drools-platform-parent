@@ -86,15 +86,6 @@ public class SpringWebSocketServer extends TextWebSocketHandler implements WebSo
 
     }
 
-    @Override
-    public void sendHeartBeat() {
-        PlatformManagementKnowledgeBean bean = PlatformManagementKnowledgeBeanServiceFactory.generateHearBeatBean();
-        try {
-            this.sendMessage(bean);
-        } catch (DroolsChtijbugException e) {
-            LOG.error("sendHeartBeat not possible", e);
-        }
-    }
 
     @Override
     public void sendMessage(final PlatformManagementKnowledgeBean platformManagementKnowledgeBean) throws DroolsChtijbugException {

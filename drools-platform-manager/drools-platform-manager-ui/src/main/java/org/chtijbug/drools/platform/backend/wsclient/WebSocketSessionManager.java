@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,18 +24,20 @@ public class WebSocketSessionManager {
     private static final Logger LOG = Logger.getLogger(WebSocketSessionManager.class);
 
     private Map<Integer, WebSocketClient> webSocketClientList = new HashMap<>();
-    private Map<Integer, Heartbeat> webSocketClientHeartBeatList = new HashMap<>();
 
     public WebSocketClient AddClient(PlatformRuntimeInstance platformRuntimeInstance) throws DeploymentException, IOException {
 
         Heartbeat heartbeat = new Heartbeat();
         heartbeat.setLastAlive(new Date());
-        WebSocketClient webSocketClient = new WebSocketClient(platformRuntimeInstance, heartbeat);
+        WebSocketClient webSocketClient = new WebSocketClient(platformRuntimeInstance);
         this.webSocketClientList.put(platformRuntimeInstance.getRuleBaseID(), webSocketClient);
-        this.webSocketClientHeartBeatList.put(platformRuntimeInstance.getRuleBaseID(), heartbeat);
 
         return webSocketClient;
 
+    }
+
+    public Set<Integer> getAllRuleBaseID() {
+        return webSocketClientList.keySet();
     }
 
     public void removeClient(Integer ruleBaseID) throws IOException {
@@ -43,7 +46,6 @@ public class WebSocketSessionManager {
             webSocketClient.closeSession();
         }
         this.webSocketClientList.remove(ruleBaseID);
-        this.webSocketClientHeartBeatList.remove(ruleBaseID);
     }
 
     public Boolean exists(Integer ruleBaseID) {
@@ -56,9 +58,10 @@ public class WebSocketSessionManager {
 
     }
 
+
     public Boolean isAlive(Integer ruleBaseID) {
         boolean result = false;
-        Heartbeat heartbeat = this.webSocketClientHeartBeatList.get(ruleBaseID);
+        Heartbeat heartbeat = this.webSocketClientList.get(ruleBaseID).getHeartbeat();
         Date dateLastHearBeat = heartbeat.getLastAlive();
         Date currentDate = new Date();
         long diff = currentDate.getTime() - dateLastHearBeat.getTime();

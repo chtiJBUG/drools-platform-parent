@@ -1,7 +1,6 @@
 package org.chtijbug.drools.platform.backend.topic;
 
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.platform.backend.topic.pojo.DeploymentRequest;
 import org.chtijbug.drools.platform.backend.topic.pojo.*;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketClient;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
@@ -61,19 +60,19 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
 
         if (clientSocket == null) {
             throw new DroolsChtijbugException("updateRulePackage-unknowrulebaseid", ruleBaseID.toString(), null);
-        } else {
-            PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
-            platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.loadNewRuleVersion);
-            List<PlatformRuntimeInstance> platformRuntimeInstanceList = platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(ruleBaseID);
-            if (platformRuntimeInstanceList.size() != 1) {
-                throw new DroolsChtijbugException("updateRulePackage-NoUniqueRuleBaseID", ruleBaseID.toString(), null);
-            }
-
         }
-
         PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
         platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.loadNewRuleVersion);
-        PlatformRuntimeDefinition instance = platformRuntimeDefinitionRepository.findByRuleBaseID(ruleBaseID);
+        List<PlatformRuntimeInstance> platformRuntimeInstanceList = platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(ruleBaseID);
+        if (platformRuntimeInstanceList.size() != 1) {
+            throw new DroolsChtijbugException("updateRulePackage-NoUniqueRuleBaseID", ruleBaseID.toString(), null);
+        }
+        if (platformRuntimeInstanceList.size() == 0) {
+            throw new DroolsChtijbugException("updateRulePackage-not Existing ruleBaseID running", ruleBaseID.toString(), null);
+        }
+
+        platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.loadNewRuleVersion);
+        PlatformRuntimeDefinition instance = platformRuntimeInstanceList.get(0).getPlatformRuntimeDefinition();
         List<DroolsResource> droolsRessourceList = instance.getDroolsRessourcesDefinition();
         if (droolsRessourceList == null || droolsRessourceList.size() > 1 || droolsRessourceList.get(0).getGuvnor_url() == null) {
             throw new DroolsChtijbugException("updateRulePackage-NotAguvnorRessource", ruleBaseID.toString(), null);

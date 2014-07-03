@@ -43,7 +43,8 @@ public class PlatformRuntimeInstance implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "platform_runtime_instance_id_fk")
     private List<SessionExecution> sessionExecutions = new ArrayList<SessionExecution>();
-    @ManyToOne
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "platform_runtime_instance_id_fk")
     private PlatformRuntimeDefinition platformRuntimeDefinition;
 

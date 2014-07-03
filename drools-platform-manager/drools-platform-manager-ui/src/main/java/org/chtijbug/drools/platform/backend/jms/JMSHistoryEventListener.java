@@ -3,8 +3,8 @@ package org.chtijbug.drools.platform.backend.jms;
 import com.google.common.base.Throwables;
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
-import org.chtijbug.drools.platform.backend.service.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.backend.service.MessageHandlerResolver;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.MessageHandlerResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,26 +27,27 @@ public class JMSHistoryEventListener implements MessageListener {
 
     @Autowired
     MessageHandlerResolver messageHandlerResolver;
+
     @Transactional
     public void onMessage(Message message) {
-        HistoryEvent historyEvent=null;
+        HistoryEvent historyEvent = null;
         try {
             if (message instanceof ObjectMessage) {
                 ObjectMessage objectMessage = (ObjectMessage) message;
                 Object messageContent = objectMessage.getObject();
-                historyEvent=(HistoryEvent)messageContent;
+                historyEvent = (HistoryEvent) messageContent;
                 try {
                     AbstractEventHandlerStrategy strategy = messageHandlerResolver.resolveMessageHandler(historyEvent);
                     strategy.handleMessage(historyEvent);
-                  } catch (Throwable e) {
-                      throw Throwables.propagate(e);
-                  }
+                } catch (Throwable e) {
+                    throw Throwables.propagate(e);
+                }
                 ObjectMessage msg = (ObjectMessage) message;
                 LOG.debug("Consumed message: " + msg.toString());
             }
         } catch (Exception e) {
-            LOG.error("Consumed message: " + e.toString()+" message content " +message.toString());
-            LOG.error("                  message  " +message.toString());
+            LOG.error("Consumed message: " + e.toString() + " message content " + message.toString());
+            LOG.error("                  message  " + message.toString());
             LOG.error("                  object content " + historyEvent.toString());
 
         }

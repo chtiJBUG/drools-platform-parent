@@ -66,17 +66,6 @@ public class RuntimeWebSocketServerService {
         this.peerLoggerServer.getBasicRemote().sendObject(bean);
     }
 
-    public void sendHeartBeat() {
-        if (this.peerLoggerServer != null) {
-            PlatformManagementKnowledgeBean platformManagementKnowledgeBean = PlatformManagementKnowledgeBeanServiceFactory.generateHearBeatBean();
-            try {
-                this.sendMessage(platformManagementKnowledgeBean);
-            } catch (IOException | EncodeException e) {
-                LOG.error("sendHeartBeat not possible", e);
-            }
-        }
-    }
-
     @OnOpen
     public void onOpen(final Session session, EndpointConfig endpointConfig) {
         Map<String, Object> userProperties = WebSocketServer.userProperties;
