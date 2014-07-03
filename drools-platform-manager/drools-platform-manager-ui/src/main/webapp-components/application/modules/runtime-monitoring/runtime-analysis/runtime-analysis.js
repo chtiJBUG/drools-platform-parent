@@ -39,7 +39,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     //___ Popover details (when you move the mouse over the rulePackage)
     $scope.popoverDetails = {
         'title': 'Guvnor URL',
-        'content': '<b>Guvnor URL</b><br/><a href="http://192.168.1.26:8080/drools-guvnor" target="_blank">192.168.1.26:8080/drools-guvnor</a>'
+        'content': '<b>Guvnor URL</b><br/><a href=""+{{runtime.hostname}}+"" target="_blank">{{runtime.hostname}}</a>'
 
     };
 
@@ -140,8 +140,9 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     /** SESSION EXECUTION DETAILS **/
 
         //___ Scrolling to the next panel
-    $scope.scrollToPanel = function (ruleBaseID) {
+    $scope.scrollToPanel = function (ruleBaseID, sessionId) {
         $scope.selectedRuntimeID = ruleBaseID;
+        $scope.selectedSessionId =  sessionId;
         $scope.sessionExecutionDetails.area = true;
         $timeout(function () {
             $scope.sessionExecutionDetails.panel = true;
@@ -213,7 +214,6 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                     console.log(error);
                     //____ TODO Send an appropriate message
                     growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
-                    mockValues();
                 });
         }
         $scope.showCancelButton = true;
@@ -225,65 +225,6 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         $scope.showCancelButton = false;
     };
 
-    //___ Temporary function to mock values because search function is not working
-    function mockValues() {
-        $scope.allRuntimes = [
-            {
-                ruleBaseID: '0',
-                runtimeURL: 'http://192.168.1.26:8080/runtime-1',
-                rulePackage: 'loyalty',
-                sessionId: '1',
-                status: 'INITMODE',
-                startDate: '2014-04-20 1:48:23 AM',
-                endDate: '2014-04-20 1:48:42 AM'
-            },
-            {
-                ruleBaseID: '1',
-                runtimeURL: 'http://192.168.1.26:8080/runtime-2',
-                rulePackage: 'loyalty',
-                sessionId: '2',
-                status: 'STARTED',
-                startDate: '2014-04-20 1:48:23 AM',
-                endDate: '2014-04-20 1:48:42 AM'
-            },
-            {
-                ruleBaseID: '2',
-                runtimeURL: 'http://192.168.1.26:8080/runtime-2',
-                rulePackage: 'loyalty',
-                sessionId: '3',
-                status: 'NOT_JOIGNABLE',
-                startDate: '2014-04-20 1:48:23 AM',
-                endDate: '2014-04-20 1:48:42 AM'
-            },
-            {
-                ruleBaseID: '3',
-                runtimeURL: 'http://192.168.1.26:8080/runtime-2',
-                rulePackage: 'loyalty',
-                sessionId: '4',
-                status: 'STOPPED',
-                startDate: '2014-04-20 1:48:23 AM',
-                endDate: '2014-04-20 1:48:42 AM'
-            },
-            {
-                ruleBaseID: '5',
-                runtimeURL: 'http://192.168.1.26:8080/runtime-2',
-                rulePackage: 'loyalty',
-                sessionId: '5',
-                status: 'CRASHED',
-                startDate: '2014-04-20 1:48:23 AM',
-                endDate: '2014-04-20 1:48:42 AM'
-            },
-            {
-                ruleBaseID: '6',
-                runtimeURL: 'http://192.168.1.26:8080/runtime-2',
-                rulePackage: 'loyalty',
-                sessionId: '6',
-                status: 'STOPPED',
-                startDate: '2014-04-20 1:48:23 AM',
-                endDate: '2014-04-20 1:48:42 AM'
-            }
-        ];
-    }
 
 });
 
