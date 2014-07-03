@@ -41,6 +41,10 @@ public class SessionExecution {
     private List<RuleExecution> ruleExecutions = new ArrayList<RuleExecution>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "process_execution_id_fk")
+    private List<ProcessExecution> processExecutions = new ArrayList<ProcessExecution>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "session_execution_id_fk")
     private List<Fact> facts = new ArrayList<Fact>();
 
@@ -117,6 +121,14 @@ public class SessionExecution {
 
     public void setRuleExecutions(List<RuleExecution> ruleExecutions) {
         this.ruleExecutions = ruleExecutions;
+    }
+
+    public List<ProcessExecution> getProcessExecutions() {
+        return processExecutions;
+    }
+
+    public void setProcessExecutions(List<ProcessExecution> processExecutions) {
+        this.processExecutions = processExecutions;
     }
 
     public List<Fact> getFacts() {
