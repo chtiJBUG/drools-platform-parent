@@ -42,7 +42,7 @@ public class SessionExecution {
 
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "process_execution_id_fk")
+    @JoinColumn(name = "session_execution_id_fk")
     private List<ProcessExecution> processExecutions = new ArrayList<ProcessExecution>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

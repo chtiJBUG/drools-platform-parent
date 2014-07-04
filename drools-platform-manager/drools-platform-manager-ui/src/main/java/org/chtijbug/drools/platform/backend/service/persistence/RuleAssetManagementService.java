@@ -1,16 +1,11 @@
 package org.chtijbug.drools.platform.backend.service.persistence;
 
-import com.google.common.base.Throwables;
-import org.chtijbug.drools.guvnor.rest.ChtijbugDroolsRestException;
-import org.chtijbug.drools.guvnor.rest.GuvnorRepositoryConnector;
 import org.chtijbug.drools.guvnor.rest.model.Asset;
 import org.chtijbug.drools.guvnor.rest.model.AssetCategory;
 import org.chtijbug.drools.platform.persistence.RuleAssetRepository;
 import org.chtijbug.drools.platform.persistence.pojo.RuleAsset;
 import org.chtijbug.drools.platform.persistence.pojo.RuleAssetCategory;
-import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -25,16 +20,8 @@ import java.util.List;
 @Component
 public class RuleAssetManagementService {
 
-
-    GuvnorRepositoryConnector guvnorRepositoryConnector;
-
     @Autowired
     RuleAssetRepository ruleAssetRepository;
-
-    @Autowired
-    public RuleAssetManagementService(RuntimeSiteTopology runtimeSiteTopology) {
-        guvnorRepositoryConnector = new GuvnorRepositoryConnector(runtimeSiteTopology.buildGuvnorConfiguration());
-    }
 
     public RuleAsset getRuleAsset(String packageName, String assetName) {
         RuleAsset ruleAsset = null;
@@ -52,30 +39,38 @@ public class RuleAssetManagementService {
     }
 
 
-    public RuleAsset getRuleAssetWithCategory(String packageName, String assetName, List<String> categoryNameList) {
+    private RuleAsset getRuleAssetWithCategory(String packageName, String assetName, List<String> categoryNameList, Integer versionNumber) {
         RuleAsset ruleAsset = null;
         if (packageName != null && assetName != null) {
             RuleAsset searchRuleAsset = ruleAssetRepository.findByPackageNameAndAssetName(packageName, assetName);
             if (searchRuleAsset != null) {
-                ruleAsset = searchRuleAsset;
-                if (ruleAsset.getRuleAssetCategory() == null) {
-                    ruleAsset.setRuleAssetCategory(new ArrayList<RuleAssetCategory>());
+                if (searchRuleAsset.getVersionNumber() == null) {
+                    searchRuleAsset.setVersionNumber(new Integer("-1"));
                 }
-                if (ruleAsset.getRuleAssetCategory().size() == 0) {
+                if (searchRuleAsset.getVersionNumber() < versionNumber) {
+                    ruleAsset = searchRuleAsset;
+                    if (ruleAsset.getRuleAssetCategory() == null) {
+                        ruleAsset.setRuleAssetCategory(new ArrayList<RuleAssetCategory>());
+                    }
                     for (String categoryName : categoryNameList) {
-                        RuleAssetCategoryToInsertForRuleAsset(ruleAsset, categoryName);
+                        ruleAssetCategoryToInsertForRuleAsset(ruleAsset, categoryName);
+                    }
+                    List<RuleAssetCategory> ruleAssetCategoriesToRemove = new ArrayList<>();
+                    for (RuleAssetCategory ruleAssetCategory : ruleAsset.getRuleAssetCategory()) {
+                        if (!categoryNameList.contains(ruleAssetCategory.getCategoryName())) {
+                            ruleAssetCategoriesToRemove.add(ruleAssetCategory);
+                        }
+                    }
+                    for (RuleAssetCategory e : ruleAssetCategoriesToRemove) {
+                        ruleAsset.getRuleAssetCategory().remove(e);
                     }
                     ruleAssetRepository.save(ruleAsset);
-                } else {
-                    for (String categoryName : categoryNameList) {
-                        RuleAssetCategoryToInsertForRuleAsset(ruleAsset, categoryName);
-                    }
-                    ruleAssetRepository.save(ruleAsset);
                 }
+
             } else {
                 ruleAsset = new RuleAsset(packageName, assetName);
                 for (String categoryName : categoryNameList) {
-                    RuleAssetCategoryToInsertForRuleAsset(ruleAsset, categoryName);
+                    ruleAssetCategoryToInsertForRuleAsset(ruleAsset, categoryName);
                 }
                 ruleAssetRepository.save(ruleAsset);
             }
@@ -83,7 +78,7 @@ public class RuleAssetManagementService {
         return ruleAsset;
     }
 
-    private void RuleAssetCategoryToInsertForRuleAsset(RuleAsset ruleAsset, String categoryName) {
+    private void ruleAssetCategoryToInsertForRuleAsset(RuleAsset ruleAsset, String categoryName) {
         boolean found = false;
         for (RuleAssetCategory ruleAssetCategory : ruleAsset.getRuleAssetCategory()) {
             if (ruleAssetCategory.getCategoryName() != null && ruleAssetCategory.getCategoryName().equals(categoryName)) {
@@ -96,29 +91,20 @@ public class RuleAssetManagementService {
         }
     }
 
-    @Scheduled(cron = "* */15 9-18 *  * MON-FRI ")
-    public void SynchronizeGuvnorCategories() {
-        try {
-            List<Asset> listPackages = guvnorRepositoryConnector.getAllPackagesInGuvnorRepo();
-            for (Asset packageAsset : listPackages) {
-                String packageName = packageAsset.getName();
-                List<Asset> assetList = guvnorRepositoryConnector.getAllBusinessAssets(packageName);
-                for (Asset asset : assetList) {
-                    String assetName = asset.getName();
-                    List<String> assetCategorylist = new ArrayList<>();
-                    for (AssetCategory element : asset.getCategories()) {
-                        String assetCategory = element.getName();
-                        if (assetCategory != null && assetCategory.length() > 0) {
-                            assetCategorylist.add(assetCategory);
-                        }
-                    }
-                    this.getRuleAssetWithCategory(packageName, assetName, assetCategorylist);
-                }
-            }
-        } catch (ChtijbugDroolsRestException e) {
-            throw Throwables.propagate(e);
-        }
 
+    public void synchronizeInDBGuvnorCategories(String packageName, Asset asset) {
+        String assetName = asset.getName();
+        List<String> assetCategorylist = new ArrayList<>();
+        for (AssetCategory element : asset.getCategories()) {
+            String assetCategory = element.getName();
+            if (assetCategory != null && assetCategory.length() > 0) {
+                assetCategorylist.add(assetCategory);
+            }
+        }
+        this.getRuleAssetWithCategory(packageName, assetName, assetCategorylist, new Integer(asset.getVersionNumber()));
     }
 
+
 }
+
+
