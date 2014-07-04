@@ -36,12 +36,13 @@ public class DecisionTableAssetManagementService {
 
             }
         } else {
-            /** Create the Decision Table in the Database
-             *
-             */
+            /**
+             *  Create a copy of the Decision Table in the Database
+             **/
             RuleAsset ruleAsset = ruleAssetRepository.findByPackageNameAndAssetName(packageName, asset.getName());
             if (ruleAsset != null) {
                 DTRuleAsset dtRuleAsset = new DTRuleAsset();
+                ruleAsset.setVersionNumber(new Integer(asset.getVersionNumber()));
                 dtRuleAsset.setRuleAsset(ruleAsset);
                 for (ColumnDefinition columnDefinition : decisionTableGuvnorFormat.getColumnDefinitionList()) {
 
