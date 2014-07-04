@@ -20,6 +20,8 @@ public class DTRowData {
 
     private Integer rowNumber;
 
+    private String rowDescription;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "dt_colData_asset_id_fk")
     private List<DTColData> dtColDatas = new ArrayList<DTColData>();
@@ -45,6 +47,14 @@ public class DTRowData {
 
     public void setRowNumber(Integer rowNumber) {
         this.rowNumber = rowNumber;
+    }
+
+    public String getRowDescription() {
+        return rowDescription;
+    }
+
+    public void setRowDescription(String rowDescription) {
+        this.rowDescription = rowDescription;
     }
 
     public List<DTColData> getDtColDatas() {
