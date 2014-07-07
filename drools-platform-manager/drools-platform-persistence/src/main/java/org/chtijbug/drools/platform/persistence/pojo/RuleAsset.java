@@ -25,7 +25,6 @@ public class RuleAsset {
     private String summary;
     private Integer versionNumber;
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-    @JoinColumn(name = "ruleasset_id")
     private List<RuleAssetCategory> ruleAssetCategory = new ArrayList<>();
 
     public RuleAsset() {

@@ -48,8 +48,7 @@ public class ProcessExecution {
 
     private String processId;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "processexecution_id")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "processExecution")
     private List<RuleflowGroup> ruleflowGroups = new ArrayList<RuleflowGroup>();
 
 
