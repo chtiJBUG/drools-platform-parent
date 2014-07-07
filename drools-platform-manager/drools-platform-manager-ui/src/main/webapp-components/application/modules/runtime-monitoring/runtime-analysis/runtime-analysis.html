@@ -37,6 +37,12 @@
                             <!-- input id="iptstatus" class="form-control" name="status" type="text"
                                    placeholder="Please enter the status" data-ng-model="filters.status" -->
                         </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-checked="filters.onlyRunningInstances" ng-model="filters.onlyRunningInstances">
+                                Only running instances
+                            </label>
+                        </div>
                         <div class="form-group">
                             <a style="cursor:pointer" ng-click="collapseStatus.firstBox=!collapseStatus.firstBox">
                                 <span ng-show="!collapseStatus.firstBox"><i class="fa fa-plus-circle"></i> More filters : Runtime</span>
@@ -103,7 +109,7 @@
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
-                                    <!--th class="bold">ruleBaseID</th-->
+                                    <th class="bold">ruleBaseID</th>
                                     <th class="bold">Runtime</th>
                                     <!--th class="bold">Status</th-->
                                     <th class="bold">Rule Package</th>
@@ -115,15 +121,15 @@
                                 <tbody>
                                 <tr ng-repeat="runtime in pageItems()"
                                     style="cursor:default" class="runtime-status-{{runtime.status}}">
-                                    <!--td>{{runtime.ruleBaseID}}</td-->
+                                    <td>{{runtime.ruleBaseID}}</td>
                                     <td>{{runtime.runtimeURL}}</td>
                                     <!--td>{{runtime.status}}</td-->
                                     <!-- data-content="test content <a href='' title='test add link'>link on content</a>" -->
-                                    <td style="cursor:pointer"><span tooltip-placement="bottom" tooltip-html-unsafe="{{popoverDetails.content}}" tooltip-trigger="click" >{{runtime.rulePackage}}</span></td>
+                                    <td style="cursor:pointer"><span tooltip-placement="bottom" tooltip-html-unsafe="<b>Guvnor URL</b><br/><a href='{{runtime.guvnorUrl}}' target='_blank'>{{runtime.guvnorUrl}}</a>" tooltip-trigger="click" >{{runtime.rulePackage}}</span></td>
                                     <td>{{runtime.sessionId}}</td>
                                     <td>{{runtime.startDate}}</td>
                                     <td>{{runtime.endDate}}</td>
-                                    <td><button class="btn " ng-click="scrollToPanel(runtime.ruleBaseID);"><i class="fa fa-eye"></i></button></td>
+                                    <td><button class="btn " ng-click="scrollToPanel(runtime.ruleBaseID, runtime.sessionId);"><i class="fa fa-eye"></i></button></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -145,7 +151,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading panel-title">
                     <button type="button" class="close" aria-hidden="true" ng-click="closeDetailsPanel()" >&times;</button>
-                    <h3 class="panel-title">All Rules Execution on Runtime {{selectedRuntimeID}}</h3>
+                    <h3 class="panel-title">All Rules Execution on Runtime ruleBaseID : {{selectedRuleBaseID}} session Id : {{selectedSessionId}}</h3>
                 </div>
                 <div class="panel-body" style="min-height:700px;">
 

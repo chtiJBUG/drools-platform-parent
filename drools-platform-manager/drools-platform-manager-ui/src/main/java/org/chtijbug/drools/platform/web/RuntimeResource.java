@@ -3,12 +3,9 @@ package org.chtijbug.drools.platform.web;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
-import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeFilter;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstanceStatus;
-import org.chtijbug.drools.platform.web.model.RuntimeInstance;
-import org.chtijbug.drools.platform.web.model.RuntimeStatusObject;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
+import org.chtijbug.drools.platform.persistence.pojo.*;
+import org.chtijbug.drools.platform.web.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +16,10 @@ import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,6 +35,8 @@ public class RuntimeResource {
 
     @Autowired
     PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
+    @Autowired
+    SessionExecutionRepository sessionExecutionRepository;
 
     @RequestMapping(method = RequestMethod.GET, value = "/{packageName:.+}")
     @Consumes(value = MediaType.APPLICATION_JSON)
@@ -69,13 +70,108 @@ public class RuntimeResource {
         return platformRuntimeInstanceRepository.findByPackageNameAllRuntime(packageName);
     }
 
+
+    @RequestMapping(method = RequestMethod.GET, value = "/session/{ruleBaseID:.+}/{sessionId:.+}")
+    @Consumes(value = MediaType.APPLICATION_JSON)
+    @Produces(value = MediaType.APPLICATION_JSON)
+    @ResponseBody
+    public SessionExecutionDetailsResource findSessionExecutionDetails(@PathVariable int ruleBaseID, @PathVariable int sessionId) {
+        logger.debug(">> findSessionExecutionDetails(sessionId= {})", sessionId);
+        try {
+            //____ Data from Database
+            final SessionExecution allSessionExecutionsDetails = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(ruleBaseID, sessionId);
+            // final SessionExecution allSessionExecutionsDetails = sessionExecutionRepository.findDetailsBySessionId(sessionID);
+            int cpt = 0;
+            SessionExecutionDetailsResource executionDetailsResource = new SessionExecutionDetailsResource();
+            ProcessExecution processExecution = allSessionExecutionsDetails.getProcessExecutions().get(0);
+            ProcessDetails processDetails = new ProcessDetails();
+
+            if (allSessionExecutionsDetails.getProcessExecutions().size() != 0) {
+
+                processDetails.setProcessName(processExecution.getProcessName());
+
+                if(processExecution.getProcessVersion()!=null) {
+                    processDetails.setProcessVersion(processExecution.getProcessVersion());
+                }else{
+                    processDetails.setProcessVersion("");
+                }
+
+                processDetails.setProcessExecutionStatus(processExecution.getProcessExecutionStatus().toString());
+                processDetails.setProcessType(processExecution.getProcessType());
+
+                executionDetailsResource.setProcessDetails(processDetails);
+
+                for (RuleflowGroup ruleFlowGroup : processExecution.getRuleflowGroups()) {
+                    RuleFlowGroupDetails ruleFlowGroupDetails = new RuleFlowGroupDetails();
+                    ruleFlowGroupDetails.setRuleflowGroup(ruleFlowGroup.getRuleflowGroup());
+                    //___ Add rule execution details list
+                    for (RuleExecution ruleExecution :ruleFlowGroup.getRuleExecutionList()) {
+                        RuleExecutionDetails ruleExecutionDetails = new RuleExecutionDetails();
+                        ruleExecutionDetails.setPackageName(ruleExecution.getPackageName());
+                        ruleExecutionDetails.setRuleName(ruleExecution.getRuleName());
+                        ruleExecutionDetails.setWhenFacts(ruleExecution.getWhenFacts());
+                        ruleExecutionDetails.setThenFacts(ruleExecution.getThenFacts());
+                        ruleFlowGroupDetails.addRuleExecution(ruleExecutionDetails); //Ajout de la ruleExecutionDetails dans la liste
+                    }
+                    executionDetailsResource.addRuleFlowGroup(ruleFlowGroupDetails);
+                }
+                //logger.debug("Skipping this entry {}", sessionId);
+
+
+            }
+            return executionDetailsResource;
+        } finally {
+            logger.debug("<< findSessionExecutionDetails()");
+        }
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/filter")
     @Consumes(MediaType.APPLICATION_JSON)
     @ResponseBody
-    public List<PlatformRuntimeInstance> findPlatformRuntimeInstanceByFilters(@RequestBody PlatformRuntimeFilter runtimeFilter) {
+    public List<SessionExecutionResource> findPlatformRuntimeInstanceByFilters(@RequestBody final PlatformRuntimeFilter runtimeFilter) {
         logger.debug(">> findAllPlatformRuntimeInstanceByFilter(runtimeFilter= {})", runtimeFilter);
         try {
-            return platformRuntimeInstanceRepository.findAllPlatformRuntimeInstanceByFilter(runtimeFilter);
+            //____ Extract data from database
+            final List<SessionExecution> allSessionExecutions = platformRuntimeInstanceRepository.findAllPlatformRuntimeInstanceByFilter(runtimeFilter);
+            //___ TODO pour chacun de ces enregistrements, le convertir en objet JSON
+            return Lists.transform(allSessionExecutions, new Function<SessionExecution, SessionExecutionResource>() {
+                @Nullable
+                @Override
+                public SessionExecutionResource apply(@Nullable SessionExecution sessionExecution) {
+                    // TODO
+                    SessionExecutionResource output = new SessionExecutionResource();
+                    PlatformRuntimeInstance runtimeInstance = sessionExecution.getPlatformRuntimeInstance();
+                    DroolsResource guvnorResource = sessionExecution.getPlatformRuntimeInstance().getDroolsRessources().get(0);
+                    assert sessionExecution != null;
+
+                    output.setRuleBaseID(sessionExecution.getPlatformRuntimeInstance().getRuleBaseID());
+                    output.setSessionId(sessionExecution.getSessionId());
+
+                    if (guvnorResource.getEndDate() == null) {
+
+                        String guvnorUrl = guvnorResource.getGuvnor_url() + guvnorResource.getGuvnor_appName();
+                        output.setGuvnorUrl(guvnorUrl);
+                        output.setRulePackage(guvnorResource.getGuvnor_packageName());
+                        output.setVersion(guvnorResource.getGuvnor_packageVersion());
+
+                    } else {
+                        logger.debug("Skipping this entry {}", sessionExecution);
+                        return null;
+                    }
+
+                    //___ Différence entre runtimeURL et hostname par rapport aux filtres ?
+                    output.setRuntimeURL(runtimeInstance.getHostname() + ":" + runtimeInstance.getPort() + runtimeInstance.getEndPoint());
+                    output.setHostname(runtimeInstance.getHostname() + ":" + runtimeInstance.getPort() + runtimeInstance.getEndPoint());
+
+                    output.setStatus(runtimeInstance.getStatus().toString());
+                    //output.setStatus(sessionExecution.getSessionExecutionStatus().toString());
+                    output.setStartDate(sessionExecution.getStartDate().toString());
+                    //sessionExecution.getFacts();
+                    if (sessionExecution.getEndDate() != null)
+                        output.setEndDate(sessionExecution.getEndDate().toString());
+                    return output;
+                }
+            });
         } finally {
             logger.debug("<< findAllPlatformRuntimeInstanceByFilter()");
         }

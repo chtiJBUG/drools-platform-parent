@@ -8,6 +8,7 @@ public class PlatformRuntimeFilter {
     private String hostname;
     private String startDate;
     private String endDate;
+    private String onlyRunningInstances;
 
     public PlatformRuntimeFilter() {/** nop */}
 
@@ -51,6 +52,14 @@ public class PlatformRuntimeFilter {
         this.endDate = endDate;
     }
 
+    public String getOnlyRunningInstances() {
+        return onlyRunningInstances;
+    }
+
+    public void setOnlyRunningInstances(String onlyRunningInstances) {
+        this.onlyRunningInstances = onlyRunningInstances;
+    }
+
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
@@ -59,6 +68,7 @@ public class PlatformRuntimeFilter {
                 .add("hostname", hostname)
                 .add("startDate", startDate)
                 .add("endDate", endDate)
+                .add("onlyRunningInstances", onlyRunningInstances)
                 .toString();
     }
 }
