@@ -156,7 +156,7 @@ public class PlatformRunTimeBeanTest {
 
 
     @Test
-    @Ignore
+
     public void testDTSycnrhonization() throws GuvnorConnexionFailedException, ChtijbugDroolsRestException {
         try {
             String packageName = "alertesecurite";

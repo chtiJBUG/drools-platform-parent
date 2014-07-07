@@ -65,7 +65,29 @@ public class DecisionTableAssetManagementService {
                         } else if (i > 1) { //Real Data column
                             ColumnDefinition columnDefinition = rowElement.getColumnDefinition();
                             if (columnDefinition.isHideColumn() == false && (columnDefinition.getColumnDefinition() == ColumnType.condition || columnDefinition.getColumnDefinition() == ColumnType.action)) {  // Only keep conditon and action
-                                DTColData dtColData = new DTColData(rowElement.getColumnDefinition().getHeader(), rowElement.getValue(), rowElement.getColumnDefinition().getFieldType());
+                                String elementValue = null;
+                                switch (rowElement.getDtCellValue52().getDataType()) {
+                                    case NUMERIC_LONG:
+                                    case NUMERIC:
+                                        if (rowElement.getDtCellValue52().getNumericValue() != null) {
+                                            elementValue = rowElement.getDtCellValue52().getNumericValue().toString();
+                                        }
+                                        break;
+                                    case STRING:
+                                        elementValue = rowElement.getDtCellValue52().getStringValue();
+                                        break;
+                                    case DATE:
+                                        if (rowElement.getDtCellValue52().getDateValue() != null) {
+                                            elementValue = rowElement.getDtCellValue52().getDateValue().toString();
+                                        }
+                                        break;
+                                    case BOOLEAN:
+                                        if (rowElement.getDtCellValue52().getBooleanValue() != null) {
+                                            elementValue = rowElement.getDtCellValue52().getBooleanValue().toString();
+                                        }
+                                        break;
+                                }
+                                DTColData dtColData = new DTColData(rowElement.getColumnDefinition().getHeader(), elementValue, rowElement.getColumnDefinition().getFieldType());
                                 dtRowData.getDtColDatas().add(dtColData);
                             }
                         }
