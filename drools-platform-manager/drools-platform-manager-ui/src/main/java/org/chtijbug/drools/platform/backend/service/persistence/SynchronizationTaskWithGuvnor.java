@@ -2,9 +2,7 @@ package org.chtijbug.drools.platform.backend.service.persistence;
 
 import com.google.common.base.Throwables;
 import org.chtijbug.drools.guvnor.rest.ChtijbugDroolsRestException;
-import org.chtijbug.drools.guvnor.rest.GuvnorConnexionFailedException;
 import org.chtijbug.drools.guvnor.rest.GuvnorRepositoryConnector;
-import org.chtijbug.drools.guvnor.rest.dt.DecisionTable;
 import org.chtijbug.drools.guvnor.rest.model.Asset;
 import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,16 +43,18 @@ public class SynchronizationTaskWithGuvnor {
                 List<Asset> assetList = guvnorRepositoryConnector.getAllBusinessAssets(packageName);
                 for (Asset asset : assetList) {
                     ruleAssetManagementService.synchronizeInDBGuvnorCategories(packageName, asset);
-                    if (asset.getType().equals("gdst")) {
-                        try {
+                    /**
+                     if (asset.getType().equals("gdst")) {
+                     try {
 
-                            DecisionTable decisionTableGuvnorFormat = guvnorRepositoryConnector.getGuidedDecisionTable(packageName, asset.getName());
-                            decisionTableAssetManagementService.SynchronizeInDBContent(packageName, asset, decisionTableGuvnorFormat);
-                        } catch (GuvnorConnexionFailedException e) {
-                            e.printStackTrace();
-                        }
+                     DecisionTable decisionTableGuvnorFormat = guvnorRepositoryConnector.getGuidedDecisionTable(packageName, asset.getName());
+                     decisionTableAssetManagementService.SynchronizeInDBContent(packageName, asset, decisionTableGuvnorFormat);
+                     } catch (GuvnorConnexionFailedException e) {
+                     e.printStackTrace();
+                     }
 
-                    }
+                     }
+                     **/
 
                 }
             }
