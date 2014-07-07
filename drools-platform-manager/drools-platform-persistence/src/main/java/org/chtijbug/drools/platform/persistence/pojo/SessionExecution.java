@@ -20,33 +20,19 @@ public class SessionExecution {
     private Long id;
     @ManyToOne
     private PlatformRuntimeInstance platformRuntimeInstance;
-
     private Integer sessionId;
-
     @Column(nullable = false)
     private Date startDate;
-
     private Date endDate;
-
     private Integer startEventID;
-
     private Integer stopEventID;
-
     @Enumerated(EnumType.STRING)
     private SessionExecutionStatus sessionExecutionStatus;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    //@JoinColumn(name = "session_execution_id_fk")
-    private List<RuleExecution> ruleExecutions = new ArrayList<RuleExecution>();
-
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "sessionExecution")
-    //@JoinColumn(name = "session_execution_id_fk")
+    private List<RuleExecution> ruleExecutions = new ArrayList<RuleExecution>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "sessionExecution")
     private List<ProcessExecution> processExecutions = new ArrayList<ProcessExecution>();
-
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "session_execution_id_fk")
     private List<Fact> facts = new ArrayList<Fact>();
 
     public SessionExecution() {
