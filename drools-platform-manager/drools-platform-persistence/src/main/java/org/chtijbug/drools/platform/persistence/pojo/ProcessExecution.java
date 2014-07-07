@@ -49,7 +49,7 @@ public class ProcessExecution {
     private String processId;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "process_execution_id_fk")
+    @JoinColumn(name = "processexecution_id")
     private List<RuleflowGroup> ruleflowGroups = new ArrayList<RuleflowGroup>();
 
 
