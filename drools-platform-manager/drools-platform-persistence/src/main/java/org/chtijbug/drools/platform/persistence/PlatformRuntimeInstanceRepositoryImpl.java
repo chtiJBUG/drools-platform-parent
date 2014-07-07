@@ -34,18 +34,23 @@ public class PlatformRuntimeInstanceRepositoryImpl implements PlatformRuntimeIns
             }
 
             //___ Append other filters
-            if (filter.getStatus() != null)
+            if (filter.getStatus() != null){
                 jpaQuery = jpaQuery.concat("and execution.platformRuntimeInstance.status.toString()= :status ");
+            }
 
+
+            if(filter.getOnlyRunningInstances()=="true"){
+                jpaQuery = jpaQuery.concat("and execution.platformRuntimeInstance.endDate is null ");
+            }
 
             if (filter.getHostname() != null)
-                jpaQuery += jpaQuery.concat("and execution.platformRuntimeInstance.hostname LIKE :hostname");
+                jpaQuery += jpaQuery.concat("and execution.platformRuntimeInstance.hostname LIKE :hostname ");
 
             if (filter.getStartDate() != null)
-                jpaQuery = jpaQuery.concat("and execution.platformRuntimeInstance.startDate= :startDate");
+                jpaQuery = jpaQuery.concat("and execution.platformRuntimeInstance.startDate= :startDate ");
 
             if (filter.getEndDate() != null)
-                jpaQuery = jpaQuery.concat("and execution.platformRuntimeInstance.startDate= :endDate");
+                jpaQuery = jpaQuery.concat("and execution.platformRuntimeInstance.startDate= :endDate ");
 
             Query query = entityManager.createQuery(jpaQuery);
             query.setParameter("packageName", filter.getPackageName());

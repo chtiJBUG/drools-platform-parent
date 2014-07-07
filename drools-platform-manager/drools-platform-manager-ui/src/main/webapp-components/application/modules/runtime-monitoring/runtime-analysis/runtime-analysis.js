@@ -27,7 +27,8 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         status: undefined,
         hostname: undefined,
         startDate: undefined,
-        endDate: undefined
+        endDate: undefined,
+        onlyRunningInstances : false
     };
 
     //___ Collapse status for each box from the "Search panel"
@@ -88,9 +89,9 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         'output': '// output'
     };
 
-    /**********************/
-    /*  DATE & TIME MGMT  */
-    /**********************/
+
+    /**  DATE & TIME MGMT  **/
+
     $scope.today = function (dateGiven) {
         return new Date();
     };
@@ -139,16 +140,33 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
     /** SESSION EXECUTION DETAILS **/
 
-        //___ Scrolling to the next panel
+    //___ Scrolling to the next panel and load Session Execution details
     $scope.scrollToPanel = function (ruleBaseID, sessionId) {
-        $scope.selectedRuntimeID = ruleBaseID;
-        $scope.selectedSessionId =  sessionId;
-        $scope.sessionExecutionDetails.area = true;
+
+        $scope.selectedRuleBaseID = ruleBaseID; // Temporary var (value displayed in the head of the panel)
+        $scope.selectedSessionId =  sessionId; // Idem
+        $scope.sessionExecutionDetails.area = true; // Second part of the page made visible
         $timeout(function () {
-            $scope.sessionExecutionDetails.panel = true;
-            var someElement = angular.element(document.getElementById('detailsPanel'));
+            $scope.sessionExecutionDetails.panel = true; // Panel visible now
+            var someElement = angular.element(document.getElementById('detailsPanel')); // Scroll to the panel
             $document.scrollToElement(someElement, 0, 1000);
         }, 3);
+
+        // DEBUG
+        console.log(typeof(sessionId));
+
+        //___ Load Details
+        $http.get('./server/runtime/session/'+ruleBaseID+'/'+sessionId)
+            .success(function (data) {
+                $scope.allSessionExecutionDetails = data;
+            })
+            .error(function (error, status) {
+                console.log("[Error] Error HTTP " + status);
+                console.log(error);
+                //____ TODO Send an appropriate message
+                growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
+            })
+
     };
 
     // Toggle to another tab
