@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * Cf. http://docs.spring.io/spring-data/jpa/docs/1.4.2.RELEASE/reference/html/jpa.repositories.html
  */
@@ -14,11 +16,13 @@ import org.springframework.stereotype.Component;
 public interface SessionExecutionRepository extends JpaRepository<SessionExecution, Long> {
 
 
-    @Query("select s from PlatformRuntimeInstance pp,SessionExecution s " +
-             "where s.platformRuntimeInstance=pp " +
-             "and  pp.ruleBaseID= :ruleBaseID and s.sessionId = :sessionID  " +
-             "and s.endDate is null ")
-    SessionExecution findByRuleBaseIDAndSessionIdAndEndDateIsNull(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionID") Integer sessionId);
+    @Query("select s from SessionExecution s " +
+             "where s.platformRuntimeInstance.ruleBaseID= :ruleBaseID and s.sessionId = :sessionId  "+
+             "and s.platformRuntimeInstance.endDate is null  ")
+    SessionExecution findByRuleBaseIDAndSessionIdAndEndDateIsNull(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionId") Integer sessionId);
+
+
+    public SessionExecution findDetailsBySessionId(@Param("sessionId") Integer sessionId);
 
 
 

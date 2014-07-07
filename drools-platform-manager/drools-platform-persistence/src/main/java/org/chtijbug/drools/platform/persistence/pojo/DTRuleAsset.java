@@ -24,11 +24,11 @@ public class DTRuleAsset {
     private RuleAsset ruleAsset;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "dt_rule_asset_id_fk")
+    @JoinColumn(name = "dtruleasset_id")
     private List<DTColumnDefinition> dtColumnDefinitions = new ArrayList<DTColumnDefinition>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "dt_rule_asset_id_fk")
+    @JoinColumn(name = "dtruleasset_id")
     private List<DTRowData> dtRowDatas = new ArrayList<DTRowData>();
 
     public DTRuleAsset() {

@@ -35,7 +35,7 @@ public class ProcessExecution {
     private Integer stopEventID;
 
     @ManyToOne
-    @JoinColumn(name = "session_execution_id_fk")
+    @JoinColumn(name = "sessionexecution_id", referencedColumnName = "id")
     private SessionExecution sessionExecution;
 
     private String ProcessInstanceId;
@@ -48,8 +48,7 @@ public class ProcessExecution {
 
     private String processId;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "process_execution_id_fk")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "processExecution")
     private List<RuleflowGroup> ruleflowGroups = new ArrayList<RuleflowGroup>();
 
 

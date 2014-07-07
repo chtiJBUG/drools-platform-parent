@@ -7,6 +7,7 @@ import org.chtijbug.drools.platform.persistence.pojo.RuleAsset;
 import org.chtijbug.drools.platform.persistence.pojo.RuleAssetCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +92,7 @@ public class RuleAssetManagementService {
         }
     }
 
-
+    @Transactional
     public void synchronizeInDBGuvnorCategories(String packageName, Asset asset) {
         String assetName = asset.getName();
         List<String> assetCategorylist = new ArrayList<>();
