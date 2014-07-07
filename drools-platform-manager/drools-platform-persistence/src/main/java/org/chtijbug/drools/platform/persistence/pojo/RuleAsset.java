@@ -23,7 +23,7 @@ public class RuleAsset {
     private String state;
     private String type;
     private String summary;
-
+    private Integer versionNumber;
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @JoinColumn(name = "rule_asset_category_id_fk")
     private List<RuleAssetCategory> ruleAssetCategory = new ArrayList<>();
@@ -92,4 +92,13 @@ public class RuleAsset {
     public void setRuleAssetCategory(List<RuleAssetCategory> ruleAssetCategory) {
         this.ruleAssetCategory = ruleAssetCategory;
     }
+
+    public Integer getVersionNumber() {
+        return versionNumber;
+    }
+
+    public void setVersionNumber(Integer versionNumber) {
+        this.versionNumber = versionNumber;
+    }
+
 }
