@@ -19,7 +19,6 @@ public class SessionExecution {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "session_execution_id_seq")
     private Long id;
     @ManyToOne
-    @JoinColumn(name = "platform_runtime_instance_id_fk")
     private PlatformRuntimeInstance platformRuntimeInstance;
 
     private Integer sessionId;
@@ -37,12 +36,12 @@ public class SessionExecution {
     private SessionExecutionStatus sessionExecutionStatus;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "session_execution_id_fk")
+    //@JoinColumn(name = "session_execution_id_fk")
     private List<RuleExecution> ruleExecutions = new ArrayList<RuleExecution>();
 
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "session_execution_id_fk")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "sessionExecution")
+    //@JoinColumn(name = "session_execution_id_fk")
     private List<ProcessExecution> processExecutions = new ArrayList<ProcessExecution>();
 
 

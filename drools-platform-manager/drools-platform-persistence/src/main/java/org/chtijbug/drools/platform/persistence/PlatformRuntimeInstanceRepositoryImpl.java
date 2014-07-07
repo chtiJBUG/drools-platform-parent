@@ -16,7 +16,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class PlatformRuntimeInstanceRepositoryImpl implements PlatformRuntimeInstanceCustomRepository {
     private static Logger logger = getLogger(PlatformRuntimeInstanceRepositoryImpl.class);
     private static final String BASE_JPA_QUERY = "select execution " +
-            "from SessionExecution execution ,DroolsResource resource " +
+            "from SessionExecution execution , DroolsResource resource " +
             "where resource.guvnor_packageName = :packageName and " +
             "resource member of execution.platformRuntimeInstance.platformRuntimeDefinition.droolsRessourcesDefinition and " +
             "resource.endDate is null ";

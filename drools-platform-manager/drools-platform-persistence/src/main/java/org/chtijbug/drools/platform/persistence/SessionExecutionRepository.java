@@ -16,10 +16,9 @@ import java.util.List;
 public interface SessionExecutionRepository extends JpaRepository<SessionExecution, Long> {
 
 
-    @Query("select s from PlatformRuntimeInstance pp,SessionExecution s " +
-             "where s.platformRuntimeInstance=pp " +
-             "and  pp.ruleBaseID= :ruleBaseID and s.sessionId = :sessionId  "+
-             "and pp.endDate is null  ")
+    @Query("select s from SessionExecution s " +
+             "where s.platformRuntimeInstance.ruleBaseID= :ruleBaseID and s.sessionId = :sessionId  "+
+             "and s.platformRuntimeInstance.endDate is null  ")
     SessionExecution findByRuleBaseIDAndSessionIdAndEndDateIsNull(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionId") Integer sessionId);
 
 

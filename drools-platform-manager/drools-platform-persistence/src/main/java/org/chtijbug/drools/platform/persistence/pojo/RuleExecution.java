@@ -38,15 +38,15 @@ public class RuleExecution {
     private List<Fact> thenFacts = new ArrayList<Fact>();
 
     @ManyToOne
-    @JoinColumn(name = "ruleflowgroup_execution_id_fk")
+    //@JoinColumn(name = "ruleflowgroup_execution_id_fk")
     private RuleflowGroup ruleflowGroup;
 
     @ManyToOne
-    @JoinColumn(name = "session_execution_id_fk")
+    //@JoinColumn(name = "session_execution_id_fk")
     private SessionExecution sessionExecution;
 
     @ManyToOne
-    @JoinColumn(name = "rule_asset_id_fk")
+    //@JoinColumn(name = "rule_asset_id_fk")
     private RuleAsset ruleAsset;
 
     public String getRuleName() {
