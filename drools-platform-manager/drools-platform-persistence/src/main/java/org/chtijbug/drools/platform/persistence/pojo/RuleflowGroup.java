@@ -28,7 +28,7 @@ public class RuleflowGroup {
     private ProcessExecution processExecution;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "ruleflowgroup_id_fk")
+    @JoinColumn(name = "ruleflowgroup_execution_id_fk")
     private List<RuleExecution> ruleExecutionList = new ArrayList<RuleExecution>();
 
     @Column(nullable = false)

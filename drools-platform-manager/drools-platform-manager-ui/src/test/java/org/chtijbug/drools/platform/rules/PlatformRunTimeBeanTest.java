@@ -5,10 +5,20 @@ import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFiredHistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFlowActivatedHistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFlowDeactivatedHistoryEvent;
+import org.chtijbug.drools.guvnor.rest.ChtijbugDroolsRestException;
+import org.chtijbug.drools.guvnor.rest.GuvnorConnexionFailedException;
+import org.chtijbug.drools.guvnor.rest.GuvnorRepositoryConnector;
+import org.chtijbug.drools.guvnor.rest.dt.DecisionTable;
+import org.chtijbug.drools.guvnor.rest.model.Asset;
+import org.chtijbug.drools.platform.backend.service.persistence.DecisionTableAssetManagementService;
+import org.chtijbug.drools.platform.persistence.DTRuleAssetRepository;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
+import org.chtijbug.drools.platform.persistence.RuleAssetRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstanceStatus;
+import org.chtijbug.drools.platform.persistence.pojo.RuleAsset;
+import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.RuleBaseBuilder;
 import org.chtijbug.drools.runtime.RuleBasePackage;
@@ -33,12 +43,23 @@ public class PlatformRunTimeBeanTest {
 
     private static TestWebSocketServer testWebSocketServer;
 
+    @Autowired
+    DTRuleAssetRepository dtRuleAssetRepository;
+
+    @Autowired
+    RuleAssetRepository ruleAssetRepository;
 
     @Autowired
     DirectAccessHistoryListener historyListener;
 
     @Autowired
     PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
+
+    @Autowired
+    private RuntimeSiteTopology runtimeSiteTopology;
+
+    @Autowired
+    private DecisionTableAssetManagementService decisionTableAssetManagementService;
 
     @BeforeClass
     public static void BeforeClass() throws UnknownHostException {
@@ -131,6 +152,28 @@ public class PlatformRunTimeBeanTest {
         Assert.assertEquals(afterRuleFlowDeactivatedHistoryEvent.getTypeEvent(), HistoryEvent.TypeEvent.RuleFlowGroup);
         Assert.assertEquals(afterRuleFlowDeactivatedHistoryEvent.getDroolsRuleFlowGroupObject().getName(), "Group1");
 
+    }
+
+
+    @Test
+    @Ignore
+    public void testDTSycnrhonization() throws GuvnorConnexionFailedException, ChtijbugDroolsRestException {
+        try {
+            String packageName = "alertesecurite";
+            GuvnorRepositoryConnector guvnorRepositoryConnector = new GuvnorRepositoryConnector(runtimeSiteTopology.buildGuvnorConfiguration());
+            DecisionTable decisionTableGuvnorFormat = guvnorRepositoryConnector.getGuidedDecisionTable(packageName, "Alerte_DepLivraison_Marque_ConnaissanceClient");
+            Asset asset = new Asset();
+            asset.setName("Alerte_DepLivraison_Marque_ConnaissanceClient");
+            asset.setVersionNumber("12");
+            RuleAsset ruleAsset = new RuleAsset();
+            ruleAsset.setPackageName(packageName);
+            ruleAsset.setAssetName(asset.getName());
+            ruleAsset.setVersionNumber(new Integer("8"));
+            ruleAssetRepository.save(ruleAsset);
+            decisionTableAssetManagementService.SynchronizeInDBContent(packageName, asset, decisionTableGuvnorFormat);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     @Test
     public void pipo(){
