@@ -84,13 +84,22 @@ public class RuntimeResource {
             int cpt = 0;
             SessionExecutionDetailsResource executionDetailsResource = new SessionExecutionDetailsResource();
             ProcessExecution processExecution = allSessionExecutionsDetails.getProcessExecutions().get(0);
-            ProcessDetails processDetails = executionDetailsResource.getProcessDetails();
+            ProcessDetails processDetails = new ProcessDetails();
 
-            if (allSessionExecutionsDetails.getProcessExecutions().size() == 1) {
+            if (allSessionExecutionsDetails.getProcessExecutions().size() != 0) {
+
                 processDetails.setProcessName(processExecution.getProcessName());
-                processDetails.setProcessVersion(processExecution.getProcessVersion());
+
+                if(processExecution.getProcessVersion()!=null) {
+                    processDetails.setProcessVersion(processExecution.getProcessVersion());
+                }else{
+                    processDetails.setProcessVersion("");
+                }
+
                 processDetails.setProcessExecutionStatus(processExecution.getProcessExecutionStatus().toString());
                 processDetails.setProcessType(processExecution.getProcessType());
+
+                executionDetailsResource.setProcessDetails(processDetails);
 
                 for (RuleflowGroup ruleFlowGroup : processExecution.getRuleflowGroups()) {
                     RuleFlowGroupDetails ruleFlowGroupDetails = new RuleFlowGroupDetails();
@@ -107,6 +116,8 @@ public class RuntimeResource {
                     executionDetailsResource.addRuleFlowGroup(ruleFlowGroupDetails);
                 }
                 //logger.debug("Skipping this entry {}", sessionId);
+
+
             }
             return executionDetailsResource;
         } finally {

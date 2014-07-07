@@ -1,11 +1,12 @@
 package org.chtijbug.drools.platform.web.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RuleFlowGroupDetails {
 
     private String ruleflowGroup;
-    private List<RuleExecutionDetails> allRuleExecutionDetails;
+    private List<RuleExecutionDetails> allRuleExecutionDetails = new ArrayList<RuleExecutionDetails>();
 
     public RuleFlowGroupDetails() { /* nop */ }
 

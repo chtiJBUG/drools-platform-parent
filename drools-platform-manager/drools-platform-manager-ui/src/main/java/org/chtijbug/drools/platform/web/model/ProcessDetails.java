@@ -9,6 +9,15 @@ public class ProcessDetails {
     private String processVersion;
     private String processType;
 
+    public ProcessDetails() {/*NOP*/}
+
+    public ProcessDetails(String processName, String processExecutionStatus, String processVersion, String processType) {
+        this.processName = processName;
+        this.processExecutionStatus = processExecutionStatus;
+        this.processVersion = processVersion;
+        this.processType = processType;
+    }
+
     public String getProcessName() {
         return processName;
     }
