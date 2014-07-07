@@ -46,9 +46,9 @@ public class DecisionTableAssetManagementService {
                 dtRuleAsset.setRuleAsset(ruleAsset);
                 for (ColumnDefinition columnDefinition : decisionTableGuvnorFormat.getColumnDefinitionList()) {
 
-                    if (columnDefinition.getColumnDefinition() == ColumnType.condition || columnDefinition.getColumnDefinition() == ColumnType.action) {
+                    if (columnDefinition.isHideColumn() == false && (columnDefinition.getColumnDefinition() == ColumnType.condition || columnDefinition.getColumnDefinition() == ColumnType.action)) {
                         DTColumnDefinition dtColumnDefinition = new DTColumnDefinition();
-                        dtColumnDefinition.setName(columnDefinition.getFieldType());
+                        dtColumnDefinition.setDataType(columnDefinition.getFieldType());
                         dtColumnDefinition.setName(columnDefinition.getHeader());
                         dtRuleAsset.getDtColumnDefinitions().add(dtColumnDefinition);
                     }
@@ -64,7 +64,7 @@ public class DecisionTableAssetManagementService {
                             dtRowData.setRowDescription(rowElement.getValue());
                         } else if (i > 1) { //Real Data column
                             ColumnDefinition columnDefinition = rowElement.getColumnDefinition();
-                            if (columnDefinition.getColumnDefinition() == ColumnType.condition || columnDefinition.getColumnDefinition() == ColumnType.action) {  // Only keep conditon and action
+                            if (columnDefinition.isHideColumn() == false && (columnDefinition.getColumnDefinition() == ColumnType.condition || columnDefinition.getColumnDefinition() == ColumnType.action)) {  // Only keep conditon and action
                                 DTColData dtColData = new DTColData(rowElement.getColumnDefinition().getHeader(), rowElement.getValue(), rowElement.getColumnDefinition().getFieldType());
                                 dtRowData.getDtColDatas().add(dtColData);
                             }
