@@ -5,7 +5,9 @@ import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFiredHistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFlowActivatedHistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFlowDeactivatedHistoryEvent;
+import org.chtijbug.drools.platform.persistence.DTRuleAssetRepository;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
+import org.chtijbug.drools.platform.persistence.RuleAssetRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstanceStatus;
@@ -33,6 +35,11 @@ public class PlatformRunTimeBeanTest {
 
     private static TestWebSocketServer testWebSocketServer;
 
+    @Autowired
+    DTRuleAssetRepository dtRuleAssetRepository;
+
+    @Autowired
+    RuleAssetRepository ruleAssetRepository;
 
     @Autowired
     DirectAccessHistoryListener historyListener;
@@ -130,6 +137,14 @@ public class PlatformRunTimeBeanTest {
         Assert.assertEquals(afterRuleFlowDeactivatedHistoryEvent.getSessionId(), 1l);
         Assert.assertEquals(afterRuleFlowDeactivatedHistoryEvent.getTypeEvent(), HistoryEvent.TypeEvent.RuleFlowGroup);
         Assert.assertEquals(afterRuleFlowDeactivatedHistoryEvent.getDroolsRuleFlowGroupObject().getName(), "Group1");
+
+    }
+
+
+    @Test
+    public void testDTSycnrhonization() {
+        //  DecisionTable decisionTableGuvnorFormat = guvnorRepositoryConnector.getGuidedDecisionTable(packageName, asset.getName());
+        //    decisionTableAssetManagementService.SynchronizeInDBContent(packageName, asset, decisionTableGuvnorFormat);
 
     }
     @Test
