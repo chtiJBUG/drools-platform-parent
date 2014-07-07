@@ -1,5 +1,6 @@
 package org.chtijbug.drools.platform.persistence.pojo;
 
+import com.google.common.base.Objects;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
