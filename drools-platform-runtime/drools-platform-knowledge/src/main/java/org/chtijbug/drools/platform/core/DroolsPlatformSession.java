@@ -106,7 +106,7 @@ public class DroolsPlatformSession implements RuleBaseSession {
 
     @Override
     public Object fireAllRulesAndStartProcess(Object inputObject, String processName) throws DroolsChtijbugException {
-        Object returnObject = this.fireAllRulesAndStartProcess(inputObject, processName);
+        Object returnObject = this.ruleBaseStatefulSession.fireAllRulesAndStartProcess(inputObject, processName);
         this.sentJMXInfo();
         return returnObject;
     }
