@@ -159,7 +159,8 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         $http.get('./server/runtime/session/'+ruleBaseID+'/'+sessionId)
             .success(function (data) {
                 $scope.allSessionExecutionDetails = data;
-                //console.log($scope.allSessionExecutionDetails);
+                console.log($scope.allSessionExecutionDetails.processDetails.processName);
+                $scope.code.output=JSON.stringify($scope.allSessionExecutionDetails, null, "\t");
             })
             .error(function (error, status) {
                 console.log("[Error] Error HTTP " + status);

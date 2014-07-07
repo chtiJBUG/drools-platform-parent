@@ -38,7 +38,7 @@ public class RuleExecution {
     private List<Fact> thenFacts = new ArrayList<Fact>();
 
     @ManyToOne
-    // @JoinColumn(name = "ruleflowgroup_execution_id_fk")
+    //@JoinColumn(name = "ruleflowgroup_execution_id_fk")
     private RuleflowGroup ruleflowGroup;
 
     @ManyToOne
