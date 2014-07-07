@@ -35,6 +35,7 @@ public class ProcessExecution {
     private Integer stopEventID;
 
     @ManyToOne
+    @JoinColumn(name = "session_execution_id_fk")
     private SessionExecution sessionExecution;
 
     private String ProcessInstanceId;
