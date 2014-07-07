@@ -61,12 +61,16 @@ public class WebSocketSessionManager {
 
     public Boolean isAlive(Integer ruleBaseID) {
         boolean result = false;
-        Heartbeat heartbeat = this.webSocketClientList.get(ruleBaseID).getHeartbeat();
-        Date dateLastHearBeat = heartbeat.getLastAlive();
-        Date currentDate = new Date();
-        long diff = currentDate.getTime() - dateLastHearBeat.getTime();
-        if (diff < 60000) {
-            result = true;
+        if (this.webSocketClientList != null && this.webSocketClientList.get(ruleBaseID) != null) {
+            Heartbeat heartbeat = this.webSocketClientList.get(ruleBaseID).getHeartbeat();
+            Date dateLastHearBeat = heartbeat.getLastAlive();
+            if (heartbeat != null && heartbeat.getLastAlive() != null) {
+                Date currentDate = new Date();
+                long diff = currentDate.getTime() - dateLastHearBeat.getTime();
+                if (diff < 60000) {
+                    result = true;
+                }
+            }
         }
         return result;
     }
