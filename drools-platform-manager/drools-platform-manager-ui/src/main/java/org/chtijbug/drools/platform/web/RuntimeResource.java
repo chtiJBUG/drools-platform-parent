@@ -16,10 +16,7 @@ import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -79,14 +76,19 @@ public class RuntimeResource {
         logger.debug(">> findSessionExecutionDetails(sessionId= {})", sessionId);
         try {
             //____ Data from Database
-            final SessionExecution allSessionExecutionsDetails = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(ruleBaseID, sessionId);
-            // final SessionExecution allSessionExecutionsDetails = sessionExecutionRepository.findDetailsBySessionId(sessionID);
-            int cpt = 0;
+            final SessionExecution sessionExecution = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(ruleBaseID, sessionId);
+            // final SessionExecution sessionExecution = sessionExecutionRepository.findDetailsBySessionId(sessionID);
             SessionExecutionDetailsResource executionDetailsResource = new SessionExecutionDetailsResource();
-            ProcessExecution processExecution = allSessionExecutionsDetails.getProcessExecutions().get(0);
+            ProcessExecution processExecution = sessionExecution.getProcessExecutions().get(0);
             ProcessDetails processDetails = new ProcessDetails();
 
-            if (allSessionExecutionsDetails.getProcessExecutions().size() != 0) {
+            //List <Fact> inputFact = (List<Fact>) sessionExecution.getFactsByType(FactType.INPUTDATA);
+            //List <Fact> outputFact = (List<Fact>) sessionExecution.getFactsByType(FactType.OUTPUTDATA);
+
+            List <Fact> inputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.INPUTDATA));
+            List <Fact> outputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.OUTPUTDATA));
+
+            if (sessionExecution.getProcessExecutions().size() != 0) {
 
                 processDetails.setProcessName(processExecution.getProcessName());
 
@@ -115,9 +117,13 @@ public class RuntimeResource {
                     }
                     executionDetailsResource.addRuleFlowGroup(ruleFlowGroupDetails);
                 }
+                for(Fact inputFact : inputFactList){
+                    executionDetailsResource.setInputObject(inputFact);
+                }
+                for(Fact outputFact : outputFactList){
+                    executionDetailsResource.setOutputObject(outputFact);
+                }
                 //logger.debug("Skipping this entry {}", sessionId);
-
-
             }
             return executionDetailsResource;
         } finally {
