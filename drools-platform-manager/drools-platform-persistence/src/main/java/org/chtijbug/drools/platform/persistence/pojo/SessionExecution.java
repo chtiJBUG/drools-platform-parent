@@ -19,6 +19,7 @@ public class SessionExecution {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "session_execution_id_seq")
     private Long id;
     @ManyToOne
+    @JoinColumn(name = "platform_runtime_instance_id", referencedColumnName = "id")
     private PlatformRuntimeInstance platformRuntimeInstance;
     private Integer sessionId;
     @Column(nullable = false)

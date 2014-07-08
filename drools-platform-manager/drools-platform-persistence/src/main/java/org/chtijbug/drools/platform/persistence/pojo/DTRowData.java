@@ -23,7 +23,7 @@ public class DTRowData {
     private String rowDescription;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "dt_colData_asset_id_fk")
+    @JoinColumn(name = "dtrowdata_id")
     private List<DTColData> dtColDatas = new ArrayList<DTColData>();
 
     public DTRowData() {

@@ -23,12 +23,10 @@ public class PlatformRuntimeDefinition implements Serializable {
     @Column(nullable = false)
     private Integer ruleBaseID;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "platform_runtime_definition_id_fk")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "platformRuntimeDefinition")
     private List<PlatformRuntimeInstance> platformRuntimeInstances = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "platform_runtime_definition_id_fk")
     private List<DroolsResource> droolsRessourcesDefinition = new ArrayList<>();
 
     private String couldInstanceStartWithNewRuleVersion;
