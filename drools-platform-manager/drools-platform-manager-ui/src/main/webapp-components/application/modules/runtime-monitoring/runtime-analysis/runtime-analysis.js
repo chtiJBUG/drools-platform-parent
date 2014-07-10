@@ -22,6 +22,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             console.log(error);
         });
 
+    //___ Filters
     $scope.filters = {
         packageName: undefined,
         status: undefined,
@@ -44,20 +45,16 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
     };
 
-    //___ Session Execution Details area
-    $scope.sessionExecutionDetails = {
-        'area': false,
-        'panel': false
+    //___ Date management
+    /** WARNING : I had to custom lang('en') to fit with the pattern of Bootstrap-UI's datepicker... **/
+    moment.lang(navigator.language); //define local date
+    $scope.format = moment.langData(navigator.language).longDateFormat('L'); //define local format date
+
+    $scope.dates = {
+        'minDate': moment("07-29-1995", "MM-DD-YYYY"),
+        'maxDate': moment("07-29-2095", "MM-DD-YYYY")
     };
 
-    //___ Dates
-    $scope.format = 'dd/MM/yyyy';
-    $scope.dates = {
-        'initDate': new Date('2016/12/20'),
-        'minDate': '1993-07-29',
-        'maxDate': '2050-07-29',
-        'myTime': new Date()
-    };
     $scope.dateOptions = {
         formatYear: 'yy',
         startingDay: 1
@@ -67,6 +64,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         'firstCalendar': false,
         'secondCalendar': false
     };
+
     $scope.hstep = 1;
     $scope.mstep = 15;
 
@@ -75,42 +73,28 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         mstep: [1, 5, 10, 15, 25, 30]
     };
 
-    $scope.ismeridian = true;
-
-    //___ ID of the runtime selected
-    $scope.selectedRuntimeID = undefined;
-
-    //___ Tab mgmt
-    $scope.selectedTab = 1;
-
-    //___ Code JSON
-    $scope.code = {
-        'input': "// input",
-        'output': '// output'
-    };
-
-
-    /**  DATE & TIME MGMT  **/
-
     $scope.today = function (dateGiven) {
-        return new Date();
+        return moment();
     };
     $scope.today();
 
     $scope.clear = function () {
-        $scope.filters.startDate = new Date();
+        $scope.filters.startDate = moment().format('L');
+        $scope.filters.endDate = moment().format('L');
     };
 
     // Disable weekend selection
     $scope.disabled = function (date, mode) {
         return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
     };
+
     /*
      $scope.toggleMin = function() {
      $scope.dates.minDate = $scope.dates.minDate ? null : new Date();
      };
      $scope.toggleMin();*/
 
+    // Open the popup
     $scope.open = function ($event, inputConcerned) {
         $event.preventDefault();
         $event.stopPropagation();
@@ -123,20 +107,26 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
     };
 
-    $scope.toggleMode = function () {
-        $scope.ismeridian = !$scope.ismeridian;
+    //___ Var needed for the 'Session Execution Details' Panel :
+
+    // Session Execution Details area
+    $scope.sessionExecutionDetails = {
+        'area': false,
+        'panel': false
     };
 
-    $scope.update = function () {
-        var d = new Date();
-        d.setHours(14);
-        d.setMinutes(0);
-        $scope.dates.mytime = d;
+    // ID of the runtime selected
+    $scope.selectedRuntimeID = undefined;
+
+    // Tab
+    $scope.selectedTab = 1;
+
+    // JSON Data Viewer
+    $scope.code = {
+        'input': "// input",
+        'output': '// output'
     };
 
-    $scope.changed = function () {
-        console.log('Time changed to: ' + $scope.dates.myTime);
-    };
 
     /** SESSION EXECUTION DETAILS **/
 
@@ -159,8 +149,23 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         $http.get('./server/runtime/session/'+ruleBaseID+'/'+sessionId)
             .success(function (data) {
                 $scope.allSessionExecutionDetails = data;
-                console.log($scope.allSessionExecutionDetails.processDetails.processName);
-                $scope.code.output=JSON.stringify($scope.allSessionExecutionDetails, null, "\t");
+                console.log('[Success] Data retrieved successfully');
+
+                $scope.code.input=JSON.stringify(JSON.parse($scope.allSessionExecutionDetails.inputObject), null, 3);
+                $scope.code.output=JSON.stringify(JSON.parse($scope.allSessionExecutionDetails.outputObject), null, 3);
+                /*
+                $scope.dataTest = [
+                    {
+                        "name" : "processDetails", "children" :[
+                            {"name" : "Process name : ", "content" : $scope.allSessionExecutionDetails.processDetails.processName },
+                            {"name" : "Process version : ", "content" : $scope.allSessionExecutionDetails.processDetails.processVersion },
+                            {"name" : "Process type : ", "content" : $scope.allSessionExecutionDetails.processDetails.processType }
+
+                        ]
+                    }
+                ];
+                */
+
             })
             .error(function (error, status) {
                 console.log("[Error] Error HTTP " + status);
@@ -190,22 +195,18 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
 
     /** SEARCH **/
-        //___ Method :
-        //___ Retrieve filters
-        //___ Then launch the http get request
     $scope.search = function () {
 
         //___ TODO date filters >> USE MOMENT.JS
-        var str = '' + $scope.filters.startDate;
-        var suffix = "(CEST)";
-
-        if (str.indexOf(suffix, str.length - suffix.length) !== -1) {
-            $scope.filters.startDate = '' + $scope.filters.startDate.getFullYear() + '-' + $scope.filters.startDate.getMonth() + '-' + $scope.filters.startDate.getDate();
+        var date;
+        //Is date valid : console.log(moment($scope.filters.startDate).isValid());
+        /*if($scope.filters.startDate != undefined){
+            date = moment($scope.filters.startDate).utc(); // it is an object
+            console.log(typeof(date));
         }
-        str = '' + $scope.filters.endDate;
-        if (str.indexOf(suffix, str.length - suffix.length) !== -1) {
-            $scope.filters.endDate = '' + $scope.filters.endDate.getFullYear() + '-' + $scope.filters.endDate.getMonth() + '-' + $scope.filters.endDate.getDate();
-        }
+        if($scope.filters.endDate != undefined){
+            date = moment($scope.filters.endDate).utc();
+        }*/
 
         console.log($scope.filters.startDate);
         console.log($scope.filters.endDate);
@@ -217,8 +218,11 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             $scope.namePackageSelectClass = "form-group has-error has-feedback";
 
         } else {
-            if ($scope.filters.status == "") {
+            if ($scope.filters.status == '') {
                 $scope.filters.status = undefined;
+            }
+            if ($scope.filters.hostname == '') {
+                $scope.filters.hostname = undefined;
             }
             console.log('[Info] Filters chosen : ');
             //___ Put $scope into var
@@ -242,9 +246,9 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     $scope.reset = function () {
         $scope.allRuntimes = [];
         $scope.namePackageSelectClass = "form-group";
+        $scope.filters=undefined;
         $scope.showCancelButton = false;
     };
-
 
 });
 

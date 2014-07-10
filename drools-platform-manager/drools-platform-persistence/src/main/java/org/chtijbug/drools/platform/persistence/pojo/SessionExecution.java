@@ -1,5 +1,9 @@
 package org.chtijbug.drools.platform.persistence.pojo;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -125,5 +129,16 @@ public class SessionExecution {
 
     public void setFacts(List<Fact> facts) {
         this.facts = facts;
+    }
+
+    public java.util.Collection<Fact> getFactsByType(final FactType factType) {
+        if (this.getFacts().isEmpty())
+            return Lists.newArrayList();
+        return Collections2.filter(this.getFacts(), new Predicate<Fact>() {
+            @Override
+            public boolean apply(Fact fact) {
+                return fact.getFactType().equals(factType);
+            }
+        });
     }
 }

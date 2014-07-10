@@ -1,6 +1,8 @@
 package org.chtijbug.drools.platform.web;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
@@ -16,10 +18,7 @@ import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -79,20 +78,22 @@ public class RuntimeResource {
         logger.debug(">> findSessionExecutionDetails(sessionId= {})", sessionId);
         try {
             //____ Data from Database
-            final SessionExecution allSessionExecutionsDetails = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(ruleBaseID, sessionId);
-            // final SessionExecution allSessionExecutionsDetails = sessionExecutionRepository.findDetailsBySessionId(sessionID);
-            int cpt = 0;
+            final SessionExecution sessionExecution = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(ruleBaseID, sessionId);
+            // final SessionExecution sessionExecution = sessionExecutionRepository.findDetailsBySessionId(sessionID);
             SessionExecutionDetailsResource executionDetailsResource = new SessionExecutionDetailsResource();
-            ProcessExecution processExecution = allSessionExecutionsDetails.getProcessExecutions().get(0);
+            ProcessExecution processExecution = sessionExecution.getProcessExecutions().get(0);
             ProcessDetails processDetails = new ProcessDetails();
 
-            if (allSessionExecutionsDetails.getProcessExecutions().size() != 0) {
+            List<Fact> inputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.INPUTDATA));
+            List<Fact> outputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.OUTPUTDATA));
+
+            if (sessionExecution.getProcessExecutions().size() != 0) {
 
                 processDetails.setProcessName(processExecution.getProcessName());
 
-                if(processExecution.getProcessVersion()!=null) {
+                if (processExecution.getProcessVersion() != null) {
                     processDetails.setProcessVersion(processExecution.getProcessVersion());
-                }else{
+                } else {
                     processDetails.setProcessVersion("");
                 }
 
@@ -105,7 +106,7 @@ public class RuntimeResource {
                     RuleFlowGroupDetails ruleFlowGroupDetails = new RuleFlowGroupDetails();
                     ruleFlowGroupDetails.setRuleflowGroup(ruleFlowGroup.getRuleflowGroup());
                     //___ Add rule execution details list
-                    for (RuleExecution ruleExecution :ruleFlowGroup.getRuleExecutionList()) {
+                    for (RuleExecution ruleExecution : ruleFlowGroup.getRuleExecutionList()) {
                         RuleExecutionDetails ruleExecutionDetails = new RuleExecutionDetails();
                         ruleExecutionDetails.setPackageName(ruleExecution.getPackageName());
                         ruleExecutionDetails.setRuleName(ruleExecution.getRuleName());
@@ -115,9 +116,13 @@ public class RuntimeResource {
                     }
                     executionDetailsResource.addRuleFlowGroup(ruleFlowGroupDetails);
                 }
+                for (Fact inputFact : inputFactList) {
+                    executionDetailsResource.setInputObject(inputFact.getJsonFact());
+                }
+                for (Fact outputFact : outputFactList) {
+                    executionDetailsResource.setOutputObject(outputFact.getJsonFact());
+                }
                 //logger.debug("Skipping this entry {}", sessionId);
-
-
             }
             return executionDetailsResource;
         } finally {
@@ -134,7 +139,7 @@ public class RuntimeResource {
             //____ Extract data from database
             final List<SessionExecution> allSessionExecutions = platformRuntimeInstanceRepository.findAllPlatformRuntimeInstanceByFilter(runtimeFilter);
             //___ TODO pour chacun de ces enregistrements, le convertir en objet JSON
-            return Lists.transform(allSessionExecutions, new Function<SessionExecution, SessionExecutionResource>() {
+            List<SessionExecutionResource> result = Lists.transform(allSessionExecutions, new Function<SessionExecution, SessionExecutionResource>() {
                 @Nullable
                 @Override
                 public SessionExecutionResource apply(@Nullable SessionExecution sessionExecution) {
@@ -154,9 +159,6 @@ public class RuntimeResource {
                         output.setRulePackage(guvnorResource.getGuvnor_packageName());
                         output.setVersion(guvnorResource.getGuvnor_packageVersion());
 
-                    } else {
-                        logger.debug("Skipping this entry {}", sessionExecution);
-                        return null;
                     }
 
                     //___ Différence entre runtimeURL et hostname par rapport aux filtres ?
@@ -172,6 +174,8 @@ public class RuntimeResource {
                     return output;
                 }
             });
+
+            return Lists.newArrayList(Iterables.filter(result,Predicates.notNull()));
         } finally {
             logger.debug("<< findAllPlatformRuntimeInstanceByFilter()");
         }

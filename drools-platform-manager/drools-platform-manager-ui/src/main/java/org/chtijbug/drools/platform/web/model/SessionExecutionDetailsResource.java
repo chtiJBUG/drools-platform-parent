@@ -1,5 +1,7 @@
 package org.chtijbug.drools.platform.web.model;
 
+import org.chtijbug.drools.platform.persistence.pojo.Fact;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,14 +10,10 @@ public class SessionExecutionDetailsResource {
     ProcessDetails processDetails;
     ExecutionStats executionStats;
     List<RuleFlowGroupDetails> allRuleFlowGroupDetails = new ArrayList<>();
+    private String inputObject;
+    private String outputObject;
 
     public SessionExecutionDetailsResource() { /* nop */ }
-
-    public SessionExecutionDetailsResource(ProcessDetails processDetails, ExecutionStats executionStats, List<RuleFlowGroupDetails> allRuleFlowGroupDetails) {
-        this.processDetails = processDetails;
-        this.executionStats = executionStats;
-        this.allRuleFlowGroupDetails = allRuleFlowGroupDetails;
-    }
 
     public ProcessDetails getProcessDetails() {
         return processDetails;
@@ -45,5 +43,19 @@ public class SessionExecutionDetailsResource {
         this.allRuleFlowGroupDetails.add(ruleFlowGroupDetails);
     }
 
+    public String getInputObject() {
+        return inputObject;
+    }
 
+    public void setInputObject(String inputObject) {
+        this.inputObject = inputObject;
+    }
+
+    public String getOutputObject() {
+        return outputObject;
+    }
+
+    public void setOutputObject(String outputObject) {
+        this.outputObject = outputObject;
+    }
 }

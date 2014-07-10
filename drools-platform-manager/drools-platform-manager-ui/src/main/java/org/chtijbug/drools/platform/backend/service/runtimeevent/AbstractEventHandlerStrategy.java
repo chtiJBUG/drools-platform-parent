@@ -1,7 +1,6 @@
 package org.chtijbug.drools.platform.backend.service.runtimeevent;
 
 import org.chtijbug.drools.entity.history.HistoryEvent;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class AbstractEventHandlerStrategy {
 
 
-    @Transactional
     public void handleMessage(HistoryEvent historyEvent) {
         if (isEventSupported(historyEvent))
             handleMessageInternally(historyEvent);
