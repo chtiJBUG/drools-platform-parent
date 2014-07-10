@@ -6,7 +6,6 @@ import org.chtijbug.drools.guvnor.rest.GuvnorRepositoryConnector;
 import org.chtijbug.drools.guvnor.rest.model.Asset;
 import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -34,7 +33,7 @@ public class SynchronizationTaskWithGuvnor {
     }
 
 
-    @Scheduled(cron = "* */15 9-18 *  * MON-FRI ")
+    //@Scheduled(cron = "* */15 9-18 *  * MON-FRI ")
     public void SynchronizeGuvnorCategories() {
         try {
             List<Asset> listPackages = guvnorRepositoryConnector.getAllPackagesInGuvnorRepo();
@@ -44,15 +43,15 @@ public class SynchronizationTaskWithGuvnor {
                 for (Asset asset : assetList) {
                     ruleAssetManagementService.synchronizeInDBGuvnorCategories(packageName, asset);
                     /**
-                    if (asset.getType().equals("gdst")) {
-                        try {
-                            DecisionTable decisionTableGuvnorFormat = guvnorRepositoryConnector.getGuidedDecisionTable(packageName, asset.getName());
-                            decisionTableAssetManagementService.SynchronizeInDBContent(packageName, asset, decisionTableGuvnorFormat);
-                        } catch (GuvnorConnexionFailedException e) {
-                            e.printStackTrace();
-                        }
+                     if (asset.getType().equals("gdst")) {
+                     try {
+                     DecisionTable decisionTableGuvnorFormat = guvnorRepositoryConnector.getGuidedDecisionTable(packageName, asset.getName());
+                     decisionTableAssetManagementService.SynchronizeInDBContent(packageName, asset, decisionTableGuvnorFormat);
+                     } catch (GuvnorConnexionFailedException e) {
+                     e.printStackTrace();
+                     }
 
-                    }
+                     }
 
                      **/
                 }

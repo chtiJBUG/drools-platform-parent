@@ -48,7 +48,7 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
     PlatformRuntimeDefinitionRepository platformRuntimeDefinitionRepository;
 
     @Override
-    @Transactional
+    @Transactional(value = "transactionManager")
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         PlatformKnowledgeBaseInitialConnectionEvent platformKnowledgeBaseInitialConnectionEvent = (PlatformKnowledgeBaseInitialConnectionEvent) historyEvent;
         int ruleBaseId = platformKnowledgeBaseInitialConnectionEvent.getRuleBaseID();
