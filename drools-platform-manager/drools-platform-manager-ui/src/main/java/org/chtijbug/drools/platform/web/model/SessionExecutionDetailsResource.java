@@ -10,8 +10,8 @@ public class SessionExecutionDetailsResource {
     ProcessDetails processDetails;
     ExecutionStats executionStats;
     List<RuleFlowGroupDetails> allRuleFlowGroupDetails = new ArrayList<>();
-    private Fact inputObject;
-    private Fact outputObject;
+    private String inputObject;
+    private String outputObject;
 
     public SessionExecutionDetailsResource() { /* nop */ }
 
@@ -43,19 +43,19 @@ public class SessionExecutionDetailsResource {
         this.allRuleFlowGroupDetails.add(ruleFlowGroupDetails);
     }
 
-    public Fact getInputObject() {
+    public String getInputObject() {
         return inputObject;
     }
 
-    public void setInputObject(Fact inputObject) {
+    public void setInputObject(String inputObject) {
         this.inputObject = inputObject;
     }
 
-    public Fact getOutputObject() {
+    public String getOutputObject() {
         return outputObject;
     }
 
-    public void setOutputObject(Fact outputObject) {
+    public void setOutputObject(String outputObject) {
         this.outputObject = outputObject;
     }
 }

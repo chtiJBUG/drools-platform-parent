@@ -54,7 +54,7 @@
                                 <label for="IPaddr">Hostname</label>
                                 <small>(Optional)</small>
                                 <input id="IPaddr" class="form-control" name="hostname" type="text"
-                                       placeholder="Please enter the status" data-ng-model="filters.hostname">
+                                       placeholder="Enter the hostname" data-ng-model="filters.hostname">
                                 <br>
 
                             </div>
@@ -156,7 +156,51 @@
                 <div class="panel-body" style="min-height:700px;">
                     <!-- Choix du statut -->
                     <tabset>
-                        <tab heading="Input" ng-click="toggleTab('input')">
+                        <tab heading="Treeview">
+                            <br>
+                            <!-- TODO List for each processExecutions (sessionExecutionDetails in allSessionExecutionDetails)-->
+                            <fieldset>
+                                <legend>Process Details</legend>
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <b>Process name : </b>{{allSessionExecutionDetails.processDetails.processName}}
+                                    </li>
+                                    <li>
+                                        <b>Process Execution status : </b>{{allSessionExecutionDetails.processDetails.processExecutionStatus}}
+                                    </li>
+                                    <li>
+                                        <b>Process type : </b>{{allSessionExecutionDetails.processDetails.processType}}
+                                    </li>
+                                </ul>
+                            </fieldset>
+                            <accordion close-others="false">
+                                <!-- All Ruleflow Group-->
+                                <accordion-group is-open="status.ruleFlowGroupPanelOpen">
+                                    <accordion-heading>
+                                        <i class="fa fa-chevron-right" ng-show="!status.ruleFlowGroupPanelOpen"></i><i class="fa fa-chevron-down" ng-show="status.ruleFlowGroupPanelOpen"></i> All Ruleflow Groups
+                                    </accordion-heading>
+                                        <accordion-group heading="Ruleflow{{flowGroupDetails.ruleflowGroup}}" ng-repeat="flowGroupDetails in allSessionExecutionDetails.allRuleFlowGroupDetails">
+                                            <accordion-group heading="Rule Execution : {{ruleExecutionDetails.ruleName}}" ng-repeat="ruleExecutionDetails in flowGroupDetails.allRuleExecutionDetails">
+                                                <ul class="list-unstyled">
+                                                    <li><b>Rule Execution Name : </b>{{ruleExecutionDetails.ruleName}}</li>
+                                                    <li><b>Rule Package Name : </b>{{ruleExecutionDetails.packageName}}</li>
+                                                    <li><b>whenFacts : </b><br><div hljs source="ruleExecutionDetails.whenFacts | json"></div></li>
+                                                    <li><b>thenFacts : </b><br><div hljs source="ruleExecutionDetails.thenFacts | json"></div></li>
+                                                </ul>
+                                            </accordion-group>
+                                        </accordion-group>
+                                </accordion-group>
+                                <accordion-group>
+                                    <accordion-heading>
+                                       JSON Data Viewer
+                                    </accordion-heading>
+                                    <div hljs source="allSessionExecutionDetails | json" style="max-height:500px; overflow: scroll;"></div>
+                                </accordion-group>
+                            </accordion>
+
+
+                        </tab>
+                        <tab heading="Input">
                             <br>
                             <div hljs source="code.input"></div>
                         </tab>
@@ -164,7 +208,8 @@
                             <br>
                             <div hljs source="code.output"></div>
                         </tab>
-                        <tab heading="Event list" ng-click="toggleTab('listing')">
+                        <tab heading="Event list">
+                            <br>
                             Nothing to display for the moment
                         </tab>
                     </tabset>

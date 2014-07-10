@@ -1,6 +1,8 @@
 package org.chtijbug.drools.platform.web;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
@@ -82,19 +84,16 @@ public class RuntimeResource {
             ProcessExecution processExecution = sessionExecution.getProcessExecutions().get(0);
             ProcessDetails processDetails = new ProcessDetails();
 
-            //List <Fact> inputFact = (List<Fact>) sessionExecution.getFactsByType(FactType.INPUTDATA);
-            //List <Fact> outputFact = (List<Fact>) sessionExecution.getFactsByType(FactType.OUTPUTDATA);
-
-            List <Fact> inputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.INPUTDATA));
-            List <Fact> outputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.OUTPUTDATA));
+            List<Fact> inputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.INPUTDATA));
+            List<Fact> outputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.OUTPUTDATA));
 
             if (sessionExecution.getProcessExecutions().size() != 0) {
 
                 processDetails.setProcessName(processExecution.getProcessName());
 
-                if(processExecution.getProcessVersion()!=null) {
+                if (processExecution.getProcessVersion() != null) {
                     processDetails.setProcessVersion(processExecution.getProcessVersion());
-                }else{
+                } else {
                     processDetails.setProcessVersion("");
                 }
 
@@ -107,7 +106,7 @@ public class RuntimeResource {
                     RuleFlowGroupDetails ruleFlowGroupDetails = new RuleFlowGroupDetails();
                     ruleFlowGroupDetails.setRuleflowGroup(ruleFlowGroup.getRuleflowGroup());
                     //___ Add rule execution details list
-                    for (RuleExecution ruleExecution :ruleFlowGroup.getRuleExecutionList()) {
+                    for (RuleExecution ruleExecution : ruleFlowGroup.getRuleExecutionList()) {
                         RuleExecutionDetails ruleExecutionDetails = new RuleExecutionDetails();
                         ruleExecutionDetails.setPackageName(ruleExecution.getPackageName());
                         ruleExecutionDetails.setRuleName(ruleExecution.getRuleName());
@@ -117,11 +116,11 @@ public class RuntimeResource {
                     }
                     executionDetailsResource.addRuleFlowGroup(ruleFlowGroupDetails);
                 }
-                for(Fact inputFact : inputFactList){
-                    executionDetailsResource.setInputObject(inputFact);
+                for (Fact inputFact : inputFactList) {
+                    executionDetailsResource.setInputObject(inputFact.getJsonFact());
                 }
-                for(Fact outputFact : outputFactList){
-                    executionDetailsResource.setOutputObject(outputFact);
+                for (Fact outputFact : outputFactList) {
+                    executionDetailsResource.setOutputObject(outputFact.getJsonFact());
                 }
                 //logger.debug("Skipping this entry {}", sessionId);
             }
@@ -140,7 +139,7 @@ public class RuntimeResource {
             //____ Extract data from database
             final List<SessionExecution> allSessionExecutions = platformRuntimeInstanceRepository.findAllPlatformRuntimeInstanceByFilter(runtimeFilter);
             //___ TODO pour chacun de ces enregistrements, le convertir en objet JSON
-            return Lists.transform(allSessionExecutions, new Function<SessionExecution, SessionExecutionResource>() {
+            List<SessionExecutionResource> result = Lists.transform(allSessionExecutions, new Function<SessionExecution, SessionExecutionResource>() {
                 @Nullable
                 @Override
                 public SessionExecutionResource apply(@Nullable SessionExecution sessionExecution) {
@@ -160,9 +159,6 @@ public class RuntimeResource {
                         output.setRulePackage(guvnorResource.getGuvnor_packageName());
                         output.setVersion(guvnorResource.getGuvnor_packageVersion());
 
-                    } else {
-                        logger.debug("Skipping this entry {}", sessionExecution);
-                        return null;
                     }
 
                     //___ Différence entre runtimeURL et hostname par rapport aux filtres ?
@@ -178,6 +174,8 @@ public class RuntimeResource {
                     return output;
                 }
             });
+
+            return Lists.newArrayList(Iterables.filter(result,Predicates.notNull()));
         } finally {
             logger.debug("<< findAllPlatformRuntimeInstanceByFilter()");
         }
