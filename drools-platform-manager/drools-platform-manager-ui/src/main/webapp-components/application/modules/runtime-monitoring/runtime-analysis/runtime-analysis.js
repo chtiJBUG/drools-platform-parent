@@ -153,18 +153,10 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
                 $scope.code.input=JSON.stringify(JSON.parse($scope.allSessionExecutionDetails.inputObject), null, 3);
                 $scope.code.output=JSON.stringify(JSON.parse($scope.allSessionExecutionDetails.outputObject), null, 3);
-                /*
-                $scope.dataTest = [
-                    {
-                        "name" : "processDetails", "children" :[
-                            {"name" : "Process name : ", "content" : $scope.allSessionExecutionDetails.processDetails.processName },
-                            {"name" : "Process version : ", "content" : $scope.allSessionExecutionDetails.processDetails.processVersion },
-                            {"name" : "Process type : ", "content" : $scope.allSessionExecutionDetails.processDetails.processType }
 
-                        ]
-                    }
-                ];
-                */
+                ruleExcecutionList =_.map(_.map(_.map($scope.allSessionExecutionDetails.allRuleFlowGroupDetails, function(item){ return item; }), function(ruleflowGroupItem){return ruleflowGroupItem.allRuleExecutionDetails;}), function(ruleExecutionGroupItem){ return ruleExecutionGroupItem[0]; });
+                //console.log("[Test] ruleExecution list: "+JSON.stringify(ruleExcecutionList[0], null, 3));
+                //console.log("[Test] undefined list: "+JSON.stringify(ruleExcecutionList[0].whenFacts[0], null, 3));
 
             })
             .error(function (error, status) {
@@ -175,6 +167,10 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             })
 
     };
+    $scope.indentJSON = function (fact) {
+        fact.jsonFact = JSON.stringify(JSON.parse(fact.jsonFact),null,3);
+    }
+
 
     // Toggle to another tab
     $scope.selectedTab = 'output';
@@ -191,27 +187,10 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         }, 1000);
     };
 
-    /** EVENTS ASSOCIATED WITH BUTTONS **/
-
-
     /** SEARCH **/
     $scope.search = function () {
-
-        //___ TODO date filters >> USE MOMENT.JS
-        var date;
-        //Is date valid : console.log(moment($scope.filters.startDate).isValid());
-        /*if($scope.filters.startDate != undefined){
-            date = moment($scope.filters.startDate).utc(); // it is an object
-            console.log(typeof(date));
-        }
-        if($scope.filters.endDate != undefined){
-            date = moment($scope.filters.endDate).utc();
-        }*/
-
-        console.log($scope.filters.startDate);
-        console.log($scope.filters.endDate);
-
-
+        console.log("[Info] Start date : "+$scope.filters.startDate);
+        console.log("[Info] End date : "+$scope.filters.endDate);
         //___ You must chose the package
         if ($scope.filters.packageName == null || $scope.filters.packageName == "") {
             console.log("[Error] Package name is mandatory for filtering");
