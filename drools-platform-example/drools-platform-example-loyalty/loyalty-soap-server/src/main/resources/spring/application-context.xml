@@ -8,9 +8,10 @@
   <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml"/>
   <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
 
-  <import resource="classpath*:META-INF.spring/drools-platform-runtime-servlet-context.xml"/>
-
   <context:property-placeholder location="classpath:spring/platform-knowledge.properties"/>
+
+  <import resource="classpath*:META-INF.spring/drools-platform-runtime-servlet-platform-context.xml"/>
+
 
   <bean id="guvnorResource" class="org.chtijbug.drools.runtime.resource.GuvnorDroolsResource"
         factory-method="createGuvnorRessource">
@@ -28,6 +29,7 @@
   <bean id="platformRunner" class="org.chtijbug.drools.platform.runtime.servlet.DroolsPlatformKnowledgeBaseJavaEE"
         init-method="initPlatformRuntime">
     <property name="webSocketHostname" value="${ws.hostname}"/>
+    <property name="endPoint" value="${ws.endpoint}"/>
     <property name="webSocketPort" value="${ws.port}"/>
     <property name="platformServer" value="${knowledge.platformServer}"/>
     <property name="ruleBaseID" value="${knowledge.rulebaseid}"/>

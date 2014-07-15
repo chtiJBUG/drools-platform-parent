@@ -112,6 +112,7 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
             platformRuntimeInstance.setStartDate(platformKnowledgeBaseInitialConnectionEvent.getStartDate());
             platformRuntimeInstance.setHostname(platformKnowledgeBaseInitialConnectionEvent.getHostname());
             platformRuntimeInstance.setPort(platformKnowledgeBaseInitialConnectionEvent.getPort());
+            platformRuntimeInstance.setEndPoint(platformKnowledgeBaseInitialConnectionEvent.getEndPoint());
             platformRuntimeInstance.setPlatformRuntimeDefinition(platformRuntimeDefinition);
             platformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.INITMODE);
             platformRuntimeDefinition.getPlatformRuntimeInstances().add(platformRuntimeInstance);

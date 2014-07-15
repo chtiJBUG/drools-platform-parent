@@ -25,6 +25,7 @@ public class WebSocketServer implements WebSocketServerInstance {
     protected static HashMap<String, Object> userProperties = new HashMap<>();
     private String ws_hostname;
     private int ws_port;
+    private String ws_endpoint = "/runtime";
     Server localWebSocketServer;
 
     public DroolsPlatformKnowledgeBaseRuntime droolsPlatformKnowledgeBase;
@@ -68,6 +69,11 @@ public class WebSocketServer implements WebSocketServerInstance {
     @Override
     public int getPort() {
         return ws_port;
+    }
+
+    @Override
+    public String getEndPoint() {
+        return this.ws_endpoint;
     }
 
     public void end() {

@@ -55,6 +55,8 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
     @Autowired
     private SpringWebSocketServer webSocketServer;
 
+    private String webSocketEndPoint;
+
     private int webSocketPort = 8080;
     /**
      * Event Messaging channel settings
@@ -219,6 +221,10 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
         this.webSocketPort = webSocketPort;
     }
 
+    public void setEndPoint(String endPoint) {
+        this.webSocketEndPoint = endPoint;
+    }
+
     public void setPlatformServer(String platformServer) {
         this.platformServer = platformServer;
     }
@@ -237,5 +243,9 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
 
     public int getWebSocketPort() {
         return webSocketPort;
+    }
+
+    public String getWebSocketEndPoint() {
+        return webSocketEndPoint;
     }
 }
