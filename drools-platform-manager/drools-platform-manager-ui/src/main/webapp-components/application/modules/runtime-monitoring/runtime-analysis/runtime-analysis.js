@@ -154,9 +154,8 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                 $scope.code.input=JSON.stringify(JSON.parse($scope.allSessionExecutionDetails.inputObject), null, 3);
                 $scope.code.output=JSON.stringify(JSON.parse($scope.allSessionExecutionDetails.outputObject), null, 3);
 
-                ruleExcecutionList =_.map(_.map(_.map($scope.allSessionExecutionDetails.allRuleFlowGroupDetails, function(item){ return item; }), function(ruleflowGroupItem){return ruleflowGroupItem.allRuleExecutionDetails;}), function(ruleExecutionGroupItem){ return ruleExecutionGroupItem[0]; });
-                //console.log("[Test] ruleExecution list: "+JSON.stringify(ruleExcecutionList[0], null, 3));
-                //console.log("[Test] undefined list: "+JSON.stringify(ruleExcecutionList[0].whenFacts[0], null, 3));
+                //How to get the rule executions in alist in AngularJS :
+                //ruleExcecutionList =_.map(_.map(_.map($scope.allSessionExecutionDetails.allRuleFlowGroupDetails, function(item){ return item; }), function(ruleflowGroupItem){return ruleflowGroupItem.allRuleExecutionDetails;}), function(ruleExecutionGroupItem){ return ruleExecutionGroupItem[0]; });
 
             })
             .error(function (error, status) {
@@ -167,6 +166,9 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             })
 
     };
+
+
+    // Indent JSON code in Details panel Event list section
     $scope.indentJSON = function (fact) {
         fact.jsonFact = JSON.stringify(JSON.parse(fact.jsonFact),null,3);
     }

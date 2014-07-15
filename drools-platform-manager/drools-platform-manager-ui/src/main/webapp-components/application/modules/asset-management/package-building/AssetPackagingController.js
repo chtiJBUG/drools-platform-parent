@@ -135,7 +135,7 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
         //___ Fields
         $scope.isVersionFieldDisabled = false;
         $scope.isASFieldDisabled=false;
-        //___ Checbox
+        //___ Checkbox
         $scope.isChecked=false;
         $scope.isCheckboxFieldDisabled=false;
         //___ Class
@@ -319,7 +319,7 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
         _.each(
             _.where($scope.activeRuntimeList, {isSelected:true}),
             function(runtime) {
-                StompService.deployRuntime(runtime.id, runtime.version);
+                StompService.deployRuntime(runtime.ruleBaseId, $scope.newVersion);
             }
         );
         growlNotifications.add('Deployment launched', 'info', 2000);
