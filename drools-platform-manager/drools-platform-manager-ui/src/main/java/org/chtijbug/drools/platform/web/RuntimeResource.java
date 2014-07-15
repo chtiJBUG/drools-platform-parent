@@ -55,7 +55,7 @@ public class RuntimeResource {
                             rulePackage = guvnorResource.getGuvnor_packageName();
                             version = guvnorResource.getGuvnor_packageVersion();
                         }
-                        return new RuntimeInstance(platformRuntimeInstance.getId(), url, rulePackage, version);
+                        return new RuntimeInstance(platformRuntimeInstance.getId(), platformRuntimeInstance.getRuleBaseID(), url, rulePackage, version);
                     }
                 }
         );
