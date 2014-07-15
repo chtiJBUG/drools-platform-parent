@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:jaxws="http://cxf.apache.org/jaxws" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:util="http://www.springframework.org/schema/util"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd   http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-  <import resource="classpath:META-INF/cxf/cxf.xml"/>
-  <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml"/>
-  <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
 
   <context:property-placeholder location="classpath:spring/platform-knowledge.properties"/>
 
-  <import resource="classpath*:META-INF.spring/drools-platform-runtime-servlet-websocket-context.xml"/>
+  <bean id="calculateService" class="loyalty.service.ServiceCalculate">
+    <property name="ruleBasePackage" ref="platformRunner"/>
+  </bean>
 
 
   <bean id="guvnorResource" class="org.chtijbug.drools.runtime.resource.GuvnorDroolsResource"
@@ -43,11 +42,5 @@
 
   </bean>
 
-  <bean id="calculateService" class="loyalty.service.ServiceCalculate">
-    <property name="ruleBasePackage" ref="platformRunner"/>
-  </bean>
-
-  <!-- JAX-WS Service Endpoint -->
-  <jaxws:endpoint id="personService" implementor="#calculateService" address="/calculateService"/>
 
 </beans>

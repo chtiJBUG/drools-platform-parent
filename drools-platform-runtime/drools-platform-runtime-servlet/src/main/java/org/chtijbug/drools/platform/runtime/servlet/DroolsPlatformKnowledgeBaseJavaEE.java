@@ -107,9 +107,11 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
     public void initPlatformRuntime() {
         logger.debug(">>createPackageBasePackage");
         try {
-            servletJmsStorageHistoryListener.setPlatformServer(this.platformServer);
-            servletJmsStorageHistoryListener.setRuleBaseID(this.ruleBaseID);
-            servletJmsStorageHistoryListener.initJmsConnection();
+            if (this.servletJmsStorageHistoryListener != null) {
+                servletJmsStorageHistoryListener.setPlatformServer(this.platformServer);
+                servletJmsStorageHistoryListener.setRuleBaseID(this.ruleBaseID);
+                servletJmsStorageHistoryListener.initJmsConnection();
+            }
 
             this.webSocketServer.setDroolsPlatformKnowledgeBaseJavaEE(this);
             ruleBasePackage = new DroolsPlatformKnowledgeBase(this.ruleBaseID, this.droolsResources, this.javaDialect, this.webSocketServer, this.servletJmsStorageHistoryListener);
