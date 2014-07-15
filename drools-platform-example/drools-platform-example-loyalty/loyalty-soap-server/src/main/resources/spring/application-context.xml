@@ -10,7 +10,7 @@
 
   <context:property-placeholder location="classpath:spring/platform-knowledge.properties"/>
 
-  <import resource="classpath*:META-INF.spring/drools-platform-runtime-servlet-platform-context.xml"/>
+  <import resource="classpath*:META-INF.spring/drools-platform-runtime-servlet-websocket-context.xml"/>
 
 
   <bean id="guvnorResource" class="org.chtijbug.drools.runtime.resource.GuvnorDroolsResource"
