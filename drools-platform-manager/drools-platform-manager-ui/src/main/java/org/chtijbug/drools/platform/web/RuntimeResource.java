@@ -137,6 +137,7 @@ public class RuntimeResource {
     @RequestMapping(method = RequestMethod.POST, value = "/filter")
     @Consumes(MediaType.APPLICATION_JSON)
     @ResponseBody
+    @Transactional
     public List<SessionExecutionResource> findPlatformRuntimeInstanceByFilters(@RequestBody final PlatformRuntimeFilter runtimeFilter) {
         logger.debug(">> findAllPlatformRuntimeInstanceByFilter(runtimeFilter= {})", runtimeFilter);
         try {
@@ -150,7 +151,7 @@ public class RuntimeResource {
                     // TODO
                     SessionExecutionResource output = new SessionExecutionResource();
                     PlatformRuntimeInstance runtimeInstance = sessionExecution.getPlatformRuntimeInstance();
-                    DroolsResource guvnorResource = sessionExecution.getPlatformRuntimeInstance().getDroolsRessources().get(0);
+                    DroolsResource guvnorResource = sessionExecution.getPlatformRuntimeInstance().getPlatformRuntimeDefinition().getDroolsRessourcesDefinition().get(0);
                     assert sessionExecution != null;
 
                     output.setRuleBaseID(sessionExecution.getPlatformRuntimeInstance().getRuleBaseID());
