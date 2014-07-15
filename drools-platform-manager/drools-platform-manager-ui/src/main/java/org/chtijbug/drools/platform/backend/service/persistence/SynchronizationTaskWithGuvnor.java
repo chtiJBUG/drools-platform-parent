@@ -36,35 +36,32 @@ public class SynchronizationTaskWithGuvnor {
     }
 
 
-    @Scheduled(cron = "* */15 9-18 *  * MON-FRI ")
+    //@Scheduled(cron = "* */15 9-18 *  * MON-FRI ")
     public void SynchronizeGuvnorCategories() {
+        try {
+            List<Asset> listPackages = guvnorRepositoryConnector.getAllPackagesInGuvnorRepo();
+            for (Asset packageAsset : listPackages) {
+                String packageName = packageAsset.getName();
+                List<Asset> assetList = guvnorRepositoryConnector.getAllBusinessAssets(packageName);
+                for (Asset asset : assetList) {
+                    ruleAssetManagementService.synchronizeInDBGuvnorCategories(packageName, asset);
+                    /**
+                     if (asset.getType().equals("gdst")) {
+                     try {
+                     DecisionTable decisionTableGuvnorFormat = guvnorRepositoryConnector.getGuidedDecisionTable(packageName, asset.getName());
+                     decisionTableAssetManagementService.SynchronizeInDBContent(packageName, asset, decisionTableGuvnorFormat);
+                     } catch (GuvnorConnexionFailedException e) {
+                     e.printStackTrace();
+                     }
 
-        /**
-         try {
-         List<Asset> listPackages = guvnorRepositoryConnector.getAllPackagesInGuvnorRepo();
-         for (Asset packageAsset : listPackages) {
-         String packageName = packageAsset.getName();
-         List<Asset> assetList = guvnorRepositoryConnector.getAllBusinessAssets(packageName);
-         for (Asset asset : assetList) {
-         ruleAssetManagementService.synchronizeInDBGuvnorCategories(packageName, asset);
+                     }
 
-         if (asset.getType().equals("gdst")) {
-         try {
-         DecisionTable decisionTableGuvnorFormat = guvnorRepositoryConnector.getGuidedDecisionTable(packageName, asset.getName());
-         decisionTableAssetManagementService.SynchronizeInDBContent(packageName, asset, decisionTableGuvnorFormat);
-         } catch (GuvnorConnexionFailedException e) {
-         e.printStackTrace();
-         }
-
-         }
-
-         }
-         }
-         } catch (ChtijbugDroolsRestException e) {
-         throw Throwables.propagate(e);
-         }
-         **/
-
+                     **/
+                }
+            }
+        } catch (ChtijbugDroolsRestException e) {
+            throw Throwables.propagate(e);
+        }
     }
 
 }

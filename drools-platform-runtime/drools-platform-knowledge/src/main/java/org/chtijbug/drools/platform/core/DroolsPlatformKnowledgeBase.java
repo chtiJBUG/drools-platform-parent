@@ -36,6 +36,7 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
      * Class Logger
      */
     private static Logger logger = LoggerFactory.getLogger(DroolsPlatformKnowledgeBase.class);
+
     /**
      * Rule base ID (UID for the runtime
      */
@@ -54,6 +55,7 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
     private String webSocketHostname;
     private WebSocketServerInstance webSocketServer;
     private int webSocketPort = 8025;
+    private String webSocketEndPoint = "/runtime";
     /**
      * Event Messaging channel settings
      */
@@ -79,6 +81,7 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
         this.javaDialect = javaDialect;
         this.webSocketHostname = webSocketServer.getHostName();
         this.webSocketPort = webSocketServer.getPort();
+        this.webSocketEndPoint = webSocketServer.getEndPoint();
         initPlatformRuntime();
     }
 
@@ -104,6 +107,7 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
         platformKnowledgeBaseInitialConnectionEvent.setSessionId(-1);
         platformKnowledgeBaseInitialConnectionEvent.setHostname(this.webSocketHostname);
         platformKnowledgeBaseInitialConnectionEvent.setPort(this.webSocketPort);
+        platformKnowledgeBaseInitialConnectionEvent.setEndPoint(this.webSocketEndPoint);
         if (droolsResources.size() == 1 && droolsResources.get(0) instanceof GuvnorDroolsResource) {
             GuvnorDroolsResource guvnorDroolsResource = (GuvnorDroolsResource) droolsResources.get(0);
             GuvnorResourceFile guvnorResourceFile = new GuvnorResourceFile(guvnorDroolsResource.getBaseUrl(), guvnorDroolsResource.getWebappName(), guvnorDroolsResource.getPackageName(), guvnorDroolsResource.getPackageVersion(), guvnorDroolsResource.getUsername(), guvnorDroolsResource.getPassword());

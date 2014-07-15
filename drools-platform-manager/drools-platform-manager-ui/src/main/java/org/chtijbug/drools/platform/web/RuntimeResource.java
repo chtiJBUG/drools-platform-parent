@@ -151,7 +151,7 @@ public class RuntimeResource {
                     // TODO
                     SessionExecutionResource output = new SessionExecutionResource();
                     PlatformRuntimeInstance runtimeInstance = sessionExecution.getPlatformRuntimeInstance();
-                    DroolsResource guvnorResource = sessionExecution.getPlatformRuntimeInstance().getDroolsRessources().get(0);
+                    DroolsResource guvnorResource = sessionExecution.getPlatformRuntimeInstance().getPlatformRuntimeDefinition().getDroolsRessourcesDefinition().get(0);
                     assert sessionExecution != null;
 
                     output.setRuleBaseID(sessionExecution.getPlatformRuntimeInstance().getRuleBaseID());
