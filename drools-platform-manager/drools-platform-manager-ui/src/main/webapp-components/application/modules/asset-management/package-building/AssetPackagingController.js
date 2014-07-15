@@ -319,7 +319,7 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
         _.each(
             _.where($scope.activeRuntimeList, {isSelected:true}),
             function(runtime) {
-                StompService.deployRuntime(runtime.ruleBaseId, runtime.version);
+                StompService.deployRuntime(runtime.ruleBaseId, $scope.newVersion);
             }
         );
         growlNotifications.add('Deployment launched', 'info', 2000);

@@ -12,13 +12,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,6 +43,7 @@ public class RuntimeResource {
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
+    @Transactional
     public List<RuntimeInstance> findActivePlatformRuntimeInstance(@PathVariable String packageName) {
         return Lists.transform(platformRuntimeInstanceRepository.findByPackageNameActiveRuntime(packageName),
                 new Function<PlatformRuntimeInstance, RuntimeInstance>() {
@@ -50,8 +53,9 @@ public class RuntimeResource {
                         String url = "http://" + platformRuntimeInstance.getHostname() + ":" + platformRuntimeInstance.getPort() + platformRuntimeInstance.getEndPoint();
                         String rulePackage = null;
                         String version = null;
-                        if (!platformRuntimeInstance.getDroolsRessources().isEmpty()) {
-                            DroolsResource guvnorResource = platformRuntimeInstance.getDroolsRessources().get(0);
+                        PlatformRuntimeDefinition platformRuntimeDefinition = platformRuntimeInstance.getPlatformRuntimeDefinition();
+                        if (!platformRuntimeDefinition.getDroolsRessourcesDefinition().isEmpty()) {
+                            DroolsResource guvnorResource = platformRuntimeDefinition.getDroolsRessourcesDefinition().get(0);
                             rulePackage = guvnorResource.getGuvnor_packageName();
                             version = guvnorResource.getGuvnor_packageVersion();
                         }
@@ -175,7 +179,7 @@ public class RuntimeResource {
                 }
             });
 
-            return Lists.newArrayList(Iterables.filter(result,Predicates.notNull()));
+            return Lists.newArrayList(Iterables.filter(result, Predicates.notNull()));
         } finally {
             logger.debug("<< findAllPlatformRuntimeInstanceByFilter()");
         }
