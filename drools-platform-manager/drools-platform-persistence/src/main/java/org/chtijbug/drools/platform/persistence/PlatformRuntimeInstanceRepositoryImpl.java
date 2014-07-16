@@ -2,6 +2,7 @@ package org.chtijbug.drools.platform.persistence;
 
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeFilter;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstanceStatus;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.slf4j.Logger;
 
@@ -34,32 +35,45 @@ public class PlatformRuntimeInstanceRepositoryImpl implements PlatformRuntimeIns
             }
 
             //___ Append other filters
+
+            //___ runtime status
             if (filter.getStatus() != null){
-                jpaQuery = jpaQuery.concat("and execution.platformRuntimeInstance.status.toString()= :status ");
+                jpaQuery = jpaQuery.concat("and execution.platformRuntimeInstance.status=:status ");
             }
 
-
+            //___ checkbox case
             if(filter.getOnlyRunningInstances()=="true"){
                 jpaQuery = jpaQuery.concat("and execution.platformRuntimeInstance.endDate is null ");
             }
 
-            if (filter.getHostname() != null)
-                jpaQuery += jpaQuery.concat("and execution.platformRuntimeInstance.hostname LIKE :hostname ");
+            if (filter.getHostname() != null){
+                jpaQuery = jpaQuery.concat("and execution.platformRuntimeInstance.hostname=:hostname ");
+            }
+            if(filter.getStartDate() != null){
+                jpaQuery = jpaQuery.concat("and execution.startDate>=:startdate ");
+            }
+            if(filter.getEndDate() != null){
+                jpaQuery = jpaQuery.concat("and execution.endDate<=:enddate ");
+            }
 
-            if (filter.getStartDate() != null)
-                jpaQuery = jpaQuery.concat("and execution.platformRuntimeInstance.startDate= :startDate ");
-
-            if (filter.getEndDate() != null)
-                jpaQuery = jpaQuery.concat("and execution.platformRuntimeInstance.startDate= :endDate ");
 
             Query query = entityManager.createQuery(jpaQuery);
+
             query.setParameter("packageName", filter.getPackageName());
-            //if (filter.getStatus() != null){
-                //query.setParameter("status", filter.getStatus());
-            //}
-            //if (filter.getHostname() != null){
-            //    query.setParameter("hostname", filter.getHostname());
-            //}
+
+            if (filter.getStatus() != null){
+                PlatformRuntimeInstanceStatus status= PlatformRuntimeInstanceStatus .getEnum(filter.getStatus());
+                query.setParameter("status", status);
+            }
+            if (filter.getHostname() != null){
+                query.setParameter("hostname", filter.getHostname());
+            }
+            if(filter.getStartDate() != null){
+                query.setParameter("startdate", filter.getStartDate());
+            }
+            if(filter.getEndDate() != null){
+                query.setParameter("enddate", filter.getEndDate());
+            }
             //___TODO append other filter criteria for the jpaQuery
 
 

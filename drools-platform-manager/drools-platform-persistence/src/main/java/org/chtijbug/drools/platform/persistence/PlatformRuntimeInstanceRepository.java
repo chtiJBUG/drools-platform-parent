@@ -2,7 +2,6 @@ package org.chtijbug.drools.platform.persistence;
 
 
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
-import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

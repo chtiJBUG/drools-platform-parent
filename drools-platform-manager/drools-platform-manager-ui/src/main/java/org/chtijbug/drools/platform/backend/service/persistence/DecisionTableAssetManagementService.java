@@ -27,6 +27,7 @@ public class DecisionTableAssetManagementService {
 
     @Transactional
     public void SynchronizeInDBContent(String packageName, Asset asset, DecisionTable decisionTableGuvnorFormat) {
+
         DTRuleAsset dtruleAsset = dtRuleAssetRepository.findByPackageNameAndAssetName(packageName, asset.getName());
         if (dtruleAsset != null) {
             Integer assetVersionNumberFromGuvnor = new Integer(asset.getVersionNumber());
@@ -35,10 +36,10 @@ public class DecisionTableAssetManagementService {
                  *  Guvnor is the master so delete it
                  */
                 dtRuleAssetRepository.delete(dtruleAsset);
-                this.createDTTableInDB(packageName, asset, decisionTableGuvnorFormat);
+                //this.createDTTableInDB(packageName, asset, decisionTableGuvnorFormat);
             }
         } else {
-            this.createDTTableInDB(packageName, asset, decisionTableGuvnorFormat);
+            //this.createDTTableInDB(packageName, asset, decisionTableGuvnorFormat);
 
 
         }

@@ -12,6 +12,7 @@ import java.util.Date;
  */
 public class PlatformKnowledgeBaseInitialConnectionEvent extends KnowledgeBaseEvent {
     private String hostname;
+    private String endPoint = "/runtime";
     private int port;
     private Date startDate;
 
@@ -42,6 +43,14 @@ public class PlatformKnowledgeBaseInitialConnectionEvent extends KnowledgeBaseEv
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
+    }
+
+    public String getEndPoint() {
+        return endPoint;
+    }
+
+    public void setEndPoint(String endPoint) {
+        this.endPoint = endPoint;
     }
 
     @Override

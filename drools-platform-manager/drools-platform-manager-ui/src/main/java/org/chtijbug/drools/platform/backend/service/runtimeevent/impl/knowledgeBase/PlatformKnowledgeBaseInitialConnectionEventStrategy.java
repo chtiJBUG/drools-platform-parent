@@ -48,7 +48,7 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
     PlatformRuntimeDefinitionRepository platformRuntimeDefinitionRepository;
 
     @Override
-    @Transactional
+    @Transactional(value = "transactionManager")
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         PlatformKnowledgeBaseInitialConnectionEvent platformKnowledgeBaseInitialConnectionEvent = (PlatformKnowledgeBaseInitialConnectionEvent) historyEvent;
         int ruleBaseId = platformKnowledgeBaseInitialConnectionEvent.getRuleBaseID();
@@ -112,6 +112,7 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
             platformRuntimeInstance.setStartDate(platformKnowledgeBaseInitialConnectionEvent.getStartDate());
             platformRuntimeInstance.setHostname(platformKnowledgeBaseInitialConnectionEvent.getHostname());
             platformRuntimeInstance.setPort(platformKnowledgeBaseInitialConnectionEvent.getPort());
+            platformRuntimeInstance.setEndPoint(platformKnowledgeBaseInitialConnectionEvent.getEndPoint());
             platformRuntimeInstance.setPlatformRuntimeDefinition(platformRuntimeDefinition);
             platformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.INITMODE);
             platformRuntimeDefinition.getPlatformRuntimeInstances().add(platformRuntimeInstance);

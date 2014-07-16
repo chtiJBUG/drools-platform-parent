@@ -77,6 +77,7 @@ public class PlatformRunTimeBeanTest {
     public void BeforeTest() {
         historyListener.getHistoryEvents().clear();
     }
+
     @Ignore
     @Test
     public void testKnowledgeBaseCreate() throws DroolsChtijbugException {
@@ -156,7 +157,7 @@ public class PlatformRunTimeBeanTest {
 
 
     @Test
-
+    //@Ignore
     public void testDTSycnrhonization() throws GuvnorConnexionFailedException, ChtijbugDroolsRestException {
         try {
             String packageName = "alertesecurite";
@@ -175,8 +176,9 @@ public class PlatformRunTimeBeanTest {
             e.printStackTrace();
         }
     }
+
     @Test
-    public void pipo(){
+    public void pipo() {
 
     }
 

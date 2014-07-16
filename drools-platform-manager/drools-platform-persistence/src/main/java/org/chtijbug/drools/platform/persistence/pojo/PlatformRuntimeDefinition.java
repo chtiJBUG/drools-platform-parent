@@ -23,7 +23,7 @@ public class PlatformRuntimeDefinition implements Serializable {
     @Column(nullable = false)
     private Integer ruleBaseID;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "platformRuntimeDefinition")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "platformRuntimeDefinition", fetch = FetchType.LAZY)
     private List<PlatformRuntimeInstance> platformRuntimeInstances = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

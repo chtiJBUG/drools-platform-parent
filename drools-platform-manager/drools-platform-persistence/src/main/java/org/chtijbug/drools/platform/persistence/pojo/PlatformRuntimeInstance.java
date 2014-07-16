@@ -35,7 +35,7 @@ public class PlatformRuntimeInstance implements Serializable {
     private Integer stopEventID;
     private Integer ruleBaseID;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<DroolsResource> droolsRessources = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "platformRuntimeInstance")

@@ -19,4 +19,7 @@ public interface WebSocketServerInstance {
     public abstract String getHostName();
 
     public abstract int getPort();
+
+
+    public abstract String getEndPoint();
 }
