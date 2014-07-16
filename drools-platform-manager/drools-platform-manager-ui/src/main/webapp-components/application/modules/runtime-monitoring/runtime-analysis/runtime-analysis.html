@@ -195,7 +195,7 @@
                                                 <!-- Had to add style="..." to keep indentation instead of class="list-unstyled" from bootstrap which doesn't keep indentation in addition of removing bullets -->
                                                 <ul collapse="!whenFacts" style="list-style-type:none;">
                                                     <li ng-repeat="whenFactItem in ruleExecutionDetails.whenFacts">
-                                                        <a ng-click="indentJSON(whenFactItem); whenFactsDetails = !whenFactsDetails;"><i ng-show="!whenFactsDetails" class="fa fa fa-plus-square-o"></i><i ng-show="whenFactsDetails" class="fa fa-minus-square-o"></i> {{whenFactItem.fullClassName}}</a> :
+                                                        <a ng-click="indentJSON(whenFactItem); whenFactsDetails = !whenFactsDetails;"><i ng-show="!whenFactsDetails" class="fa fa fa-plus-square-o"></i><i ng-show="whenFactsDetails" class="fa fa-minus-square-o"></i> {{whenFactItem.fullClassName}}</a>
                                                         <div ng-show="whenFactsDetails" hljs source="whenFactItem.jsonFact"></div>
                                                     </li>
                                                 </ul>
@@ -205,7 +205,7 @@
                                                 <!-- Had to add style="..." to keep indentation instead of class="list-unstyled" from bootstrap which doesn't keep indentation in addition of removing bullets -->
                                                 <ul collapse="!thenFacts" style="list-style-type:none;">
                                                     <li ng-repeat="thenFactItem in ruleExecutionDetails.thenFacts">
-                                                        <a ng-click="indentJSON(thenFactItem); thenFactsDetails = !thenFactsDetails;"><i ng-show="!thenFactsDetails" class="fa fa fa-plus-square-o"></i><i ng-show="thenFactsDetails" class="fa fa-minus-square-o"></i> {{thenFactItem.fullClassName}}</a> :
+                                                        <a ng-click="indentJSON(thenFactItem); thenFactsDetails = !thenFactsDetails;"><i ng-show="!thenFactsDetails" class="fa fa fa-plus-square-o"></i><i ng-show="thenFactsDetails" class="fa fa-minus-square-o"></i>  {{thenFactItem.fullClassName}}</a> <span class="label label-info">{{thenFactItem.factType}}</span>
                                                         <div ng-show="thenFactsDetails" hljs source="thenFactItem.jsonFact"></div>
                                                     </li>
                                                 </ul>
