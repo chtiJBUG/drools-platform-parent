@@ -35,9 +35,9 @@ droolsPlatformApp.config(function ($routeProvider) {
             templateUrl: 'modules/asset-management/status-modification/status-modification.html',
             controller: 'homeController'
         }).
-        when('/buildAssetPackage', {
-            templateUrl: 'modules/asset-management/package-building/package-building.html',
-            controller: 'assetPackagingController'
+        when('/packageVersionManagement', {
+            templateUrl: 'modules/asset-management/package-version-management/package-version-management.html',
+            controller: 'packageVersionManagementController'
         }).
         when('/runtimeAnalysis', {
             templateUrl: 'modules/runtime-monitoring/runtime-analysis/runtime-analysis.html',

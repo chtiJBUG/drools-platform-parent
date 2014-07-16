@@ -1,6 +1,6 @@
-<div data-ng-controller="assetPackagingController">
+<div data-ng-controller="packageVersionManagementController">
     <div class="page-header">
-        <h3 style="margin-left:20px">Asset Package Version Management </h3>
+        <h3 style="margin-left:20px">Package Version Management</h3>
     </div>
     <div class="row col-sm-12">
         <div class="col-md-3">
@@ -80,51 +80,47 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <!-- onRightClick will enable the change of boolean statement (isSnapshot) which allow to know if it is a snapshot version or not -->
-                                <!-- data-target links the line to the context menu -->
-                                <tr context-menu="onRightClick(packageVersion)" data-target="myMenu"
-                                    ng-repeat="packageVersion in packageVersionsList">
-                                    <td>{{packageVersion.packageName}}</td>
-                                    <td>{{packageVersion.version}}</td>
-                                    <td>
-                                        <span ng-show="!packageVersion.isRelease" class="label label-warning"><small>
-                                            SNAPSHOT
-                                        </small></span>
-                                        <span ng-show="packageVersion.isRelease" class="label label-success"><small>
-                                            RELEASE
-                                        </small></span>
-                                    </td>
-                                </tr>
-                                <!-- Context menu -->
-                                <div  class="dropdown position-fixed ng-scope" id="myMenu">
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                        <li ng-show="isSnapshot" ng-class="{true:'disabled'} [visibleItem]" role="presentation">
-                                            <a class="pointer" role="menuitem" tabindex="-1"
-                                               ng-click="launchWizzard('rebuild')">Rebuild</a>
-                                        </li>
-                                        <li ng-show="isSnapshot" ng-class="{true:'disabled'} [visibleItem]" role="presentation">
-                                            <a class="pointer" role="menuitem" tabindex="-1"
-                                               ng-click="launchWizzard('release')">Release</a>
-                                        </li>
-                                        <li ng-show="isSnapshot" class="divider"></li>
-                                        <li role="presentation">
-                                            <a class="pointer" role="menuitem" tabindex="-1"
-                                               ng-click="launchDeploy()">Deploy</a>
-                                        </li>
-                                        <li ng-show="isSnapshot" class="divider"></li>
-                                        <li ng-show="isSnapshot" role="presentation">
-                                            <a class="pointer" role="menuitem" tabindex="-1"
-                                               ng-click="launchAlertMsg()">Delete</a>
-                                        </li>
-                                    </ul>
-                                </div>
-
+                                    <!-- onRightClick will enable the change of boolean statement (isSnapshot) which allow to know if it is a snapshot version or not -->
+                                    <!-- data-target links the line to the context menu -->
+                                    <tr context-menu="onRightClick(packageVersion)" data-target="myMenu"
+                                        ng-repeat="packageVersion in packageVersionsList">
+                                        <td>{{packageVersion.packageName}}</td>
+                                        <td>{{packageVersion.version}}</td>
+                                        <td>
+                                            <span ng-show="!packageVersion.isRelease" class="label label-warning"><small>
+                                                SNAPSHOT
+                                            </small></span>
+                                            <span ng-show="packageVersion.isRelease" class="label label-success"><small>
+                                                RELEASE
+                                            </small></span>
+                                        </td>
+                                    </tr>
+                                    <!-- Context menu -->
+                                    <div  class="dropdown position-fixed ng-scope" id="myMenu">
+                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                            <li ng-show="isSnapshot" ng-class="{true:'disabled'} [visibleItem]" role="presentation">
+                                                <a class="pointer" role="menuitem" tabindex="-1"
+                                                   ng-click="launchWizzard('rebuild')">Rebuild</a>
+                                            </li>
+                                            <li ng-show="isSnapshot" ng-class="{true:'disabled'} [visibleItem]" role="presentation">
+                                                <a class="pointer" role="menuitem" tabindex="-1"
+                                                   ng-click="launchWizzard('release')">Release</a>
+                                            </li>
+                                            <li ng-show="isSnapshot" class="divider"></li>
+                                            <li role="presentation">
+                                                <a class="pointer" role="menuitem" tabindex="-1"
+                                                   ng-click="launchDeploy()">Deploy</a>
+                                            </li>
+                                            <li ng-show="isSnapshot" class="divider"></li>
+                                            <li ng-show="isSnapshot" role="presentation">
+                                                <a class="pointer" role="menuitem" tabindex="-1"
+                                                   ng-click="launchAlertMsg()">Delete</a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </tbody>
                             </table>
-
                         </div>
-                        <br>
-
                     </div>
                     <button id="btn-launcher" class="btn btn-success pull-right" ng-show="isCreateButtonVisible"
                             ng-click="launchWizzard('create')">
