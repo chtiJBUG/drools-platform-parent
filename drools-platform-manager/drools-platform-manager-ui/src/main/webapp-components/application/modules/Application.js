@@ -75,8 +75,7 @@ droolsPlatformApp.service('StompService', function(growlNotifications){
             //setConnected(true);
             console.log('Connected: ' + frame);
             stompClient.subscribe('/topic/newpackageVersiondeployed', function (deploymentStatus) {
-                //console.log(JSON.parse(deploymentStatus.body).state.toString());
-                //alert("deploymentStatus : "+deploymentStatus);
+                console.log(JSON.parse(deploymentStatus.body).state.toString());
                 //____ TODO Handle ERROR cases + etc..
 
                 //___ TODO Get content from deploymentStatus
