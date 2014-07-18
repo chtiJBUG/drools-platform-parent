@@ -66,7 +66,7 @@ droolsPlatformApp.run(function ($rootScope, $log, $location) {
 var DroolsPlatformControllers = angular.module('drools-platform.controllers', []);
 
 //___ STOMP Service
-droolsPlatformApp.service('StompService', function(){
+droolsPlatformApp.service('StompService', function(growlNotifications){
     var stompClient = null;
     function connect(){
         var socket = new SockJS('/server/update');
@@ -75,7 +75,8 @@ droolsPlatformApp.service('StompService', function(){
             //setConnected(true);
             console.log('Connected: ' + frame);
             stompClient.subscribe('/topic/newpackageVersiondeployed', function (deploymentStatus) {
-                console.log("deploymentStatus : "+deploymentStatus);
+                //console.log(JSON.parse(deploymentStatus.body).state.toString());
+                //alert("deploymentStatus : "+deploymentStatus);
                 //____ TODO Handle ERROR cases + etc..
 
                 //___ TODO Get content from deploymentStatus
@@ -96,7 +97,6 @@ droolsPlatformApp.service('StompService', function(){
         });
     }
 
-    //____ Is it useful ??
     this.disconnect = function () {
         stompClient.disconnect();
         //setConnected(false);
@@ -105,6 +105,7 @@ droolsPlatformApp.service('StompService', function(){
 
     this.deployRuntime = function (ruleBaseID, packageVersion) {
         stompClient.send("/app/update", {},  JSON.stringify({'ruleBaseID': ruleBaseID, 'packageVersion': packageVersion}));
+        growlNotifications.add('Deployment launched', 'info', 2000);
     };
 
     connect();

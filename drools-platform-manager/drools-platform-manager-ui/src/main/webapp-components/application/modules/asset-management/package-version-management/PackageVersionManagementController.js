@@ -316,13 +316,18 @@ DroolsPlatformControllers.controller('packageVersionManagementController', ['$ro
 
     //___ Deploy
     $scope.deployVersion = function() {
+        if($scope.isSnapshot){
+            $scope.versionToDeploy=$scope.newVersion+"-SNAPSHOT";
+        }else{
+            $scope.versionToDeploy=$scope.newVersion;
+        }
+        console.log("[Info] Version to deploy : "+$scope.versionToDeploy);
         _.each(
             _.where($scope.activeRuntimeList, {isSelected:true}),
             function(runtime) {
-                StompService.deployRuntime(runtime.ruleBaseId, $scope.newVersion);
+                StompService.deployRuntime(runtime.ruleBaseId, $scope.versionToDeploy);
             }
         );
-        growlNotifications.add('Deployment launched', 'info', 2000);
         $scope.closeDeploy();
     };
 
