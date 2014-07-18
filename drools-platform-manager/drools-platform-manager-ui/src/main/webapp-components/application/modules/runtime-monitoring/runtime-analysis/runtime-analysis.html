@@ -34,8 +34,6 @@
                                 <option ng-repeat="s in statusesList" value="{{s.runtimeStatus}}">{{s.description}}
                                 </option>
                             </select>
-                            <!-- input id="iptstatus" class="form-control" name="status" type="text"
-                                   placeholder="Please enter the status" data-ng-model="filters.status" -->
                         </div>
                         <div class="checkbox">
                             <label>
@@ -43,12 +41,13 @@
                                 Only running instances
                             </label>
                         </div>
+                        <!-- Angular Bootstrap UI collapsing functionality -->
+                        <!-- The boolean values of collapseStatus.firstBox, secondBox, etc. haven't been declared in the JS file. Apparently we don't need to do it -->
                         <div class="form-group">
-                            <a style="cursor:pointer" ng-click="collapseStatus.firstBox=!collapseStatus.firstBox">
+                            <a ng-click="collapseStatus.firstBox=!collapseStatus.firstBox">
                                 <span ng-show="!collapseStatus.firstBox"><i class="fa fa-plus-circle"></i> More filters : Runtime</span>
                                 <span ng-show="collapseStatus.firstBox"><i class="fa fa-minus-circle"></i> Hide filters</span>
                             </a>
-                            <hr ng-show="collapseStatus.firstBox">
                             <div collapse="!collapseStatus.firstBox">
                                 <h4>Runtime</h4>
                                 <label for="IPaddr">Hostname</label>
@@ -61,12 +60,11 @@
 
                         </div>
                         <div class="form-group">
-                            <a style="cursor:pointer" ng-click="collapseStatus.secondBox=!collapseStatus.secondBox">
-                                <span ng-show="!collapseStatus.secondBox"><i class="fa fa-plus-circle"></i> More filters : Session Execution</span>
-                                <span ng-show="collapseStatus.secondBox"><i class="fa fa-minus-circle"></i> Hide filters</span>
+                            <a ng-click="collapseStatus.seconddBox=!collapseStatus.seconddBox">
+                                <span ng-show="!collapseStatus.seconddBox"><i class="fa fa-plus-circle"></i> More filters : Session Execution</span>
+                                <span ng-show="collapseStatus.seconddBox"><i class="fa fa-minus-circle"></i> Hide filters</span>
                             </a>
-                            <hr ng-show="collapseStatus.secondBox">
-                            <div collapse="!collapseStatus.secondBox">
+                            <div collapse="!collapseStatus.seconddBox">
                                 <h4>SessionExecution</h4>
                                 <label>From</label>
                                 <div class="input-group col-md-6">
@@ -119,7 +117,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="runtime in pageItems()"
+                                <tr ng-repeat="runtime in allRuntimes"
                                     style="cursor:default" class="runtime-status-{{runtime.status}}">
                                     <td>{{runtime.ruleBaseID}}</td>
                                     <td>{{runtime.runtimeURL}}</td>
@@ -133,9 +131,11 @@
                                 </tr>
                                 </tbody>
                             </table>
+
                         </div>
-                        <div ng-show="allRuntimes.length != 0">
-                            <span paginator items="allRuntimes" class="pull-right" ng-show="allRuntimes.length != 0"></span>
+                        <!-- pagination ng-show="allRuntimes.length != 0" total-items="count" ng-model="currentPage" ng-change="pageChanged()"></pagination -->
+                        <div class="col-md-6 col-md-offset-3" ng-show="allRuntimes.length != 0">
+                            <pagination  total-items="count" ng-model="currentPage" max-size="5" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages" ng-change="pageChanged()"></pagination>
                         </div>
                     </div>
                 </div>
