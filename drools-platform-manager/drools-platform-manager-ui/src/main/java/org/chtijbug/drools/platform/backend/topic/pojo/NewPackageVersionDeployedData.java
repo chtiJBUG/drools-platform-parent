@@ -22,15 +22,6 @@ public class NewPackageVersionDeployedData extends BaseTopicData{
         super();
     }
 
-    public NewPackageVersionDeployedData(RequestStatus state) {
-        this.state = state;
-    }
-
-    public NewPackageVersionDeployedData(RequestStatus state, List<PlatformResourceFile> platformResourceFiles) {
-        this.state = state;
-        this.platformResourceFiles = platformResourceFiles;
-    }
-
     public RequestStatus getState() {
         return state;
     }

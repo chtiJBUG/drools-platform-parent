@@ -1,4 +1,9 @@
-DroolsPlatformControllers.controller('packageVersionManagementController', ['$rootScope', '$scope', '$http', '$log', 'growlNotifications', 'StompService', function ($rootScope, $scope, $http, $log, growlNotifications, StompService) {
+DroolsPlatformControllers.controller('packageVersionManagementController', ['$rootScope',
+    '$scope',
+    '$http',
+    '$log',
+    'growlNotifications',
+    'StompService', function ($rootScope, $scope, $http, $log, growlNotifications, StompService) {
     initController();
     var unchecked=true;
     /* Functions to search the package's versions */
