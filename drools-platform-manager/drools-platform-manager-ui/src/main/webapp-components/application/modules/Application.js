@@ -76,7 +76,6 @@ droolsPlatformApp.service('StompService', function(growlNotifications){
             console.log('Connected: ' + frame);
             stompClient.subscribe('/topic/newpackageVersiondeployed', function (deploymentStatus) {
                 console.log("Test console.log() in suscribe");
-                console.log("Test commit stash");
                 console.log(JSON.parse(deploymentStatus.body));
                 //____ TODO Handle ERROR cases + etc..
 
