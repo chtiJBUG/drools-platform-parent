@@ -7,9 +7,6 @@
   <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml"/>
   <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
 
-  <import resource="classpath*:META-INF.spring/drools-platform-runtime-servlet-websocket-context.xml"/>
-
-  <import resource="classpath:spring/application-context.xml"/>
 
   <!-- JAX-WS Service Endpoint -->
   <jaxws:endpoint id="personService" implementor="#calculateService" address="/calculateService"/>

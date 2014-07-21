@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.platform.core.droolslistener.PlatformHistoryListener;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEvent;
+import org.chtijbug.drools.platform.runtime.servlet.DroolsPlatformKnowledgeBaseJavaEE;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.springframework.stereotype.Component;
 
@@ -33,20 +34,9 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
 
     private Session session;
 
+    DroolsPlatformKnowledgeBaseJavaEE platformKnowledgeBaseJavaEE;
 
-    public void setPlatformServer(String platformServer) {
-        this.platformServer = platformServer;
-    }
-
-    public void setRuleBaseID(Integer ruleBaseID) {
-        this.ruleBaseID = ruleBaseID;
-    }
-
-    public ServletJmsStorageHistoryListener() throws DroolsChtijbugException {
-
-    }
-
-    public void initJmsConnection() throws JMSException {
+   public void initJmsConnection() throws DroolsChtijbugException {
 
 
         String url = "tcp://" + this.platformServer + ":" + this.platformPort;
@@ -58,8 +48,8 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
             Queue queue = session.createQueue(this.platformQueueName);
             producer = session.createProducer(queue);
         } catch (JMSException exp) {
-            // TODO handle properly exception
-            exp.printStackTrace();
+            DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("DroolsPlatformKnowledgeBaseJavaEE", "initJmsConnection", exp);
+            throw droolsChtijbugException;
         }
     }
 
@@ -97,5 +87,15 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
 
     }
 
+    public void setPlatformKnowledgeBaseJavaEE(DroolsPlatformKnowledgeBaseJavaEE platformKnowledgeBaseJavaEE) {
+        this.platformKnowledgeBaseJavaEE = platformKnowledgeBaseJavaEE;
+    }
 
+    public void initJMSConnection() throws DroolsChtijbugException {
+        this.ruleBaseID = this.platformKnowledgeBaseJavaEE.getRuleBaseID();
+        this.platformServer = this.platformKnowledgeBaseJavaEE.getPlatformServer();
+        this.platformKnowledgeBaseJavaEE.setServletJmsStorageHistoryListener(this);
+        this.initJmsConnection();
+        this.platformKnowledgeBaseJavaEE.startConnectionToPlatform();
+    }
 }

@@ -12,13 +12,12 @@ import org.chtijbug.drools.runtime.listener.HistoryListener;
 import org.chtijbug.drools.runtime.resource.DroolsResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.jms.JMSException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,9 +40,13 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
      * Rule base singleton (Knowledge session factory)
      */
     private DroolsPlatformKnowledgeBaseRuntime ruleBasePackage;
+
+
+    private Semaphore startAndGo = new Semaphore(1);
+
     /** */
 
-    @Autowired
+
     private ServletJmsStorageHistoryListener servletJmsStorageHistoryListener;
     /** */
     private List<DroolsResource> droolsResources = new ArrayList<>();
@@ -52,7 +55,7 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
      */
     private String webSocketHostname;
 
-    @Autowired
+
     private SpringWebSocketServer webSocketServer;
 
     private String webSocketEndPoint;
@@ -106,27 +109,46 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
 
     public void initPlatformRuntime() {
         logger.debug(">>createPackageBasePackage");
-        try {
-            if (this.servletJmsStorageHistoryListener != null) {
-                servletJmsStorageHistoryListener.setPlatformServer(this.platformServer);
-                servletJmsStorageHistoryListener.setRuleBaseID(this.ruleBaseID);
-                servletJmsStorageHistoryListener.initJmsConnection();
-            }
+        logger.debug("<<<createPackageBasePackage");
+    }
 
-            this.webSocketServer.setDroolsPlatformKnowledgeBaseJavaEE(this);
-            ruleBasePackage = new DroolsPlatformKnowledgeBase(this.ruleBaseID, this.droolsResources, this.javaDialect, this.webSocketServer, this.servletJmsStorageHistoryListener);
-        } catch (DroolsChtijbugException | JMSException | InterruptedException | UnknownHostException e) {
+    public void startConnectionToPlatform() {
+        try {
+            startAndGo.acquire();
+            if (this.webSocketServer != null && this.servletJmsStorageHistoryListener != null) {
+                ruleBasePackage = new DroolsPlatformKnowledgeBase(this.ruleBaseID, this.droolsResources, this.javaDialect, this.webSocketServer, this.servletJmsStorageHistoryListener);
+            }
+            startAndGo.release();
+        } catch (DroolsChtijbugException | InterruptedException | UnknownHostException e) {
             logger.error("Error while initialisazing caused by {}", e);
             throw Throwables.propagate(e);
         } finally {
             logger.debug("<<<createPackageBasePackage");
 
         }
-
     }
 
     public void setServletJmsStorageHistoryListener(ServletJmsStorageHistoryListener servletJmsStorageHistoryListener) {
-        this.servletJmsStorageHistoryListener = servletJmsStorageHistoryListener;
+        try {
+            startAndGo.acquire();
+            this.servletJmsStorageHistoryListener = servletJmsStorageHistoryListener;
+            startAndGo.release();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    public void setWebSocketServer(SpringWebSocketServer webSocketServer) {
+        try {
+            startAndGo.acquire();
+            this.webSocketServer = webSocketServer;
+            startAndGo.release();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -249,5 +271,9 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
 
     public String getWebSocketEndPoint() {
         return webSocketEndPoint;
+    }
+
+    public String getPlatformServer() {
+        return platformServer;
     }
 }

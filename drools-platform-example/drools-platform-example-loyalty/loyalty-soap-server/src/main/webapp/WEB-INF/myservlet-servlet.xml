@@ -4,7 +4,6 @@
 
 
   <import resource="classpath*:META-INF.spring/drools-platform-runtime-servlet-websocket-context.xml"/>
-  <import resource="classpath:spring/application-context.xml"/>
 
 
 </beans>
