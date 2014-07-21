@@ -1,0 +1,37 @@
+<!doctype html>
+<html ng-app="droolsPlatformApp">
+    <head>
+        <base href="/"/>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>Drools Platform Management UI</title>
+        <link rel="icon" href="favicon.ico">
+
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="styles/43ea6d2e.less.css">
+
+    </head>
+
+    <body ng-controller="MainCtrl" ng-cloak>
+
+        <script src="scripts/271909fa.scripts.js"></script>
+
+        <script src="modules/modules.js"></script>
+
+        <div id="wrap">
+            <div ng-include="'modules/home/navbar.html'"></div>
+            <div id="main">
+                <div ng-include="'modules/login/login.html'"></div>
+                <div ng-hide="loginRequired" ng-view></div>
+            </div>
+        </div>
+        <div id="footer">
+            <p class="muted credit pull-left">
+                <span>Built by </span><img src="images/1ece6dd6.pymma-logo-mini.png" alt="Pymma"/>
+            </p>
+            <p class="muted version pull-right">v {{version}}</p>
+        </div>
+
+    </body>
+</html>
