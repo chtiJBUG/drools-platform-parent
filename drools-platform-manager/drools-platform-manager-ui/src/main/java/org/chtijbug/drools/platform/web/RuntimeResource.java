@@ -137,7 +137,6 @@ public class RuntimeResource {
     @RequestMapping(method = RequestMethod.POST, value = "/filter")
     @Consumes(MediaType.APPLICATION_JSON)
     @ResponseBody
-    @Transactional
     public List<SessionExecutionResource> findPlatformRuntimeInstanceByFilters(@RequestBody final PlatformRuntimeFilter runtimeFilter) {
         logger.debug(">> findAllPlatformRuntimeInstanceByFilter(runtimeFilter= {})", runtimeFilter);
         try {

@@ -80,7 +80,7 @@ public class StandaloneLoyaltyClient {
         while (true) {
             ticket = loyaltyClient.fireAllRules(ticket);
             logger.info("Ticket processed : {}", ticket);
-            sleep(3000);
+            sleep(30000);
         }
 
     }
