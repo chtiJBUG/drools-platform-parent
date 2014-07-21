@@ -8,7 +8,10 @@ import org.chtijbug.drools.entity.history.ResourceFile;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketClient;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
-import org.chtijbug.drools.platform.entity.*;
+import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
+import org.chtijbug.drools.platform.entity.PlatformResourceFile;
+import org.chtijbug.drools.platform.entity.RequestRuntimePlarform;
+import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseInitialConnectionEvent;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepository;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
@@ -75,15 +78,12 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
                          * So we have to set the previous drools ressources as ended
                          */
                         for (DroolsResource existingResource : existingPlatformRuntimeInstance.getDroolsRessources()) {
-
                             existingResource.setEndDate(platformKnowledgeBaseInitialConnectionEvent.getDateEvent());
                             existingResource.setStopEventID(platformKnowledgeBaseInitialConnectionEvent.getEventID());
-
-
                         }
-                        platformRuntimeInstanceRepository.save(existingPlatformRuntimeInstance);
                     }
                 }
+                platformRuntimeDefinitionRepository.save(platformRuntimeDefinition);
             } else {
                 platformRuntimeDefinition = new PlatformRuntimeDefinition();
                 platformRuntimeDefinition.setRuleBaseID(ruleBaseId);
@@ -130,7 +130,6 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
                     }
                 }
                 platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.loadNewRuleVersion);
-                platformManagementKnowledgeBean.setHeartbeat(new Heartbeat());
                 platformManagementKnowledgeBean.setRequestStatus(RequestStatus.SUCCESS);
                 webSocketClient.sendMessage(platformManagementKnowledgeBean);
                 platformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.STARTED);
