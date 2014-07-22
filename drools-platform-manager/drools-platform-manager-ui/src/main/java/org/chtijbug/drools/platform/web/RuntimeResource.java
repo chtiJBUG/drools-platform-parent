@@ -11,6 +11,8 @@ import org.chtijbug.drools.platform.web.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -134,6 +136,19 @@ public class RuntimeResource {
         }
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/count")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ResponseBody
+    public Integer countPlatformRuntimeInstanceByFilters(@RequestBody final PlatformRuntimeFilter runtimeFilter) {
+        logger.debug(">> countPlatformRuntimeInstanceByFilters(runtimeFilter= {})", runtimeFilter);
+        try{
+            return platformRuntimeInstanceRepository.countAllPlatformRuntimeInstanceByFilter(runtimeFilter);
+        }finally {
+            logger.debug("<< countPlatformRuntimeInstanceByFilters()");
+        }
+
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/filter")
     @Consumes(MediaType.APPLICATION_JSON)
     @ResponseBody
@@ -178,6 +193,14 @@ public class RuntimeResource {
                     return output;
                 }
             });
+
+            int page = 1;
+            int pageSize = 10;
+
+            Pageable pageable = new PageRequest(page, pageSize);
+
+            /*model.addAttribute("users", result.get(pageable));
+            return "users";*/
 
             return Lists.newArrayList(Iterables.filter(result, Predicates.notNull()));
         } finally {

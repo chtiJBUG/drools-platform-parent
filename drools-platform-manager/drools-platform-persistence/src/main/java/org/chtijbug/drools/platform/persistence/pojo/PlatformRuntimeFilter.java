@@ -12,6 +12,8 @@ public class PlatformRuntimeFilter {
     private Date endDate;
     private String onlyRunningInstances;
 
+    private Page page;
+
     public PlatformRuntimeFilter() {/* nop */}
 
     public String getPackageName() {
@@ -60,6 +62,14 @@ public class PlatformRuntimeFilter {
 
     public void setOnlyRunningInstances(String onlyRunningInstances) {
         this.onlyRunningInstances = onlyRunningInstances;
+    }
+
+    public Page getPage() {
+        return page;
+    }
+
+    public void setPage(Page page) {
+        this.page = page;
     }
 
     @Override
