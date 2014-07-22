@@ -1,5 +1,6 @@
 package org.chtijbug.drools.platform.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.chtijbug.drools.platform.entity.coder.JSONCoder;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 
@@ -12,16 +13,18 @@ import java.util.List;
  * Time: 15:12
  * To change this template use File | Settings | File Templates.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlatformManagementKnowledgeBean {
 
-
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class PlatformManagementKnowledgeBeanCode extends JSONCoder<PlatformManagementKnowledgeBean> {
-        public void PlatformManagementKnowledgeBeanCode() {
+
+        public PlatformManagementKnowledgeBeanCode() {
             set_type(PlatformManagementKnowledgeBean.class);
         }
     }
 
-    private Heartbeat heartbeat = new Heartbeat();
+    private Heartbeat heartbeat;
 
 
     private boolean isAlive = false;
@@ -40,9 +43,9 @@ public class PlatformManagementKnowledgeBean {
 
     private RequestStatus requestStatus;
 
-    private JMXInfo jmxInfo = new JMXInfo();
+    private JMXInfo jmxInfo;
 
-    private List<PlatformResourceFile> resourceFileList = new ArrayList<>();
+    private ArrayList<PlatformResourceFile> resourceFileList = new ArrayList<>();
 
     private DroolsChtijbugException droolsChtijbugException;
 
@@ -83,7 +86,7 @@ public class PlatformManagementKnowledgeBean {
         return resourceFileList;
     }
 
-    public void setResourceFileList(List<PlatformResourceFile> resourceFileList) {
+    public void setResourceFileList(ArrayList<PlatformResourceFile> resourceFileList) {
         this.resourceFileList = resourceFileList;
     }
 

@@ -121,7 +121,13 @@ public class SpringWebSocketServer extends TextWebSocketHandler implements WebSo
         return this.platformKnowledgeBaseJavaEE.getWebSocketEndPoint();
     }
 
-    public void setDroolsPlatformKnowledgeBaseJavaEE(DroolsPlatformKnowledgeBaseJavaEE droolsPlatformKnowledgeBaseJavaEE) {
-        this.platformKnowledgeBaseJavaEE = droolsPlatformKnowledgeBaseJavaEE;
+    public void setPlatformKnowledgeBaseJavaEE(DroolsPlatformKnowledgeBaseJavaEE platformKnowledgeBaseJavaEE) {
+        this.platformKnowledgeBaseJavaEE = platformKnowledgeBaseJavaEE;
+    }
+
+    public void initServer() {
+        this.platformKnowledgeBaseJavaEE.setWebSocketServer(this);
+        this.platformKnowledgeBaseJavaEE.startConnectionToPlatform();
+
     }
 }

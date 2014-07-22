@@ -1,5 +1,7 @@
 package org.chtijbug.drools.platform.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.Date;
 
 /**
@@ -8,10 +10,15 @@ import java.util.Date;
  * Time: 16:16
  * To change this template use File | Settings | File Templates.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Heartbeat {
     Date lastAlive;
 
     public Heartbeat() {
+    }
+
+    public Heartbeat(Date lastAlive) {
+        this.lastAlive = lastAlive;
     }
 
     public Date getLastAlive() {

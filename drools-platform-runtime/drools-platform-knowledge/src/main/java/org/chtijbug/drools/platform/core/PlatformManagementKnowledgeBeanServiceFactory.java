@@ -49,7 +49,7 @@ public class PlatformManagementKnowledgeBeanServiceFactory {
     public static List<DroolsResource> extract(List<PlatformResourceFile> resourceFiles, String guvnorUsername, String guvnorPassword) {
         List<DroolsResource> droolsResources = new ArrayList<>();
         for (PlatformResourceFile resourceFile : resourceFiles) {
-            if (resourceFile.getGuvnor_url() != null) {
+            if (!"empty".equals(resourceFile.getGuvnor_url())) {
                 DroolsResource droolsResource = GuvnorDroolsResource.createGuvnorRessource(resourceFile.getGuvnor_url(), resourceFile.getGuvnor_appName(), resourceFile.getGuvnor_packageName(), resourceFile.getGuvnor_packageVersion(), guvnorUsername, guvnorPassword);
                 droolsResources.add(droolsResource);
             } else {
