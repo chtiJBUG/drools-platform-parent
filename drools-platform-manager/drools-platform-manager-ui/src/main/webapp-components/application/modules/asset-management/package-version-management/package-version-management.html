@@ -217,7 +217,7 @@
                                         <table class="table table-hover" ng-show="activeRuntimeList.length != 0">
                                             <thead>
                                                 <tr>
-                                                    <th><input type="checkbox" ng-click="check()"></th>
+                                                    <th><input type="checkbox" ng-click="check()" ng-model="allChecked"></th>
                                                     <th class="bold">Rulebase ID</th>
                                                     <th class="bold">Runtime</th>
                                                     <th class="bold">Version</th>
@@ -226,9 +226,8 @@
                                             <tbody>
                                                 <tr ng-repeat="runtime in activeRuntimeList"
                                                     style="cursor:default" class="runtime-status-{{runtime.status}}">
-
                                                     <td>
-                                                        <input type="checkbox" ng-model="runtime.isSelected"><!-- checklist-model="checkedActiveRuntimeList.item" checklist-value="runtime"-->
+                                                        <input type="checkbox" ng-model="runtime.isSelected">
                                                     </td>
                                                     <td>{{runtime.ruleBaseId}}</td>
                                                     <td>{{runtime.url}}</td>
