@@ -4,11 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import org.chtijbug.drools.platform.entity.coder.JSONCoder;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 
-import javax.websocket.DecodeException;
-import javax.websocket.EncodeException;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,27 +19,7 @@ public class PlatformManagementKnowledgeBean {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class PlatformManagementKnowledgeBeanCode extends JSONCoder<PlatformManagementKnowledgeBean> {
 
-        @Override
-        public void encode(PlatformManagementKnowledgeBean object, Writer writer) throws EncodeException, IOException {
-            super.encode(object, writer);
-        }
-
-        @Override
-        public PlatformManagementKnowledgeBean decode(Reader reader) throws DecodeException, IOException {
-            StringBuilder builder = new StringBuilder();
-            int charsRead = -1;
-            char[] chars = new char[100];
-            do {
-                charsRead = reader.read(chars, 0, chars.length);
-                //if we have valid chars, append them to end of string.
-                if (charsRead > 0)
-                    builder.append(chars, 0, charsRead);
-            } while (charsRead > 0);
-            String stringReadFromReader = builder.toString();
-            return super.decode(reader);
-        }
-
-        public void PlatformManagementKnowledgeBeanCode() {
+        public PlatformManagementKnowledgeBeanCode() {
             set_type(PlatformManagementKnowledgeBean.class);
         }
     }

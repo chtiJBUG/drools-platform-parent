@@ -8,8 +8,5 @@
 
   <import resource="classpath*:META-INF.spring/drools-platform-runtime-servlet-application-context.xml"/>
 
-  <bean id="calculateService" class="loyalty.service.ServiceCalculate">
-  </bean>
-
 
 </beans>
