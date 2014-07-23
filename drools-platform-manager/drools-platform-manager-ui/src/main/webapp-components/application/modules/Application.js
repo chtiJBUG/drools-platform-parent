@@ -72,30 +72,14 @@ droolsPlatformApp.service('StompService', function(growlNotifications){
         var socket = new SockJS('/server/update');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
-            //setConnected(true);
-            console.log('Connected: ' + frame);
-            stompClient.subscribe('/topic/newpackageVersiondeployed', function (deploymentStatus) {
-                console.log("Test console.log() in suscribe");
-                console.log(JSON.parse(deploymentStatus.body));
-                //____ TODO Handle ERROR cases + etc..
-
-                //___ TODO Get content from deploymentStatus
-
-                //___ TODO Status display mode
-                //___ if(status == "INITMODE"){
-                    //____ growlNotifications.add(... , 'info', 2000);
-                //___ }else if(status == "STARTED"){
-                    //___ growlNotifications.add(... , 'success', 2000);
-                //___ }else if(status == "NOT_JOIGNABLE"){
-                    //___ growlNotifications.add(... , 'warning', 2000);
-                //___ }else if(status == "STOPPED"){
-                    //___ growlNotifications.add(... , 'warning', 2000);
-                //___ }else if(status == "CRASHED")
-                    //growlNotifications.add(... , 'danger', 2000);
-                //___ }
+            console.log('Connected : ' + frame);
+            stompClient.subscribe('/topic/newpackageVersiondeployed', function (message) {
+                console.log(JSON.parse(message.body).state);
             });
         });
     }
+
+
 
     this.disconnect = function () {
         stompClient.disconnect();

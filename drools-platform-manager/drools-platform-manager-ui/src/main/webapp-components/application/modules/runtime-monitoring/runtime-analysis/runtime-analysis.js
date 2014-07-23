@@ -129,6 +129,15 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         'output': '// output'
     };
 
+    $scope.sidebarContracted=true;
+
+    $scope.detailsFilters = {
+        ruleCategory: undefined,
+        ruleName: undefined,
+        factType: undefined,
+        startDate: undefined
+    };
+
 
     /** SESSION EXECUTION DETAILS **/
 
@@ -190,6 +199,8 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             $scope.sessionExecutionDetails.panel = false;
         }, 1000);
     };
+
+
 
     /** SEARCH **/
     $scope.search = function () {
