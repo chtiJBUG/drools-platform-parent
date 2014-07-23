@@ -2,6 +2,7 @@ package org.chtijbug.drools.platform.backend.service.persistence;
 
 import org.chtijbug.drools.guvnor.rest.model.Asset;
 import org.chtijbug.drools.guvnor.rest.model.AssetCategory;
+import org.chtijbug.drools.platform.persistence.RuleAssetCategoryRepository;
 import org.chtijbug.drools.platform.persistence.RuleAssetRepository;
 import org.chtijbug.drools.platform.persistence.pojo.RuleAsset;
 import org.chtijbug.drools.platform.persistence.pojo.RuleAssetCategory;
@@ -24,6 +25,9 @@ public class RuleAssetManagementService {
     @Autowired
     RuleAssetRepository ruleAssetRepository;
 
+    @Autowired
+    RuleAssetCategoryRepository ruleAssetCategoryRepository;
+
     public RuleAsset getRuleAsset(String packageName, String assetName) {
         RuleAsset ruleAsset = null;
 
@@ -39,8 +43,8 @@ public class RuleAssetManagementService {
         return ruleAsset;
     }
 
-    @Transactional
-    private RuleAsset getRuleAssetWithCategory(String packageName, String assetName, List<String> categoryNameList, Integer versionNumber) {
+
+    private RuleAsset getRuleAssetWithCategory(String packageName, String assetName, List<String> categoryNameListFromGuvnor, Integer versionNumber) {
         RuleAsset ruleAsset = null;
         if (packageName != null && assetName != null) {
             RuleAsset searchRuleAsset = ruleAssetRepository.findByPackageNameAndAssetName(packageName, assetName);
@@ -49,16 +53,18 @@ public class RuleAssetManagementService {
                     searchRuleAsset.setVersionNumber(new Integer("-1"));
                 }
                 if (searchRuleAsset.getVersionNumber() < versionNumber) {
+
                     ruleAsset = searchRuleAsset;
+                    ruleAsset.setVersionNumber(versionNumber);
                     if (ruleAsset.getRuleAssetCategory() == null) {
                         ruleAsset.setRuleAssetCategory(new ArrayList<RuleAssetCategory>());
                     }
-                    for (String categoryName : categoryNameList) {
+                    for (String categoryName : categoryNameListFromGuvnor) {
                         ruleAssetCategoryToInsertForRuleAsset(ruleAsset, categoryName);
                     }
                     List<RuleAssetCategory> ruleAssetCategoriesToRemove = new ArrayList<>();
                     for (RuleAssetCategory ruleAssetCategory : ruleAsset.getRuleAssetCategory()) {
-                        if (!categoryNameList.contains(ruleAssetCategory.getCategoryName())) {
+                        if (!categoryNameListFromGuvnor.contains(ruleAssetCategory.getCategoryName())) {
                             ruleAssetCategoriesToRemove.add(ruleAssetCategory);
                         }
                     }
@@ -70,7 +76,8 @@ public class RuleAssetManagementService {
 
             } else {
                 ruleAsset = new RuleAsset(packageName, assetName);
-                for (String categoryName : categoryNameList) {
+                ruleAsset.setVersionNumber(versionNumber);
+                for (String categoryName : categoryNameListFromGuvnor) {
                     ruleAssetCategoryToInsertForRuleAsset(ruleAsset, categoryName);
                 }
                 ruleAssetRepository.save(ruleAsset);
@@ -86,13 +93,16 @@ public class RuleAssetManagementService {
                 found = true;
             }
         }
-        if (found = false) {
-            RuleAssetCategory ruleAssetCategory = new RuleAssetCategory(categoryName);
+        if (found == false) {
+            RuleAssetCategory ruleAssetCategory = ruleAssetCategoryRepository.findBycategoryName(categoryName);
+            if (ruleAssetCategory == null) {
+                ruleAssetCategory = new RuleAssetCategory(categoryName);
+            }
             ruleAsset.getRuleAssetCategory().add(ruleAssetCategory);
         }
     }
 
-
+    @Transactional
     public void synchronizeInDBGuvnorCategories(String packageName, Asset asset) {
         String assetName = asset.getName();
         List<String> assetCategorylist = new ArrayList<>();
