@@ -45,7 +45,7 @@ public class RuleExecution {
     @JoinColumn(name = "session_execution_id_fk", referencedColumnName = "id")
     private SessionExecution sessionExecution;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "rule_asset_id_fk", referencedColumnName = "id")
     private RuleAsset ruleAsset;
 

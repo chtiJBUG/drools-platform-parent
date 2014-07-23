@@ -1,6 +1,11 @@
-DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', '$scope', '$http', '$log', 'growlNotifications', 'StompService', function ($rootScope, $scope, $http, $log, growlNotifications, StompService) {
+DroolsPlatformControllers.controller('packageVersionManagementController', ['$rootScope',
+    '$scope',
+    '$http',
+    '$log',
+    'growlNotifications',
+    'StompService', function ($rootScope, $scope, $http, $log, growlNotifications, StompService) {
     initController();
-    var unchecked=true;
+
     /* Functions to search the package's versions */
     //___ Quick search after any modification
     $scope.searchPackageByName = function() {
@@ -168,6 +173,7 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
         _.each($scope.activeRuntimeList, function(runtime) {
             runtime.isSelected = false;
         });
+        $scope.allChecked=false;
         $('#Deployment').modal('hide');
     };
     //___ Modal for : Confirm Message
@@ -299,16 +305,14 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
 
     $scope.check = function() {
         // TODO
-        if(unchecked==true){
+        if($scope.allChecked==false){
             _.each($scope.activeRuntimeList, function(runtime) {
                runtime.isSelected = true;
             });
-            unchecked=false;
         }else{
             _.each($scope.activeRuntimeList, function(runtime) {
                 runtime.isSelected = false;
             });
-            unchecked=true;
         }
 
     };
@@ -316,13 +320,18 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
 
     //___ Deploy
     $scope.deployVersion = function() {
+        if($scope.isSnapshot){
+            $scope.versionToDeploy=$scope.newVersion+"-SNAPSHOT";
+        }else{
+            $scope.versionToDeploy=$scope.newVersion;
+        }
+        console.log("[Info] Version to deploy : "+$scope.versionToDeploy);
         _.each(
             _.where($scope.activeRuntimeList, {isSelected:true}),
             function(runtime) {
-                StompService.deployRuntime(runtime.ruleBaseId, $scope.newVersion);
+                StompService.deployRuntime(runtime.ruleBaseId, $scope.versionToDeploy);
             }
         );
-        growlNotifications.add('Deployment launched', 'info', 2000);
         $scope.closeDeploy();
     };
 
@@ -385,6 +394,9 @@ DroolsPlatformControllers.controller('assetPackagingController', ['$rootScope', 
         $scope.checkedActiveRuntimeList = {
             item:[]
         };
+
+        //___ Deploy modal
+        $scope.allChecked=false;
 
         //___ After resetting the values, get values from the server
         //___ Get the list of the existed package from the server

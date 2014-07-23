@@ -44,7 +44,7 @@
     <tomcat.deployment.password>tomcat</tomcat.deployment.password>
     <tomcat.version>7.0.52</tomcat.version>
     <jackson.version>2.3.1</jackson.version>
-
+    <projectreactor.version>1.0.0.RELEASE</projectreactor.version>
   </properties>
 
   <licenses>
@@ -491,6 +491,17 @@
         <groupId>org.apache.cxf</groupId>
         <artifactId>cxf-rt-transports-http</artifactId>
         <version>${cxf.version}</version>
+      </dependency>
+      <!--projectreactor -->
+      <dependency>
+        <groupId>org.projectreactor</groupId>
+        <artifactId>reactor-core</artifactId>
+        <version>${projectreactor.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.projectreactor</groupId>
+        <artifactId>reactor-tcp</artifactId>
+        <version>${projectreactor.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

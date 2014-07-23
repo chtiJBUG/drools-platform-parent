@@ -22,6 +22,13 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             console.log(error);
         });
 
+    //___ Pagination options
+    $scope.page = {
+        currentIndex : undefined,
+        totalCount: undefined,
+        maxItemPerPage : undefined
+
+    }
     //___ Filters
     $scope.filters = {
         packageName: undefined,
@@ -29,13 +36,8 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         hostname: undefined,
         startDate: undefined,
         endDate: undefined,
-        onlyRunningInstances : false
-    };
-
-    //___ Collapse status for each box from the "Search panel"
-    $scope.collapseStatus = {
-        "firstBox": false,
-        "secondBox": false
+        onlyRunningInstances : false,
+        page : $scope.page
     };
 
     //___ Popover details (when you move the mouse over the rulePackage)
@@ -208,11 +210,12 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             console.log('[Info] Filters chosen : ');
             //___ Put $scope into var
             var filters = $scope.filters;
-            console.log(filters);
             $scope.namePackageSelectClass = "form-group";
-            $http.post('./server/runtime/filter', filters)
+
+            $http.post('./server/runtime/count', filters)
                 .success(function (data) {
-                    $scope.allRuntimes = data;
+                    $scope.count = data;
+                    console.log("[Info] Total count : "+$scope.count);
                 })
                 .error(function (error, status) {
                     console.log("[Error] Error HTTP " + status);
@@ -220,14 +223,65 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                     //____ TODO Send an appropriate message
                     growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
                 });
+
+
+            $http.post('./server/runtime/filter', filters)
+                .success(function (data) {
+                    $scope.allRuntimes = data;
+                    console.log("[Info] Number of items displayed per page : "+$scope.allRuntimes.length);
+                })
+                .error(function (error, status) {
+                    console.log("[Error] Error HTTP " + status);
+                    console.log(error);
+                    //____ TODO Send an appropriate message
+                    growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
+                });
+
+
+
         }
+        $scope.currentPage=1;
+        //var result = Math.floor(-5/4);//-2
         $scope.showCancelButton = true;
+    };
+
+    $scope.pageChanged = function() {
+        console.log('Page changed to: ' + $scope.currentPage);
+        var filters=$scope.filters;
+        filters.page.currentIndex=$scope.currentPage;
+        $http.post('./server/runtime/filter', filters)
+            .success(function (data) {
+                $scope.allRuntimes = data;
+                console.log("[Info] Number of items displayed per page : "+$scope.allRuntimes.length);
+            })
+            .error(function (error, status) {
+                console.log("[Error] Error HTTP " + status);
+                console.log(error);
+                //____ TODO Send an appropriate message
+                growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
+            });
     };
 
     $scope.reset = function () {
         $scope.allRuntimes = [];
         $scope.namePackageSelectClass = "form-group";
-        $scope.filters=undefined;
+        //___ Pagination options
+        $scope.page = {
+            currentIndex : undefined,
+            totalCount: undefined,
+            maxItemPerPage : undefined
+
+        }
+        //___ Filters
+        $scope.filters = {
+            packageName: undefined,
+            status: undefined,
+            hostname: undefined,
+            startDate: undefined,
+            endDate: undefined,
+            onlyRunningInstances : false,
+            page : $scope.page
+        };
         $scope.showCancelButton = false;
     };
 
