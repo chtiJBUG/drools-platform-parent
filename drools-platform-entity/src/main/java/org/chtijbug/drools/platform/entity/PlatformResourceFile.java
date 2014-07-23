@@ -1,15 +1,18 @@
 package org.chtijbug.drools.platform.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * Created by IntelliJ IDEA.
  * Date: 05/05/14
  * Time: 11:50
  * To change this template use File | Settings | File Templates.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlatformResourceFile {
     private String fileName;
     private String content;
-    private String guvnor_url=null;
+    private String guvnor_url = null;
     private String guvnor_appName;
     private String guvnor_packageName;
     private String guvnor_packageVersion;
