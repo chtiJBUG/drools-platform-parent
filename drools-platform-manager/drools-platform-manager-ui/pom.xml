@@ -166,6 +166,15 @@
       <artifactId>javax.websocket-api</artifactId>
       <scope>provided</scope>
     </dependency>
+    <!-- Projectreactor for stomp over activemq-->
+    <dependency>
+      <groupId>org.projectreactor</groupId>
+      <artifactId>reactor-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.projectreactor</groupId>
+      <artifactId>reactor-tcp</artifactId>
+    </dependency>
 
   </dependencies>
 
@@ -244,15 +253,15 @@
     </plugins>
   </build>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>javax.websocket</groupId>
-                <artifactId>javax.websocket-api</artifactId>
-                <version>1.0</version>
-                <scope>provided</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>javax.websocket</groupId>
+        <artifactId>javax.websocket-api</artifactId>
+        <version>1.0</version>
+        <scope>provided</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
 </project>

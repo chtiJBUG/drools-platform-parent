@@ -1,40 +1,40 @@
 <beans
-        xmlns="http://www.springframework.org/schema/beans"
-        xmlns:p="http://www.springframework.org/schema/p"
-        xmlns:amq="http://activemq.apache.org/schema/core"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jms="http://www.springframework.org/schema/jms"
-        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:amq="http://activemq.apache.org/schema/core"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jms="http://www.springframework.org/schema/jms"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
   http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd">
 
 
+  <!--  lets create an embedded ActiveMQ Broker -->
 
 
-    <!--  lets create an embedded ActiveMQ Broker -->
+  <amq:broker brokerName="brokerService" persistent="false" useShutdownHook="true"
+              xmlns="http://activemq.apache.org/schema/core">
+    <amq:persistenceAdapter>
+      <amq:amqPersistenceAdapter directory="${jms.basedir}" maxFileLength="32mb"/>
+    </amq:persistenceAdapter>
+    <amq:transportConnectors>
+      <amq:transportConnector uri="tcp://${jms.server}:${jms.port}"/>
+      <amq:transportConnector uri="stomp://${jms.server}:${stomp.port}"/>
+    </amq:transportConnectors>
+  </amq:broker>
 
 
-    <amq:broker brokerName="brokerService" persistent="false" useShutdownHook="true" xmlns="http://activemq.apache.org/schema/core">
-        <amq:persistenceAdapter >
-            <amq:amqPersistenceAdapter directory="${jms.basedir}" maxFileLength="32mb" />
-        </amq:persistenceAdapter>
-        <amq:transportConnectors>
-            <amq:transportConnector uri="tcp://${jms.server}:${jms.port}" />
-        </amq:transportConnectors>
-    </amq:broker>
+  <!-- A JMS connection factory for ActiveMQ -->
+  <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory"
+        p:brokerURL="tcp://${jms.server}:${jms.port}"/>
+
+  <!-- The Spring message listener container configuration -->
+  <jms:listener-container
+      container-type="default"
+      connection-factory="connectionFactory"
+      acknowledge="transacted">
+    <jms:listener destination="historyEventQueue" ref="simpleMessageListener"/>
+  </jms:listener-container>
 
 
-    <!-- A JMS connection factory for ActiveMQ -->
-    <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory"
-          p:brokerURL="tcp://${jms.server}:${jms.port}" />
-
-    <!-- The Spring message listener container configuration -->
-    <jms:listener-container
-            container-type="default"
-            connection-factory="connectionFactory"
-            acknowledge="transacted">
-        <jms:listener destination="historyEventQueue" ref="simpleMessageListener" />
-    </jms:listener-container>
-
-
-    <bean id="webSocketSessionManager" class="org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager"/>
+  <bean id="webSocketSessionManager" class="org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager"/>
 
 </beans>

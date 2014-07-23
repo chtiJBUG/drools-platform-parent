@@ -2,9 +2,7 @@ package org.chtijbug.drools.platform.backend.service.persistence;
 
 import com.google.common.base.Throwables;
 import org.chtijbug.drools.guvnor.rest.ChtijbugDroolsRestException;
-import org.chtijbug.drools.guvnor.rest.GuvnorConnexionFailedException;
 import org.chtijbug.drools.guvnor.rest.GuvnorRepositoryConnector;
-import org.chtijbug.drools.guvnor.rest.dt.DecisionTable;
 import org.chtijbug.drools.guvnor.rest.model.Asset;
 import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +34,7 @@ public class SynchronizationTaskWithGuvnor {
     }
 
 
-    //@Scheduled(cron = "* */15 9-18 *  * MON-FRI ")
+    @Scheduled(cron = "* */15 9-18 *  * MON-FRI ")
     public void SynchronizeGuvnorCategories() {
         try {
             List<Asset> listPackages = guvnorRepositoryConnector.getAllPackagesInGuvnorRepo();

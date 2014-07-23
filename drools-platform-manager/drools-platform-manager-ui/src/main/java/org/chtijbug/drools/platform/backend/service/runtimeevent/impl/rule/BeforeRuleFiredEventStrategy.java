@@ -5,6 +5,7 @@ import org.chtijbug.drools.entity.DroolsFactObject;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.rule.BeforeRuleFiredHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
+import org.chtijbug.drools.platform.persistence.RuleAssetRepository;
 import org.chtijbug.drools.platform.persistence.RuleExecutionRepository;
 import org.chtijbug.drools.platform.persistence.RuleflowGroupRepository;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
@@ -32,6 +33,9 @@ public class BeforeRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
     @Autowired
     private SessionExecutionRepository sessionExecutionRepository;
 
+    @Autowired
+    private RuleAssetRepository ruleAssetRepository;
+
     @Override
     @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
@@ -47,6 +51,15 @@ public class BeforeRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
         ruleExecution.setStartDate(beforeRuleFiredHistoryEvent.getDateEvent());
         ruleExecution.setRuleName(beforeRuleFiredHistoryEvent.getRule().getRuleName());
         ruleExecution.setPackageName(beforeRuleFiredHistoryEvent.getRule().getRulePackageName());
+        RuleAsset ruleAsset = ruleAssetRepository.findByPackageNameAndAssetName(ruleExecution.getPackageName(), ruleExecution.getRuleName());
+        if (ruleAsset != null) {
+            ruleExecution.setRuleAsset(ruleAsset);
+        } else {
+            ruleAsset = new RuleAsset(ruleExecution.getPackageName(), ruleExecution.getRuleName());
+            ruleAssetRepository.save(ruleAsset);
+            ruleExecution.setRuleAsset(ruleAsset);
+        }
+
         ruleExecution.setStartEventID(beforeRuleFiredHistoryEvent.getEventID());
         for (DroolsFactObject droolsFactObject : beforeRuleFiredHistoryEvent.getWhenObjects()) {
             if (droolsFactObject != null) {

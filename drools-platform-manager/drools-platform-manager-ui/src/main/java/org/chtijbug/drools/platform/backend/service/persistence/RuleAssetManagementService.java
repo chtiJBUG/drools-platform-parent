@@ -39,7 +39,7 @@ public class RuleAssetManagementService {
         return ruleAsset;
     }
 
-
+    @Transactional
     private RuleAsset getRuleAssetWithCategory(String packageName, String assetName, List<String> categoryNameList, Integer versionNumber) {
         RuleAsset ruleAsset = null;
         if (packageName != null && assetName != null) {
@@ -92,7 +92,7 @@ public class RuleAssetManagementService {
         }
     }
 
-    @Transactional
+
     public void synchronizeInDBGuvnorCategories(String packageName, Asset asset) {
         String assetName = asset.getName();
         List<String> assetCategorylist = new ArrayList<>();
