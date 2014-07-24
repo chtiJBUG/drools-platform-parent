@@ -67,4 +67,19 @@ public class PlatformResourceFile {
     public String getGuvnor_password() {
         return guvnor_password;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("PlatformResourceFile{");
+        sb.append("fileName='").append(fileName).append('\'');
+        sb.append(", content='").append(content).append('\'');
+        sb.append(", guvnor_url='").append(guvnor_url).append('\'');
+        sb.append(", guvnor_appName='").append(guvnor_appName).append('\'');
+        sb.append(", guvnor_packageName='").append(guvnor_packageName).append('\'');
+        sb.append(", guvnor_packageVersion='").append(guvnor_packageVersion).append('\'');
+        sb.append(", guvnor_userName='").append(guvnor_userName).append('\'');
+        sb.append(", guvnor_password='").append(guvnor_password).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

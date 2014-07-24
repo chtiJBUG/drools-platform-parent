@@ -14,6 +14,7 @@ import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeDefinition;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.RealTimeParameters;
 import org.glassfish.tyrus.client.ClientManager;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 
@@ -32,6 +33,7 @@ import java.util.Arrays;
         decoders = {PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class})
 public class WebSocketClient
         extends Endpoint {
+    private final static org.slf4j.Logger logger = LoggerFactory.getLogger(WebSocketClient.class);
 
     @Value(value = "${knowledge.numberRetriesConnectionToRuntime}")
     private int numberRetries;
@@ -71,7 +73,7 @@ public class WebSocketClient
          */
         boolean connected = false;
         int retryNumber = 0;
-        IOException lastsException = null;
+        IOException lastException = null;
         while (retryNumber < this.numberRetries && connected == false) {
             try {
                 ClientManager client = ClientManager.createClient();
@@ -84,16 +86,24 @@ public class WebSocketClient
                         URI.create("ws://" + platformRuntimeInstance.getHostname() + ":" + platformRuntimeInstance.getPort() + platformRuntimeInstance.getEndPoint())
                 );
                 connected = true;
+                LOG.info("Successfully Connected to " + platformRuntimeInstance.toString());
             } catch (IOException e) {
-                lastsException = e;
-
+                lastException = e;
+                LOG.error("Could not  Connect to " + platformRuntimeInstance.toString() + " Try number=" + retryNumber, e);
+                try {
+                    Thread.sleep(this.timeToWaitBetweenTwoRetries);
+                } catch (InterruptedException e1) {
+                    LOG.error("Could not  wait  " + platformRuntimeInstance.toString() + " Try number=" + retryNumber, e1);
+                }
             } finally {
                 retryNumber++;
             }
         }
         if (connected == false && retryNumber >= this.numberRetries) {
-            if (lastsException != null) {
-                throw lastsException;
+            if (lastException != null) {
+                LOG.error("Could not Connect to " + platformRuntimeInstance.toString() + " after =" + retryNumber, lastException);
+
+                throw lastException;
             }
         }
     }

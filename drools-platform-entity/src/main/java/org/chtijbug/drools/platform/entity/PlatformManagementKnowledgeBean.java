@@ -101,11 +101,18 @@ public class PlatformManagementKnowledgeBean {
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("PlatformManagementKnowledgeBean{");
-        sb.append("isAlive=").append(isAlive);
+        sb.append("heartbeat=").append(heartbeat);
+        sb.append(", isAlive=").append(isAlive);
         sb.append(", requestRuntimePlarform=").append(requestRuntimePlarform);
         sb.append(", requestStatus=").append(requestStatus);
         sb.append(", jmxInfo=").append(jmxInfo);
-        sb.append(", resourceFileList=").append(resourceFileList);
+        if (resourceFileList != null && resourceFileList.size() > 0) {
+            sb.append(", resourceFileList=").append(resourceFileList);
+            for (PlatformResourceFile element : resourceFileList) {
+                sb.append(",   PlatformResourceFile=").append(element);
+            }
+        }
+
         sb.append(", droolsChtijbugException=").append(droolsChtijbugException);
         sb.append('}');
         return sb.toString();
