@@ -14,6 +14,7 @@ import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeDefinition;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.RealTimeParameters;
 import org.glassfish.tyrus.client.ClientManager;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 
 import javax.websocket.*;
@@ -32,9 +33,12 @@ import java.util.Arrays;
 public class WebSocketClient
         extends Endpoint {
 
+    @Value(value = "${knowledge.numberRetriesConnectionToRuntime}")
+    private int numberRetries;
+
     private static final Logger LOG = Logger.getLogger(WebSocketClient.class);
     private PlatformRuntimeInstance platformRuntimeInstance;
-
+    private int timeToWaitBetweenTwoRetries;
     private Session session;
     private PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
     private PlatformRuntimeDefinitionRepository platformRuntimeDefinitionRepository;
@@ -47,7 +51,7 @@ public class WebSocketClient
     private LoadNewRuleVersionListener loadNewRuleVersionListener;
     private VersionInfosListener versionInfosListener;
 
-    public WebSocketClient(PlatformRuntimeInstance platformRuntimeInstance) throws DeploymentException, IOException {
+    public WebSocketClient(PlatformRuntimeInstance platformRuntimeInstance, int numberRetries, int timeToWaitBetweenTwoRetries) throws DeploymentException, IOException {
         ApplicationContext applicationContext = AppContext.getApplicationContext();
         this.platformRuntimeInstanceRepository = applicationContext.getBean(PlatformRuntimeInstanceRepository.class);
         this.sessionExecutionRepository = applicationContext.getBean(SessionExecutionRepository.class);
@@ -59,19 +63,38 @@ public class WebSocketClient
         this.versionInfosListener = applicationContext.getBean(VersionInfosListener.class);
         this.platformRuntimeDefinitionRepository = applicationContext.getBean(PlatformRuntimeDefinitionRepository.class);
         this.platformRuntimeInstance = platformRuntimeInstance;
-        try {
-            ClientManager client = ClientManager.createClient();
-            this.session = client.connectToServer(
-                    this,
-                    ClientEndpointConfig.Builder.create()
-                            .encoders(Arrays.<Class<? extends Encoder>>asList(PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class))
-                            .decoders(Arrays.<Class<? extends Decoder>>asList(PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class))
-                            .build(),
-                    URI.create("ws://" + platformRuntimeInstance.getHostname() + ":" + platformRuntimeInstance.getPort() + platformRuntimeInstance.getEndPoint())
-            );
-        } catch (Exception e) {
-            throw e;
+        this.numberRetries = numberRetries;
+        this.timeToWaitBetweenTwoRetries = timeToWaitBetweenTwoRetries;
 
+        /**
+         * Let us start n times teh connection + wait between timeout
+         */
+        boolean connected = false;
+        int retryNumber = 0;
+        IOException lastsException = null;
+        while (retryNumber < this.numberRetries && connected == false) {
+            try {
+                ClientManager client = ClientManager.createClient();
+                this.session = client.connectToServer(
+                        this,
+                        ClientEndpointConfig.Builder.create()
+                                .encoders(Arrays.<Class<? extends Encoder>>asList(PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class))
+                                .decoders(Arrays.<Class<? extends Decoder>>asList(PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class))
+                                .build(),
+                        URI.create("ws://" + platformRuntimeInstance.getHostname() + ":" + platformRuntimeInstance.getPort() + platformRuntimeInstance.getEndPoint())
+                );
+                connected = true;
+            } catch (IOException e) {
+                lastsException = e;
+
+            } finally {
+                retryNumber++;
+            }
+        }
+        if (connected == false && retryNumber >= this.numberRetries) {
+            if (lastsException != null) {
+                throw lastsException;
+            }
         }
     }
 

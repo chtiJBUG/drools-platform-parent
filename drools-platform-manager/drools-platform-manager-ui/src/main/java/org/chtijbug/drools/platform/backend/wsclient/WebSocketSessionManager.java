@@ -3,6 +3,7 @@ package org.chtijbug.drools.platform.backend.wsclient;
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.platform.entity.Heartbeat;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.DeploymentException;
@@ -25,11 +26,18 @@ public class WebSocketSessionManager {
 
     private Map<Integer, WebSocketClient> webSocketClientList = new HashMap<>();
 
+    @Value(value = "${knowledge.numberRetriesConnectionToRuntime}")
+    private int numberRetries;
+
+
+    @Value(value = "${knowledge.timeToWaitBetweenTwoRetries}")
+    private int timeToWaitBetweenTwoRetries;
+
     public WebSocketClient AddClient(PlatformRuntimeInstance platformRuntimeInstance) throws DeploymentException, IOException {
 
         Heartbeat heartbeat = new Heartbeat();
         heartbeat.setLastAlive(new Date());
-        WebSocketClient webSocketClient = new WebSocketClient(platformRuntimeInstance);
+        WebSocketClient webSocketClient = new WebSocketClient(platformRuntimeInstance, numberRetries, timeToWaitBetweenTwoRetries);
         this.webSocketClientList.put(platformRuntimeInstance.getRuleBaseID(), webSocketClient);
 
         return webSocketClient;
