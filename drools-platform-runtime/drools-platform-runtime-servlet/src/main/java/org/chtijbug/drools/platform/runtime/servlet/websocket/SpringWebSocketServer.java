@@ -42,13 +42,15 @@ public class SpringWebSocketServer extends TextWebSocketHandler implements WebSo
         PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode stream = new PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode();
 
         PlatformManagementKnowledgeBean bean = stream.decode(new StringReader(message.getPayload()));
+        LOG.info("Received Request= " + bean.toString());
         switch (bean.getRequestRuntimePlarform()) {
             case isAlive:
                 this.sendMessage(PlatformManagementKnowledgeBeanServiceFactory.isAlive(bean));
-                LOG.info("Runtime is alive");
+                LOG.info("Runtime is alive" + bean.toString());
                 break;
             case duplicateRuleBaseID:
                 this.platformKnowledgeBaseJavaEE.dispose();
+                LOG.error("duplicated ruleBaseID " + bean.toString());
                 break;
             case ruleVersionInfos:
                 bean = PlatformManagementKnowledgeBeanServiceFactory.generateRuleVersionsInfo(bean, platformKnowledgeBaseJavaEE.getDroolsResources());
@@ -64,10 +66,12 @@ public class SpringWebSocketServer extends TextWebSocketHandler implements WebSo
                     bean.setRequestStatus(RequestStatus.SUCCESS);
                     this.sendMessage(bean);
                     this.platformKnowledgeBaseJavaEE.setRuleBaseStatus(true);
+                    LOG.info("loadNewRuleVersion done");
                 } catch (Exception e) {
                     DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("RELOAD", "Could not reload Rule Package From Guvnor", e);
                     bean.setDroolsChtijbugException(droolsChtijbugException);
                     bean.setRequestStatus(RequestStatus.FAILURE);
+                    LOG.error("Could not reload new rule version" + bean.toString(), e);
                     this.sendMessage(bean);
                 }
                 break;
