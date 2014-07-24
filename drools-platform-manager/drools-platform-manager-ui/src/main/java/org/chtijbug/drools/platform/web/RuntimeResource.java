@@ -94,7 +94,6 @@ public class RuntimeResource {
             List<Fact> outputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.OUTPUTDATA));
 
             if (sessionExecution.getProcessExecutions().size() != 0) {
-
                 processDetails.setProcessName(processExecution.getProcessName());
 
                 if (processExecution.getProcessVersion() != null) {
@@ -118,6 +117,13 @@ public class RuntimeResource {
                         ruleExecutionDetails.setRuleName(ruleExecution.getRuleName());
                         ruleExecutionDetails.setWhenFacts(ruleExecution.getWhenFacts());
                         ruleExecutionDetails.setThenFacts(ruleExecution.getThenFacts());
+
+                        RuleAssetDetails ruleAssetDetails = new RuleAssetDetails();
+                        ruleAssetDetails.setAssetName(ruleExecution.getRuleAsset().getAssetName());
+                        ruleAssetDetails.setVersionNumber(ruleExecution.getRuleAsset().getVersionNumber());
+                        ruleAssetDetails.setRuleAssetCategory(ruleExecution.getRuleAsset().getRuleAssetCategory());
+                        ruleExecutionDetails.setRuleAsset(ruleAssetDetails);
+
                         ruleFlowGroupDetails.addRuleExecution(ruleExecutionDetails); //Ajout de la ruleExecutionDetails dans la liste
                     }
                     executionDetailsResource.addRuleFlowGroup(ruleFlowGroupDetails);
@@ -167,7 +173,6 @@ public class RuntimeResource {
                     PlatformRuntimeInstance runtimeInstance = sessionExecution.getPlatformRuntimeInstance();
                     DroolsResource guvnorResource = sessionExecution.getPlatformRuntimeInstance().getPlatformRuntimeDefinition().getDroolsRessourcesDefinition().get(0);
                     assert sessionExecution != null;
-
                     output.setRuleBaseID(sessionExecution.getPlatformRuntimeInstance().getRuleBaseID());
                     output.setSessionId(sessionExecution.getSessionId());
 
@@ -208,9 +213,11 @@ public class RuntimeResource {
         }
     }
 
+    //Simplify those requests is possible ?
+
     @RequestMapping(method = RequestMethod.GET, value = "/all/statuses")
-    @Produces(value = MediaType.APPLICATION_JSON)
-    @ResponseBody
+         @Produces(value = MediaType.APPLICATION_JSON)
+         @ResponseBody
     public List<RuntimeStatusObject> getAllStatuses() {
         RuntimeStatusObject initmode = new RuntimeStatusObject(PlatformRuntimeInstanceStatus.INITMODE, "INITMODE");
         RuntimeStatusObject started = new RuntimeStatusObject(PlatformRuntimeInstanceStatus.STARTED, "STARTED");
@@ -220,5 +227,22 @@ public class RuntimeResource {
 
         return Arrays.asList(initmode, started, notJoignable, stopped, crashed);
     }
+
+
+    @RequestMapping(method = RequestMethod.GET, value = "/all/facttypes")
+    @Produces(value = MediaType.APPLICATION_JSON)
+    @ResponseBody
+    public List<FactTypeObject> getAllFactTypes() {
+        FactTypeObject when = new FactTypeObject(FactType.WHEN, "WHEN");
+        FactTypeObject inserted = new FactTypeObject(FactType.INSERTED, "INSERTED");
+        FactTypeObject updated_oldvalue = new FactTypeObject(FactType.UPDATED_OLDVALUE, "UPDATED_OLDVALUE");
+        FactTypeObject updated_newvalue = new FactTypeObject(FactType.UPDATED_NEWVALUE, "UPDATED_NEWVALUE");
+        FactTypeObject deleted = new FactTypeObject(FactType.DELETED, "DELETED");
+        FactTypeObject inputdata = new FactTypeObject(FactType.INPUTDATA, "INPUTDATA");
+        FactTypeObject outputdata = new FactTypeObject(FactType.OUTPUTDATA, "OUTPUTDATA");
+
+        return Arrays.asList(when, inserted, updated_oldvalue, updated_newvalue, deleted, inputdata, outputdata);
+    }
+
 
 }

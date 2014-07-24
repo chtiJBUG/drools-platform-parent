@@ -170,7 +170,7 @@
                                             style="padding:0;height:auto;width:auto;"
                                             data-placeholder="Select a category">
                                         <option value=""></option>
-                                        <option ng-repeat="p in packagesList" value="{{p}}">{{p}}
+                                        <option ng-repeat="r in ruleAssetCategoryList" value="{{r.categoryName}}">{{r.categoryName}}
                                         </option>
                                     </select>
                                 </div>
@@ -188,12 +188,12 @@
                                             style="padding:0;height:auto;width:auto;"
                                             data-placeholder="Select a fact type">
                                         <option value=""></option>
-                                        <option ng-repeat="p in packagesList" value="{{p}}">{{p}}
+                                        <option ng-repeat="f in facttypesList" value="{{f.type}}">{{f.description}}
                                         </option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <button id="btn-search" class="btn btn-info pull-right" ng-click="search()">
+                                    <button id="btn-search" class="btn btn-info pull-right" ng-click="searchDetails()">
                                         <i class="fa fa-search"></i> Search
                                     </button>
                                 </div>

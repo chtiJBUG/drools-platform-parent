@@ -22,6 +22,13 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             console.log(error);
         });
 
+    $http.get('./server/runtime/all/facttypes')
+        .success(function (data) {
+            $scope.facttypesList = data;
+        })
+        .error(function (error) {
+            console.log(error);
+        });
     //___ Pagination options
     $scope.page = {
         currentIndex : undefined,
@@ -165,9 +172,41 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                 $scope.code.input=JSON.stringify(JSON.parse($scope.allSessionExecutionDetails.inputObject), null, 3);
                 $scope.code.output=JSON.stringify(JSON.parse($scope.allSessionExecutionDetails.outputObject), null, 3);
 
-                //How to get the rule executions in alist in AngularJS :
-                //ruleExcecutionList =_.map(_.map(_.map($scope.allSessionExecutionDetails.allRuleFlowGroupDetails, function(item){ return item; }), function(ruleflowGroupItem){return ruleflowGroupItem.allRuleExecutionDetails;}), function(ruleExecutionGroupItem){ return ruleExecutionGroupItem[0]; });
+                // RuleExecution list
+                ruleExcecutionList =_.map(
+                    _.map(
+                        _.map(
+                            $scope.allSessionExecutionDetails.allRuleFlowGroupDetails,
+                            function(item){
+                                return item;
+                            }
+                        ),
+                        function(ruleflowGroupItem){
+                            return ruleflowGroupItem.allRuleExecutionDetails;
+                        }
+                    ),
+                    function(ruleExecutionGroupItem){
+                        return ruleExecutionGroupItem[0];
+                    }
+                );
 
+                // ruleAssetCategory List
+                $scope.ruleAssetCategoryList=_.map(
+                    _.map(
+                        _.map(
+                            ruleExcecutionList,
+                            function(ruleExecutionItem){
+                                return ruleExecutionItem.ruleAsset;
+                            }
+                        ),
+                        function(ruleAssetItem){
+                            return ruleAssetItem.ruleAssetCategory;
+                        }
+                    ),
+                    function(item){
+                        return item[0];
+                    }
+                );
             })
             .error(function (error, status) {
                 console.log("[Error] Error HTTP " + status);
@@ -255,6 +294,10 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         //var result = Math.floor(-5/4);//-2
         $scope.showCancelButton = true;
     };
+
+    $scope.searchDetails = function(){
+        alert("Not yet implemented");
+    }
 
     $scope.pageChanged = function() {
         console.log('Page changed to: ' + $scope.currentPage);
