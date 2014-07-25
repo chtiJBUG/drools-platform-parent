@@ -213,7 +213,7 @@ public class RuntimeResource {
         }
     }
 
-    //Simplify those requests is possible ?
+    // Is it possible to simplify those requests?
 
     @RequestMapping(method = RequestMethod.GET, value = "/all/statuses")
          @Produces(value = MediaType.APPLICATION_JSON)
@@ -232,16 +232,16 @@ public class RuntimeResource {
     @RequestMapping(method = RequestMethod.GET, value = "/all/facttypes")
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
-    public List<FactTypeObject> getAllFactTypes() {
-        FactTypeObject when = new FactTypeObject(FactType.WHEN, "WHEN");
-        FactTypeObject inserted = new FactTypeObject(FactType.INSERTED, "INSERTED");
-        FactTypeObject updated_oldvalue = new FactTypeObject(FactType.UPDATED_OLDVALUE, "UPDATED_OLDVALUE");
-        FactTypeObject updated_newvalue = new FactTypeObject(FactType.UPDATED_NEWVALUE, "UPDATED_NEWVALUE");
-        FactTypeObject deleted = new FactTypeObject(FactType.DELETED, "DELETED");
-        FactTypeObject inputdata = new FactTypeObject(FactType.INPUTDATA, "INPUTDATA");
-        FactTypeObject outputdata = new FactTypeObject(FactType.OUTPUTDATA, "OUTPUTDATA");
+    public List<String> getAllFactTypes() {
+        /*FactTypeObject when = new FactTypeObject();
+        FactTypeObject inserted = new FactTypeObject();
+        FactTypeObject updated_oldvalue = new FactTypeObject();
+        FactTypeObject updated_newvalue = new FactTypeObject();
+        FactTypeObject deleted = new FactTypeObject();
+        FactTypeObject inputdata = new FactTypeObject();
+        FactTypeObject outputdata = new FactTypeObject();*/
 
-        return Arrays.asList(when, inserted, updated_oldvalue, updated_newvalue, deleted, inputdata, outputdata);
+        return Arrays.asList(FactType.WHEN.toString(), FactType.INSERTED.toString(), FactType.UPDATED_OLDVALUE.toString(), FactType.UPDATED_NEWVALUE.toString(), FactType.DELETED.toString(), FactType.INPUTDATA.toString(), FactType.OUTPUTDATA.toString());
     }
 
 

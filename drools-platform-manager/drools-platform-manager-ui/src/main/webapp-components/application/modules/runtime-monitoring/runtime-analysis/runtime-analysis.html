@@ -170,15 +170,20 @@
                                             style="padding:0;height:auto;width:auto;"
                                             data-placeholder="Select a category">
                                         <option value=""></option>
-                                        <option ng-repeat="r in ruleAssetCategoryList" value="{{r.categoryName}}">{{r.categoryName}}
+                                        <option ng-repeat="c in ruleAssetCategoryList" value="{{c.categoryName}}">{{c.categoryName}}
                                         </option>
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label for="ruleType">Rule name </label>
-                                    <small>(Optional)</small>
-                                    <input id="ruleType" class="form-control" name="selectType" type="text"
-                                           placeholder="Please enter the rule name" data-ng-model="detailsFilters.ruleName">
+                                <div class="form-group" ng-class="ruleName">
+                                    <label for="rule-name-select">Rule name</label>
+                                    <select id="rule-name-select" ui-select2="selectRuleName" ng-model="detailsFilters.ruleName"
+                                            class="form-control"
+                                            style="padding:0;height:auto;width:auto;"
+                                            data-placeholder="Select the rule name">
+                                        <option value=""></option>
+                                        <option ng-repeat="r in ruleNameList" value="{{r}}">{{r}}
+                                        </option>
+                                    </select>
                                 </div>
                                 <h4>Facts</h4>
                                 <div class="form-group" ng-class="factType">
@@ -188,7 +193,7 @@
                                             style="padding:0;height:auto;width:auto;"
                                             data-placeholder="Select a fact type">
                                         <option value=""></option>
-                                        <option ng-repeat="f in facttypesList" value="{{f.type}}">{{f.description}}
+                                        <option ng-repeat="f in facttypesList" value="{{f}}">{{f}}
                                         </option>
                                     </select>
                                 </div>

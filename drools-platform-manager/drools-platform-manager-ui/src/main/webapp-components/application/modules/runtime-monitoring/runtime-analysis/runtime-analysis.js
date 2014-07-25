@@ -29,6 +29,14 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         .error(function (error) {
             console.log(error);
         });
+
+    // Allow user to cancel his choice when selecting item
+    $scope.selectPackage = {allowClear: true};
+    $scope.selectStatus = {allowClear: true};
+    $scope.selectCategory = {allowClear: true};
+    $scope.selectRuleName = {allowClear: true};
+    $scope.selectFactType = {allowClear: true};
+
     //___ Pagination options
     $scope.page = {
         currentIndex : undefined,
@@ -141,8 +149,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     $scope.detailsFilters = {
         ruleCategory: undefined,
         ruleName: undefined,
-        factType: undefined,
-        startDate: undefined
+        factType: undefined
     };
 
 
@@ -160,9 +167,6 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             $document.scrollToElement(someElement, 0, 1000);
         }, 3);
 
-        // DEBUG
-        console.log(typeof(sessionId));
-
         //___ Load Details
         $http.get('./server/runtime/session/'+ruleBaseID+'/'+sessionId)
             .success(function (data) {
@@ -171,6 +175,12 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
                 $scope.code.input=JSON.stringify(JSON.parse($scope.allSessionExecutionDetails.inputObject), null, 3);
                 $scope.code.output=JSON.stringify(JSON.parse($scope.allSessionExecutionDetails.outputObject), null, 3);
+
+
+                /*
+                    From allSessionExecution, we will extract the useful informations.
+                    It required complexed for loop, then we use undescoreJS to simplify a bit.
+                */
 
                 // RuleExecution list
                 ruleExcecutionList =_.map(
@@ -186,9 +196,17 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                         }
                     ),
                     function(ruleExecutionGroupItem){
-                        return ruleExecutionGroupItem[0];
+                        return ruleExecutionGroupItem[0]; //Because the list is placed in the first item of an array
                     }
                 );
+
+                // ruleName List extracted from the ruleExecutionList
+                $scope.ruleNameList=_.map(
+                    ruleExcecutionList,
+                    function(ruleExecutionItem){
+                        return ruleExecutionItem.ruleName;
+                    }
+                )
 
                 // ruleAssetCategory List
                 $scope.ruleAssetCategoryList=_.map(
@@ -204,9 +222,91 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                         }
                     ),
                     function(item){
-                        return item[0];
+                        return item[0]; //Because the list is placed in the first item of an array
                     }
                 );
+
+                whenFactsFullClasseNameList = _.map(
+                    _.map(
+                        _.map(
+                            _.map(
+                                _.map(
+                                    _.map(
+                                        $scope.allSessionExecutionDetails.allRuleFlowGroupDetails,
+                                        function(item){
+                                            return item;
+                                        }
+                                    ),
+                                    function(ruleflowGroupObject){
+                                        return ruleflowGroupObject.allRuleExecutionDetails;
+                                    }
+                                ),
+                                function(tempItem){
+                                    return tempItem[0]; //Because the elements are placed in the first item of an array
+                                }
+                            ),
+                            function(ruleflowGroupObjectItem){
+                                return ruleflowGroupObjectItem.whenFacts;
+                            }
+                        ),
+                        function(whenFactsObject){
+                            return whenFactsObject[0]; //Because the list is placed in the first item of an array
+                        }
+                    ),
+                    function(whenFactsItem){
+                        return whenFactsItem.fullClassName;
+                    }
+                );
+
+                thenFactsFullClasseNameList = _.map(
+                    _.map(
+                        _.map(
+                            _.map(
+                                _.map(
+                                    _.map(
+                                        $scope.allSessionExecutionDetails.allRuleFlowGroupDetails,
+                                        function(item){
+                                            return item;
+                                        }
+                                    ),
+                                    function(ruleflowGroupObject){
+                                        return ruleflowGroupObject.allRuleExecutionDetails;
+                                    }
+                                ),
+                                function(tempItem){
+                                    return tempItem[0];
+                                }
+                            ),
+                            function(ruleflowGroupObjectItem){
+                                return ruleflowGroupObjectItem.thenFacts;
+                            }
+                        ),
+                        function(thenFactsObject){
+                            return thenFactsObject[0];
+                        }
+                    ),
+                    function(thenFactsItem){
+                        return thenFactsItem.fullClassName;
+                    }
+                );
+
+                // We add each items from whenFact fullClassName list and thenFact fullClassName list to the fact type list which already contains FactType.
+
+                _.each(whenFactsFullClasseNameList, function(item){
+                    $scope.facttypesList[$scope.facttypesList.length] = item;
+                });
+
+                _.each(thenFactsFullClasseNameList, function(item){
+                    $scope.facttypesList[$scope.facttypesList.length] = item;
+                });
+
+                //We delete duplicates, we have to do this
+                $scope.facttypesList=_.uniq($scope.facttypesList);
+
+                console.log($scope.facttypesList);
+
+
+
             })
             .error(function (error, status) {
                 console.log("[Error] Error HTTP " + status);
@@ -297,6 +397,8 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
     $scope.searchDetails = function(){
         alert("Not yet implemented");
+        console.log($scope.detailsFilters)
+
     }
 
     $scope.pageChanged = function() {
