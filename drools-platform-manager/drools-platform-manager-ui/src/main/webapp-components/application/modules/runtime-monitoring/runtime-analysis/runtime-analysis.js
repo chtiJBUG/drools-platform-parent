@@ -147,6 +147,9 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     $scope.sidebarContracted=true;
 
     $scope.detailsFilters = {
+        ruleCategorySelect: undefined, //Temporary (?)
+        ruleNameSelect: undefined, //Temporary (?)
+        factTypeSelect: undefined, //Temporary (?)
         ruleCategory: undefined,
         ruleName: undefined,
         factType: undefined
@@ -171,6 +174,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         $http.get('./server/runtime/session/'+ruleBaseID+'/'+sessionId)
             .success(function (data) {
                 $scope.allSessionExecutionDetails = data;
+                $scope.tempAllSessionExecutionDetails = $scope.allSessionExecutionDetails;
                 console.log('[Success] Data retrieved successfully');
 
                 $scope.code.input=JSON.stringify(JSON.parse($scope.allSessionExecutionDetails.inputObject), null, 3);
@@ -330,6 +334,11 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         $scope.selectedTab = item;
     }
 
+
+    $scope.collapseSidebar = function(){
+        $scope.sidebarContracted=!$scope.sidebarContracted;
+    }
+
     $scope.closeDetailsPanel = function () {
         var someElement = angular.element(document.getElementById('wrap'));
         $document.scrollToElement(someElement, 0, 1000);
@@ -396,8 +405,14 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     };
 
     $scope.searchDetails = function(){
-        alert("Not yet implemented");
-        console.log($scope.detailsFilters)
+        //Temporary (?)
+        $scope.detailsFilters.ruleName=$scope.detailsFilters.ruleNameSelect;
+        $scope.detailsFilters.ruleCategory=$scope.detailsFilters.ruleCategorySelect;
+        $scope.detailsFilters.factType=$scope.detailsFilters.factTypeSelect;
+        $scope.detailsFilters.ruleNameSelect=undefined;
+        $scope.detailsFilters.ruleCategorySelect=undefined;
+        $scope.detailsFilters.factTypeSelect=undefined;
+        $scope.collapseSidebar();
 
     }
 
@@ -417,6 +432,8 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                 growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
             });
     };
+
+
 
     $scope.reset = function () {
         $scope.allRuntimes = [];
