@@ -126,7 +126,7 @@ DroolsPlatformControllers.controller('MainCtrl', ['$rootScope', '$scope', '$wind
                 $log.log("Error. Caused by : " + cause);
                 $rootScope.username = "default";
             });
-
+        $scope.version = "0.0.0";
         console.log("Details about $location :");
         console.log($location); //complete location
         console.log($location.absUrl()); //complete URL
