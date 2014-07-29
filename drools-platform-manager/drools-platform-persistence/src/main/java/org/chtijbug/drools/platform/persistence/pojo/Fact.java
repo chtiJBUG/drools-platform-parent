@@ -15,7 +15,7 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "fact")
+@Table(name = "fact", indexes = {@Index(columnList = "fullClassName")})
 @TypeDefs({@TypeDef(name = "json", typeClass = StringJsonUserType.class)})
 public class Fact {
     @Id

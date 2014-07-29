@@ -34,7 +34,7 @@ public class SynchronizationTaskWithGuvnor {
     }
 
 
-    @Scheduled(cron = "* */2 9-18 *  * MON-FRI ")
+    @Scheduled(cron = "* */20 9-18 *  * MON-FRI ")
     public void SynchronizeGuvnorCategories() {
         try {
             List<Asset> listPackages = guvnorRepositoryConnector.getAllPackagesInGuvnorRepo();

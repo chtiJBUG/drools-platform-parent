@@ -12,7 +12,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "rule_execution")
+@Table(name = "rule_execution", indexes = {@Index(columnList = "ruleName"), @Index(columnList = "packageName")})
 public class RuleExecution {
 
     @Id

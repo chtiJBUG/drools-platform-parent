@@ -10,6 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "rule_asset_category")
+@Cacheable(value = true)
 public class RuleAssetCategory {
     @Id
     @SequenceGenerator(name = "rule_asset_category_id_seq", sequenceName = "rule_asset_category_seq")

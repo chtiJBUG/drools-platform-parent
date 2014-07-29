@@ -1,5 +1,6 @@
 package org.chtijbug.drools.platform.persistence.pojo;
 
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -10,7 +11,8 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "drools_resource")
+@Table(name = "drools_resource", indexes = {@Index(columnList = "guvnor_packageName")})
+@Cacheable(value = true)
 public class DroolsResource {
 
     @Id
