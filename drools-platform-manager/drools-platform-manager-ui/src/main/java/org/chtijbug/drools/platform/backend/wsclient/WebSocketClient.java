@@ -73,7 +73,7 @@ public class WebSocketClient
          */
         boolean connected = false;
         int retryNumber = 0;
-        IOException lastException = null;
+        Exception lastException = null;
         while (retryNumber < this.numberRetries && connected == false) {
             try {
                 ClientManager client = ClientManager.createClient();
@@ -87,7 +87,7 @@ public class WebSocketClient
                 );
                 connected = true;
                 LOG.info("Successfully Connected to " + platformRuntimeInstance.toString());
-            } catch (IOException e) {
+            } catch (Exception e) {
                 lastException = e;
                 LOG.error("Could not  Connect to " + platformRuntimeInstance.toString() + " Try number=" + retryNumber, e);
                 try {
@@ -103,7 +103,9 @@ public class WebSocketClient
             if (lastException != null) {
                 LOG.error("Could not Connect to " + platformRuntimeInstance.toString() + " after =" + retryNumber, lastException);
 
-                throw lastException;
+                if (lastException instanceof IOException) {
+                    throw (IOException) lastException;
+                }
             }
         }
     }

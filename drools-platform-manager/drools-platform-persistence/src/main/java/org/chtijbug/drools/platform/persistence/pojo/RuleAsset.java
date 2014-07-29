@@ -11,7 +11,8 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "rule_asset")
+@Table(name = "rule_asset", indexes = {@Index(columnList = "assetName")})
+@Cacheable(value = true)
 public class RuleAsset {
     @Id
     @SequenceGenerator(name = "rule_asset_id_seq", sequenceName = "rule_asset_seq")

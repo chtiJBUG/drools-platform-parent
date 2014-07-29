@@ -15,7 +15,8 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "platform_runtime_instance")
+@Table(name = "platform_runtime_instance", indexes = {@Index(columnList = "ruleBaseID")})
+@Cacheable(value = true)
 public class PlatformRuntimeInstance implements Serializable {
 
     @Id

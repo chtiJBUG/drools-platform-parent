@@ -12,7 +12,8 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "ruleflowgroup")
+@Table(name = "ruleflowgroup", indexes = {@Index(columnList = "ruleflowGroup")})
+@Cacheable(value = true)
 public class RuleflowGroup {
 
     @Id

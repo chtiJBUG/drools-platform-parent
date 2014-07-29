@@ -13,6 +13,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "process_execution")
+@Cacheable(value = true)
 public class ProcessExecution {
 
     @Id

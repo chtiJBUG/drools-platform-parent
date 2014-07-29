@@ -43,7 +43,16 @@
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-entitymanager</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-ehcache</artifactId>
+      <exclusions>
+        <exclusion>
+          <artifactId>ehcache-core</artifactId>
+          <groupId>net.sf.ehcache</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
@@ -76,9 +85,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-    	<groupId>org.postgresql</groupId>
-    	<artifactId>postgresql</artifactId>
-    	<scope>test</scope>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.chtijbug.drools</groupId>
@@ -86,10 +95,10 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-       <groupId>commons-dbcp</groupId>
-       <artifactId>commons-dbcp</artifactId>
-       <scope>test</scope>
-     </dependency>
+      <groupId>commons-dbcp</groupId>
+      <artifactId>commons-dbcp</artifactId>
+      <scope>test</scope>
+    </dependency>
 
   </dependencies>
 

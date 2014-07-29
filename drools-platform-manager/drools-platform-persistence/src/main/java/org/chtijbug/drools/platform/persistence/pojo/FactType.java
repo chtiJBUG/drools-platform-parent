@@ -7,5 +7,13 @@ package org.chtijbug.drools.platform.persistence.pojo;
  * To change this template use File | Settings | File Templates.
  */
 public enum FactType {
-    WHEN, INSERTED, UPDATED_OLDVALUE, UPDATED_NEWVALUE, DELETED, INPUTDATA, OUTPUTDATA
+    WHEN, INSERTED, UPDATED_OLDVALUE, UPDATED_NEWVALUE, DELETED, INPUTDATA, OUTPUTDATA;
+
+    public static FactType getEnum(String factType) {
+        for (FactType type : FactType.values()) {
+            if (type.name().equals(type))
+                return type;
+        }
+        return null;
+    }
 }

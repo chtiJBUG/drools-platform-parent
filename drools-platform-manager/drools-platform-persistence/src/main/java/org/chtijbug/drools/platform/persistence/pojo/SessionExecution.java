@@ -16,7 +16,8 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "session_execution")
+@Table(name = "session_execution", indexes = {@Index(columnList = "sessionId")})
+@Cacheable(value = true)
 public class SessionExecution {
     @Id
     @SequenceGenerator(name = "session_execution_id_seq", sequenceName = "session_execution_seq")

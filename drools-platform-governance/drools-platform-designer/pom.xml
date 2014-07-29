@@ -1,81 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>drools-platform-governance</artifactId>
-        <groupId>org.chtijbug.drools</groupId>
-        <version>1.0.0-SNAPSHOT</version>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>drools-platform-governance</artifactId>
+    <groupId>org.chtijbug.drools</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>drools-platform-designer</artifactId>
-    <name>drools platform designer</name>
-    <packaging>war</packaging>
-    <build>
-        <finalName>designer</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <finalName>designer</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                    <descriptors>
-                        <descriptor>src/main/assembly/assembly-designer.xml</descriptor>
-                    </descriptors>
-                </configuration>
-            </plugin>
-            <!-- Get Subversion revision number and make available as property 'buildNumber' -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>buildnumber-maven-plugin</artifactId>
-                <version>1.0</version>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>create</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <doCheck>false</doCheck>
-                    <doUpdate>false</doUpdate>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <configuration>
+  <artifactId>drools-platform-designer</artifactId>
+  <name>drools platform designer</name>
+  <packaging>war</packaging>
+  <build>
+    <finalName>designer</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2.1</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <finalName>designer</finalName>
+          <appendAssemblyId>false</appendAssemblyId>
+          <descriptors>
+            <descriptor>src/main/assembly/assembly-designer.xml</descriptor>
+          </descriptors>
+        </configuration>
+      </plugin>
+      <!-- Get Subversion revision number and make available as property 'buildNumber' -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>buildnumber-maven-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>create</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <doCheck>false</doCheck>
+          <doUpdate>false</doUpdate>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.tomcat.maven</groupId>
+        <artifactId>tomcat7-maven-plugin</artifactId>
+        <configuration>
 
-                    <url>http://dpf1:8080/manager/text</url>
-                    <!-- Refer to the server settings in your ~/.m2/settings.xml -->
-                    <server>dev-tomcat-dpf1</server>
-                    <path>/designer</path>
+          <url>http://dpf1:8080/manager/text</url>
+          <!-- Refer to the server settings in your ~/.m2/settings.xml -->
+          <server>dev-tomcat-dpf1</server>
+          <path>/designer</path>
 
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
-    <dependencies>
+  <dependencies>
 
 
-        <dependency>
-            <groupId>org.jboss.drools</groupId>
-            <artifactId>jbpm-designer</artifactId>
-            <version>2.4.2.chtijbug</version>
-            <type>war</type>
-        </dependency>
+    <dependency>
+      <groupId>org.jboss.drools</groupId>
+      <artifactId>jbpm-designer</artifactId>
+      <version>2.4.2.chtijbug</version>
+      <type>war</type>
+    </dependency>
 
-    </dependencies>
+  </dependencies>
 </project>
