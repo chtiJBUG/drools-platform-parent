@@ -225,7 +225,7 @@
                                     <br>
                                     <!-- TODO List for each processExecutions (sessionExecutionDetails in allSessionExecutionDetails)-->
                                     <fieldset>
-                                        <legend>Process Details</legend>
+                                        <legend class="scheduler-border">Process Details</legend>
                                         <ul class="list-unstyled">
                                             <li>
                                                 <b>Process name : </b>{{allSessionExecutionDetails.processDetails.processName}}
@@ -238,7 +238,8 @@
                                             </li>
                                         </ul>
                                     </fieldset>
-                                    <accordion close-others="false">
+                                    <br>
+                                    <accordion id="accordion" close-others="false">
                                         <!-- All Ruleflow Group-->
                                         <accordion-group is-open="status.ruleFlowGroupPanelOpen" ng-repeat="flowGroupDetails in allSessionExecutionDetails.allRuleFlowGroupDetails">
                                             <accordion-heading >

@@ -22,6 +22,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                         _.map(
                             $scope.allSessionExecutionDetails.allRuleFlowGroupDetails,
                             function(item){
+                                console.log(item);
                                 return item;
                             }
                         ),
@@ -36,6 +37,8 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                     }
                 );
 
+                console.log(ruleExcecutionList);
+
                 // ruleName List extracted from the ruleExecutionList
                 $scope.ruleNameList=_.map(
                     ruleExcecutionList,
@@ -49,8 +52,8 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                     _.map(
                         _.map(
                             ruleExcecutionList,
-                            function(ruleExecutionItem){
-                                return ruleExecutionItem.ruleAsset;
+                            function(ruleExecutnItem){
+                                return ruleExecutnItem.ruleAsset;
                             }
                         ),
                         function(ruleAssetItem){
