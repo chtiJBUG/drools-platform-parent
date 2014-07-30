@@ -4,9 +4,8 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
-import org.chtijbug.drools.platform.persistence.pojo.*;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.web.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,9 +36,9 @@ public class RuntimeResource {
     private static Logger logger = LoggerFactory.getLogger(RuntimeResource.class);
 
     @Autowired
-    PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
+    PlatformRuntimeInstanceRepositoryCacheService platformRuntimeInstanceRepository;
     @Autowired
-    SessionExecutionRepository sessionExecutionRepository;
+    SessionExecutionRepositoryCacheService sessionExecutionRepository;
 
     @RequestMapping(method = RequestMethod.GET, value = "/{packageName:.+}")
     @Consumes(value = MediaType.APPLICATION_JSON)
@@ -147,9 +146,9 @@ public class RuntimeResource {
     @ResponseBody
     public Integer countPlatformRuntimeInstanceByFilters(@RequestBody final PlatformRuntimeFilter runtimeFilter) {
         logger.debug(">> countPlatformRuntimeInstanceByFilters(runtimeFilter= {})", runtimeFilter);
-        try{
+        try {
             return platformRuntimeInstanceRepository.countAllPlatformRuntimeInstanceByFilter(runtimeFilter);
-        }finally {
+        } finally {
             logger.debug("<< countPlatformRuntimeInstanceByFilters()");
         }
 
@@ -216,8 +215,8 @@ public class RuntimeResource {
     // Is it possible to simplify those requests?
 
     @RequestMapping(method = RequestMethod.GET, value = "/all/statuses")
-         @Produces(value = MediaType.APPLICATION_JSON)
-         @ResponseBody
+    @Produces(value = MediaType.APPLICATION_JSON)
+    @ResponseBody
     public List<RuntimeStatusObject> getAllStatuses() {
         RuntimeStatusObject initmode = new RuntimeStatusObject(PlatformRuntimeInstanceStatus.INITMODE, "INITMODE");
         RuntimeStatusObject started = new RuntimeStatusObject(PlatformRuntimeInstanceStatus.STARTED, "STARTED");

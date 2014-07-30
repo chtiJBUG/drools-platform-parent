@@ -6,7 +6,7 @@ import org.chtijbug.drools.entity.history.GuvnorResourceFile;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseAddRessourceEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class KnowledgeBaseAddRessourceEventStrategy extends AbstractEventHandler
 
 
     @Autowired
-    PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
+    PlatformRuntimeInstanceRepositoryCacheService platformRuntimeInstanceRepository;
 
     @Override
     @Transactional

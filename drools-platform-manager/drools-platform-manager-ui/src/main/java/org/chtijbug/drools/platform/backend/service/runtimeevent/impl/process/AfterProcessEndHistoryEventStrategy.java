@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.process.AfterProcessEndHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.ProcessExecutionRepository;
+import org.chtijbug.drools.platform.persistence.ProcessExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.ProcessExecution;
 import org.chtijbug.drools.platform.persistence.pojo.ProcessExecutionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class AfterProcessEndHistoryEventStrategy extends AbstractEventHandlerStr
     private static final Logger LOG = Logger.getLogger(AfterProcessEndHistoryEventStrategy.class);
 
     @Autowired
-    ProcessExecutionRepository processExecutionRepository;
+    ProcessExecutionRepositoryCacheService processExecutionRepository;
 
     @Override
     @Transactional

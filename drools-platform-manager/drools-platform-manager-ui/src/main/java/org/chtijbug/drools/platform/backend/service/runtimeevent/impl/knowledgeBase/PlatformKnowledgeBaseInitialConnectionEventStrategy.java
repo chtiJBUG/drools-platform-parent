@@ -13,8 +13,8 @@ import org.chtijbug.drools.platform.entity.PlatformResourceFile;
 import org.chtijbug.drools.platform.entity.RequestRuntimePlarform;
 import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseInitialConnectionEvent;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepository;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeDefinition;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
@@ -43,10 +43,10 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
 
 
     @Autowired
-    PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
+    PlatformRuntimeInstanceRepositoryCacheService platformRuntimeInstanceRepository;
 
     @Autowired
-    PlatformRuntimeDefinitionRepository platformRuntimeDefinitionRepository;
+    PlatformRuntimeDefinitionRepositoryCacheService platformRuntimeDefinitionRepository;
 
     @Override
     @Transactional(value = "transactionManager")

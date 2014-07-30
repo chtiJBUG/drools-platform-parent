@@ -4,8 +4,8 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionFireAllRulesBeginEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.FireAllRulesExecutionRepository;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
+import org.chtijbug.drools.platform.persistence.FireAllRulesExecutionRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.FireAllRulesExecution;
 import org.chtijbug.drools.platform.persistence.pojo.FireAllRulesExecutionStatus;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
@@ -28,10 +28,10 @@ public class KnowledgeSessionFireAllRulesBeginEventStrategy extends AbstractEven
     private static final Logger LOG = Logger.getLogger(KnowledgeSessionFireAllRulesBeginEventStrategy.class);
 
     @Autowired
-    FireAllRulesExecutionRepository fireAllRulesExecutionRepository;
+    FireAllRulesExecutionRepositoryCacheService fireAllRulesExecutionRepository;
 
     @Autowired
-    SessionExecutionRepository sessionExecutionRepository;
+    SessionExecutionRepositoryCacheService sessionExecutionRepository;
 
     @Override
     @Transactional

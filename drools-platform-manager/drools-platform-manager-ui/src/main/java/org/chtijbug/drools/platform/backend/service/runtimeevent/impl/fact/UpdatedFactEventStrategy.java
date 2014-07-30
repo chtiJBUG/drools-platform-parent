@@ -4,8 +4,8 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.fact.UpdatedFactHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.RuleExecutionRepository;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
+import org.chtijbug.drools.platform.persistence.RuleExecutionRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.Fact;
 import org.chtijbug.drools.platform.persistence.pojo.FactType;
 import org.chtijbug.drools.platform.persistence.pojo.RuleExecution;
@@ -25,10 +25,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class UpdatedFactEventStrategy extends AbstractEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(UpdatedFactEventStrategy.class);
     @Autowired
-    RuleExecutionRepository ruleExecutionRepository;
+    RuleExecutionRepositoryCacheService ruleExecutionRepository;
 
     @Autowired
-    SessionExecutionRepository sessionExecutionRepository;
+    SessionExecutionRepositoryCacheService sessionExecutionRepository;
 
     @Override
     @Transactional

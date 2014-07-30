@@ -45,6 +45,7 @@
     <tomcat.version>7.0.52</tomcat.version>
     <jackson.version>2.3.1</jackson.version>
     <projectreactor.version>1.0.0.RELEASE</projectreactor.version>
+    <gridgain.version>6.2.0</gridgain.version>
   </properties>
 
   <licenses>
@@ -176,6 +177,11 @@
       <dependency>
         <groupId>org.chtijbug.drools</groupId>
         <artifactId>drools-platform-persistence</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.chtijbug.drools</groupId>
+        <artifactId>drools-platform-service</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- spring deps -->
@@ -508,7 +514,15 @@
         <artifactId>reactor-tcp</artifactId>
         <version>${projectreactor.version}</version>
       </dependency>
+      <!-- GridGain -->
+      <dependency>
+        <groupId>org.gridgain</groupId>
+        <artifactId>gridgain-datagrid</artifactId>
+        <version>${gridgain.version}</version>
+      </dependency>
     </dependencies>
+
+
   </dependencyManagement>
 
 

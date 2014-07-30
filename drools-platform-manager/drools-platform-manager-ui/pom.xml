@@ -31,7 +31,7 @@
     </dependency>
     <dependency>
       <groupId>org.chtijbug.drools</groupId>
-      <artifactId>drools-platform-persistence</artifactId>
+      <artifactId>drools-platform-service</artifactId>
     </dependency>
     <dependency>
       <groupId>org.chtijbug.drools</groupId>

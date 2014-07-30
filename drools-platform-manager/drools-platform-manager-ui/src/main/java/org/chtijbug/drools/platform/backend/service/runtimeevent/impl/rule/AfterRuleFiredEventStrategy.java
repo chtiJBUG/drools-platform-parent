@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFiredHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.RuleExecutionRepository;
+import org.chtijbug.drools.platform.persistence.RuleExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.RuleExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,7 +22,7 @@ public class AfterRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(AfterRuleFiredEventStrategy.class);
 
     @Autowired
-    private RuleExecutionRepository ruleExecutionRepository;
+    private RuleExecutionRepositoryCacheService ruleExecutionRepository;
 
 
     @Override
