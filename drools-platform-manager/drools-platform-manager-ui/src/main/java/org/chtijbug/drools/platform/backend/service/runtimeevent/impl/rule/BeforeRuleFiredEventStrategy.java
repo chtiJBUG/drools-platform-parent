@@ -9,6 +9,7 @@ import org.chtijbug.drools.platform.persistence.RuleAssetRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.RuleExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.RuleflowGroupRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

@@ -4,6 +4,7 @@ import org.chtijbug.drools.guvnor.rest.dt.*;
 import org.chtijbug.drools.guvnor.rest.model.Asset;
 import org.chtijbug.drools.platform.persistence.DTRuleAssetRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.RuleAssetRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

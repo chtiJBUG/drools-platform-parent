@@ -6,6 +6,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.pojo.*;
 import org.chtijbug.drools.platform.web.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

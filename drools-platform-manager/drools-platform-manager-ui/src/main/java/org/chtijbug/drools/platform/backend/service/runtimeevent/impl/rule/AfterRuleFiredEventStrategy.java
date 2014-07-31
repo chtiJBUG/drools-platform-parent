@@ -31,10 +31,8 @@ public class AfterRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
         AfterRuleFiredHistoryEvent afterRuleFiredHistoryEvent = (AfterRuleFiredHistoryEvent) historyEvent;
 
         RuleExecution ruleExecution = null;
-
-
-        ruleExecution = ruleExecutionRepository.findByRuleBaseIDAndSessionIDAndRuleFlowNameAndRuleName(afterRuleFiredHistoryEvent.getRuleBaseID(), afterRuleFiredHistoryEvent.getSessionId(), afterRuleFiredHistoryEvent.getRule().getRuleFlowGroup(), afterRuleFiredHistoryEvent.getRule().getRuleName());
-        if (ruleExecution != null) {
+        if (afterRuleFiredHistoryEvent.getRule().getRuleFlowGroup() != null) {
+            ruleExecution = ruleExecutionRepository.findByRuleBaseIDAndSessionIDAndRuleFlowNameAndRuleName(afterRuleFiredHistoryEvent.getRuleBaseID(), afterRuleFiredHistoryEvent.getSessionId(), afterRuleFiredHistoryEvent.getRule().getRuleFlowGroup(), afterRuleFiredHistoryEvent.getRule().getRuleName());
             ruleExecution.setEndDate(afterRuleFiredHistoryEvent.getDateEvent());
             ruleExecution.setStopEventID(afterRuleFiredHistoryEvent.getEventID());
             ruleExecutionRepository.save(ruleExecution);

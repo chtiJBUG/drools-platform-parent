@@ -45,7 +45,7 @@
     <tomcat.version>7.0.52</tomcat.version>
     <jackson.version>2.3.1</jackson.version>
     <projectreactor.version>1.0.0.RELEASE</projectreactor.version>
-    <gridgain.version>6.2.0</gridgain.version>
+    <gridgain.version>6.2.0-rc4</gridgain.version>
   </properties>
 
   <licenses>
@@ -314,7 +314,6 @@
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
         <version>1.3.175</version>
-        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>com.googlecode.ehcache-spring-annotations</groupId>
@@ -519,6 +518,7 @@
         <groupId>org.gridgain</groupId>
         <artifactId>gridgain-datagrid</artifactId>
         <version>${gridgain.version}</version>
+        <type>pom</type>
       </dependency>
     </dependencies>
 

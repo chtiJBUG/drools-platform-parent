@@ -66,7 +66,7 @@ public class RuleExecutionRepositoryImpl implements RuleExecutionCustomRepositor
         }
     }
 
-    @Override
+    //@Override
     public RuleExecution findActiveRuleInSessionByRuleBaseIDAndSessionID(Integer ruleBaseID, Integer sessionId) {
         RuleExecution ruleExecutionFound = null;
         logger.debug(">> findActiveRuleInSessionByRuleBaseIDAndSessionID");
@@ -98,7 +98,7 @@ public class RuleExecutionRepositoryImpl implements RuleExecutionCustomRepositor
         }
     }
 
-    @Override
+    //@Override
     public RuleExecution findActiveRuleInRuleFlowGroupByRuleBaseIDAndSessionID(Integer ruleBaseID, Integer sessionId) {
         logger.debug(">> findActiveRuleInRuleFlowGroupByRuleBaseIDAndSessionID");
         RuleExecution ruleExecutionFound = null;

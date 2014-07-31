@@ -21,9 +21,17 @@
       <groupId>org.chtijbug.drools</groupId>
       <artifactId>drools-platform-entity</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.gridgain</groupId>
-      <artifactId>gridgain-datagrid</artifactId>
+      <artifactId>gridgain-core</artifactId>
+      <version>${gridgain.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.gridgain</groupId>
+      <artifactId>gridgain-indexing</artifactId>
+      <version>${gridgain.version}</version>
     </dependency>
     <!-- Rest Plumb -->
 

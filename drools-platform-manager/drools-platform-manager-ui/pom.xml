@@ -35,6 +35,10 @@
     </dependency>
     <dependency>
       <groupId>org.chtijbug.drools</groupId>
+      <artifactId>drools-platform-persistence</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.chtijbug.drools</groupId>
       <artifactId>drools-platform-entity</artifactId>
     </dependency>
     <!-- Rest Plumb -->
