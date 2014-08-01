@@ -140,7 +140,7 @@
                         </div>
                         <!-- pagination ng-show="allRuntimes.length != 0" total-items="count" ng-model="currentPage" ng-change="pageChanged()"></pagination -->
                         <div class="col-md-6 col-md-offset-3" ng-show="allRuntimes.length != 0">
-                            <pagination  total-items="count" ng-model="currentPage" max-size="5" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages" ng-change="pageChanged()"></pagination>
+                            <pagination  total-items="count" ng-model="currentPage" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages" ng-change="pageChanged()"></pagination>
                         </div>
                     </div>
                 </div>
@@ -259,7 +259,7 @@
                                             <div class="alert alert-info" ng-show="flowGroupDetails.allRuleExecutionDetails.length==0">
                                                 <b>There are no rule executions for this ruleflow group.</b>
                                             </div>
-                                            <accordion-group ng-repeat="ruleExecutionDetails in flowGroupDetails.allRuleExecutionDetails" ng-click="status.ruleExecutionOpen = !status.ruleExecutionOpen;">
+                                            <accordion-group ng-repeat="ruleExecutionDetails in flowGroupDetails.allRuleExecutionDetails" is-open="status.ruleExecutionOpen">
                                                 <accordion-heading>
                                                     <i class="fa fa-chevron-right" ng-show="!status.ruleExecutionOpen"></i>
                                                     <i class="fa fa-chevron-down" ng-show="status.ruleExecutionOpen"></i>
@@ -272,33 +272,33 @@
                                                         <b><a  ng-click="whenFacts = !whenFacts;"><i ng-show="!whenFacts" class="fa fa fa-plus-square-o"></i><i ng-show="whenFacts" class="fa fa-minus-square-o"></i> whenFacts </a>:</b> <br>
                                                         <!-- Had to add style="..." to keep indentation instead of class="list-unstyled" from bootstrap which doesn't keep indentation in addition of removing bullets -->
                                                         <ul collapse="!whenFacts" style="list-style-type:none;">
-                                                            <li ng-repeat="whenFactItem in ruleExecutionDetails.whenFacts">
+                                                            <li ng-repeat="whenFactItem in ruleExecutionDetails.whenFacts | filter:detailsFilters.factType:strict">
                                                                 <a ng-click="indentJSON(whenFactItem); whenFactsDetails = !whenFactsDetails;"><i ng-show="!whenFactsDetails" class="fa fa fa-plus-square-o"></i><i ng-show="whenFactsDetails" class="fa fa-minus-square-o"></i> {{whenFactItem.fullClassName}}</a>
-                                                                <div ng-show="whenFactsDetails" hljs source="whenFactItem.jsonFact"></div>
+                                                                <div collapse="!whenFactsDetails" hljs source="whenFactItem.jsonFact"></div>
                                                             </li>
                                                         </ul>
                                                     </li>
                                                     <li>
                                                         <b><a  ng-click="thenFacts = !thenFacts;"><i ng-show="!thenFacts" class="fa fa fa-plus-square-o"></i><i ng-show="thenFacts" class="fa fa-minus-square-o"></i> thenFacts </a>:</b> <br>
-                                                        <!-- Had to add style="..." to keep indentation instead of class="list-unstyled" from bootstrap which doesn't keep indentation in addition of removing bullets -->
+                                                        <!-- I had to add style="..." to keep indentation instead of class="list-unstyled" from bootstrap which doesn't keep indentation in addition of removing bullets -->
                                                         <ul collapse="!thenFacts" style="list-style-type:none;">
-                                                            <li ng-repeat="thenFactItem in ruleExecutionDetails.thenFacts">
+                                                            <li ng-repeat="thenFactItem in ruleExecutionDetails.thenFacts | filter:detailsFilters.factType:strict">
                                                                 <a ng-click="indentJSON(thenFactItem); thenFactsDetails = !thenFactsDetails;"><i ng-show="!thenFactsDetails" class="fa fa fa-plus-square-o"></i><i ng-show="thenFactsDetails" class="fa fa-minus-square-o"></i>  {{thenFactItem.fullClassName}}</a> <span class="label label-info">{{thenFactItem.factType}}</span>
-                                                                <div ng-show="thenFactsDetails" hljs source="thenFactItem.jsonFact"></div>
+                                                                <div collapse="!thenFactsDetails" hljs source="thenFactItem.jsonFact"></div>
                                                             </li>
                                                         </ul>
                                                     </li>
                                                     <li>
                                                         <div>
                                                             <b><a  ng-click="ruleAssetBool = !ruleAssetBool;"><i ng-show="!ruleAssetBool" class="fa fa fa-plus-square-o"></i><i ng-show="ruleAssetBool" class="fa fa-minus-square-o"></i> ruleAsset </a>:</b> <br>
-                                                            <!-- Had to add style="..." to keep indentation instead of class="list-unstyled" from bootstrap which doesn't keep indentation in addition of removing bullets -->
+                                                            <!-- I had to add style="..." to keep indentation instead of class="list-unstyled" from bootstrap which doesn't keep indentation in addition of removing bullets -->
                                                             <ul collapse="!ruleAssetBool" style="list-style-type:none;">
                                                                 <li>
                                                                     <b>Asset name :</b> {{ruleExecutionDetails.ruleAsset.assetName}}
                                                                 </li>
                                                                 <li>
                                                                     <b><a  ng-click="ruleAssetCategoryBool = !ruleAssetCategoryBool;"><i ng-show="!ruleAssetCategoryBool" class="fa fa fa-plus-square-o"></i><i ng-show="ruleAssetCategoryBool" class="fa fa-minus-square-o"></i> Rule Asset Category </a>:</b> <br>
-                                                                    <ul collapse="!ruleAssetCategoryBool" style="list-style-type:none;">
+                                                                    <ul collapse="!ruleAssetCategoryBool">
                                                                         <li ng-repeat="ruleCategoryItem in ruleExecutionDetails.ruleAsset.ruleAssetCategory">
                                                                             <b>ID :</b> {{ruleCategoryItem.id}}
                                                                             <b>Category name :</b> {{ruleCategoryItem.categoryName}}

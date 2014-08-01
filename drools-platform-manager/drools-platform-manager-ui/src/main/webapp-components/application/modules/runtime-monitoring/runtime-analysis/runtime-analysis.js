@@ -7,6 +7,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     /** SESSION EXECUTION DETAILS **/
 
     $scope.loadDetails = function (ruleBaseID, sessionId){
+
         $http.get('./server/runtime/session/'+ruleBaseID+'/'+sessionId)
             .success(function (data) {
                 $scope.allSessionExecutionDetails = data;
@@ -16,9 +17,11 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                     From allSessionExecution, we will extract the useful informations.
                     We use undescoreJS, otherwise it will be complexed to write the for loops
                 */
-                ruleExcecutionList = null;
 
-                // RuleExecution list
+                /** PROCEDURE TO RETRIEVE THE LISTS NEEDED TO FILTER THE SESSION EXECUTION DETAILS **/
+
+
+                // 1) Extract the RuleExecution list form allSessionExecutionDetails
                 ruleExcecutionList =_.map(
                     _.map(
                         _.map(
@@ -40,10 +43,10 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                     }
                 );
 
+                // Remove "undefined" elements in the list
                 ruleExcecutionList = _.without(ruleExcecutionList, undefined);
-                console.log(ruleExcecutionList);
 
-                // ruleName List extracted from the ruleExecutionList
+                // 2) ruleName List extracted from the ruleExecutionList
                 $scope.ruleNameList=_.map(
                     ruleExcecutionList,
                     function(ruleExecutionItem){
@@ -51,7 +54,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                     }
                 )
 
-                // ruleAssetCategory List
+                // 3) ruleAssetCategory List
                 $scope.ruleAssetCategoryList=_.map(
                     _.map(
                         _.map(
@@ -69,6 +72,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                     }
                 );
 
+                // 4) fullClassName List
                 whenFactsFullClasseNameList = _.map(
                     _.map(
                         _.map(
@@ -126,6 +130,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                 console.log(error);
                 //____ TODO Send an appropriate message
                 growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
+
             })
     }
 
@@ -190,6 +195,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                 .success(function (data) {
                     $scope.count = data;
                     console.log("[Info] Total count : "+$scope.count);
+
                 })
                 .error(function (error, status) {
                     console.log("[Error] Error HTTP " + status);
@@ -203,6 +209,8 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                 .success(function (data) {
                     $scope.allRuntimes = data;
                     console.log("[Info] Number of items displayed per page : "+$scope.allRuntimes.length);
+                    $scope.numPagesMax = Math.ceil($scope.count/$scope.allRuntimes.length);
+                    console.log($scope.numPagesMax);
                 })
                 .error(function (error, status) {
                     console.log("[Error] Error HTTP " + status);
@@ -216,7 +224,8 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     };
 
     $scope.applyFilters = function(){
-        // var = $ allows to disabled strict filtering (otherwise e.g : ruleNameSelect ! = "" with strict filtering)
+        // $ allows to disabled strict filtering (otherwise letting fields empty will provide zero result with strict filtering)
+        // TODO : Is it possible to simplify this ?
         if($scope.detailsFilters.ruleNameSelect == ""){
             $scope.detailsFilters.ruleName=$;
         }else{

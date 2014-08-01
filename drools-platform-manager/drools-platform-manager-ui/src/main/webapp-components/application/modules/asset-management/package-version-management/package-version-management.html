@@ -100,21 +100,21 @@
                                         <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                                             <li ng-show="isSnapshot" ng-class="{true:'disabled'} [visibleItem]" role="presentation">
                                                 <a class="pointer" role="menuitem" tabindex="-1"
-                                                   ng-click="launchWizzard('rebuild')">Rebuild</a>
+                                                   ng-click="showWizzard('rebuild')">Rebuild</a>
                                             </li>
                                             <li ng-show="isSnapshot" ng-class="{true:'disabled'} [visibleItem]" role="presentation">
                                                 <a class="pointer" role="menuitem" tabindex="-1"
-                                                   ng-click="launchWizzard('release')">Release</a>
+                                                   ng-click="showWizzard('release')">Release</a>
                                             </li>
                                             <li ng-show="isSnapshot" class="divider"></li>
                                             <li role="presentation">
                                                 <a class="pointer" role="menuitem" tabindex="-1"
-                                                   ng-click="launchDeploy()">Deploy</a>
+                                                   ng-click="showDeploy()">Deploy</a>
                                             </li>
                                             <li ng-show="isSnapshot" class="divider"></li>
                                             <li ng-show="isSnapshot" role="presentation">
                                                 <a class="pointer" role="menuitem" tabindex="-1"
-                                                   ng-click="launchAlertMsg()">Delete</a>
+                                                   ng-click="showAlertMsg()">Delete</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -123,7 +123,7 @@
                         </div>
                     </div>
                     <button id="btn-launcher" class="btn btn-success pull-right" ng-show="isCreateButtonVisible"
-                            ng-click="launchWizzard('create')">
+                            ng-click="showWizzard('create')">
                         <i class="fa fa-plus"></i> Add a new version
                     </button>
                     <!-- Modal : Wizzard -->
