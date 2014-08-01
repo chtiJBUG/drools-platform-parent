@@ -34,9 +34,9 @@ public class SessionExecution {
     private Integer stopEventID;
     @Enumerated(EnumType.STRING)
     private SessionExecutionStatus sessionExecutionStatus;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "sessionExecution")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sessionExecution")
     private List<RuleExecution> ruleExecutions = new ArrayList<RuleExecution>();
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "sessionExecution")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sessionExecution")
     private List<ProcessExecution> processExecutions = new ArrayList<ProcessExecution>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Fact> facts = new ArrayList<Fact>();
