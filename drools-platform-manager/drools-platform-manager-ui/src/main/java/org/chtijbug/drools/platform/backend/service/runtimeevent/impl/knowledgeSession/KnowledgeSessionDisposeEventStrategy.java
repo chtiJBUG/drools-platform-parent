@@ -38,7 +38,7 @@ public class KnowledgeSessionDisposeEventStrategy extends AbstractEventHandlerSt
         existingSessionRutime.setEndDate(sessionDisposedEvent.getDateEvent());
         existingSessionRutime.setStopEventID(sessionDisposedEvent.getEventID());
         existingSessionRutime.setSessionExecutionStatus(SessionExecutionStatus.DISPOSED);
-        sessionExecutionRepository.save(existingSessionRutime);
+        sessionExecutionRepository.save(sessionDisposedEvent.getRuleBaseID(), sessionDisposedEvent.getSessionId(), existingSessionRutime);
         LOG.debug("SessionDisposedEvent " + historyEvent.toString());
     }
 

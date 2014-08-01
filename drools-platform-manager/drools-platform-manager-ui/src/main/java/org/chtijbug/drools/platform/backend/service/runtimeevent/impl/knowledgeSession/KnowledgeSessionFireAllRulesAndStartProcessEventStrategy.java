@@ -60,7 +60,7 @@ public class KnowledgeSessionFireAllRulesAndStartProcessEventStrategy extends Ab
                 existingSessionRutime.getFacts().add(outputFact);
             }
 
-            sessionExecutionRepository.save(existingSessionRutime);
+            sessionExecutionRepository.save(sessionFireAllRulesAndStartProcess.getRuleBaseID(), sessionFireAllRulesAndStartProcess.getSessionId(), existingSessionRutime);
         }
 
         LOG.debug("SessionFireAllRulesAndStartProcess " + sessionFireAllRulesAndStartProcess.toString());

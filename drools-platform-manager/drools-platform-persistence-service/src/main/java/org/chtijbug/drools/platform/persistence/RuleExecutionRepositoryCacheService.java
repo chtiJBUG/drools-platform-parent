@@ -4,7 +4,6 @@ package org.chtijbug.drools.platform.persistence;
 import org.chtijbug.drools.platform.persistence.pojo.RuleExecution;
 import org.chtijbug.drools.platform.persistence.searchobjects.IndexRuleExecution;
 import org.gridgain.grid.GridException;
-import org.gridgain.grid.GridGain;
 import org.gridgain.grid.cache.GridCache;
 import org.gridgain.grid.cache.GridCacheProjection;
 import org.gridgain.grid.cache.query.GridCacheQueries;
@@ -26,6 +25,8 @@ public class RuleExecutionRepositoryCacheService {
 
     private static Logger logger = getLogger(RuleExecutionRepositoryCacheService.class);
 
+    @Autowired
+    CacheSingleton cacheSingleton;
 
     @Autowired
     RuleExecutionRepository ruleExecutionRepository;
@@ -37,12 +38,13 @@ public class RuleExecutionRepositoryCacheService {
         GridCacheProjection<Long, IndexRuleExecution> ruleExecutionCache = getCache();
         GridCacheQueries<Long, IndexRuleExecution> queries = ruleExecutionCache.queries();
         GridCacheQuery<Map.Entry<Long, IndexRuleExecution>> qry =
-                queries.createSqlQuery(IndexRuleExecution.class, "ruleBaseID= ? and sessionId = ? and ruleFlowGroup = ? and ruleName= ?");
+                queries.createSqlQuery(IndexRuleExecution.class, "rulebaseid= ? and sessionid = ? and ruleflowgroup = ? and rulename= ?");
         try {
-            Collection<Map.Entry<Long, IndexRuleExecution>> toto = qry.execute(ruleBaseID, sessionId, ruleName).get();
-            if (toto.size() == 0) {
+            Collection<Map.Entry<Long, IndexRuleExecution>> queryresult = qry.execute(ruleBaseID, sessionId, ruleFlowGroup, ruleName).get();
+            if (queryresult.size() != 1) {
                 result = this.ruleExecutionRepository.findByRuleBaseIDAndSessionIDAndRuleFlowNameAndRuleName(ruleBaseID, sessionId, ruleFlowGroup, ruleName);
             } else {
+                result = queryresult.iterator().next().getValue().getRuleExecution();
 
             }
         } catch (GridException e) {
@@ -52,7 +54,6 @@ public class RuleExecutionRepositoryCacheService {
     }
 
 
-
     public RuleExecution findActiveRuleByRuleBaseIDAndSessionIDAndRuleName(Integer ruleBaseID, Integer sessionId, String ruleName) {
         RuleExecution result = null;
         GridCacheProjection<Long, IndexRuleExecution> ruleExecutionCache = getCache();
@@ -60,11 +61,11 @@ public class RuleExecutionRepositoryCacheService {
         GridCacheQuery<Map.Entry<Long, IndexRuleExecution>> qry =
                 queries.createSqlQuery(IndexRuleExecution.class, "ruleBaseID= ? and sessionId = ? and ruleName= ?");
         try {
-            Collection<Map.Entry<Long, IndexRuleExecution>> toto = qry.execute(ruleBaseID, sessionId, ruleName).get();
-            if (toto.size() == 0) {
+            Collection<Map.Entry<Long, IndexRuleExecution>> queryresult = qry.execute(ruleBaseID, sessionId, ruleName).get();
+            if (queryresult.size() != 1) {
                 result = this.ruleExecutionRepository.findActiveRuleByRuleBaseIDAndSessionIDAndRuleName(ruleBaseID, sessionId, ruleName);
             } else {
-
+                result = queryresult.iterator().next().getValue().getRuleExecution();
             }
         } catch (GridException e) {
             logger.error("  public RuleExecution findActiveRuleByRuleBaseIDAndSessionIDAndRuleName(Integer ruleBaseID, Integer sessionId, String ruleName) ", e);
@@ -73,7 +74,7 @@ public class RuleExecutionRepositoryCacheService {
     }
 
 
-    public void save(RuleExecution ruleExecution) {
+    public void save(Integer ruleBaseID, Integer sessionID, String ruleFlowGroupName, RuleExecution ruleExecution) {
 
 
         RuleExecution savedObject = this.ruleExecutionRepository.save(ruleExecution);
@@ -89,12 +90,11 @@ public class RuleExecutionRepositoryCacheService {
                 newCachedObjet = true;
                 cachedObject = new IndexRuleExecution();
                 cachedObject.setRuleExecution(savedObject);
-                cachedObject.setRuleBaseID(cachedObject.getRuleBaseID());
-                cachedObject.setSessionId(savedObject.getSessionExecution().getSessionId());
-                if (savedObject.getRuleflowGroup() != null) {
-                    cachedObject.setRuleFlowGroup(savedObject.getRuleflowGroup().getRuleflowGroup());
-                }
-                cachedObject.setRuleName(savedObject.getRuleName());
+
+                cachedObject.setrulebaseid(ruleBaseID);
+                cachedObject.setsessionid(sessionID);
+                cachedObject.setruleflowgroup(ruleFlowGroupName);
+                cachedObject.setrulename(savedObject.getRuleName());
             }
             if (savedObject.getEndDate() == null) {
                 ruleExecutionCache.put(savedObject.getId(), cachedObject);
@@ -112,7 +112,7 @@ public class RuleExecutionRepositoryCacheService {
     }
 
     private GridCacheProjection<Long, IndexRuleExecution> getCache() {
-        GridCache<?, ?> goGridCache = GridGain.grid().cache("local_service");
+        GridCache<?, ?> goGridCache = cacheSingleton.getGrid().cache("local_tx_indexruleexecution");
         GridCacheProjection<Long, IndexRuleExecution> ruleExecutionCache = goGridCache.projection(Long.class, IndexRuleExecution.class);
 
         return ruleExecutionCache;

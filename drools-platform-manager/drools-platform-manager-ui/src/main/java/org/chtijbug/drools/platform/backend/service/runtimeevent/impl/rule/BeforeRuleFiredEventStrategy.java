@@ -72,7 +72,7 @@ public class BeforeRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
                 ruleExecution.getWhenFacts().add(fact);
             }
         }
-        ruleExecutionRepository.save(ruleExecution);
+        ruleExecutionRepository.save(beforeRuleFiredHistoryEvent.getRuleBaseID(), beforeRuleFiredHistoryEvent.getSessionId(), beforeRuleFiredHistoryEvent.getRule().getRuleFlowGroup(), ruleExecution);
         LOG.debug("BeforeRuleFiredHistoryEvent " + historyEvent.toString());
     }
 

@@ -45,20 +45,20 @@ public class DeleteFactEventStrategy extends AbstractEventHandlerStrategy {
         if (deletedFactHistoryEvent.getRuleName() == null) {  // inserted from a session
             SessionExecution sessionExecution = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(deletedFactHistoryEvent.getRuleBaseID(), deletedFactHistoryEvent.getSessionId());
             sessionExecution.getFacts().add(fact);
-            sessionExecutionRepository.save(sessionExecution);
+            sessionExecutionRepository.save(deletedFactHistoryEvent.getRuleBaseID(), deletedFactHistoryEvent.getSessionId(), sessionExecution);
 
         } else if (deletedFactHistoryEvent.getRuleName() != null && deletedFactHistoryEvent.getRuleflowGroup() == null) {   // inserted from a rule that is not in a ruleflow/process
             existingInSessionRuleExecution = ruleExecutionRepository.findActiveRuleByRuleBaseIDAndSessionIDAndRuleName(deletedFactHistoryEvent.getRuleBaseID(), deletedFactHistoryEvent.getSessionId(), deletedFactHistoryEvent.getRuleName());
             if (existingInSessionRuleExecution != null) {
                 existingInSessionRuleExecution.getThenFacts().add(fact);
-                ruleExecutionRepository.save(existingInSessionRuleExecution);
+                ruleExecutionRepository.save(deletedFactHistoryEvent.getRuleBaseID(), deletedFactHistoryEvent.getSessionId(), deletedFactHistoryEvent.getRuleflowGroup(), existingInSessionRuleExecution);
             }
 
         } else { // inserted from a rule in a ruleflowgroup/process
             existingInSessionRuleExecution = ruleExecutionRepository.findByRuleBaseIDAndSessionIDAndRuleFlowNameAndRuleName(deletedFactHistoryEvent.getRuleBaseID(), deletedFactHistoryEvent.getSessionId(), deletedFactHistoryEvent.getRuleflowGroup(), deletedFactHistoryEvent.getRuleName());
             if (existingInSessionRuleExecution != null) {
                 existingInSessionRuleExecution.getThenFacts().add(fact);
-                ruleExecutionRepository.save(existingInSessionRuleExecution);
+                ruleExecutionRepository.save(deletedFactHistoryEvent.getRuleBaseID(), deletedFactHistoryEvent.getSessionId(), deletedFactHistoryEvent.getRuleflowGroup(), existingInSessionRuleExecution);
             }
         }
 

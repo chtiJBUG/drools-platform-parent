@@ -51,14 +51,14 @@ public class UpdatedFactEventStrategy extends AbstractEventHandlerStrategy {
             SessionExecution sessionExecution = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
             sessionExecution.getFacts().add(factOldValue);
             sessionExecution.getFacts().add(factNewValue);
-            sessionExecutionRepository.save(sessionExecution);
+            sessionExecutionRepository.save(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId(), sessionExecution);
 
         } else if (updatedFactHistoryEvent.getRuleName() != null && updatedFactHistoryEvent.getRuleflowGroup() == null) {   // updated from a rule that is not in a ruleflow/process
             existingInSessionRuleExecution = ruleExecutionRepository.findActiveRuleByRuleBaseIDAndSessionIDAndRuleName(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId(), updatedFactHistoryEvent.getRuleName());
             if (existingInSessionRuleExecution != null) {
                 existingInSessionRuleExecution.getThenFacts().add(factOldValue);
                 existingInSessionRuleExecution.getThenFacts().add(factNewValue);
-                ruleExecutionRepository.save(existingInSessionRuleExecution);
+                ruleExecutionRepository.save(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId(), updatedFactHistoryEvent.getRuleflowGroup(), existingInSessionRuleExecution);
             }
 
         } else { // updated from a rule in a ruleflowgroup/process
@@ -66,7 +66,7 @@ public class UpdatedFactEventStrategy extends AbstractEventHandlerStrategy {
             if (existingInSessionRuleExecution != null) {
                 existingInSessionRuleExecution.getThenFacts().add(factOldValue);
                 existingInSessionRuleExecution.getThenFacts().add(factNewValue);
-                ruleExecutionRepository.save(existingInSessionRuleExecution);
+                ruleExecutionRepository.save(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId(), updatedFactHistoryEvent.getRuleflowGroup(), existingInSessionRuleExecution);
             }
         }
 

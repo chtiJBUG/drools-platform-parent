@@ -35,12 +35,12 @@ public class AfterRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
             ruleExecution = ruleExecutionRepository.findByRuleBaseIDAndSessionIDAndRuleFlowNameAndRuleName(afterRuleFiredHistoryEvent.getRuleBaseID(), afterRuleFiredHistoryEvent.getSessionId(), afterRuleFiredHistoryEvent.getRule().getRuleFlowGroup(), afterRuleFiredHistoryEvent.getRule().getRuleName());
             ruleExecution.setEndDate(afterRuleFiredHistoryEvent.getDateEvent());
             ruleExecution.setStopEventID(afterRuleFiredHistoryEvent.getEventID());
-            ruleExecutionRepository.save(ruleExecution);
+            ruleExecutionRepository.save(afterRuleFiredHistoryEvent.getRuleBaseID(), afterRuleFiredHistoryEvent.getSessionId(), afterRuleFiredHistoryEvent.getRule().getRuleFlowGroup(), ruleExecution);
         } else {
             ruleExecution = ruleExecutionRepository.findActiveRuleByRuleBaseIDAndSessionIDAndRuleName(afterRuleFiredHistoryEvent.getRuleBaseID(), afterRuleFiredHistoryEvent.getSessionId(), afterRuleFiredHistoryEvent.getRule().getRuleName());
             ruleExecution.setEndDate(afterRuleFiredHistoryEvent.getDateEvent());
             ruleExecution.setStopEventID(afterRuleFiredHistoryEvent.getEventID());
-            ruleExecutionRepository.save(ruleExecution);
+            ruleExecutionRepository.save(afterRuleFiredHistoryEvent.getRuleBaseID(), afterRuleFiredHistoryEvent.getSessionId(), afterRuleFiredHistoryEvent.getRule().getRuleFlowGroup(), ruleExecution);
         }
         LOG.debug("AfterRuleFiredHistoryEvent " + historyEvent.toString());
     }

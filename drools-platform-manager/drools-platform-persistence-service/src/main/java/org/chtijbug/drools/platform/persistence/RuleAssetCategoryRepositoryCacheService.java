@@ -17,7 +17,7 @@ public class RuleAssetCategoryRepositoryCacheService {
     RuleAssetCategoryRepository ruleAssetCategoryRepository;
 
     public RuleAssetCategory findBycategoryName(String categorieName) {
-        return this.findBycategoryName(categorieName);
+        return this.ruleAssetCategoryRepository.findBycategoryName(categorieName);
 
     }
 }

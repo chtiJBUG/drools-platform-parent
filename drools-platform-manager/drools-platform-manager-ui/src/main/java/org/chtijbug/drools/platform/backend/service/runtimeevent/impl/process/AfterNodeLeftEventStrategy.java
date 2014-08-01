@@ -36,7 +36,7 @@ public class AfterNodeLeftEventStrategy extends AbstractEventHandlerStrategy {
             ruleflowGroup.setEndDate(afterNodeLeftHistoryEvent.getDateEvent());
             ruleflowGroup.setStopEventID(afterNodeLeftHistoryEvent.getEventID());
             ruleflowGroup.setRuleflowGroupStatus(RuleflowGroupStatus.STOPPED);
-            ruleflowGroupRepository.save(ruleflowGroup);
+            ruleflowGroupRepository.save(afterNodeLeftHistoryEvent.getRuleBaseID(), afterNodeLeftHistoryEvent.getSessionId(), afterNodeLeftHistoryEvent.getSessionId(), ruleflowGroup);
         }
         // afterNodeLeftHistoryEvent.get
         LOG.debug("AfterNodeLeftHistoryEvent " + historyEvent.toString());

@@ -42,7 +42,7 @@ public class AfterNodeInstanceTriggeredEventStrategy extends AbstractEventHandle
             for (RuleflowGroup ruleflowGroup : ruleflowGroups) {
                 ruleflowGroup.setEndDate(new Date());
                 ruleflowGroup.setRuleflowGroupStatus(RuleflowGroupStatus.CRASHED);
-                ruleflowGroupRepository.save(ruleflowGroup);
+                ruleflowGroupRepository.save(afterNodeInstanceTriggeredHistoryEvent.getRuleBaseID(), afterNodeInstanceTriggeredHistoryEvent.getSessionId(), afterNodeInstanceTriggeredHistoryEvent.getSessionId(), ruleflowGroup);
             }
 
             ProcessExecution processExecution = processExecutionRepository.findStartedProcessByRuleBaseIDBySessionIDAndProcessInstanceId(afterNodeInstanceTriggeredHistoryEvent.getRuleBaseID(), afterNodeInstanceTriggeredHistoryEvent.getSessionId(), afterNodeInstanceTriggeredHistoryEvent.getProcessInstance().getId());
@@ -53,7 +53,7 @@ public class AfterNodeInstanceTriggeredEventStrategy extends AbstractEventHandle
             ruleflowGroup.setStartEventID(afterNodeInstanceTriggeredHistoryEvent.getEventID());
             ruleflowGroup.setRuleflowGroupStatus(RuleflowGroupStatus.STARTED);
             ruleflowGroup.setRuleflowGroup(afterNodeInstanceTriggeredHistoryEvent.getNodeInstance().getNode().getRuleflowGroupName());
-            ruleflowGroupRepository.save(ruleflowGroup);
+            ruleflowGroupRepository.save(afterNodeInstanceTriggeredHistoryEvent.getRuleBaseID(), afterNodeInstanceTriggeredHistoryEvent.getSessionId(), afterNodeInstanceTriggeredHistoryEvent.getSessionId(), ruleflowGroup);
         }
         LOG.debug("AfterNodeInstanceTriggeredHistoryEvent " + historyEvent.toString());
     }

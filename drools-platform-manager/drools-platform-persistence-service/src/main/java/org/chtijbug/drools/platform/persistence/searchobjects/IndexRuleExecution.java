@@ -1,6 +1,9 @@
 package org.chtijbug.drools.platform.persistence.searchobjects;
 
 import org.chtijbug.drools.platform.persistence.pojo.RuleExecution;
+import org.gridgain.grid.cache.query.GridCacheQuerySqlField;
+
+import java.io.Serializable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -8,47 +11,55 @@ import org.chtijbug.drools.platform.persistence.pojo.RuleExecution;
  * Time: 11:23
  * To change this template use File | Settings | File Templates.
  */
-public class IndexRuleExecution {
+public class IndexRuleExecution implements Serializable {
 
-    private Integer ruleBaseID;
-    private Integer sessionId;
-    private String ruleFlowGroup;
-    private String ruleName;
+    @GridCacheQuerySqlField
+    private Integer rulebaseid;
+
+    @GridCacheQuerySqlField
+    private Integer sessionid;
+
+    @GridCacheQuerySqlField
+    private String ruleflowgroup;
+
+    @GridCacheQuerySqlField
+    private String rulename;
+
     private RuleExecution ruleExecution;
 
     public IndexRuleExecution() {
     }
 
-    public Integer getRuleBaseID() {
-        return ruleBaseID;
+    public Integer getrulebaseid() {
+        return rulebaseid;
     }
 
-    public void setRuleBaseID(Integer ruleBaseID) {
-        this.ruleBaseID = ruleBaseID;
+    public void setrulebaseid(Integer rulebaseid) {
+        this.rulebaseid = rulebaseid;
     }
 
-    public Integer getSessionId() {
-        return sessionId;
+    public Integer getsessionid() {
+        return sessionid;
     }
 
-    public void setSessionId(Integer sessionId) {
-        this.sessionId = sessionId;
+    public void setsessionid(Integer sessionid) {
+        this.sessionid = sessionid;
     }
 
-    public String getRuleFlowGroup() {
-        return ruleFlowGroup;
+    public String getruleflowgroup() {
+        return ruleflowgroup;
     }
 
-    public void setRuleFlowGroup(String ruleFlowGroup) {
-        this.ruleFlowGroup = ruleFlowGroup;
+    public void setruleflowgroup(String ruleFlowGroup) {
+        this.ruleflowgroup = ruleFlowGroup;
     }
 
-    public String getRuleName() {
-        return ruleName;
+    public String getrulename() {
+        return rulename;
     }
 
-    public void setRuleName(String ruleName) {
-        this.ruleName = ruleName;
+    public void setrulename(String rulename) {
+        this.rulename = rulename;
     }
 
     public RuleExecution getRuleExecution() {
@@ -63,10 +74,10 @@ public class IndexRuleExecution {
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("IndexRuleExecution{");
-        sb.append("ruleBaseID=").append(ruleBaseID);
-        sb.append(", sessionId=").append(sessionId);
-        sb.append(", ruleFlowGroup='").append(ruleFlowGroup).append('\'');
-        sb.append(", ruleName='").append(ruleName).append('\'');
+        sb.append("ruleBaseID=").append(rulebaseid);
+        sb.append(", sessionId=").append(sessionid);
+        sb.append(", ruleflowgroup='").append(ruleflowgroup).append('\'');
+        sb.append(", rulename='").append(rulename).append('\'');
         sb.append(", ruleExecution=").append(ruleExecution);
         sb.append('}');
         return sb.toString();
