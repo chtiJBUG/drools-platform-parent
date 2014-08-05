@@ -19,7 +19,8 @@
     "AngularStomp": "latest",
     "stomp-websocket": "~2.3.1",
     "angular-highlightjs": "latest",
-    "sockjs": "~0.3.4"
+    "sockjs": "~0.3.4",
+    "angular-spinner": "~0.5.0"
   },
   "devDependencies": {}
 }

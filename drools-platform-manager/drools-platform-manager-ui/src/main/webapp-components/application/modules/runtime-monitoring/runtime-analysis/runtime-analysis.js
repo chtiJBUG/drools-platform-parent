@@ -1,4 +1,4 @@
-DroolsPlatformControllers.controller('runtimeAnalysisController', function ($rootScope, $scope, $document, $http, $log, $timeout, growlNotifications) {
+DroolsPlatformControllers.controller('runtimeAnalysisController', function ($rootScope, $scope, $document, $http, $log, $timeout, growlNotifications, usSpinnerService, loaderSpinner) {
 
     /** SCOPE DEFINITION **/
 
@@ -172,14 +172,16 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
     /** SEARCH **/
     $scope.search = function () {
-        console.log("[Info] Start date : "+$scope.filters.startDate);
-        console.log("[Info] End date : "+$scope.filters.endDate);
         //___ You must chose the package
         if ($scope.filters.packageName == null || $scope.filters.packageName == "") {
             console.log("[Error] Package name is mandatory for filtering");
             $scope.namePackageSelectClass = "form-group has-error has-feedback";
 
         } else {
+
+            //Load spinner : Fade to + disable search button + spin showed
+            loaderSpinner.openSpinner();
+
             if ($scope.filters.status == '') {
                 $scope.filters.status = undefined;
             }
@@ -208,21 +210,47 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             $http.post('./server/runtime/filter', filters)
                 .success(function (data) {
                     $scope.allRuntimes = data;
-                    console.log("[Info] Number of items displayed per page : "+$scope.allRuntimes.length);
                     $scope.numPagesMax = Math.ceil($scope.count/$scope.allRuntimes.length);
-                    console.log($scope.numPagesMax);
+                    console.log("[Info] Number of items displayed per page : "+$scope.allRuntimes.length);
+                    console.log("[Info] Number of pages needed : "+$scope.numPagesMax);
                 })
                 .error(function (error, status) {
                     console.log("[Error] Error HTTP " + status);
                     console.log(error);
                     //____ TODO Send an appropriate message
                     growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
+
                 });
+
+            //Load spinner : Fade to + enable search button + spin hided
+            $timeout(function () {
+                loaderSpinner.closeSpinner();
+            }, 2000);
+
+
         }
         $scope.currentPage=1;
         $scope.showCancelButton = true;
     };
 
+    $scope.pageChanged = function() {
+        console.log('[Info] Page changed to : ' + $scope.currentPage);
+        var filters=$scope.filters;
+        filters.page.currentIndex=$scope.currentPage;
+        $http.post('./server/runtime/filter', filters)
+            .success(function (data) {
+                $scope.allRuntimes = data;
+                console.log("[Info] Number of items displayed per page : "+$scope.allRuntimes.length);
+            })
+            .error(function (error, status) {
+                console.log("[Error] Error HTTP " + status);
+                console.log(error);
+                //____ TODO Send an appropriate message
+                growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
+            });
+    };
+
+    //___ Filter the runtime's details
     $scope.applyFilters = function(){
         // $ allows to disabled strict filtering (otherwise letting fields empty will provide zero result with strict filtering)
         // TODO : Is it possible to simplify this ?
@@ -252,22 +280,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         }
     }
 
-    $scope.pageChanged = function() {
-        console.log('Page changed to: ' + $scope.currentPage);
-        var filters=$scope.filters;
-        filters.page.currentIndex=$scope.currentPage;
-        $http.post('./server/runtime/filter', filters)
-            .success(function (data) {
-                $scope.allRuntimes = data;
-                console.log("[Info] Number of items displayed per page : "+$scope.allRuntimes.length);
-            })
-            .error(function (error, status) {
-                console.log("[Error] Error HTTP " + status);
-                console.log(error);
-                //____ TODO Send an appropriate message
-                growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
-            });
-    };
+
 
     $scope.reset = function () {
         initRuntimeAnalysisController();
@@ -275,6 +288,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         $scope.collapseStatus.firstBox=false;
         $scope.collapseStatus.seconddBox=false;
         $scope.showCancelButton = false;
+        console.log($scope.showCancelButton);
     };
 
     /** INIT THE SCOPE VALUES **/
@@ -439,7 +453,6 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             fullClassName: undefined
         };
     };
-
 });
 
 

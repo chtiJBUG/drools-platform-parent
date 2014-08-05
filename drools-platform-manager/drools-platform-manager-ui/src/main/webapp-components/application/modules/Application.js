@@ -9,7 +9,8 @@ var droolsPlatformApp = angular.module('droolsPlatformApp', [
     'growlNotifications',
     'ngSanitize',
     'ngAnimate',
-    'hljs'
+    'hljs',
+    'angularSpinner'
 
 ]);
 
@@ -44,6 +45,21 @@ droolsPlatformApp.factory('httpInterceptor', ['$q', '$rootScope', function ($q, 
         return promise.then(success, error);
     };
 
+}]);
+
+droolsPlatformApp.factory('loaderSpinner', ['$rootScope', 'usSpinnerService', function($rootScope, usSpinnerService) {
+    return {
+        openSpinner: function() {
+            $("#main").fadeTo("slow",0.10); //fadeTo(speed, opacity)
+            $rootScope.disableButton=true;
+            usSpinnerService.spin('spinner-1');
+        },
+        closeSpinner : function(){
+            $("#main").fadeTo("slow",1);
+            $rootScope.disableButton=false;
+            usSpinnerService.stop('spinner-1');
+        }
+    };
 }]);
 
 droolsPlatformApp.run(function ($rootScope, $log, $location) {

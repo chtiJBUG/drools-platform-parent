@@ -42,6 +42,8 @@
         <script src="components/moment/moment.js"></script>
         <script src="modules/momentjs-custom.js"></script>
         <script src="components/ng-context-menu/dist/ng-context-menu.min.js"></script>
+        <script src="components/spin.js/spin.js"></script>
+        <script src="components/angular-spinner/angular-spinner.js"></script>
         <!-- endbuild -->
 
         <!-- build:js modules/modules.js -->
@@ -65,6 +67,7 @@
         <div id="wrap" style="background-image: url('images/pattern.png');">
             <div ng-include="'modules/home/navbar.html'"></div>
             <div growl-notifications class="notifications"></div>
+            <div us-spinner="{radius:30, width:8, lines: 13, length: 20, shadow:true}" spinner-key="spinner-1"></div>
             <div id="main">
                 <div ng-include="'modules/login/login.html'"></div>
                 <div ng-hide="loginRequired" ng-view></div>
