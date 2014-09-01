@@ -4,8 +4,8 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.*;
 import org.chtijbug.drools.platform.web.model.*;
 import org.slf4j.Logger;
@@ -37,9 +37,9 @@ public class RuntimeResource {
     private static Logger logger = LoggerFactory.getLogger(RuntimeResource.class);
 
     @Autowired
-    PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
+    PlatformRuntimeInstanceRepositoryCacheService platformRuntimeInstanceRepository;
     @Autowired
-    SessionExecutionRepository sessionExecutionRepository;
+    SessionExecutionRepositoryCacheService sessionExecutionRepository;
 
     @RequestMapping(method = RequestMethod.GET, value = "/{packageName:.+}")
     @Consumes(value = MediaType.APPLICATION_JSON)
@@ -71,6 +71,7 @@ public class RuntimeResource {
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
+    @Transactional
     public List<PlatformRuntimeInstance> findAllPlatformRuntimeInstance(@PathVariable String packageName) {
         return platformRuntimeInstanceRepository.findByPackageNameAllRuntime(packageName);
     }
@@ -80,11 +81,12 @@ public class RuntimeResource {
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
+    @Transactional
     public SessionExecutionDetailsResource findSessionExecutionDetails(@PathVariable int ruleBaseID, @PathVariable int sessionId) {
         logger.debug(">> findSessionExecutionDetails(sessionId= {})", sessionId);
         try {
             //____ Data from Database
-            final SessionExecution sessionExecution = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(ruleBaseID, sessionId);
+            final SessionExecution sessionExecution = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNullForUI(ruleBaseID, sessionId);
             // final SessionExecution sessionExecution = sessionExecutionRepository.findDetailsBySessionId(sessionID);
             SessionExecutionDetailsResource executionDetailsResource = new SessionExecutionDetailsResource();
             ProcessExecution processExecution = sessionExecution.getProcessExecutions().get(0);
@@ -148,9 +150,9 @@ public class RuntimeResource {
     @ResponseBody
     public Integer countPlatformRuntimeInstanceByFilters(@RequestBody final PlatformRuntimeFilter runtimeFilter) {
         logger.debug(">> countPlatformRuntimeInstanceByFilters(runtimeFilter= {})", runtimeFilter);
-        try{
+        try {
             return platformRuntimeInstanceRepository.countAllPlatformRuntimeInstanceByFilter(runtimeFilter);
-        }finally {
+        } finally {
             logger.debug("<< countPlatformRuntimeInstanceByFilters()");
         }
 
@@ -159,6 +161,7 @@ public class RuntimeResource {
     @RequestMapping(method = RequestMethod.POST, value = "/filter")
     @Consumes(MediaType.APPLICATION_JSON)
     @ResponseBody
+    @Transactional
     public List<SessionExecutionResource> findPlatformRuntimeInstanceByFilters(@RequestBody final PlatformRuntimeFilter runtimeFilter) {
         logger.debug(">> findAllPlatformRuntimeInstanceByFilter(runtimeFilter= {})", runtimeFilter);
         try {
@@ -217,8 +220,8 @@ public class RuntimeResource {
     // Is it possible to simplify those requests?
 
     @RequestMapping(method = RequestMethod.GET, value = "/all/statuses")
-         @Produces(value = MediaType.APPLICATION_JSON)
-         @ResponseBody
+    @Produces(value = MediaType.APPLICATION_JSON)
+    @ResponseBody
     public List<RuntimeStatusObject> getAllStatuses() {
         RuntimeStatusObject initmode = new RuntimeStatusObject(PlatformRuntimeInstanceStatus.INITMODE, "INITMODE");
         RuntimeStatusObject started = new RuntimeStatusObject(PlatformRuntimeInstanceStatus.STARTED, "STARTED");

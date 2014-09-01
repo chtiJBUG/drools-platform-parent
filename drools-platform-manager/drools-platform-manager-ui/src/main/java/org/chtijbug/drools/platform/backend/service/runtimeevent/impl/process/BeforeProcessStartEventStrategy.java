@@ -4,8 +4,8 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.process.BeforeProcessStartHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.ProcessExecutionRepository;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
+import org.chtijbug.drools.platform.persistence.ProcessExecutionRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.ProcessExecution;
 import org.chtijbug.drools.platform.persistence.pojo.ProcessExecutionStatus;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
@@ -27,9 +27,9 @@ import java.util.List;
 public class BeforeProcessStartEventStrategy extends AbstractEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(BeforeProcessStartEventStrategy.class);
     @Autowired
-    ProcessExecutionRepository processExecutionRepository;
+    ProcessExecutionRepositoryCacheService processExecutionRepository;
     @Autowired
-    private SessionExecutionRepository sessionExecutionRepository;
+    private SessionExecutionRepositoryCacheService sessionExecutionRepository;
 
 
     @Override

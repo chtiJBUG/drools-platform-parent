@@ -5,7 +5,7 @@ import org.chtijbug.drools.entity.DroolsNodeType;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.process.AfterNodeLeftHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.RuleflowGroupRepository;
+import org.chtijbug.drools.platform.persistence.RuleflowGroupRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.RuleflowGroup;
 import org.chtijbug.drools.platform.persistence.pojo.RuleflowGroupStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class AfterNodeLeftEventStrategy extends AbstractEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(AfterNodeLeftEventStrategy.class);
 
     @Autowired
-    RuleflowGroupRepository ruleflowGroupRepository;
+    RuleflowGroupRepositoryCacheService ruleflowGroupRepository;
 
     @Override
     @Transactional
@@ -36,7 +36,7 @@ public class AfterNodeLeftEventStrategy extends AbstractEventHandlerStrategy {
             ruleflowGroup.setEndDate(afterNodeLeftHistoryEvent.getDateEvent());
             ruleflowGroup.setStopEventID(afterNodeLeftHistoryEvent.getEventID());
             ruleflowGroup.setRuleflowGroupStatus(RuleflowGroupStatus.STOPPED);
-            ruleflowGroupRepository.save(ruleflowGroup);
+            ruleflowGroupRepository.save(afterNodeLeftHistoryEvent.getRuleBaseID(), afterNodeLeftHistoryEvent.getSessionId(), afterNodeLeftHistoryEvent.getSessionId(), ruleflowGroup);
         }
         // afterNodeLeftHistoryEvent.get
         LOG.debug("AfterNodeLeftHistoryEvent " + historyEvent.toString());

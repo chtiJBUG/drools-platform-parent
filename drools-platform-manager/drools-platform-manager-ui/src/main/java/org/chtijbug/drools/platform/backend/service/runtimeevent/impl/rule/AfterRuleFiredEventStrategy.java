@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFiredHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.RuleExecutionRepository;
+import org.chtijbug.drools.platform.persistence.RuleExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.RuleExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,7 +22,7 @@ public class AfterRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(AfterRuleFiredEventStrategy.class);
 
     @Autowired
-    private RuleExecutionRepository ruleExecutionRepository;
+    private RuleExecutionRepositoryCacheService ruleExecutionRepository;
 
 
     @Override
@@ -31,18 +31,16 @@ public class AfterRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
         AfterRuleFiredHistoryEvent afterRuleFiredHistoryEvent = (AfterRuleFiredHistoryEvent) historyEvent;
 
         RuleExecution ruleExecution = null;
-
-
-        ruleExecution = ruleExecutionRepository.findByRuleBaseIDAndSessionIDAndRuleFlowNameAndRuleName(afterRuleFiredHistoryEvent.getRuleBaseID(), afterRuleFiredHistoryEvent.getSessionId(), afterRuleFiredHistoryEvent.getRule().getRuleFlowGroup(), afterRuleFiredHistoryEvent.getRule().getRuleName());
-        if (ruleExecution != null) {
+        if (afterRuleFiredHistoryEvent.getRule().getRuleFlowGroup() != null) {
+            ruleExecution = ruleExecutionRepository.findByRuleBaseIDAndSessionIDAndRuleFlowNameAndRuleName(afterRuleFiredHistoryEvent.getRuleBaseID(), afterRuleFiredHistoryEvent.getSessionId(), afterRuleFiredHistoryEvent.getRule().getRuleFlowGroup(), afterRuleFiredHistoryEvent.getRule().getRuleName());
             ruleExecution.setEndDate(afterRuleFiredHistoryEvent.getDateEvent());
             ruleExecution.setStopEventID(afterRuleFiredHistoryEvent.getEventID());
-            ruleExecutionRepository.save(ruleExecution);
+            ruleExecutionRepository.save(afterRuleFiredHistoryEvent.getRuleBaseID(), afterRuleFiredHistoryEvent.getSessionId(), afterRuleFiredHistoryEvent.getRule().getRuleFlowGroup(), ruleExecution);
         } else {
             ruleExecution = ruleExecutionRepository.findActiveRuleByRuleBaseIDAndSessionIDAndRuleName(afterRuleFiredHistoryEvent.getRuleBaseID(), afterRuleFiredHistoryEvent.getSessionId(), afterRuleFiredHistoryEvent.getRule().getRuleName());
             ruleExecution.setEndDate(afterRuleFiredHistoryEvent.getDateEvent());
             ruleExecution.setStopEventID(afterRuleFiredHistoryEvent.getEventID());
-            ruleExecutionRepository.save(ruleExecution);
+            ruleExecutionRepository.save(afterRuleFiredHistoryEvent.getRuleBaseID(), afterRuleFiredHistoryEvent.getSessionId(), afterRuleFiredHistoryEvent.getRule().getRuleFlowGroup(), ruleExecution);
         }
         LOG.debug("AfterRuleFiredHistoryEvent " + historyEvent.toString());
     }

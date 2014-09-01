@@ -4,8 +4,8 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.fact.InsertedFactHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.RuleExecutionRepository;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
+import org.chtijbug.drools.platform.persistence.RuleExecutionRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.Fact;
 import org.chtijbug.drools.platform.persistence.pojo.FactType;
 import org.chtijbug.drools.platform.persistence.pojo.RuleExecution;
@@ -26,10 +26,10 @@ public class InsertedFactEventStrategy extends AbstractEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(InsertedFactEventStrategy.class);
 
     @Autowired
-    RuleExecutionRepository ruleExecutionRepository;
+    RuleExecutionRepositoryCacheService ruleExecutionRepository;
 
     @Autowired
-    SessionExecutionRepository sessionExecutionRepository;
+    SessionExecutionRepositoryCacheService sessionExecutionRepository;
 
     @Override
     @Transactional
@@ -41,22 +41,28 @@ public class InsertedFactEventStrategy extends AbstractEventHandlerStrategy {
         fact.setJsonFact(insertedFactHistoryEvent.getInsertedObject().getRealObject_JSON());
         fact.setModificationDate(insertedFactHistoryEvent.getDateEvent());
         fact.setFactType(FactType.INSERTED);
-        RuleExecution existingInSessionRuleExecution = ruleExecutionRepository.findActiveRuleInSessionByRuleBaseIDAndSessionID(insertedFactHistoryEvent.getRuleBaseID(), insertedFactHistoryEvent.getSessionId());
-        if (existingInSessionRuleExecution != null) {
-            existingInSessionRuleExecution.getThenFacts().add(fact);
-            ruleExecutionRepository.save(existingInSessionRuleExecution);
+        RuleExecution existingInSessionRuleExecution = null;
+        if (insertedFactHistoryEvent.getRuleName() == null) {  // inserted from a session
+            SessionExecution sessionExecution = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(insertedFactHistoryEvent.getRuleBaseID(), insertedFactHistoryEvent.getSessionId());
+            sessionExecution.getFacts().add(fact);
+            sessionExecutionRepository.save(insertedFactHistoryEvent.getRuleBaseID(), insertedFactHistoryEvent.getSessionId(), sessionExecution);
 
-        } else {
-            existingInSessionRuleExecution = ruleExecutionRepository.findActiveRuleInRuleFlowGroupByRuleBaseIDAndSessionID(insertedFactHistoryEvent.getRuleBaseID(), insertedFactHistoryEvent.getSessionId());
+        } else if (insertedFactHistoryEvent.getRuleName() != null && insertedFactHistoryEvent.getRuleflowGroup() == null) {   // inserted from a rule that is not in a ruleflow/process
+            existingInSessionRuleExecution = ruleExecutionRepository.findActiveRuleByRuleBaseIDAndSessionIDAndRuleName(insertedFactHistoryEvent.getRuleBaseID(), insertedFactHistoryEvent.getSessionId(), insertedFactHistoryEvent.getRuleName());
             if (existingInSessionRuleExecution != null) {
                 existingInSessionRuleExecution.getThenFacts().add(fact);
-                ruleExecutionRepository.save(existingInSessionRuleExecution);
-            } else {
-                SessionExecution sessionExecution = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(insertedFactHistoryEvent.getRuleBaseID(), insertedFactHistoryEvent.getSessionId());
-                sessionExecution.getFacts().add(fact);
-                sessionExecutionRepository.save(sessionExecution);
+                ruleExecutionRepository.save(insertedFactHistoryEvent.getRuleBaseID(), insertedFactHistoryEvent.getSessionId(), insertedFactHistoryEvent.getRuleflowGroup(), existingInSessionRuleExecution);
+            }
+
+        } else { // inserted from a rule in a ruleflowgroup/process
+            existingInSessionRuleExecution = ruleExecutionRepository.findByRuleBaseIDAndSessionIDAndRuleFlowNameAndRuleName(insertedFactHistoryEvent.getRuleBaseID(), insertedFactHistoryEvent.getSessionId(), insertedFactHistoryEvent.getRuleflowGroup(), insertedFactHistoryEvent.getRuleName());
+            if (existingInSessionRuleExecution != null) {
+                existingInSessionRuleExecution.getThenFacts().add(fact);
+                ruleExecutionRepository.save(insertedFactHistoryEvent.getRuleBaseID(), insertedFactHistoryEvent.getSessionId(), insertedFactHistoryEvent.getRuleflowGroup(), existingInSessionRuleExecution);
             }
         }
+
+
         LOG.debug("InsertedFactHistoryEvent " + historyEvent.toString());
     }
 

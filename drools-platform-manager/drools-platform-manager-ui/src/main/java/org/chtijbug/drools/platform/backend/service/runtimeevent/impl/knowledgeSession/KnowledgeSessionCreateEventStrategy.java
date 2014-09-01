@@ -4,8 +4,8 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionCreatedEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecutionStatus;
@@ -28,10 +28,10 @@ public class KnowledgeSessionCreateEventStrategy extends AbstractEventHandlerStr
     private static final Logger LOG = Logger.getLogger(KnowledgeSessionCreateEventStrategy.class);
 
     @Autowired
-    PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
+    PlatformRuntimeInstanceRepositoryCacheService platformRuntimeInstanceRepository;
 
     @Autowired
-    SessionExecutionRepository sessionExecutionRepository;
+    SessionExecutionRepositoryCacheService sessionExecutionRepository;
 
     @Override
     @Transactional
@@ -41,7 +41,7 @@ public class KnowledgeSessionCreateEventStrategy extends AbstractEventHandlerStr
         if (existingSessionRutime != null) {
             existingSessionRutime.setEndDate(new Date());
             existingSessionRutime.setSessionExecutionStatus(SessionExecutionStatus.CRASHED);
-            sessionExecutionRepository.save(existingSessionRutime);
+            sessionExecutionRepository.save(sessionCreatedEvent.getRuleBaseID(), sessionCreatedEvent.getSessionId(), existingSessionRutime);
         }
         List<PlatformRuntimeInstance> platformRuntimeInstances = platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(sessionCreatedEvent.getRuleBaseID());
         if (platformRuntimeInstances.size() == 1) {
@@ -51,7 +51,7 @@ public class KnowledgeSessionCreateEventStrategy extends AbstractEventHandlerStr
             sessionExecution.setSessionId(sessionCreatedEvent.getSessionId());
             sessionExecution.setStartEventID(sessionCreatedEvent.getEventID());
             sessionExecution.setSessionExecutionStatus(SessionExecutionStatus.STARTED);
-            sessionExecutionRepository.save(sessionExecution);
+            sessionExecutionRepository.save(sessionCreatedEvent.getRuleBaseID(), sessionCreatedEvent.getSessionId(), sessionExecution);
         }
         LOG.debug("SessionCreatedEvent " + historyEvent.toString());
     }

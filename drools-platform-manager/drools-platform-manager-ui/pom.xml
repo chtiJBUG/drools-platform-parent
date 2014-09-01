@@ -31,6 +31,10 @@
     </dependency>
     <dependency>
       <groupId>org.chtijbug.drools</groupId>
+      <artifactId>drools-platform-service</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.chtijbug.drools</groupId>
       <artifactId>drools-platform-persistence</artifactId>
     </dependency>
     <dependency>
@@ -175,6 +179,7 @@
       <groupId>org.projectreactor</groupId>
       <artifactId>reactor-tcp</artifactId>
     </dependency>
+
 
   </dependencies>
 

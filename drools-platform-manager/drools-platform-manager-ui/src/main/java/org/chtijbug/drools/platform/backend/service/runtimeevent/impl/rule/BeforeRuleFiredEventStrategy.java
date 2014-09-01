@@ -5,10 +5,10 @@ import org.chtijbug.drools.entity.DroolsFactObject;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.rule.BeforeRuleFiredHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.RuleAssetRepository;
-import org.chtijbug.drools.platform.persistence.RuleExecutionRepository;
-import org.chtijbug.drools.platform.persistence.RuleflowGroupRepository;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
+import org.chtijbug.drools.platform.persistence.RuleAssetRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.RuleExecutionRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.RuleflowGroupRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,16 +25,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class BeforeRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(BeforeRuleFiredEventStrategy.class);
     @Autowired
-    private RuleflowGroupRepository ruleflowGroupRepository;
+    private RuleflowGroupRepositoryCacheService ruleflowGroupRepository;
 
     @Autowired
-    private RuleExecutionRepository ruleExecutionRepository;
+    private RuleExecutionRepositoryCacheService ruleExecutionRepository;
 
     @Autowired
-    private SessionExecutionRepository sessionExecutionRepository;
+    private SessionExecutionRepositoryCacheService sessionExecutionRepository;
 
     @Autowired
-    private RuleAssetRepository ruleAssetRepository;
+    private RuleAssetRepositoryCacheService ruleAssetRepository;
 
     @Override
     @Transactional
@@ -72,7 +72,7 @@ public class BeforeRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
                 ruleExecution.getWhenFacts().add(fact);
             }
         }
-        ruleExecutionRepository.save(ruleExecution);
+        ruleExecutionRepository.save(beforeRuleFiredHistoryEvent.getRuleBaseID(), beforeRuleFiredHistoryEvent.getSessionId(), beforeRuleFiredHistoryEvent.getRule().getRuleFlowGroup(), ruleExecution);
         LOG.debug("BeforeRuleFiredHistoryEvent " + historyEvent.toString());
     }
 

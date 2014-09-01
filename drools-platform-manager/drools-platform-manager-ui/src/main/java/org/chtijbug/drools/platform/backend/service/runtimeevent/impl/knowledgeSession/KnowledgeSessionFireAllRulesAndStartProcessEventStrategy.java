@@ -5,8 +5,8 @@ import org.chtijbug.drools.entity.DroolsFactObject;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionFireAllRulesAndStartProcess;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.Fact;
 import org.chtijbug.drools.platform.persistence.pojo.FactType;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
@@ -26,10 +26,10 @@ public class KnowledgeSessionFireAllRulesAndStartProcessEventStrategy extends Ab
     private static final Logger LOG = Logger.getLogger(KnowledgeSessionFireAllRulesAndStartProcessEventStrategy.class);
 
     @Autowired
-    PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
+    PlatformRuntimeInstanceRepositoryCacheService platformRuntimeInstanceRepository;
 
     @Autowired
-    SessionExecutionRepository sessionExecutionRepository;
+    SessionExecutionRepositoryCacheService sessionExecutionRepository;
 
     @Override
     @Transactional
@@ -60,7 +60,7 @@ public class KnowledgeSessionFireAllRulesAndStartProcessEventStrategy extends Ab
                 existingSessionRutime.getFacts().add(outputFact);
             }
 
-            sessionExecutionRepository.save(existingSessionRutime);
+            sessionExecutionRepository.save(sessionFireAllRulesAndStartProcess.getRuleBaseID(), sessionFireAllRulesAndStartProcess.getSessionId(), existingSessionRutime);
         }
 
         LOG.debug("SessionFireAllRulesAndStartProcess " + sessionFireAllRulesAndStartProcess.toString());
