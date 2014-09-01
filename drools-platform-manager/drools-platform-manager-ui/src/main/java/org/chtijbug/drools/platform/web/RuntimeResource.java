@@ -71,6 +71,7 @@ public class RuntimeResource {
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
+    @Transactional
     public List<PlatformRuntimeInstance> findAllPlatformRuntimeInstance(@PathVariable String packageName) {
         return platformRuntimeInstanceRepository.findByPackageNameAllRuntime(packageName);
     }
@@ -80,11 +81,12 @@ public class RuntimeResource {
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
+    @Transactional
     public SessionExecutionDetailsResource findSessionExecutionDetails(@PathVariable int ruleBaseID, @PathVariable int sessionId) {
         logger.debug(">> findSessionExecutionDetails(sessionId= {})", sessionId);
         try {
             //____ Data from Database
-            final SessionExecution sessionExecution = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(ruleBaseID, sessionId);
+            final SessionExecution sessionExecution = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNullForUI(ruleBaseID, sessionId);
             // final SessionExecution sessionExecution = sessionExecutionRepository.findDetailsBySessionId(sessionID);
             SessionExecutionDetailsResource executionDetailsResource = new SessionExecutionDetailsResource();
             ProcessExecution processExecution = sessionExecution.getProcessExecutions().get(0);
@@ -158,6 +160,7 @@ public class RuntimeResource {
     @RequestMapping(method = RequestMethod.POST, value = "/filter")
     @Consumes(MediaType.APPLICATION_JSON)
     @ResponseBody
+    @Transactional
     public List<SessionExecutionResource> findPlatformRuntimeInstanceByFilters(@RequestBody final PlatformRuntimeFilter runtimeFilter) {
         logger.debug(">> findAllPlatformRuntimeInstanceByFilter(runtimeFilter= {})", runtimeFilter);
         try {

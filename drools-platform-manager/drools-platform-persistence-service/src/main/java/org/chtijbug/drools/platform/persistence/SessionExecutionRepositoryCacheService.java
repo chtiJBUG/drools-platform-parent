@@ -1,6 +1,8 @@
 package org.chtijbug.drools.platform.persistence;
 
 
+import org.chtijbug.drools.platform.persistence.pojo.ProcessExecution;
+import org.chtijbug.drools.platform.persistence.pojo.RuleflowGroup;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.chtijbug.drools.platform.persistence.searchobjects.IndexSessionExecution;
 import org.gridgain.grid.GridException;
@@ -8,10 +10,14 @@ import org.gridgain.grid.cache.GridCache;
 import org.gridgain.grid.cache.GridCacheProjection;
 import org.gridgain.grid.cache.query.GridCacheQueries;
 import org.gridgain.grid.cache.query.GridCacheQuery;
+import org.jdal.dao.jpa.JpaUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Collection;
 import java.util.Map;
 
@@ -27,10 +33,43 @@ public class SessionExecutionRepositoryCacheService {
     @Autowired
     CacheSingleton cacheSingleton;
 
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     SessionExecutionRepository sessionExecutionRepository;
 
+    @Transactional
+    public SessionExecution findByRuleBaseIDAndSessionIdAndEndDateIsNullForUI(Integer ruleBaseID, Integer sessionId) {
+        SessionExecution result = null;
+        GridCacheProjection<Long, IndexSessionExecution> ruleFlowGroupCache = getCache();
+        GridCacheQueries<Long, IndexSessionExecution> queries = ruleFlowGroupCache.queries();
+        GridCacheQuery<Map.Entry<Long, IndexSessionExecution>> qry =
+                queries.createSqlQuery(IndexSessionExecution.class, "ruleBaseid= ? and sessionid = ? ");
+        try {
+            Collection<Map.Entry<Long, IndexSessionExecution>> queryresult = qry.execute(ruleBaseID, sessionId).get();
+            if (queryresult.size() != 1) {
+                result = this.sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(ruleBaseID, sessionId);
+                if (result != null) {
+                    JpaUtils.initialize(entityManager, result, 5);
+                    for (ProcessExecution processExecution : result.getProcessExecutions()) {
+                        for (RuleflowGroup ruleflowGroup : processExecution.getRuleflowGroups()) {
+                            JpaUtils.initialize(entityManager, ruleflowGroup, 5);
+                        }
+                    }
+
+                    this.save(ruleBaseID, sessionId, result);
+                }
+            } else {
+                result = queryresult.iterator().next().getValue().getSessionExecution();
+            }
+        } catch (GridException e) {
+            logger.error(" public SessionExecution findByRuleBaseIDAndSessionIdAndEndDateIsNull(Integer ruleBaseID, Integer sessionId)", e);
+        }
+        return result;
+    }
+
+    @Transactional
     public SessionExecution findByRuleBaseIDAndSessionIdAndEndDateIsNull(Integer ruleBaseID, Integer sessionId) {
         SessionExecution result = null;
         GridCacheProjection<Long, IndexSessionExecution> ruleFlowGroupCache = getCache();
@@ -41,6 +80,9 @@ public class SessionExecutionRepositoryCacheService {
             Collection<Map.Entry<Long, IndexSessionExecution>> queryresult = qry.execute(ruleBaseID, sessionId).get();
             if (queryresult.size() != 1) {
                 result = this.sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(ruleBaseID, sessionId);
+                if (result != null) {
+                    this.save(ruleBaseID, sessionId, result);
+                }
             } else {
                 result = queryresult.iterator().next().getValue().getSessionExecution();
             }

@@ -38,6 +38,10 @@
       <artifactId>gridgain-spring</artifactId>
       <version>${gridgain.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.jdal</groupId>
+      <artifactId>jdal-core</artifactId>
+    </dependency>
     <!-- Rest Plumb -->
 
 
