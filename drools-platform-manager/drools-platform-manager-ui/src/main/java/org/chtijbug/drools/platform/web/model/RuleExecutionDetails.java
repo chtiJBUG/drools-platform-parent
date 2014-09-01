@@ -1,7 +1,6 @@
 package org.chtijbug.drools.platform.web.model;
 
 import org.chtijbug.drools.platform.persistence.pojo.Fact;
-import org.chtijbug.drools.platform.persistence.pojo.RuleAsset;
 
 import java.util.List;
 
@@ -55,7 +54,11 @@ public class RuleExecutionDetails {
         this.thenFacts = thenFacts;
     }
 
-    public RuleAssetDetails getRuleAsset() { return ruleAsset; }
+    public RuleAssetDetails getRuleAsset() {
+        return ruleAsset;
+    }
 
-    public void setRuleAsset(RuleAssetDetails ruleAsset) { this.ruleAsset = ruleAsset; }
+    public void setRuleAsset(RuleAssetDetails ruleAsset) {
+        this.ruleAsset = ruleAsset;
+    }
 }

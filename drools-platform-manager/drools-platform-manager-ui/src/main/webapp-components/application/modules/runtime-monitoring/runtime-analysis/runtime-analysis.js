@@ -103,7 +103,11 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                         }
                     ),
                     function(thenFactItem){
-                        return thenFactItem.fullClassName;
+                        if (thenFactItem == undefined) {
+                            return null;
+                        } else {
+                            return thenFactItem.fullClassName;
+                        }
                     }
                 );
 
