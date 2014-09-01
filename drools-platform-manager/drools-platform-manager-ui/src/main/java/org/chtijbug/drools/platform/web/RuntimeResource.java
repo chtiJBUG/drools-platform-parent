@@ -122,6 +122,7 @@ public class RuntimeResource {
                         ruleAssetDetails.setAssetName(ruleExecution.getRuleAsset().getAssetName());
                         ruleAssetDetails.setVersionNumber(ruleExecution.getRuleAsset().getVersionNumber());
                         ruleAssetDetails.setRuleAssetCategory(ruleExecution.getRuleAsset().getRuleAssetCategory());
+
                         ruleExecutionDetails.setRuleAsset(ruleAssetDetails);
 
                         ruleFlowGroupDetails.addRuleExecution(ruleExecutionDetails); //Ajout de la ruleExecutionDetails dans la liste

@@ -66,16 +66,21 @@
                             </a>
                             <div collapse="!collapseStatus.seconddBox">
                                 <h4>SessionExecution</h4>
-                                <label>From</label>
-                                <div class="input-group col-md-6">
-                                    <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="filters.startDate" is-open="datePickers.firstCalendar" min-date="dates.minDate" max-date="dates.maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close">
-                                    <span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="open($event, 'startDate')"><i class="fa fa-calendar"></i></button></span>
-
-                                </div>
-                                <label>To</label>
-                                <div class="input-group col-md-6">
-                                    <input type="text" class="form-control" class="form-control" datepicker-popup="{{format}}" ng-model="filters.endDate" is-open="datePickers.secondCalendar" min-date="dates.minDate" max-date="'2014-07-29'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" ng-click="open($event, 'endDate')" >
-                                    <span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="open($event, 'endDate')"><i class="fa fa-calendar"></i></button></span>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>From :</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="filters.startDate" is-open="datePickers.firstCalendar" min-date="dates.minDate" max-date="dates.maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close">
+                                            <span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="open($event, 'startDate')"><i class="fa fa-calendar"></i></button></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>To :</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" class="form-control" datepicker-popup="{{format}}" ng-model="filters.endDate" is-open="datePickers.secondCalendar" min-date="dates.minDate" max-date="'2014-07-29'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" ng-click="open($event, 'endDate')" >
+                                            <span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="open($event, 'endDate')"><i class="fa fa-calendar"></i></button></span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -84,7 +89,7 @@
                                 <i class="fa fa-reply"></i>
                             </button>
 
-                            <button id="btn-search" class="btn btn-info pull-right" ng-click="search()">
+                            <button id="btn-search" class="btn btn-info pull-right" ng-click="search()" ng-disabled="disableButton">
                                 <i class="fa fa-search"></i> Search
                             </button>
                         </div>
@@ -99,7 +104,7 @@
             <div class="row">
                 <div class="panel panel-default" style="min-height: 372px;">
                     <div class="panel-heading panel-title">
-                        <h3 class="panel-title">All Runtimes <span ng-show="allRuntimes.length != 0">({{allRuntimes.length}} runtime(s))</span></h3>
+                        <h3 class="panel-title">All Runtimes <span ng-show="allRuntimes.length != 0">({{count}} runtime(s))</span></h3>
                     </div>
                     <div class="panel-body">
                         <!-- Search result -->
@@ -131,12 +136,10 @@
                                 </tr>
                                 </tbody>
                             </table>
-
                         </div>
-                        <!-- pagination ng-show="allRuntimes.length != 0" total-items="count" ng-model="currentPage" ng-change="pageChanged()"></pagination -->
-                        <div class="col-md-6 col-md-offset-3" ng-show="allRuntimes.length != 0">
-                            <pagination  total-items="count" ng-model="currentPage" max-size="5" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages" ng-change="pageChanged()"></pagination>
-                        </div>
+                        <span class="col-md-6 col-md-offset-4" >
+                            <pagination  ng-show="allRuntimes.length != 0" total-items="count" ng-model="currentPage" items-per-page="5" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPagesMax" ng-change="pageChanged()"></pagination>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -154,134 +157,186 @@
                     <h3 class="panel-title">All Rules Execution on Runtime </h3>
                 </div>
                 <div class="panel-body" style="min-height:700px;">
-                    <div>
-                        <div class="collapsible-sidebar" ng-class="{'slide-out':sidebarContracted}">
-                            <button id="btn-searchDetails" class="btn btn-danger pull-right" ng-click="collapseSidebar()">
-                                Close
-                            </button>
+                    <tabset>
+                        <tab heading="Input">
                             <br>
-                            <h3>Filter the details</h3>
-                            <form role="form" name="SearchDetailsForm">
-                                <h4>Rule</h4>
-                                <div class="form-group" ng-class="ruleType">
-                                    <label for="rule-category-select">Rule category</label>
-                                    <select id="rule-category-select" ui-select2="selectCategory" ng-model="detailsFilters.ruleCategorySelect"
-                                            class="form-control"
-                                            style="padding:0;height:auto;width:auto;"
-                                            data-placeholder="Select a category">
-                                        <option value=""></option>
-                                        <option ng-repeat="c in ruleAssetCategoryList" value="{{c.categoryName}}">{{c.categoryName}}
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="form-group" ng-class="ruleName">
-                                    <label for="rule-name-select">Rule name</label>
-                                    <select id="rule-name-select" ui-select2="selectRuleName" ng-model="detailsFilters.ruleNameSelect"
-                                            class="form-control"
-                                            style="padding:0;height:auto;width:auto;"
-                                            data-placeholder="Select the rule name">
-                                        <option value=""></option>
-                                        <option ng-repeat="r in ruleNameList" value="{{r}}">{{r}}
-                                        </option>
-                                    </select>
-                                </div>
-                                <h4>Facts</h4>
-                                <div class="form-group" ng-class="factType">
-                                    <label for="fact-type-select">Fact type</label>
-                                    <select id="fact-type-select" ui-select2="selectFactType" ng-model="detailsFilters.factTypeSelect"
-                                            class="form-control"
-                                            style="padding:0;height:auto;width:auto;"
-                                            data-placeholder="Select a fact type">
-                                        <option value=""></option>
-                                        <option ng-repeat="f in facttypesList" value="{{f}}">{{f}}
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <button id="btn-search" class="btn btn-info pull-right" ng-click="searchDetails()">
-                                        Apply filters
-                                    </button>
-                                </div>
-
-                            </form>
-
-                        </div>
-                        <div>
-                            <tabset>
-                                <tab heading="Input">
-                                    <br>
-                                    <div hljs source="code.input"></div>
-                                </tab>
-                                <tab heading="Output">
-                                    <br>
-                                    <div hljs source="code.output"></div>
-                                </tab>
-                                <tab heading="Event list">
-                                    <br>
-                                    <button id="btn-searchDetails" class="btn btn-info pull-left" ng-click="collapseSidebar()">
-                                        <i class="fa fa-search"></i> Filters
-                                    </button>
-                                    <br>
-                                    <br>
-                                    <!-- TODO List for each processExecutions (sessionExecutionDetails in allSessionExecutionDetails)-->
+                            <div hljs source="code.input"></div>
+                        </tab>
+                        <tab heading="Output">
+                            <br>
+                            <div hljs source="code.output"></div>
+                        </tab>
+                        <tab heading="Event list">
+                            <br>
+                            <!-- TODO List for each processExecutions (sessionExecutionDetails in allSessionExecutionDetails)-->
+                            <fieldset>
+                                <legend class="scheduler-border">Process Details</legend>
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <b>Process name : </b>{{allSessionExecutionDetails.processDetails.processName}}
+                                    </li>
+                                    <li>
+                                        <b>Process Execution status : </b>{{allSessionExecutionDetails.processDetails.processExecutionStatus}}
+                                    </li>
+                                    <li>
+                                        <b>Process type : </b>{{allSessionExecutionDetails.processDetails.processType}}
+                                    </li>
+                                </ul>
+                            </fieldset>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-3">
                                     <fieldset>
-                                        <legend>Process Details</legend>
-                                        <ul class="list-unstyled">
-                                            <li>
-                                                <b>Process name : </b>{{allSessionExecutionDetails.processDetails.processName}}
-                                            </li>
-                                            <li>
-                                                <b>Process Execution status : </b>{{allSessionExecutionDetails.processDetails.processExecutionStatus}}
-                                            </li>
-                                            <li>
-                                                <b>Process type : </b>{{allSessionExecutionDetails.processDetails.processType}}
-                                            </li>
-                                        </ul>
+                                        <legend>Filter the details</legend>
+                                        <form role="form" name="SearchDetailsForm">
+                                            <h4>Rule</h4>
+                                            <div class="form-group" ng-class="ruleName">
+
+                                                <select id="rule-name-select" ui-select2="selectRuleName" ng-model="detailsFilters.ruleNameSelect"
+                                                        class="form-control"
+                                                        style="padding:0;height:auto;width:auto;"
+                                                        data-placeholder="Select the rule name">
+                                                    <option value=""></option>
+                                                    <option ng-repeat="r in ruleNameList" value="{{r}}">{{r}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group" ng-class="ruleType">
+
+                                                <select id="rule-category-select" ui-select2="selectCategory" ng-model="detailsFilters.ruleCategorySelect"
+                                                        class="form-control"
+                                                        style="padding:0;height:auto;width:auto;"
+                                                        data-placeholder="Select a category">
+                                                    <option value=""></option>
+                                                    <option ng-repeat="c in ruleAssetCategoryList" value="{{c.categoryName}}">{{c.categoryName}}
+                                                    </option>
+                                                </select>
+                                            </div>
+
+                                            <h4>Facts</h4>
+                                            <div class="form-group" ng-class="factType">
+
+                                                <select id="fact-type-select" ui-select2="selectFactType" ng-model="detailsFilters.factTypeSelect"
+                                                        class="form-control"
+                                                        style="padding:0;height:auto;width:auto;"
+                                                        data-placeholder="Select a fact type">
+                                                    <option value=""></option>
+                                                    <option ng-repeat="f in facttypesList" value="{{f}}">{{f}}
+                                                    </option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group" ng-class="fullClassName">
+
+                                                <select id="full-class-name-select" ui-select2="selectFullClassName" ng-model="detailsFilters.fullClassNameSelect"
+                                                        class="form-control"
+                                                        style="padding:0;height:auto;width:auto;"
+                                                        data-placeholder="Select a class name">
+                                                    <option value=""></option>
+                                                    <option ng-repeat="f in fullClassNameList" value="{{f}}">{{f}}
+                                                    </option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <button id="btn-search" class="btn btn-info pull-right" ng-click="applyFilters()">
+                                                    Apply filters
+                                                </button>
+                                            </div>
+
+                                        </form>
                                     </fieldset>
-                                    <accordion close-others="false">
+                                </div>
+                                <div class="col-md-9">
+                                    <accordion  close-others="false">
                                         <!-- All Ruleflow Group-->
-                                        <accordion-group is-open="status.ruleFlowGroupPanelOpen" ng-repeat="flowGroupDetails in allSessionExecutionDetails.allRuleFlowGroupDetails">
-                                            <accordion-heading >
+                                        <accordion-group is-open="status.ruleFlowGroupPanelOpen" ng-repeat="flowGroupDetails in allSessionExecutionDetails.allRuleFlowGroupDetails" ng-show="([flowGroupDetails] | filter:detailsFilters.ruleName:true | filter:detailsFilters.factType:true | filter:detailsFilters.fullClassName:true | filter:detailsFilters.ruleCategory:true).length > 0">
+                                            <accordion-heading>
                                                 <i class="fa fa-chevron-right" ng-show="!status.ruleFlowGroupPanelOpen"></i><i class="fa fa-chevron-down" ng-show="status.ruleFlowGroupPanelOpen"></i> Ruleflow{{flowGroupDetails.ruleflowGroup}}
                                             </accordion-heading>
-                                            <accordion-group ng-repeat="ruleExecutionDetails in flowGroupDetails.allRuleExecutionDetails | filter:detailsFilters.ruleName | filter:detailsFilters.ruleCategory" ng-click="status.ruleExecutionOpen = !status.ruleExecutionOpen;">
-                                                <accordion-heading >
-                                                    <i class="fa fa-chevron-right" ng-show="!status.ruleExecutionOpen"></i><i class="fa fa-chevron-down" ng-show="status.ruleExecutionOpen"></i> Rule Execution : {{ruleExecutionDetails.ruleName}}
+                                            <div class="alert alert-info" ng-show="flowGroupDetails.allRuleExecutionDetails.length==0">
+                                                <b>There are no rule executions for this ruleflow group.</b>
+                                            </div>
+                                            <accordion-group ng-repeat="ruleExecutionDetails in flowGroupDetails.allRuleExecutionDetails" is-open="status.ruleExecutionOpen">
+                                                <accordion-heading>
+                                                    <i class="fa fa-chevron-right" ng-show="!status.ruleExecutionOpen"></i>
+                                                    <i class="fa fa-chevron-down" ng-show="status.ruleExecutionOpen"></i>
+                                                    Rule Execution : {{ruleExecutionDetails.ruleName}}
                                                 </accordion-heading>
-                                                <ul class="list-unstyled">
-                                                    <li><b>Rule Execution Name : </b>{{ruleExecutionDetails.ruleName}}</li>
-                                                    <li><b>Rule Package Name : </b>{{ruleExecutionDetails.packageName}}</li>
-                                                    <li>
-                                                        <b><a  ng-click="whenFacts = !whenFacts;"><i ng-show="!whenFacts" class="fa fa fa-plus-square-o"></i><i ng-show="whenFacts" class="fa fa-minus-square-o"></i> whenFacts </a>:</b> <br>
-                                                        <!-- Had to add style="..." to keep indentation instead of class="list-unstyled" from bootstrap which doesn't keep indentation in addition of removing bullets -->
-                                                        <ul collapse="!whenFacts" style="list-style-type:none;">
-                                                            <li ng-repeat="whenFactItem in ruleExecutionDetails.whenFacts | filter:detailsFilters.factType:strict">
-                                                                <a ng-click="indentJSON(whenFactItem); whenFactsDetails = !whenFactsDetails;"><i ng-show="!whenFactsDetails" class="fa fa fa-plus-square-o"></i><i ng-show="whenFactsDetails" class="fa fa-minus-square-o"></i> {{whenFactItem.fullClassName}}</a>
-                                                                <div ng-show="whenFactsDetails" hljs source="whenFactItem.jsonFact"></div>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                    <li>
-                                                        <b><a  ng-click="thenFacts = !thenFacts;"><i ng-show="!thenFacts" class="fa fa fa-plus-square-o"></i><i ng-show="thenFacts" class="fa fa-minus-square-o"></i> thenFacts </a>:</b> <br>
-                                                        <!-- Had to add style="..." to keep indentation instead of class="list-unstyled" from bootstrap which doesn't keep indentation in addition of removing bullets -->
-                                                        <ul collapse="!thenFacts" style="list-style-type:none;">
-                                                            <li ng-repeat="thenFactItem in ruleExecutionDetails.thenFacts | filter:detailsFilters.factType:strict">
-                                                                <a ng-click="indentJSON(thenFactItem); thenFactsDetails = !thenFactsDetails;"><i ng-show="!thenFactsDetails" class="fa fa fa-plus-square-o"></i><i ng-show="thenFactsDetails" class="fa fa-minus-square-o"></i>  {{thenFactItem.fullClassName}}</a> <span class="label label-info">{{thenFactItem.factType}}</span>
-                                                                <div ng-show="thenFactsDetails" hljs source="thenFactItem.jsonFact"></div>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
+                                                <div class="col-md-6">
+                                                    <ul class="list-unstyled">
+                                                        <li><b>Rule Execution Name : </b>{{ruleExecutionDetails.ruleName}}</li>
+                                                        <li><b>Rule Package Name : </b>{{ruleExecutionDetails.packageName}}</li>
+                                                        <li>
+                                                            <b><a  ng-click="whenFacts = !whenFacts;"><i ng-show="!whenFacts" class="fa fa fa-plus-square-o"></i><i ng-show="whenFacts" class="fa fa-minus-square-o"></i> whenFacts </a>:</b> <br>
+                                                            <!-- Had to add style="..." to keep indentation instead of class="list-unstyled" from bootstrap which doesn't keep indentation in addition of removing bullets -->
+                                                            <ul collapse="!whenFacts" style="list-style-type:none;">
+                                                                <li ng-repeat="whenFactItem in ruleExecutionDetails.whenFacts | filter:detailsFilters.factType:strict">
+                                                                    <a ng-click="indentJSON(whenFactItem); whenFactsDetails = !whenFactsDetails;"><i ng-show="!whenFactsDetails" class="fa fa fa-plus-square-o"></i><i ng-show="whenFactsDetails" class="fa fa-minus-square-o"></i> {{whenFactItem.fullClassName}}</a>
+                                                                    <div collapse="!whenFactsDetails" hljs source="whenFactItem.jsonFact"></div>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                        <li>
+                                                            <b><a  ng-click="thenFacts = !thenFacts;"><i ng-show="!thenFacts" class="fa fa fa-plus-square-o"></i><i ng-show="thenFacts" class="fa fa-minus-square-o"></i> thenFacts </a>:</b> <br>
+                                                            <!-- I had to add style="..." to keep indentation instead of class="list-unstyled" from bootstrap which doesn't keep indentation in addition of removing bullets -->
+                                                            <ul collapse="!thenFacts" style="list-style-type:none;">
+                                                                <li ng-repeat="thenFactItem in ruleExecutionDetails.thenFacts | filter:detailsFilters.factType:strict">
+                                                                    <a ng-click="indentJSON(thenFactItem); thenFactsDetails = !thenFactsDetails;"><i ng-show="!thenFactsDetails" class="fa fa fa-plus-square-o"></i><i ng-show="thenFactsDetails" class="fa fa-minus-square-o"></i>  {{thenFactItem.fullClassName}}</a> <span class="label label-info">{{thenFactItem.factType}}</span>
+                                                                    <div collapse="!thenFactsDetails" hljs source="thenFactItem.jsonFact"></div>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                        <li>
+                                                            <div>
+                                                                <b><a  ng-click="ruleAssetBool = !ruleAssetBool;"><i ng-show="!ruleAssetBool" class="fa fa fa-plus-square-o"></i><i ng-show="ruleAssetBool" class="fa fa-minus-square-o"></i> ruleAsset </a>:</b> <br>
+                                                                <!-- I had to add style="..." to keep indentation instead of class="list-unstyled" from bootstrap which doesn't keep indentation in addition of removing bullets -->
+                                                                <ul collapse="!ruleAssetBool" style="list-style-type:none;">
+                                                                    <li>
+                                                                        <b>Asset name :</b> {{ruleExecutionDetails.ruleAsset.assetName}}
+                                                                    </li>
+                                                                    <li>
+                                                                        <b><a  ng-click="ruleAssetCategoryBool = !ruleAssetCategoryBool;"><i ng-show="!ruleAssetCategoryBool" class="fa fa fa-plus-square-o"></i><i ng-show="ruleAssetCategoryBool" class="fa fa-minus-square-o"></i> Rule Asset Category </a>:</b> <br>
+                                                                        <ul collapse="!ruleAssetCategoryBool">
+                                                                            <li ng-repeat="ruleCategoryItem in ruleExecutionDetails.ruleAsset.ruleAssetCategory">
+                                                                                <b>ID :</b> {{ruleCategoryItem.id}}
+                                                                                <b>Category name :</b> {{ruleCategoryItem.categoryName}}
+                                                                            </li>
+                                                                        </ul>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <fieldset>
+                                                        <legend>Execution Stats</legend>
+                                                        <b>Number of rules :</b><br>
+                                                        <b>Duration :</b><br>
+                                                        <b>Status :</b>
+
+                                                    </fieldset>
+                                                </div>
                                             </accordion-group>
                                         </accordion-group>
                                     </accordion>
-                                </tab>
-                            </tabset>
-                        </div>
-                    </div>
+                                </div>
+                            </div>
+                        </tab>
+                    </tabset>
                 </div>
                 <div class="panel-footer">
                     Rulebase ID : {{selectedRuleBaseID}}, Session Id : {{selectedSessionId}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myLoader" class="modal fade" data-backdrop="static">
+        <div class="modal-dialog loader">
+            <div class="modal-content loader-content">
+                <div class="modal-body center-block" style="text-align: center;">
+                    <div class="spinner"></div>
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-DroolsPlatformControllers.controller('runtimeAnalysisController', function ($rootScope, $scope, $document, $http, $log, $timeout, growlNotifications) {
+DroolsPlatformControllers.controller('runtimeAnalysisController', function ($rootScope, $scope, $document, $http, $log, $timeout, growlNotifications, usSpinnerService, loaderSpinner) {
 
     /** SCOPE DEFINITION **/
 
@@ -7,6 +7,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     /** SESSION EXECUTION DETAILS **/
 
     $scope.loadDetails = function (ruleBaseID, sessionId){
+
         $http.get('./server/runtime/session/'+ruleBaseID+'/'+sessionId)
             .success(function (data) {
                 $scope.allSessionExecutionDetails = data;
@@ -16,7 +17,11 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                     From allSessionExecution, we will extract the useful informations.
                     We use undescoreJS, otherwise it will be complexed to write the for loops
                 */
-                // RuleExecution list
+
+                /** PROCEDURE TO RETRIEVE THE LISTS NEEDED TO FILTER THE SESSION EXECUTION DETAILS **/
+
+
+                // 1) Extract the RuleExecution list form allSessionExecutionDetails
                 ruleExcecutionList =_.map(
                     _.map(
                         _.map(
@@ -33,10 +38,15 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                         // The list is in an array [{...},{...}]
                         // We need the first item of the array
                         return ruleExecutionGroupItem[0];
+
+
                     }
                 );
 
-                // ruleName List extracted from the ruleExecutionList
+                // Remove "undefined" elements in the list
+                ruleExcecutionList = _.without(ruleExcecutionList, undefined);
+
+                // 2) ruleName List extracted from the ruleExecutionList
                 $scope.ruleNameList=_.map(
                     ruleExcecutionList,
                     function(ruleExecutionItem){
@@ -44,13 +54,13 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                     }
                 )
 
-                // ruleAssetCategory List
+                // 3) ruleAssetCategory List
                 $scope.ruleAssetCategoryList=_.map(
                     _.map(
                         _.map(
                             ruleExcecutionList,
-                            function(ruleExecutionItem){
-                                return ruleExecutionItem.ruleAsset;
+                            function(ruleExecutnItem){
+                                return ruleExecutnItem.ruleAsset;
                             }
                         ),
                         function(ruleAssetItem){
@@ -62,6 +72,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                     }
                 );
 
+                // 4) fullClassName List
                 whenFactsFullClasseNameList = _.map(
                     _.map(
                         _.map(
@@ -96,18 +107,20 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                     }
                 );
 
-                // We add each items from whenFact fullClassName list and thenFact fullClassName list to the fact type list which already contains FactType.
+                $scope.fullClassNameList = [];
+
+                // We add each items from whenFact fullClassName list and thenFact fullClassName list to a global list
 
                 _.each(whenFactsFullClasseNameList, function(item){
-                    $scope.facttypesList[$scope.facttypesList.length] = item;
+                    $scope.fullClassNameList[$scope.fullClassNameList.length] = item;
                 });
 
                 _.each(thenFactsFullClasseNameList, function(item){
-                    $scope.facttypesList[$scope.facttypesList.length] = item;
+                    $scope.fullClassNameList[$scope.fullClassNameList.length] = item;
                 });
 
                 // If we wanna delete duplicates, we have to do this :
-                $scope.facttypesList=_.uniq($scope.facttypesList);
+                $scope.fullClassNameList=_.uniq($scope.fullClassNameList);
 
                 // When details have been loaded : Scrolling to the 'details' panel
                 $scope.scrollToPanel(ruleBaseID, sessionId);
@@ -117,6 +130,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                 console.log(error);
                 //____ TODO Send an appropriate message
                 growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
+
             })
     }
 
@@ -158,14 +172,16 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
     /** SEARCH **/
     $scope.search = function () {
-        console.log("[Info] Start date : "+$scope.filters.startDate);
-        console.log("[Info] End date : "+$scope.filters.endDate);
         //___ You must chose the package
         if ($scope.filters.packageName == null || $scope.filters.packageName == "") {
             console.log("[Error] Package name is mandatory for filtering");
             $scope.namePackageSelectClass = "form-group has-error has-feedback";
 
         } else {
+
+            //Load spinner : Fade to + disable search button + spin showed
+            loaderSpinner.openSpinner();
+
             if ($scope.filters.status == '') {
                 $scope.filters.status = undefined;
             }
@@ -181,6 +197,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                 .success(function (data) {
                     $scope.count = data;
                     console.log("[Info] Total count : "+$scope.count);
+
                 })
                 .error(function (error, status) {
                     console.log("[Error] Error HTTP " + status);
@@ -193,34 +210,31 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             $http.post('./server/runtime/filter', filters)
                 .success(function (data) {
                     $scope.allRuntimes = data;
+                    $scope.numPagesMax = Math.ceil($scope.count/$scope.allRuntimes.length);
                     console.log("[Info] Number of items displayed per page : "+$scope.allRuntimes.length);
+                    console.log("[Info] Number of pages needed : "+$scope.numPagesMax);
                 })
                 .error(function (error, status) {
                     console.log("[Error] Error HTTP " + status);
                     console.log(error);
                     //____ TODO Send an appropriate message
                     growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
+
                 });
+
+            //Load spinner : Fade to + enable search button + spin hided
+            $timeout(function () {
+                loaderSpinner.closeSpinner();
+            }, 2000);
+
+
         }
         $scope.currentPage=1;
         $scope.showCancelButton = true;
     };
 
-    $scope.searchDetails = function(){
-        //Apply filters [Temporary (?)]
-        $scope.detailsFilters.ruleName=$scope.detailsFilters.ruleNameSelect;
-        $scope.detailsFilters.ruleCategory=$scope.detailsFilters.ruleCategorySelect;
-        $scope.detailsFilters.factType=$scope.detailsFilters.factTypeSelect;
-        //Reinitialize values
-        $scope.detailsFilters.ruleNameSelect=undefined;
-        $scope.detailsFilters.ruleCategorySelect=undefined;
-        $scope.detailsFilters.factTypeSelect=undefined;
-        //Hide sidebar
-        $scope.collapseSidebar();
-    }
-
     $scope.pageChanged = function() {
-        console.log('Page changed to: ' + $scope.currentPage);
+        console.log('[Info] Page changed to : ' + $scope.currentPage);
         var filters=$scope.filters;
         filters.page.currentIndex=$scope.currentPage;
         $http.post('./server/runtime/filter', filters)
@@ -236,12 +250,45 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             });
     };
 
+    //___ Filter the runtime's details
+    $scope.applyFilters = function(){
+        // $ allows to disabled strict filtering (otherwise letting fields empty will provide zero result with strict filtering)
+        // TODO : Is it possible to simplify this ?
+        if($scope.detailsFilters.ruleNameSelect == ""){
+            $scope.detailsFilters.ruleName=$;
+        }else{
+            $scope.detailsFilters.ruleName=$scope.detailsFilters.ruleNameSelect;
+        }
+
+        if($scope.detailsFilters.ruleCategorySelect == ""){
+            $scope.detailsFilters.ruleCategory=$;
+        }else{
+            $scope.detailsFilters.ruleCategory=$scope.detailsFilters.ruleCategorySelect;
+        }
+
+
+        if($scope.detailsFilters.factTypeSelect == ""){
+            $scope.detailsFilters.factType=$;
+        }else{
+            $scope.detailsFilters.factType=$scope.detailsFilters.factTypeSelect;
+        }
+
+        if($scope.detailsFilters.fullClassNameSelect == ""){
+            $scope.detailsFilters.fullClassName=$;
+        }else{
+            $scope.detailsFilters.fullClassName=$scope.detailsFilters.fullClassNameSelect;
+        }
+    }
+
+
+
     $scope.reset = function () {
         initRuntimeAnalysisController();
         //___ Close filters collapsible boxes from "Filter execution by Runtime"
         $scope.collapseStatus.firstBox=false;
         $scope.collapseStatus.seconddBox=false;
         $scope.showCancelButton = false;
+        console.log($scope.showCancelButton);
     };
 
     /** INIT THE SCOPE VALUES **/
@@ -281,6 +328,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         $scope.selectCategory = {allowClear: true};
         $scope.selectRuleName = {allowClear: true};
         $scope.selectFactType = {allowClear: true};
+        $scope.selectFullClassName = {allowClear: true};
 
         //___ Pagination options
         $scope.page = {
@@ -395,15 +443,16 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
         //___ Filters for the 'Details' panel
         $scope.detailsFilters = {
-            ruleCategorySelect: undefined, //Temporary (?)
-            ruleNameSelect: undefined, //Temporary (?)
-            factTypeSelect: undefined, //Temporary (?)
+            ruleCategorySelect: undefined,
+            ruleNameSelect: undefined,
+            factTypeSelect: undefined,
+            fullClassNameSelect : undefined,
             ruleCategory: undefined,
             ruleName: undefined,
-            factType: undefined
+            factType: undefined,
+            fullClassName: undefined
         };
     };
-
 });
 
 

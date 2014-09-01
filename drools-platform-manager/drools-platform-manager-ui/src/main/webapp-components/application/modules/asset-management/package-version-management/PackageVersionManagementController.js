@@ -100,7 +100,7 @@ DroolsPlatformControllers.controller('packageVersionManagementController', ['$ro
 
     /* Modal Management */
     //___ Modal for : Create, Rebuild, Release
-    $scope.launchWizzard = function(typeOfWizzard){
+    $scope.showWizzard = function(typeOfWizzard){
         if(typeOfWizzard=="create"){
             $scope.newVersion=undefined;
             //___ Show only the button needed
@@ -152,7 +152,7 @@ DroolsPlatformControllers.controller('packageVersionManagementController', ['$ro
         $('#Wizzard').modal('hide');
     };
     //___ Modal for : Deploy
-    $scope.launchDeploy = function(){
+    $scope.showDeploy = function(){
 
         var packageSelected=$scope.package;
         //___ Get the list according to the params chosen
@@ -177,7 +177,7 @@ DroolsPlatformControllers.controller('packageVersionManagementController', ['$ro
         $('#Deployment').modal('hide');
     };
     //___ Modal for : Confirm Message
-    $scope.launchAlertMsg = function() {
+    $scope.showAlertMsg = function() {
         $('#AlertMsg').modal('show');
     };
     $scope.closeAlertMsg = function() {

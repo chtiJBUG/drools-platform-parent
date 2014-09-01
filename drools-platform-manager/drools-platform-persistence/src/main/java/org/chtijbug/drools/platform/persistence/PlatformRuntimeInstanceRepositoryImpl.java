@@ -31,7 +31,7 @@ public class PlatformRuntimeInstanceRepositoryImpl implements PlatformRuntimeIns
         try {
             String jpaQuery = SELECT_QUERY_PART+COMMON_QUERY_PART;
             //___ Append other filters
-            Query query = appendQuerySpecs(filter, jpaQuery);
+            Query query = appendQuerySpecs(filter, jpaQuery, true);
 
             Page page = filter.getPage();
             if(page.getMaxItemPerPage() != null){
@@ -54,7 +54,7 @@ public class PlatformRuntimeInstanceRepositoryImpl implements PlatformRuntimeIns
 
             String jpaQueryCount = COUNT_QUERY_PART+COMMON_QUERY_PART;
             //___ Append other filters
-            Query query = appendQuerySpecs(filter, jpaQueryCount);
+            Query query = appendQuerySpecs(filter, jpaQueryCount, false);
             //Integer cResults=(Integer) query.getFirstResult();
             int count = ((Number)query.getSingleResult()).intValue();
             return count;
@@ -63,7 +63,7 @@ public class PlatformRuntimeInstanceRepositoryImpl implements PlatformRuntimeIns
         }
     }
 
-    private Query appendQuerySpecs(PlatformRuntimeFilter filter, String baseQuery){
+    private Query appendQuerySpecs(PlatformRuntimeFilter filter, String baseQuery, boolean isOrdered){
         String result = baseQuery;
         if (filter.getPackageName() == null) {
             throw new RuntimeException("The Package name is mandatory for filtering PlatformRuntimeInstance");
@@ -90,6 +90,13 @@ public class PlatformRuntimeInstanceRepositoryImpl implements PlatformRuntimeIns
         if(filter.getEndDate() != null){
             result = result.concat("and execution.endDate<=:enddate ");
         }
+
+        if(isOrdered){
+            // Try to sort the list by sessionId and start date of session execution
+            result = result.concat("order by execution.sessionId ASC, execution.startDate ");
+
+        }
+
         Query query = entityManager.createQuery(result);
         query.setParameter("packageName", filter.getPackageName());
         if (filter.getStatus() != null){
