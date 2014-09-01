@@ -49,7 +49,7 @@ public class KnowledgeSessionFireAllRulesAndStartProcessEventStrategy extends Ab
                 existingSessionRutime.getFacts().add(inputFact);
             }
             if (sessionFireAllRulesAndStartProcess.getOutputObject() != null) {
-                DroolsFactObject outputObject = sessionFireAllRulesAndStartProcess.getInputObject();
+                DroolsFactObject outputObject = sessionFireAllRulesAndStartProcess.getOutputObject();
                 Fact outputFact = new Fact();
                 outputFact.setEventid(sessionFireAllRulesAndStartProcess.getEventID());
                 outputFact.setFactType(FactType.OUTPUTDATA);
