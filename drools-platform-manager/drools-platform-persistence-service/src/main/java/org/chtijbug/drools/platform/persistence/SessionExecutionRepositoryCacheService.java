@@ -40,31 +40,18 @@ public class SessionExecutionRepositoryCacheService {
     SessionExecutionRepository sessionExecutionRepository;
 
     @Transactional
-    public SessionExecution findByRuleBaseIDAndSessionIdAndEndDateIsNullForUI(Integer ruleBaseID, Integer sessionId) {
+    public SessionExecution findByIdForUI(Long id) {
         SessionExecution result = null;
-        GridCacheProjection<Long, IndexSessionExecution> ruleFlowGroupCache = getCache();
-        GridCacheQueries<Long, IndexSessionExecution> queries = ruleFlowGroupCache.queries();
-        GridCacheQuery<Map.Entry<Long, IndexSessionExecution>> qry =
-                queries.createSqlQuery(IndexSessionExecution.class, "ruleBaseid= ? and sessionid = ? ");
-        try {
-            Collection<Map.Entry<Long, IndexSessionExecution>> queryresult = qry.execute(ruleBaseID, sessionId).get();
-            if (queryresult.size() != 1) {
-                result = this.sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(ruleBaseID, sessionId);
-                if (result != null) {
-                    JpaUtils.initialize(entityManager, result, 5);
-                    for (ProcessExecution processExecution : result.getProcessExecutions()) {
-                        for (RuleflowGroup ruleflowGroup : processExecution.getRuleflowGroups()) {
-                            JpaUtils.initialize(entityManager, ruleflowGroup, 5);
-                        }
-                    }
-
-                    this.save(ruleBaseID, sessionId, result);
+        result = this.sessionExecutionRepository.findOne(id);
+        if (result != null) {
+            JpaUtils.initialize(entityManager, result, 5);
+            for (ProcessExecution processExecution : result.getProcessExecutions()) {
+                for (RuleflowGroup ruleflowGroup : processExecution.getRuleflowGroups()) {
+                    JpaUtils.initialize(entityManager, ruleflowGroup, 5);
                 }
-            } else {
-                result = queryresult.iterator().next().getValue().getSessionExecution();
             }
-        } catch (GridException e) {
-            logger.error(" public SessionExecution findByRuleBaseIDAndSessionIdAndEndDateIsNull(Integer ruleBaseID, Integer sessionId)", e);
+
+
         }
         return result;
     }

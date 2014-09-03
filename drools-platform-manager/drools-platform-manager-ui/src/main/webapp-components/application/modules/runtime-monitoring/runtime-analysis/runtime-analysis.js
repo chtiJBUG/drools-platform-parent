@@ -6,9 +6,9 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
     /** SESSION EXECUTION DETAILS **/
 
-    $scope.loadDetails = function (ruleBaseID, sessionId){
+    $scope.loadDetails = function (Id) {
 
-        $http.get('./server/runtime/session/'+ruleBaseID+'/'+sessionId)
+        $http.get('./server/runtime/session/' + Id)
             .success(function (data) {
                 $scope.allSessionExecutionDetails = data;
                 $scope.code.input=JSON.stringify(JSON.parse($scope.allSessionExecutionDetails.inputObject), null, 3);
@@ -127,7 +127,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                 $scope.fullClassNameList=_.uniq($scope.fullClassNameList);
 
                 // When details have been loaded : Scrolling to the 'details' panel
-                $scope.scrollToPanel(ruleBaseID, sessionId);
+                    $scope.scrollToPanel($scope.ruleBaseID, $scope.sessionId);
             })
             .error(function (error, status) {
                 console.log("[Error] Error HTTP " + status);

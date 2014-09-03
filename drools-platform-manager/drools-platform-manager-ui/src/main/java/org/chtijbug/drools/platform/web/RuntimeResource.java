@@ -77,16 +77,16 @@ public class RuntimeResource {
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "/session/{ruleBaseID:.+}/{sessionId:.+}")
+    @RequestMapping(method = RequestMethod.GET, value = "/session/{Id}")
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
     @Transactional
-    public SessionExecutionDetailsResource findSessionExecutionDetails(@PathVariable int ruleBaseID, @PathVariable int sessionId) {
-        logger.debug(">> findSessionExecutionDetails(sessionId= {})", sessionId);
+    public SessionExecutionDetailsResource findSessionExecutionDetails(@PathVariable Long Id) {
+        logger.debug(">> findSessionExecutionDetails(sessionId= {})", Id);
         try {
             //____ Data from Database
-            final SessionExecution sessionExecution = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNullForUI(ruleBaseID, sessionId);
+            final SessionExecution sessionExecution = sessionExecutionRepository.findByIdForUI(Id);
             // final SessionExecution sessionExecution = sessionExecutionRepository.findDetailsBySessionId(sessionID);
             SessionExecutionDetailsResource executionDetailsResource = new SessionExecutionDetailsResource();
             ProcessExecution processExecution = sessionExecution.getProcessExecutions().get(0);
@@ -174,6 +174,7 @@ public class RuntimeResource {
                 public SessionExecutionResource apply(@Nullable SessionExecution sessionExecution) {
                     // TODO
                     SessionExecutionResource output = new SessionExecutionResource();
+                    output.setId(sessionExecution.getId());
                     PlatformRuntimeInstance runtimeInstance = sessionExecution.getPlatformRuntimeInstance();
                     DroolsResource guvnorResource = sessionExecution.getPlatformRuntimeInstance().getPlatformRuntimeDefinition().getDroolsRessourcesDefinition().get(0);
                     assert sessionExecution != null;

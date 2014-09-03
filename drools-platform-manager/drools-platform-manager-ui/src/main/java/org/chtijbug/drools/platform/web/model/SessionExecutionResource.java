@@ -11,6 +11,7 @@ public class SessionExecutionResource {
     private String status;
     private String StartDate;
     private String EndDate;
+    private Long id;
 
 
     public SessionExecutionResource() { /*nop*/ }
@@ -106,5 +107,13 @@ public class SessionExecutionResource {
 
     public void setEndDate(String endDate) {
         EndDate = endDate;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 }
