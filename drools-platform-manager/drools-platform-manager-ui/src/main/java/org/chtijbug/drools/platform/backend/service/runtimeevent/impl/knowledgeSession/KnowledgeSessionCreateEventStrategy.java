@@ -46,6 +46,7 @@ public class KnowledgeSessionCreateEventStrategy extends AbstractEventHandlerStr
         List<PlatformRuntimeInstance> platformRuntimeInstances = platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(sessionCreatedEvent.getRuleBaseID());
         if (platformRuntimeInstances.size() == 1) {
             SessionExecution sessionExecution = new SessionExecution();
+            sessionExecution.setProcessingStartDate(new Date());
             sessionExecution.setPlatformRuntimeInstance(platformRuntimeInstances.get(0));
             sessionExecution.setStartDate(sessionCreatedEvent.getDateEvent());
             sessionExecution.setSessionId(sessionCreatedEvent.getSessionId());

@@ -40,6 +40,8 @@ public class SessionExecution {
     private List<ProcessExecution> processExecutions = new ArrayList<ProcessExecution>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Fact> facts = new ArrayList<Fact>();
+    private Date processingStartDate;
+    private Date processingStopDate;
 
     public SessionExecution() {
     }
@@ -141,5 +143,21 @@ public class SessionExecution {
                 return fact.getFactType().equals(factType);
             }
         });
+    }
+
+    public void setProcessingStartDate(Date processionStartDate) {
+        this.processingStartDate = processionStartDate;
+    }
+
+    public Date getProcessingStartDate() {
+        return processingStartDate;
+    }
+
+    public void setProcessingStopDate(Date processingStopDate) {
+        this.processingStopDate = processingStopDate;
+    }
+
+    public Date getProcessingStopDate() {
+        return processingStopDate;
     }
 }

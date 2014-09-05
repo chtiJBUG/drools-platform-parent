@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 /**
  * Created by IntelliJ IDEA.
  * Date: 25/03/14
@@ -36,6 +38,7 @@ public class KnowledgeSessionDisposeEventStrategy extends AbstractEventHandlerSt
         SessionExecution existingSessionRutime = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
 
         existingSessionRutime.setEndDate(sessionDisposedEvent.getDateEvent());
+        existingSessionRutime.setProcessingStopDate(new Date());
         existingSessionRutime.setStopEventID(sessionDisposedEvent.getEventID());
         existingSessionRutime.setSessionExecutionStatus(SessionExecutionStatus.DISPOSED);
         sessionExecutionRepository.save(sessionDisposedEvent.getRuleBaseID(), sessionDisposedEvent.getSessionId(), existingSessionRutime);
