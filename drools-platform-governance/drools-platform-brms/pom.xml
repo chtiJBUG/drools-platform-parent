@@ -34,7 +34,7 @@
       <version>3.1.0.GA</version>
     </dependency>
     <dependency>
-      <groupId>org.drools</groupId>
+      <groupId>org.chtijbug.drools</groupId>
       <artifactId>guvnor-webapp-drools</artifactId>
       <type>war</type>
     </dependency>
@@ -49,9 +49,9 @@
       <version>${cxf.version}</version>
     </dependency>
     <dependency>
-       <groupId>org.postgresql</groupId>
-       <artifactId>postgresql</artifactId>
-     </dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
@@ -86,7 +86,7 @@
         <configuration>
 
           <url>http://dpf1:8080/manager/text</url>
-         <!-- Refer to the server settings in your ~/.m2/settings.xml -->
+          <!-- Refer to the server settings in your ~/.m2/settings.xml -->
           <server>dev-tomcat-dpf1</server>
           <path>/drools-guvnor</path>
 
