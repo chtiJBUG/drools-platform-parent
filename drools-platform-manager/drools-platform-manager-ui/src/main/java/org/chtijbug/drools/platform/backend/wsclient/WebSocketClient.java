@@ -89,7 +89,6 @@ public class WebSocketClient
                 LOG.info("Successfully Connected to " + platformRuntimeInstance.toString());
             } catch (Exception e) {
                 lastException = e;
-                LOG.error("Could not  Connect to " + platformRuntimeInstance.toString() + " Try number=" + retryNumber, e);
                 try {
                     Thread.sleep(this.timeToWaitBetweenTwoRetries);
                 } catch (InterruptedException e1) {

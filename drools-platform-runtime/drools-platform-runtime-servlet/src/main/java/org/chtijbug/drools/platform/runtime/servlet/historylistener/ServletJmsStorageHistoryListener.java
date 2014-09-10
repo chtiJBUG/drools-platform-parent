@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.jms.*;
-import java.io.IOException;
 import java.util.Date;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.Semaphore;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,6 +38,10 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
 
     private Session session;
 
+    private boolean jmsConnected = false;
+
+    final BlockingQueue<HistoryEvent> cachedHistoryEvents = new LinkedBlockingDeque<HistoryEvent>();
+
     @Value(value = "${knowledge.numberRetriesConnectionToRuntime}")
     private String numberRetriesString;
 
@@ -43,6 +49,7 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
     @Value(value = "${knowledge.timeToWaitBetweenTwoRetries}")
     private String timeToWaitBetweenTwoRetriesString;
 
+    Semaphore jmsConnectedSemaphore = new Semaphore(1);
 
     DroolsPlatformKnowledgeBaseJavaEE platformKnowledgeBaseJavaEE;
 
@@ -54,54 +61,67 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
         String url = "tcp://" + this.platformServer + ":" + this.platformPort;
         ConnectionFactory factory = new ActiveMQConnectionFactory(url);
         Connection connection = null;
-        try {
-            boolean connected = false;
-            int retryNumber = 0;
-            Exception lastException = null;
-            while (retryNumber < numberRetries && connected == false) {
+        JMSConnectionListener jmsConnectionListener = new JMSConnectionListener() {
+            @Override
+            public void connected(Connection connection) throws JMSException, InterruptedException {
                 try {
-                    connection = factory.createConnection();
-                    connected = true;
-                } catch (Exception e) {
-                    lastException = e;
-                    LOG.error("Could not  Connect to " + platformServer.toString() + " Try number=" + retryNumber, e);
-                    try {
-                        Thread.sleep(timeToWaitBetweenTwoRetries);
-                    } catch (InterruptedException e1) {
-                        LOG.error("Could not  wait  " + platformServer.toString() + " Try number=" + retryNumber, e1);
+                    session = connection.createSession(false,
+                            Session.AUTO_ACKNOWLEDGE);
+                    Queue queue = session.createQueue(platformQueueName);
+                    producer = session.createProducer(queue);
+                    jmsConnectedSemaphore.acquire();
+                    for (HistoryEvent cachedhistoryEvent : cachedHistoryEvents) {
+                        ObjectMessage cachedmsg = session.createObjectMessage(cachedhistoryEvent);
+                        producer.send(cachedmsg);
                     }
-                } finally {
-                    retryNumber++;
+                    cachedHistoryEvents.clear();
+                    jmsConnected = true;
+                    jmsConnectedSemaphore.release();
+                } catch (JMSException e) {
+                    throw e;
+                } catch (InterruptedException e) {
+                    throw e;
                 }
-            }
-            if (connected == false && retryNumber >= numberRetries) {
-                if (lastException != null) {
-                    LOG.error("Could not Connect to " + platformServer.toString() + " after =" + retryNumber, lastException);
-                    if (lastException instanceof IOException) {
-                        DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("DroolsPlatformKnowledgeBaseJavaEE.initJmsConnection", "Could Not connect", lastException);
-                        throw droolsChtijbugException;
-                    }
-                }
-            }
 
-            session = connection.createSession(false,
-                    Session.AUTO_ACKNOWLEDGE);
-            Queue queue = session.createQueue(this.platformQueueName);
-            producer = session.createProducer(queue);
-        } catch (JMSException exp) {
-            DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("DroolsPlatformKnowledgeBaseJavaEE", "initJmsConnection", exp);
-            throw droolsChtijbugException;
-        }
+            }
+        };
+        CreateJMSConnectionThread createJMSConnectionThread = new CreateJMSConnectionThread(jmsConnectionListener, numberRetries, factory, timeToWaitBetweenTwoRetries);
+        createJMSConnectionThread.start();
     }
+
 
     @Override
     public void fireEvent(HistoryEvent historyEvent) throws DroolsChtijbugException {
         try {
-            ObjectMessage msg = session.createObjectMessage(historyEvent);
-            producer.send(msg);
-        } catch (JMSException e) {
-            DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("JMSHistoryEvent", "FireEvent", e);
+            jmsConnectedSemaphore.acquire();
+        } catch (InterruptedException e) {
+            DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("ServletJmsStorageHistoryListener.fireEvent", "Acquire not possible", e);
             throw droolsChtijbugException;
+        }
+        if (jmsConnected == false) {
+            /**
+             * If no connection is possible, cache the history Event
+             */
+            cachedHistoryEvents.add(historyEvent);
+            jmsConnectedSemaphore.release();
+        } else {
+            try {
+                /**
+                 * If some history events were cached before, send them first
+                 */
+                for (HistoryEvent cachedhistoryEvent : cachedHistoryEvents) {
+                    ObjectMessage cachedmsg = session.createObjectMessage(cachedhistoryEvent);
+                    producer.send(cachedmsg);
+                }
+                cachedHistoryEvents.clear();
+                ObjectMessage msg = session.createObjectMessage(historyEvent);
+                producer.send(msg);
+            } catch (JMSException e) {
+                DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("JMSHistoryEvent", "FireEvent", e);
+                throw droolsChtijbugException;
+            } finally {
+                jmsConnectedSemaphore.release();
+            }
         }
 
 
