@@ -86,7 +86,12 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
                         }
                     ),
                     function(whenFactItem){
-                        return whenFactItem.fullClassName;
+                        if (whenFactItem == undefined) {
+                            return null;
+                        } else {
+                            return thenFactItem.fullClassName;
+                        }
+
                     }
                 );
 
