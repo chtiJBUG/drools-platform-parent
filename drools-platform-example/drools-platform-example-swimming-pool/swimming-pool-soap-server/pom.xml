@@ -11,11 +11,11 @@
   </parent>
   <artifactId>swimming-pool-soap-server</artifactId>
 
-  <name>Calculation Service WebApp</name>
+  <name>swimming pool Calculation Service WebApp</name>
   <url>http://www.springframework.org/spring-ws</url>
   <packaging>war</packaging>
   <build>
-    <finalName>Swimming-pool-soap-server</finalName>
+    <finalName>swimming-pool-soap-server</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

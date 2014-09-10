@@ -7,7 +7,7 @@
   <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml"/>
   <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
 
-  <bean id="calculateService" class="swimmingpool.service.ServiceCalculate">
+  <bean id="calculateService" class="loyalty.service.ServiceCalculate">
     <property name="ruleBasePackage" ref="platformRunner"/>
   </bean>
   <!-- JAX-WS Service Endpoint -->
