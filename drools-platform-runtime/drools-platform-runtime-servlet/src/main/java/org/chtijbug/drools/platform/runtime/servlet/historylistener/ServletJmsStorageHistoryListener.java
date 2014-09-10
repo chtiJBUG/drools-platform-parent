@@ -8,9 +8,11 @@ import org.chtijbug.drools.platform.core.droolslistener.PlatformHistoryListener;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEvent;
 import org.chtijbug.drools.platform.runtime.servlet.DroolsPlatformKnowledgeBaseJavaEE;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.jms.*;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -34,15 +36,54 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
 
     private Session session;
 
+    @Value(value = "${knowledge.numberRetriesConnectionToRuntime}")
+    private String numberRetriesString;
+
+
+    @Value(value = "${knowledge.timeToWaitBetweenTwoRetries}")
+    private String timeToWaitBetweenTwoRetriesString;
+
+
     DroolsPlatformKnowledgeBaseJavaEE platformKnowledgeBaseJavaEE;
 
-   public void initJmsConnection() throws DroolsChtijbugException {
 
+    public void initJmsConnection() throws DroolsChtijbugException {
 
+        int numberRetries = new Integer(this.numberRetriesString);
+        int timeToWaitBetweenTwoRetries = new Integer(this.timeToWaitBetweenTwoRetriesString);
         String url = "tcp://" + this.platformServer + ":" + this.platformPort;
         ConnectionFactory factory = new ActiveMQConnectionFactory(url);
+        Connection connection = null;
         try {
-            Connection connection = factory.createConnection();
+            boolean connected = false;
+            int retryNumber = 0;
+            Exception lastException = null;
+            while (retryNumber < numberRetries && connected == false) {
+                try {
+                    connection = factory.createConnection();
+                    connected = true;
+                } catch (Exception e) {
+                    lastException = e;
+                    LOG.error("Could not  Connect to " + platformServer.toString() + " Try number=" + retryNumber, e);
+                    try {
+                        Thread.sleep(timeToWaitBetweenTwoRetries);
+                    } catch (InterruptedException e1) {
+                        LOG.error("Could not  wait  " + platformServer.toString() + " Try number=" + retryNumber, e1);
+                    }
+                } finally {
+                    retryNumber++;
+                }
+            }
+            if (connected == false && retryNumber >= numberRetries) {
+                if (lastException != null) {
+                    LOG.error("Could not Connect to " + platformServer.toString() + " after =" + retryNumber, lastException);
+                    if (lastException instanceof IOException) {
+                        DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("DroolsPlatformKnowledgeBaseJavaEE.initJmsConnection", "Could Not connect", lastException);
+                        throw droolsChtijbugException;
+                    }
+                }
+            }
+
             session = connection.createSession(false,
                     Session.AUTO_ACKNOWLEDGE);
             Queue queue = session.createQueue(this.platformQueueName);

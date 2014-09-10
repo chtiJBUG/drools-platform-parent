@@ -9,7 +9,7 @@ import java.util.Date;
  * Time: 11:23
  * To change this template use File | Settings | File Templates.
  */
-public class abo {
+public class Abonnement {
 
     private SeasonType season;
     private Date birthDate;
@@ -17,7 +17,7 @@ public class abo {
     private BigDecimal price;
     private BigDecimal nettoPrice;
 
-    public abo() {
+    public Abonnement() {
     }
 
     public SeasonType getSeason() {

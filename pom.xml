@@ -366,7 +366,7 @@
       </dependency>
       <!-- drools dependencies-->
       <dependency>
-        <groupId>org.drools</groupId>
+        <groupId>org.chtijbug.drools</groupId>
         <artifactId>guvnor-webapp-drools</artifactId>
         <version>${guvnor.verion}</version>
         <type>war</type>
