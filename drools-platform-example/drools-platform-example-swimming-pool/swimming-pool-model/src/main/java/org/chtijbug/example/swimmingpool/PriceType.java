@@ -7,5 +7,5 @@ package org.chtijbug.example.swimmingpool;
  * To change this template use File | Settings | File Templates.
  */
 public enum PriceType {
-    definitive, initial, promotion, reduction
+    definitive, promotion, reduction
 }

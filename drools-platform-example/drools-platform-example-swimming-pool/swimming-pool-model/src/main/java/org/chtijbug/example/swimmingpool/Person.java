@@ -1,6 +1,9 @@
 package org.chtijbug.example.swimmingpool;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,6 +16,9 @@ public class Person {
     private String surname;
     private Gender gender;
     private Date birthdate;
+    private List<Price> priceList = new ArrayList<>();
+    private Integer age;
+    private BigDecimal standardPrice;
 
     public Person() {
     }
@@ -49,6 +55,34 @@ public class Person {
         this.birthdate = birthdate;
     }
 
+    public List<Price> getPriceList() {
+        return priceList;
+    }
+
+    public void setPriceList(List<Price> priceList) {
+        this.priceList = priceList;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public void addPrice(Price p) {
+        this.priceList.add(p);
+    }
+
+    public BigDecimal getStandardPrice() {
+        return standardPrice;
+    }
+
+    public void setStandardPrice(BigDecimal standardPrice) {
+        this.standardPrice = standardPrice;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Person{");
@@ -56,6 +90,9 @@ public class Person {
         sb.append(", surname='").append(surname).append('\'');
         sb.append(", gender=").append(gender);
         sb.append(", birthdate=").append(birthdate);
+        sb.append(", priceList=").append(priceList);
+        sb.append(", age=").append(age);
+        sb.append(", standardPrice=").append(standardPrice);
         sb.append('}');
         return sb.toString();
     }

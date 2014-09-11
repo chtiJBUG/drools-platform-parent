@@ -18,6 +18,7 @@ public class Quote {
     private List<Person> personList = new ArrayList<>();
     private Address address;
     private List<Price> priceList = new ArrayList<>();
+    private List<CalculationStep> calculationStepList = new ArrayList<>();
 
     public Quote() {
     }
@@ -78,6 +79,14 @@ public class Quote {
         this.priceList = priceList;
     }
 
+    public List<CalculationStep> getCalculationStepList() {
+        return calculationStepList;
+    }
+
+    public void setCalculationStepList(List<CalculationStep> calculationStepList) {
+        this.calculationStepList = calculationStepList;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Quote{");
@@ -88,6 +97,7 @@ public class Quote {
         sb.append(", personList=").append(personList);
         sb.append(", address=").append(address);
         sb.append(", priceList=").append(priceList);
+        sb.append(", calculationStepList=").append(calculationStepList);
         sb.append('}');
         return sb.toString();
     }
