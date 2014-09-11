@@ -85,7 +85,7 @@ var DroolsPlatformControllers = angular.module('drools-platform.controllers', []
 droolsPlatformApp.service('StompService', function(growlNotifications){
     var stompClient = null;
     function connect(){
-        var socket = new SockJS('/server/update');
+        var socket = new SockJS('/drools-platform-ui/server/update');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             console.log('Connected : ' + frame);
