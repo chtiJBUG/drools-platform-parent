@@ -9,144 +9,144 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
     $scope.loadDetails = function (Id) {
 
         $http.get('./server/runtime/session/' + Id)
-            .success(function (data) {
-                $scope.allSessionExecutionDetails = data;
-                $scope.code.input=JSON.stringify(JSON.parse($scope.allSessionExecutionDetails.inputObject), null, 3);
-                $scope.code.output=JSON.stringify(JSON.parse($scope.allSessionExecutionDetails.outputObject), null, 3);
-                /*
-                    From allSessionExecution, we will extract the useful informations.
-                    We use undescoreJS, otherwise it will be complexed to write the for loops
-                */
+                .success(function (data) {
+                    $scope.allSessionExecutionDetails = data;
+                    $scope.code.input = JSON.stringify(JSON.parse($scope.allSessionExecutionDetails.inputObject), null, 3);
+                    $scope.code.output = JSON.stringify(JSON.parse($scope.allSessionExecutionDetails.outputObject), null, 3);
+                    /*
+                     From allSessionExecution, we will extract the useful informations.
+                     We use undescoreJS, otherwise it will be complexed to write the for loops
+                     */
 
-                /** PROCEDURE TO RETRIEVE THE LISTS NEEDED TO FILTER THE SESSION EXECUTION DETAILS **/
+                    /** PROCEDURE TO RETRIEVE THE LISTS NEEDED TO FILTER THE SESSION EXECUTION DETAILS **/
 
 
-                // 1) Extract the RuleExecution list form allSessionExecutionDetails
-                ruleExcecutionList =_.map(
-                    _.map(
-                        _.map(
-                            $scope.allSessionExecutionDetails.allRuleFlowGroupDetails,
-                            function(item){
-                                return item;
+                        // 1) Extract the RuleExecution list form allSessionExecutionDetails
+                    ruleExcecutionList = _.map(
+                            _.map(
+                                    _.map(
+                                            $scope.allSessionExecutionDetails.allRuleFlowGroupDetails,
+                                            function (item) {
+                                                return item;
+                                            }
+                                    ),
+                                    function (ruleflowGroupItem) {
+                                        return ruleflowGroupItem.allRuleExecutionDetails;
+                                    }
+                            ),
+                            function (ruleExecutionGroupItem) {
+                                // The list is in an array [{...},{...}]
+                                // We need the first item of the array
+                                return ruleExecutionGroupItem[0];
+
+
                             }
-                        ),
-                        function(ruleflowGroupItem){
-                            return ruleflowGroupItem.allRuleExecutionDetails;
-                        }
-                    ),
-                    function(ruleExecutionGroupItem){
-                        // The list is in an array [{...},{...}]
-                        // We need the first item of the array
-                        return ruleExecutionGroupItem[0];
+                    );
 
+                    // Remove "undefined" elements in the list
+                    ruleExcecutionList = _.without(ruleExcecutionList, undefined);
 
-                    }
-                );
-
-                // Remove "undefined" elements in the list
-                ruleExcecutionList = _.without(ruleExcecutionList, undefined);
-
-                // 2) ruleName List extracted from the ruleExecutionList
-                $scope.ruleNameList=_.map(
-                    ruleExcecutionList,
-                    function(ruleExecutionItem){
-                        return ruleExecutionItem.ruleName;
-                    }
-                )
-
-                // 3) ruleAssetCategory List
-                $scope.ruleAssetCategoryList=_.map(
-                    _.map(
-                        _.map(
+                    // 2) ruleName List extracted from the ruleExecutionList
+                    $scope.ruleNameList = _.map(
                             ruleExcecutionList,
-                            function(ruleExecutnItem){
-                                return ruleExecutnItem.ruleAsset;
+                            function (ruleExecutionItem) {
+                                return ruleExecutionItem.ruleName;
                             }
-                        ),
-                        function(ruleAssetItem){
-                            return ruleAssetItem.ruleAssetCategory;
-                        }
-                    ),
-                    function(item){
-                        return item[0];
-                    }
-                );
+                    )
 
-                // 4) fullClassName List
-                whenFactsFullClasseNameList = _.map(
-                    _.map(
-                        _.map(
-                            ruleExcecutionList,
-                            function(ruleExecutionItem){
-                                return ruleExecutionItem.whenFacts;
+                    // 3) ruleAssetCategory List
+                    $scope.ruleAssetCategoryList = _.map(
+                            _.map(
+                                    _.map(
+                                            ruleExcecutionList,
+                                            function (ruleExecutnItem) {
+                                                return ruleExecutnItem.ruleAsset;
+                                            }
+                                    ),
+                                    function (ruleAssetItem) {
+                                        return ruleAssetItem.ruleAssetCategory;
+                                    }
+                            ),
+                            function (item) {
+                                return item[0];
                             }
-                        ),
-                        function(whenFactsList){
-                            return whenFactsList[0];
-                        }
-                    ),
-                    function(whenFactItem){
-                        if (whenFactItem == undefined) {
-                            return null;
-                        } else {
-                            return thenFactItem.fullClassName;
-                        }
+                    );
 
-                    }
-                );
+                    // 4) fullClassName List
+                    whenFactsFullClasseNameList = _.map(
+                            _.map(
+                                    _.map(
+                                            ruleExcecutionList,
+                                            function (ruleExecutionItem) {
+                                                return ruleExecutionItem.whenFacts;
+                                            }
+                                    ),
+                                    function (whenFactsList) {
+                                        return whenFactsList[0];
+                                    }
+                            ),
+                            function (whenFactItem) {
+                                if (whenFactItem == undefined) {
+                                    return null;
+                                } else {
+                                    return whenFactItem.fullClassName;
+                                }
 
-                thenFactsFullClasseNameList = _.map(
-                    _.map(
-                        _.map(
-                            ruleExcecutionList,
-                            function(ruleExecutionItem){
-                                return ruleExecutionItem.thenFacts;
                             }
-                        ),
-                        function(thenFactsList){
-                            return thenFactsList[0];
-                        }
-                    ),
-                    function(thenFactItem){
-                        if (thenFactItem == undefined) {
-                            return null;
-                        } else {
-                            return thenFactItem.fullClassName;
-                        }
-                    }
-                );
+                    );
 
-                $scope.fullClassNameList = [];
+                    thenFactsFullClasseNameList = _.map(
+                            _.map(
+                                    _.map(
+                                            ruleExcecutionList,
+                                            function (ruleExecutionItem) {
+                                                return ruleExecutionItem.thenFacts;
+                                            }
+                                    ),
+                                    function (thenFactsList) {
+                                        return thenFactsList[0];
+                                    }
+                            ),
+                            function (thenFactItem) {
+                                if (thenFactItem == undefined) {
+                                    return null;
+                                } else {
+                                    return thenFactItem.fullClassName;
+                                }
+                            }
+                    );
 
-                // We add each items from whenFact fullClassName list and thenFact fullClassName list to a global list
+                    $scope.fullClassNameList = [];
 
-                _.each(whenFactsFullClasseNameList, function(item){
-                    $scope.fullClassNameList[$scope.fullClassNameList.length] = item;
-                });
+                    // We add each items from whenFact fullClassName list and thenFact fullClassName list to a global list
 
-                _.each(thenFactsFullClasseNameList, function(item){
-                    $scope.fullClassNameList[$scope.fullClassNameList.length] = item;
-                });
+                    _.each(whenFactsFullClasseNameList, function (item) {
+                        $scope.fullClassNameList[$scope.fullClassNameList.length] = item;
+                    });
 
-                // If we wanna delete duplicates, we have to do this :
-                $scope.fullClassNameList=_.uniq($scope.fullClassNameList);
+                    _.each(thenFactsFullClasseNameList, function (item) {
+                        $scope.fullClassNameList[$scope.fullClassNameList.length] = item;
+                    });
 
-                // When details have been loaded : Scrolling to the 'details' panel
+                    // If we wanna delete duplicates, we have to do this :
+                    $scope.fullClassNameList = _.uniq($scope.fullClassNameList);
+
+                    // When details have been loaded : Scrolling to the 'details' panel
                     $scope.scrollToPanel($scope.ruleBaseID, $scope.sessionId);
-            })
-            .error(function (error, status) {
-                console.log("[Error] Error HTTP " + status);
-                console.log(error);
-                //____ TODO Send an appropriate message
-                growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
+                })
+                .error(function (error, status) {
+                    console.log("[Error] Error HTTP " + status);
+                    console.log(error);
+                    //____ TODO Send an appropriate message
+                    growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
 
-            })
+                })
     }
 
     //___ Scrolling to the next panel and load Session Execution details
     $scope.scrollToPanel = function (ruleBaseID, sessionId) {
         $scope.selectedRuleBaseID = ruleBaseID; // Temporary var (value displayed in the head of the panel)
-        $scope.selectedSessionId =  sessionId; // Idem
+        $scope.selectedSessionId = sessionId; // Idem
         $scope.sessionExecutionDetails.area = true; // Second part of the page made visible
         $timeout(function () {
             $scope.sessionExecutionDetails.panel = true; // Panel visible now
@@ -157,7 +157,7 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
     // Indent JSON code in Details panel Event list section
     $scope.indentJSON = function (fact) {
-        fact.jsonFact = JSON.stringify(JSON.parse(fact.jsonFact),null,3);
+        fact.jsonFact = JSON.stringify(JSON.parse(fact.jsonFact), null, 3);
     }
 
     // Toggle to another tab
@@ -166,8 +166,8 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         $scope.selectedTab = item;
     }
 
-    $scope.collapseSidebar = function(){
-        $scope.sidebarContracted=!$scope.sidebarContracted;
+    $scope.collapseSidebar = function () {
+        $scope.sidebarContracted = !$scope.sidebarContracted;
     }
 
     $scope.closeDetailsPanel = function () {
@@ -203,33 +203,33 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             $scope.namePackageSelectClass = "form-group";
 
             $http.post('./server/runtime/count', filters)
-                .success(function (data) {
-                    $scope.count = data;
-                    console.log("[Info] Total count : "+$scope.count);
+                    .success(function (data) {
+                        $scope.count = data;
+                        console.log("[Info] Total count : " + $scope.count);
 
-                })
-                .error(function (error, status) {
-                    console.log("[Error] Error HTTP " + status);
-                    console.log(error);
-                    //____ TODO Send an appropriate message
-                    growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
-                });
+                    })
+                    .error(function (error, status) {
+                        console.log("[Error] Error HTTP " + status);
+                        console.log(error);
+                        //____ TODO Send an appropriate message
+                        growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
+                    });
 
 
             $http.post('./server/runtime/filter', filters)
-                .success(function (data) {
-                    $scope.allRuntimes = data;
-                    $scope.numPagesMax = Math.ceil($scope.count/$scope.allRuntimes.length);
-                    console.log("[Info] Number of items displayed per page : "+$scope.allRuntimes.length);
-                    console.log("[Info] Number of pages needed : "+$scope.numPagesMax);
-                })
-                .error(function (error, status) {
-                    console.log("[Error] Error HTTP " + status);
-                    console.log(error);
-                    //____ TODO Send an appropriate message
-                    growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
+                    .success(function (data) {
+                        $scope.allRuntimes = data;
+                        $scope.numPagesMax = Math.ceil($scope.count / $scope.allRuntimes.length);
+                        console.log("[Info] Number of items displayed per page : " + $scope.allRuntimes.length);
+                        console.log("[Info] Number of pages needed : " + $scope.numPagesMax);
+                    })
+                    .error(function (error, status) {
+                        console.log("[Error] Error HTTP " + status);
+                        console.log(error);
+                        //____ TODO Send an appropriate message
+                        growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
 
-                });
+                    });
 
             //Load spinner : Fade to + enable search button + spin hided
             $timeout(function () {
@@ -238,64 +238,63 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
 
         }
-        $scope.currentPage=1;
+        $scope.currentPage = 1;
         $scope.showCancelButton = true;
     };
 
-    $scope.pageChanged = function() {
+    $scope.pageChanged = function () {
         console.log('[Info] Page changed to : ' + $scope.currentPage);
-        var filters=$scope.filters;
-        filters.page.currentIndex=$scope.currentPage;
+        var filters = $scope.filters;
+        filters.page.currentIndex = $scope.currentPage;
         $http.post('./server/runtime/filter', filters)
-            .success(function (data) {
-                $scope.allRuntimes = data;
-                console.log("[Info] Number of items displayed per page : "+$scope.allRuntimes.length);
-            })
-            .error(function (error, status) {
-                console.log("[Error] Error HTTP " + status);
-                console.log(error);
-                //____ TODO Send an appropriate message
-                growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
-            });
+                .success(function (data) {
+                    $scope.allRuntimes = data;
+                    console.log("[Info] Number of items displayed per page : " + $scope.allRuntimes.length);
+                })
+                .error(function (error, status) {
+                    console.log("[Error] Error HTTP " + status);
+                    console.log(error);
+                    //____ TODO Send an appropriate message
+                    growlNotifications.add('Whoops ! Error HTTP ' + status, 'danger', 2000);
+                });
     };
 
     //___ Filter the runtime's details
-    $scope.applyFilters = function(){
+    $scope.applyFilters = function () {
         // $ allows to disabled strict filtering (otherwise letting fields empty will provide zero result with strict filtering)
         // TODO : Is it possible to simplify this ?
-        if($scope.detailsFilters.ruleNameSelect == ""){
-            $scope.detailsFilters.ruleName=$;
-        }else{
-            $scope.detailsFilters.ruleName=$scope.detailsFilters.ruleNameSelect;
+        if ($scope.detailsFilters.ruleNameSelect == "") {
+            $scope.detailsFilters.ruleName = $;
+        } else {
+            $scope.detailsFilters.ruleName = $scope.detailsFilters.ruleNameSelect;
         }
 
-        if($scope.detailsFilters.ruleCategorySelect == ""){
-            $scope.detailsFilters.ruleCategory=$;
-        }else{
-            $scope.detailsFilters.ruleCategory=$scope.detailsFilters.ruleCategorySelect;
+        if ($scope.detailsFilters.ruleCategorySelect == "") {
+            $scope.detailsFilters.ruleCategory = $;
+        } else {
+            $scope.detailsFilters.ruleCategory = $scope.detailsFilters.ruleCategorySelect;
         }
 
 
-        if($scope.detailsFilters.factTypeSelect == ""){
-            $scope.detailsFilters.factType=$;
-        }else{
-            $scope.detailsFilters.factType=$scope.detailsFilters.factTypeSelect;
+        if ($scope.detailsFilters.factTypeSelect == "") {
+            $scope.detailsFilters.factType = $;
+        } else {
+            $scope.detailsFilters.factType = $scope.detailsFilters.factTypeSelect;
         }
 
-        if($scope.detailsFilters.fullClassNameSelect == ""){
-            $scope.detailsFilters.fullClassName=$;
-        }else{
-            $scope.detailsFilters.fullClassName=$scope.detailsFilters.fullClassNameSelect;
+        if ($scope.detailsFilters.fullClassNameSelect == "") {
+            $scope.detailsFilters.fullClassName = $;
+        } else {
+            $scope.detailsFilters.fullClassName = $scope.detailsFilters.fullClassNameSelect;
         }
     }
-
 
 
     $scope.reset = function () {
         initRuntimeAnalysisController();
         //___ Close filters collapsible boxes from "Filter execution by Runtime"
-        $scope.collapseStatus.firstBox=false;
-        $scope.collapseStatus.seconddBox=false;
+        $scope.collapseStatus.firstBox = false;
+        $scope.collapseStatus.seconddBox = false;
         $scope.showCancelButton = false;
         console.log($scope.showCancelButton);
     };
@@ -306,30 +305,30 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
         //___ Fetch the rule package list
         $http.get('./server/rules_package/list')
-            .success(function (data) {
-                $scope.packagesList = data;
-            })
-            .error(function (error) {
-                console.log(error);
-            });
+                .success(function (data) {
+                    $scope.packagesList = data;
+                })
+                .error(function (error) {
+                    console.log(error);
+                });
 
         //___ Fecth the statuses
         $http.get('./server/runtime/all/statuses')
-            .success(function (data) {
-                $scope.statusesList = data;
-            })
-            .error(function (error) {
-                console.log(error);
-            });
+                .success(function (data) {
+                    $scope.statusesList = data;
+                })
+                .error(function (error) {
+                    console.log(error);
+                });
 
         //___ Fetch the list of FactType
         $http.get('./server/runtime/all/facttypes')
-            .success(function (data) {
-                $scope.facttypesList = data;
-            })
-            .error(function (error) {
-                console.log(error);
-            });
+                .success(function (data) {
+                    $scope.facttypesList = data;
+                })
+                .error(function (error) {
+                    console.log(error);
+                });
 
         // Allow the user to cancel his choice when selecting an item
         $scope.selectPackage = {allowClear: true};
@@ -341,9 +340,9 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
 
         //___ Pagination options
         $scope.page = {
-            currentIndex : undefined,
+            currentIndex: undefined,
             totalCount: undefined,
-            maxItemPerPage : undefined
+            maxItemPerPage: undefined
 
         }
 
@@ -354,8 +353,8 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
             hostname: undefined,
             startDate: undefined,
             endDate: undefined,
-            onlyRunningInstances : false,
-            page : $scope.page
+            onlyRunningInstances: false,
+            page: $scope.page
         };
 
         //___ Popover details (when you move the mouse over the rulePackage)
@@ -448,14 +447,14 @@ DroolsPlatformControllers.controller('runtimeAnalysisController', function ($roo
         };
 
         //___ Status of the sidebar from the 'Details' panel
-        $scope.sidebarContracted=true;
+        $scope.sidebarContracted = true;
 
         //___ Filters for the 'Details' panel
         $scope.detailsFilters = {
             ruleCategorySelect: undefined,
             ruleNameSelect: undefined,
             factTypeSelect: undefined,
-            fullClassNameSelect : undefined,
+            fullClassNameSelect: undefined,
             ruleCategory: undefined,
             ruleName: undefined,
             factType: undefined,
