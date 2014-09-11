@@ -3,7 +3,7 @@ package swimmingpool.service;
 import org.chtijbug.drools.platform.runtime.servlet.DroolsPlatformKnowledgeBaseJavaEE;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.RuleBaseSession;
-import org.chtijbug.example.swimmingpool.Abonnement;
+import org.chtijbug.example.swimmingpool.Quote;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,15 +21,15 @@ public class ServiceCalculate implements IServiceCalculate {
     }
 
     @Override
-    public Abonnement calculate(@WebParam(name = "abonnement") Abonnement abonnement) {
+    public Quote calculate(@WebParam(name = "abonnement") Quote quote) {
         RuleBaseSession sessionStatefull = null;
         try {
             sessionStatefull = platformKnowledgeBaseJavaEE.createRuleBaseSession();
-            sessionStatefull.fireAllRulesAndStartProcess(abonnement, "P001");
+            sessionStatefull.fireAllRulesAndStartProcess(quote, "P001");
             sessionStatefull.dispose();
         } catch (DroolsChtijbugException e) {
             logger.error("Error in fireallrules", e);
         }
-        return abonnement;
+        return quote;
     }
 }

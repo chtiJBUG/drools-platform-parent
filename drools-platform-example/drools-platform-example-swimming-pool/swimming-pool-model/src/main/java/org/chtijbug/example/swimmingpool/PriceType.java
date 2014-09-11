@@ -2,10 +2,10 @@ package org.chtijbug.example.swimmingpool;
 
 /**
  * Created by IntelliJ IDEA.
- * Date: 16/07/14
- * Time: 11:24
+ * Date: 11/09/14
+ * Time: 10:30
  * To change this template use File | Settings | File Templates.
  */
-public enum SeasonType {
-    day, week, weekend, month, summer, winter, spring, autumn, fullYear
+public enum PriceType {
+    definitive, initial, promotion, reduction
 }

@@ -1,6 +1,6 @@
 package swimmingpool.service;
 
-import org.chtijbug.example.swimmingpool.Abonnement;
+import org.chtijbug.example.swimmingpool.Quote;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -11,7 +11,7 @@ import javax.jws.soap.SOAPBinding;
 public interface IServiceCalculate {
 
     @WebMethod(operationName = "calculate")
-    public abstract Abonnement calculate(Abonnement ticket);
+    public abstract Quote calculate(Quote quote);
 
 
 }
