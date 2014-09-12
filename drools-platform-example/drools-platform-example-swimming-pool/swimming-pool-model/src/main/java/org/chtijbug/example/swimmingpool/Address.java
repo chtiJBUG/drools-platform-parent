@@ -6,7 +6,7 @@ package org.chtijbug.example.swimmingpool;
  * Time: 10:09
  * To change this template use File | Settings | File Templates.
  */
-public class Address {
+public class Address extends BaseElement {
     private String streetNumber;
     private String streetName;
     private String zipCode;

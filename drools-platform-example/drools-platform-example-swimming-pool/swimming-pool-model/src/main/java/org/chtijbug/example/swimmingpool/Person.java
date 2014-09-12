@@ -11,7 +11,7 @@ import java.util.List;
  * Time: 10:05
  * To change this template use File | Settings | File Templates.
  */
-public class Person {
+public class Person extends BaseElement {
     private String name;
     private String surname;
     private Gender gender;
@@ -19,6 +19,7 @@ public class Person {
     private List<Price> priceList = new ArrayList<>();
     private Integer age;
     private BigDecimal standardPrice;
+
 
     public Person() {
     }
@@ -82,6 +83,7 @@ public class Person {
     public void setStandardPrice(BigDecimal standardPrice) {
         this.standardPrice = standardPrice;
     }
+
 
     @Override
     public String toString() {

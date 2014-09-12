@@ -10,7 +10,7 @@ import java.util.List;
  * Time: 10:01
  * To change this template use File | Settings | File Templates.
  */
-public class Quote {
+public class Quote extends BaseElement {
     private Date quoteDate;
     private Date validUntil;
     private Period period;

@@ -8,7 +8,7 @@ import java.util.Date;
  * Time: 10:13
  * To change this template use File | Settings | File Templates.
  */
-public class Period {
+public class Period extends BaseElement {
     private Date desidedStartDate;
     private SeasonType seasonType;
 
