@@ -17,7 +17,7 @@ public class Person extends BaseElement {
     private Gender gender;
     private Date birthdate;
     private List<Price> priceList = new ArrayList<>();
-    private Integer age;
+    private double age;
     private BigDecimal standardPrice;
 
 
@@ -64,11 +64,11 @@ public class Person extends BaseElement {
         this.priceList = priceList;
     }
 
-    public Integer getAge() {
+    public double getAge() {
         return age;
     }
 
-    public void setAge(Integer age) {
+    public void setAge(double age) {
         this.age = age;
     }
 
