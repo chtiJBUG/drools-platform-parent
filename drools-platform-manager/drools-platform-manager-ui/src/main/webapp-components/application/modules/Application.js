@@ -20,7 +20,7 @@ droolsPlatformApp.config(function ($locationProvider) {
     Stomp.WebSocketClass = SockJS;
 });
 
-droolsPlatformApp.run(['$animate', function($animate){
+droolsPlatformApp.run(['$animate', function ($animate) {
     $animate.enabled(true);
     console.log('Animation enabled: ' + $animate.enabled());
 }]);
@@ -47,16 +47,16 @@ droolsPlatformApp.factory('httpInterceptor', ['$q', '$rootScope', function ($q, 
 
 }]);
 
-droolsPlatformApp.factory('loaderSpinner', ['$rootScope', 'usSpinnerService', function($rootScope, usSpinnerService) {
+droolsPlatformApp.factory('loaderSpinner', ['$rootScope', 'usSpinnerService', function ($rootScope, usSpinnerService) {
     return {
-        openSpinner: function() {
-            $("#main").fadeTo("slow",0.10); //fadeTo(speed, opacity)
-            $rootScope.disableButton=true;
+        openSpinner: function () {
+            $("#main").fadeTo("slow", 0.10); //fadeTo(speed, opacity)
+            $rootScope.disableButton = true;
             usSpinnerService.spin('spinner-1');
         },
-        closeSpinner : function(){
-            $("#main").fadeTo("slow",1);
-            $rootScope.disableButton=false;
+        closeSpinner: function () {
+            $("#main").fadeTo("slow", 1);
+            $rootScope.disableButton = false;
             usSpinnerService.stop('spinner-1');
         }
     };
@@ -82,7 +82,7 @@ droolsPlatformApp.run(function ($rootScope, $log, $location) {
 var DroolsPlatformControllers = angular.module('drools-platform.controllers', []);
 
 //___ STOMP Service
-droolsPlatformApp.service('StompService', function(growlNotifications){
+droolsPlatformApp.service('StompService', function (growlNotifications) {
     var stompClient = null;
 
     function connect() {  //TODO make it parametric ?
@@ -90,12 +90,11 @@ droolsPlatformApp.service('StompService', function(growlNotifications){
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             console.log('Connected : ' + frame);
-            stompClient.subscribe('/topic/newpackageVersiondeployed', function (message) {
+            stompClient.subscribe('/drools-platform-ui/topic/newpackageVersiondeployed', function (message) {
                 console.log(JSON.parse(message.body).state);
             });
         });
     }
-
 
 
     this.disconnect = function () {
@@ -105,7 +104,7 @@ droolsPlatformApp.service('StompService', function(growlNotifications){
     };
 
     this.deployRuntime = function (ruleBaseID, packageVersion) {
-        stompClient.send("/app/update", {},  JSON.stringify({'ruleBaseID': ruleBaseID, 'packageVersion': packageVersion}));
+        stompClient.send("/app/update", {}, JSON.stringify({'ruleBaseID': ruleBaseID, 'packageVersion': packageVersion}));
         growlNotifications.add('Deployment launched', 'info', 2000);
     };
 
@@ -115,7 +114,7 @@ droolsPlatformApp.service('StompService', function(growlNotifications){
 
 });
 
-DroolsPlatformControllers.controller('MainCtrl', ['$rootScope', '$scope', '$window', '$http', 'LoginService','$log', '$location',
+DroolsPlatformControllers.controller('MainCtrl', ['$rootScope', '$scope', '$window', '$http', 'LoginService', '$log', '$location',
     function ($rootScope, $scope, $window, $http, LoginService, $log, $location) {
         $scope.logout = function () {
             var loginRequired = function () {
@@ -136,13 +135,13 @@ DroolsPlatformControllers.controller('MainCtrl', ['$rootScope', '$scope', '$wind
             ];
         });
         $http.get('./server/username')
-            .success(function (data) {
-                $rootScope.username = data
-            })
-            .error(function (cause) {
-                $log.log("Error. Caused by : " + cause);
-                $rootScope.username = "default";
-            });
+                .success(function (data) {
+                    $rootScope.username = data
+                })
+                .error(function (cause) {
+                    $log.log("Error. Caused by : " + cause);
+                    $rootScope.username = "default";
+                });
         $scope.version = "0.0.0";
         console.log("Details about $location :");
         console.log($location); //complete location

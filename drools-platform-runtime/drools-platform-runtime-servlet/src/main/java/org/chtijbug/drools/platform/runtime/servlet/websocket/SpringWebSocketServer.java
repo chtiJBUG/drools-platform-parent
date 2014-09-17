@@ -42,11 +42,9 @@ public class SpringWebSocketServer extends TextWebSocketHandler implements WebSo
         PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode stream = new PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode();
 
         PlatformManagementKnowledgeBean bean = stream.decode(new StringReader(message.getPayload()));
-        LOG.info("Received Request= " + bean.toString());
         switch (bean.getRequestRuntimePlarform()) {
             case isAlive:
                 this.sendMessage(PlatformManagementKnowledgeBeanServiceFactory.isAlive(bean));
-                LOG.info("Runtime is alive" + bean.toString());
                 break;
             case duplicateRuleBaseID:
                 this.platformKnowledgeBaseJavaEE.dispose();
@@ -54,10 +52,7 @@ public class SpringWebSocketServer extends TextWebSocketHandler implements WebSo
                 break;
             case ruleVersionInfos:
                 bean = PlatformManagementKnowledgeBeanServiceFactory.generateRuleVersionsInfo(bean, platformKnowledgeBaseJavaEE.getDroolsResources());
-                LOG.info("Server Side before sent" + bean.toString());
                 this.sendMessage(bean);
-                LOG.info("Server Side after sent");
-
                 break;
             case loadNewRuleVersion:
                 List<DroolsResource> droolsResources = PlatformManagementKnowledgeBeanServiceFactory.extract(bean.getResourceFileList(), platformKnowledgeBaseJavaEE.getGuvnorUsername(), platformKnowledgeBaseJavaEE.getGuvnorPassword());
