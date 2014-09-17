@@ -44,13 +44,10 @@ ALTER TABLE guvnorusers_groups
 
 
 INSERT INTO guvnorusers values (1,'admin','admin');
-INSERT INTO guvnorusers values (2,'tomcat','tomcat');
+INSERT INTO guvnorusers values (3,'swimmingpool','swimmingpool');
+INSERT INTO guvnorusers values (2,'loyalty','loyalty');
 INSERT INTO guvnorgroups values (1,'admin');
-INSERT INTO guvnorgroups values (2,'manager-gui');
-INSERT INTO guvnorgroups values (3,'admin-gui');
-INSERT INTO guvnorusers_groups values (1,1);
-INSERT INTO guvnorusers_groups values (2,2);
-INSERT INTO guvnorusers_groups values (2,3);
+INSERT INTO guvnorusers_groups values (1,1)
 
 
 2)   In %TOMCAT_HOME%/lib
@@ -85,6 +82,6 @@ INSERT INTO guvnorusers_groups values (2,3);
     };
 
     8 – Before runing Tomcat create in %TOMCAT_HOME%/bin a setenv.sh file if you running on linux or setenv.bat on windows with this content (Working on linux)
-    …
-    JAVA_OPTS=”-Xms128m -Xmx256m -Djava.security.auth.login.config=$CATALINA_HOME/conf/jaasConfig”
-    export JAVA_OPTS
+       export JAVA_OPTS
+    put this
+    CATALINA_OPTS="-Xms1536m -Xmx6536m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=556m -XX:+DisableExplicitGC -Djava.security.auth.login.config=/home/nheron/workspace-ivy-showroom/apache-tomcat-7.0.53/conf/jaasConfig"
