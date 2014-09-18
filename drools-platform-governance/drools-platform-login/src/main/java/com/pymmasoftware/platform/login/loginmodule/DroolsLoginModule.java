@@ -2,6 +2,9 @@ package com.pymmasoftware.platform.login.loginmodule;
 
 import com.pymmasoftware.platform.login.loginmodule.principal.DroolsGroup;
 import com.pymmasoftware.platform.login.loginmodule.principal.DroolsPrincipal;
+import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.ResultSetHandler;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -12,10 +15,9 @@ import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,13 +42,9 @@ public class DroolsLoginModule implements LoginModule {
     private String password;
 
     private DroolsPrincipal userPrincipal;
-    private DroolsPrincipal[] roles;
+    private DroolsGroup[] roles;
     private Context env;
-    private DataSource pool;
-    private Connection conn;
-    private Statement stmt;
-    private ResultSet rs;
-    private boolean passed;
+    private DataSource dataSource;
 
 
     @Override
@@ -59,7 +57,7 @@ public class DroolsLoginModule implements LoginModule {
 
         try {
             env = (Context) new InitialContext().lookup("java:comp/env");
-            pool = (DataSource) env.lookup("jdbc/URDroolsDS");
+            dataSource = (DataSource) env.lookup("jdbc/URDroolsDS");
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -68,13 +66,11 @@ public class DroolsLoginModule implements LoginModule {
 
     @Override
     public boolean login() throws LoginException {
-
         succeeded = false;
-
+        QueryRunner queryRunner = null;
         try {
-
-            conn = pool.getConnection();
-
+            userPrincipal = null;
+            roles = null;
             if (callbackHandler == null)
                 throw new LoginException("No callback handler");
 
@@ -97,64 +93,79 @@ public class DroolsLoginModule implements LoginModule {
             username = nameCallback.getName();
             password = new String(passwordCallback.getPassword());
 
-            conn = pool.getConnection();
-            stmt = conn.createStatement();
-            // Some sql commands
+            queryRunner = new QueryRunner(dataSource);
 
-            String sqlname = "select * from guvnorusers where username ='"
-                    + username + "'and password ='"
-                    + password + "'";
-
-            rs = stmt.executeQuery(sqlname);
-
-            passed = rs.next();
-            if (!passed) {
-                succeeded = false;
-                System.out.print("unknown user");
-                throw new FailedLoginException("The username is incorrect");
-            } else {
-                String basehash = rs.getString("password");
-                Integer id = rs.getInt("id");
-                // crypto.UserPasswordCheck.compareWith=crypto.UserPasswordCheck.putIntoDateBase(name,
-                // pass);
-                if (!basehash.equals(password)) {
-                    throw new FailedLoginException("The password is incorrect");
-                } else {
-                    userPrincipal = new DroolsPrincipal(username);
-                    Statement stmt2;
-                    ResultSet rs2;
-                    String sqlname2 = "select groups from guvnorgroups gr,guvnorusers_groups gr_user " +
-                            "where gr.id = gr_user.groups_id  " +
-                            "and gr_user.guvnorusers_id=" + id;
-                    stmt2 = conn.createStatement();
-                    rs2 = stmt2.executeQuery(sqlname2);
-
-                    List<DroolsPrincipal> rolesList = new ArrayList<>();
-
-                    int i = 0;
-                    while (rs2.next()) {
-                        DroolsPrincipal droolsPrincipal = new DroolsPrincipal(rs2.getString("groups"));
-                        rolesList.add(droolsPrincipal);
-                        i++;
+            // Create a ResultSetHandler implementation to convert the
+            // first row into an Object[].
+            ResultSetHandler<DroolsPrincipal> h = new ResultSetHandler<DroolsPrincipal>() {
+                public DroolsPrincipal handle(ResultSet rs) throws SQLException {
+                    if (!rs.next()) {
+                        return null;
                     }
-                    roles = new DroolsPrincipal[i];
-                    i = 0;
-                    for (DroolsPrincipal droolsPrincipal : rolesList) {
-                        roles[i] = droolsPrincipal;
-                    }
-                    succeeded = true;
-                    return true;
+
+                    ResultSetMetaData meta = rs.getMetaData();
+                    String userName = rs.getString("username");
+
+                    DroolsPrincipal droolsPrincipal = new DroolsPrincipal(userName);
+                    droolsPrincipal.setId(rs.getInt("id"));
+
+                    return droolsPrincipal;
                 }
+            };
+            ResultSetHandler<List<DroolsGroup>> hh = new ResultSetHandler<List<DroolsGroup>>() {
+                public List<DroolsGroup> handle(ResultSet rs) throws SQLException {
+                    if (!rs.next()) {
+                        return null;
+                    }
+                    List<DroolsGroup> droolsGroups = new ArrayList<>();
+                    boolean goOne = true;
+                    while (goOne) {
+                        String groupName = rs.getString("groups");
 
+                        DroolsGroup droolsGroup = new DroolsGroup(groupName);
+                        droolsGroups.add(droolsGroup);
+                        if (rs.next() == false) {
+                            goOne = false;
+                        }
+                    }
+                    return droolsGroups;
+                }
+            };
+
+            String sqlname = "select * from guvnorusers where username = ? and password = ? ";
+            DroolsPrincipal user = queryRunner.query(sqlname, h, username, password);
+            if (user == null) {
+                succeeded = false;
+                throw new FailedLoginException("The username or The password is incorrect");
+            } else {
+
+                userPrincipal = user;
+                String sqlname2 = "select groups from guvnorgroups gr,guvnorusers_groups gr_user " +
+                        "where gr.id = gr_user.groups_id  " +
+                        "and gr_user.guvnorusers_id= ?";
+                List<DroolsGroup> droolsGroups = queryRunner.query(sqlname2, hh, user.getId());
+                int i = droolsGroups.size();
+                roles = new DroolsGroup[i];
+                i = 0;
+                for (DroolsGroup droolsGroup : droolsGroups) {
+                    roles[i] = droolsGroup;
+                }
+                succeeded = true;
+                return true;
             }
+
+
         } catch (Exception e) {
             throw new LoginException(e.getMessage());
         } finally {
             try {
-                conn.close();
-            } catch (SQLException sqle) {
+                if (queryRunner != null && queryRunner.getDataSource() != null && queryRunner.getDataSource().getConnection() != null) {
+                    DbUtils.close(queryRunner.getDataSource().getConnection());
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-            return true;
+
         }
 
     }
@@ -166,7 +177,7 @@ public class DroolsLoginModule implements LoginModule {
         subject.getPrincipals().add(userPrincipal);
         // jboss requires the name 'Roles'
         DroolsGroup group = new DroolsGroup("Roles");
-        for (DroolsPrincipal role : roles) {
+        for (DroolsGroup role : roles) {
             group.addMember(role);
         }
         subject.getPrincipals().add(group);
