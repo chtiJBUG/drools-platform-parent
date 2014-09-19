@@ -35,7 +35,7 @@ CREATE TABLE guvnorusers_groups
   CONSTRAINT fk_guvnorusers_id FOREIGN KEY (guvnorusers_id)
       REFERENCES guvnorusers (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
- CONSTRAINT fk_groups_id FOREIGN KEY (guvnorusers_id)
+ CONSTRAINT fk_groups_id FOREIGN KEY (groups_id)
       REFERENCES guvnorgroups (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
@@ -47,7 +47,9 @@ INSERT INTO guvnorusers values (1,'admin','admin');
 INSERT INTO guvnorusers values (3,'swimmingpool','swimmingpool');
 INSERT INTO guvnorusers values (2,'loyalty','loyalty');
 INSERT INTO guvnorgroups values (1,'admin');
-INSERT INTO guvnorusers_groups values (1,1)
+INSERT INTO guvnorusers_groups values (1,1)  ;
+INSERT INTO guvnorusers_groups values (2,1) ;
+INSERT INTO guvnorusers_groups values (3,1);
 
 
 2)   In %TOMCAT_HOME%/lib

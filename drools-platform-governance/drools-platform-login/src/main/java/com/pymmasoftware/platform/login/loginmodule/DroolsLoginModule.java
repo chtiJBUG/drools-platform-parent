@@ -2,7 +2,6 @@ package com.pymmasoftware.platform.login.loginmodule;
 
 import com.pymmasoftware.platform.login.loginmodule.principal.DroolsGroup;
 import com.pymmasoftware.platform.login.loginmodule.principal.DroolsPrincipal;
-import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 
@@ -43,8 +42,8 @@ public class DroolsLoginModule implements LoginModule {
 
     private DroolsPrincipal userPrincipal;
     private DroolsGroup[] roles;
-    private Context env;
-    private DataSource dataSource;
+    private static Context env = null;
+    private static DataSource dataSource = null;
 
 
     @Override
@@ -56,8 +55,12 @@ public class DroolsLoginModule implements LoginModule {
         this.options = options;
 
         try {
-            env = (Context) new InitialContext().lookup("java:comp/env");
-            dataSource = (DataSource) env.lookup("jdbc/URDroolsDS");
+            if (env == null) {
+                env = (Context) new InitialContext().lookup("java:comp/env");
+                if (dataSource == null) {
+                    dataSource = (DataSource) env.lookup("jdbc/URDroolsDS");
+                }
+            }
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -144,11 +147,13 @@ public class DroolsLoginModule implements LoginModule {
                         "where gr.id = gr_user.groups_id  " +
                         "and gr_user.guvnorusers_id= ?";
                 List<DroolsGroup> droolsGroups = queryRunner.query(sqlname2, hh, user.getId());
-                int i = droolsGroups.size();
-                roles = new DroolsGroup[i];
-                i = 0;
-                for (DroolsGroup droolsGroup : droolsGroups) {
-                    roles[i] = droolsGroup;
+                if (droolsGroups != null) {
+                    int i = droolsGroups.size();
+                    roles = new DroolsGroup[i];
+                    i = 0;
+                    for (DroolsGroup droolsGroup : droolsGroups) {
+                        roles[i] = droolsGroup;
+                    }
                 }
                 succeeded = true;
                 return true;
@@ -158,14 +163,7 @@ public class DroolsLoginModule implements LoginModule {
         } catch (Exception e) {
             throw new LoginException(e.getMessage());
         } finally {
-            try {
-                if (queryRunner != null && queryRunner.getDataSource() != null && queryRunner.getDataSource().getConnection() != null) {
-                    DbUtils.close(queryRunner.getDataSource().getConnection());
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
+            queryRunner = null;
         }
 
     }
@@ -188,7 +186,13 @@ public class DroolsLoginModule implements LoginModule {
     @Override
     public boolean abort() throws LoginException {
         // TODO Auto-generated method stub
-        return false;
+        subject.getPrincipals().remove(userPrincipal);
+        succeeded = false;
+        succeeded = commitSucceeded;
+        username = null;
+        password = null;
+        userPrincipal = null;
+        return true;
     }
 
     @Override
