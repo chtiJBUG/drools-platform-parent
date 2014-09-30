@@ -11,7 +11,6 @@ import org.chtijbug.drools.guvnor.rest.ChtijbugDroolsRestException;
 import org.chtijbug.drools.guvnor.rest.GuvnorRepositoryConnector;
 import org.chtijbug.drools.guvnor.rest.model.Asset;
 import org.chtijbug.drools.guvnor.rest.model.AssetPropertyType;
-import org.chtijbug.drools.guvnor.rest.model.Snapshot;
 import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -74,9 +73,9 @@ public class RuleManager {
             this.guvnorRepositoryConnector.deletePackageSnapshot(packageName, version);
         }
 
-        List<Snapshot> listSnapshots = this.guvnorRepositoryConnector.getListSnapshots(packageName);
-        for (Snapshot snapshot : listSnapshots) {
-            if (snapshot.getName().equals(version)) {
+        List<String> listSnapshots = this.guvnorRepositoryConnector.getListSnapshots(packageName);
+        for (String snapshot : listSnapshots) {
+            if (snapshot.equals(version)) {
                 logger.warn("Cannot take a RulePackage Snapshot. Version already exists");
                 throw new AdministrationBusinessProcessException(BusinessProcessError.VERSION_ALREADY_EXISTS, "Snapshot already existing");
             }
@@ -89,7 +88,7 @@ public class RuleManager {
         return version.endsWith("-SNAPSHOT");
     }
 
-    public List<Snapshot> getAvailableSnapshots() throws Exception {
+    public List<String> getAvailableSnapshots() throws Exception {
         return guvnorRepositoryConnector.getListSnapshots();
     }
 
@@ -106,16 +105,8 @@ public class RuleManager {
 
     //___ Fetch all package's versions with the package's name
     public List<String> findAllPackageVersionsByName(String packageName) throws ChtijbugDroolsRestException {
-        List<Snapshot> listPackages = guvnorRepositoryConnector.getListSnapshots(packageName);
-        return Lists.transform(listPackages, new Function<Snapshot, String>() {
-            @Nullable
-            @Override
-            public String apply(@Nullable Snapshot snapshot) {
-                if (snapshot == null)
-                    return null;
-                return snapshot.getName();
-            }
-        });
+        List<String> listPackages = guvnorRepositoryConnector.getListSnapshots(packageName);
+        return listPackages;
     }
 
     //___ Fetch all package's versions with the package's name and version
