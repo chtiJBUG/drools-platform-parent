@@ -1,9 +1,23 @@
+/*
+ * Copyright 2014 Pymma Software
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.chtijbug.drools.platform.web;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.chtijbug.drools.guvnor.rest.ChtijbugDroolsRestException;
-import org.chtijbug.drools.guvnor.rest.model.Snapshot;
 import org.chtijbug.drools.platform.rules.config.Environment;
 import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
 import org.chtijbug.drools.platform.rules.management.AssetStatus;
@@ -46,14 +60,14 @@ public class RulesPackageResource {
         List<String> result;
         if (version.equals("default")) {
             result = this.ruleManager.findAllPackageVersionsByName(packageName);
-        }else if(version.equals("default-SNAPSHOT")){
-            version=".*-SNAPSHOT";
+        } else if (version.equals("default-SNAPSHOT")) {
+            version = ".*-SNAPSHOT";
             result = this.ruleManager.findAllPackageVersionsByNameAndVersion(packageName, version);
-        }else {
-            if(version.equals("*")){
-                version=".*";
-            }else if(version.equals("*-SNAPSHOT")){
-                version=".*-SNAPSHOT";
+        } else {
+            if (version.equals("*")) {
+                version = ".*";
+            } else if (version.equals("*-SNAPSHOT")) {
+                version = ".*-SNAPSHOT";
             }
             result = this.ruleManager.findAllPackageVersionsByNameAndVersion(packageName, version);
         }
@@ -65,6 +79,7 @@ public class RulesPackageResource {
             }
         });
     }
+
     @RequestMapping(method = RequestMethod.POST, value = "/{packageName:.+}/{version:.+}")
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
@@ -72,7 +87,7 @@ public class RulesPackageResource {
     public void setPackageVersion(@PathVariable final String packageName, @PathVariable String version, @RequestBody List<AssetStatus> buildScope) throws Exception {
         try {
             this.ruleManager.buildAndTakeSnapshot(packageName, buildScope, version);
-        } catch (ChtijbugDroolsRestException e){
+        } catch (ChtijbugDroolsRestException e) {
             // TODO
         }
     }
@@ -84,6 +99,7 @@ public class RulesPackageResource {
     public void deleteVersion(@PathVariable final String packageName, @PathVariable String version) throws Exception {
         this.ruleManager.deletePackageVersion(packageName, version);
     }
+
     @RequestMapping(method = RequestMethod.POST, value = "/rebuild/{packageName:.+}/{version:.+}")
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
@@ -91,7 +107,7 @@ public class RulesPackageResource {
     public void rebuildPackageVersion(@PathVariable final String packageName, @PathVariable String version, @RequestBody List<AssetStatus> buildScope) throws Exception {
         try {
             this.ruleManager.buildAndTakeSnapshot(packageName, buildScope, version);
-        } catch (ChtijbugDroolsRestException e){
+        } catch (ChtijbugDroolsRestException e) {
             // TODO
         }
     }
@@ -117,12 +133,12 @@ public class RulesPackageResource {
     @RequestMapping(value = "/snapshots", method = RequestMethod.GET)
     @Produces(value = MediaType.APPLICATION_JSON)
     public List<String> getAvailableSnapshots() throws Exception {
-        return Lists.transform(ruleManager.getAvailableSnapshots(), new Function<Snapshot, String>() {
+        return Lists.transform(ruleManager.getAvailableSnapshots(), new Function<String, String>() {
             @Nullable
             @Override
-            public String apply(@Nullable Snapshot input) {
+            public String apply(@Nullable String input) {
                 if (input != null) {
-                    return input.getName();
+                    return input;
                 }
                 return null;
             }

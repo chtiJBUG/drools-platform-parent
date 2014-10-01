@@ -1,13 +1,20 @@
+/*
+ * Copyright 2014 Pymma Software
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.chtijbug.drools.platform.web.filter;
 
-/*
- * Copyright 2003 Jayson Falkner (jayson@jspinsider.com)
- * This code is from "Servlets and JavaServer pages; the J2EE Web Tier",
- * http://www.jspbook.com. You may freely use the code both commercially
- * and non-commercially. If you like the code, please pick up a copy of
- * the book and help support the authors, development of more free code,
- * and the JSP/Servlet/J2EE community.
- */
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -99,7 +106,7 @@ class GZIPResponseStream extends ServletOutputStream {
         if (closed) {
             throw new IOException("Cannot write to a closed output stream");
         }
-        gzipstream.write((byte)b);
+        gzipstream.write((byte) b);
     }
 
     public void write(byte b[]) throws IOException {
@@ -153,7 +160,8 @@ class GZIPResponseWrapper extends HttpServletResponseWrapper {
                     stream.close();
                 }
             }
-        } catch (IOException e) {}
+        } catch (IOException e) {
+        }
     }
 
     public void flushBuffer() throws IOException {
@@ -184,5 +192,6 @@ class GZIPResponseWrapper extends HttpServletResponseWrapper {
         return (writer);
     }
 
-    public void setContentLength(int length) {}
+    public void setContentLength(int length) {
+    }
 }

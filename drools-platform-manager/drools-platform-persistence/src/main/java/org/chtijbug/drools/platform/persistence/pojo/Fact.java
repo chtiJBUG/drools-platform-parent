@@ -1,3 +1,18 @@
+/*
+ * Copyright 2014 Pymma Software
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.chtijbug.drools.platform.persistence.pojo;
 
 import org.chtijbug.drools.platform.persistence.utility.StringJsonUserType;
@@ -8,12 +23,6 @@ import org.hibernate.annotations.TypeDefs;
 import javax.persistence.*;
 import java.util.Date;
 
-/**
- * Created by IntelliJ IDEA.
- * Date: 31/03/14
- * Time: 11:49
- * To change this template use File | Settings | File Templates.
- */
 @Entity
 @Table(name = "fact", indexes = {@Index(columnList = "fullClassName")})
 @TypeDefs({@TypeDef(name = "json", typeClass = StringJsonUserType.class)})

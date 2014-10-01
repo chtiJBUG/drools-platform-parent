@@ -1,11 +1,21 @@
+/*
+ * Copyright 2014 Pymma Software
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.chtijbug.drools.platform.persistence.utility;
 
-/**
- * Created by IntelliJ IDEA.
- * Date: 31/03/14
- * Time: 11:37
- * To change this template use File | Settings | File Templates.
- */
+
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.usertype.UserType;
@@ -30,7 +40,7 @@ public class StringJsonUserType implements UserType {
      */
     @Override
     public int[] sqlTypes() {
-        return new int[] { Types.JAVA_OBJECT};
+        return new int[]{Types.JAVA_OBJECT};
     }
 
     /**
@@ -54,12 +64,12 @@ public class StringJsonUserType implements UserType {
     @Override
     public boolean equals(Object x, Object y) throws HibernateException {
 
-        if( x== null){
+        if (x == null) {
 
-            return y== null;
+            return y == null;
         }
 
-        return x.equals( y);
+        return x.equals(y);
     }
 
     /**
@@ -80,12 +90,11 @@ public class StringJsonUserType implements UserType {
      * @param session
      * @param owner   the containing entity  @return Object
      * @throws org.hibernate.HibernateException
-     *
      * @throws java.sql.SQLException
      */
     @Override
     public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
-        if(rs.getString(names[0]) == null){
+        if (rs.getString(names[0]) == null) {
             return null;
         }
         return rs.getString(names[0]);
@@ -101,7 +110,6 @@ public class StringJsonUserType implements UserType {
      * @param index   statement parameter index
      * @param session
      * @throws org.hibernate.HibernateException
-     *
      * @throws java.sql.SQLException
      */
     @Override
@@ -147,11 +155,10 @@ public class StringJsonUserType implements UserType {
      * @param value the object to be cached
      * @return a cachable representation of the object
      * @throws org.hibernate.HibernateException
-     *
      */
     @Override
     public Serializable disassemble(Object value) throws HibernateException {
-        return (String)this.deepCopy( value);
+        return (String) this.deepCopy(value);
     }
 
     /**
@@ -162,11 +169,10 @@ public class StringJsonUserType implements UserType {
      * @param owner  the owner of the cached object
      * @return a reconstructed object from the cachable representation
      * @throws org.hibernate.HibernateException
-     *
      */
     @Override
     public Object assemble(Serializable cached, Object owner) throws HibernateException {
-        return this.deepCopy( cached);
+        return this.deepCopy(cached);
     }
 
     /**

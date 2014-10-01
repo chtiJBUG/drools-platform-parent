@@ -1,3 +1,19 @@
+/*
+* Copyright 2014 Pymma Software
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
 package org.chtijbug.drools.platform.persistence;
 
 
@@ -16,8 +32,8 @@ import java.util.List;
 public interface ProcessExecutionRepository extends JpaRepository<ProcessExecution, Long> {
 
     @Query("select r from PlatformRuntimeInstance p,ProcessExecution r,SessionExecution s where s.platformRuntimeInstance = p and p.endDate is null  and r.sessionExecution = s and r.endDate is null and p.ruleBaseID = :ruleBaseID and s.sessionId = :sessionID and r.ProcessInstanceId = :processInstanceId")
-    List<ProcessExecution> findAllStartedProcessByRuleBaseIDAndSessionIDAndProcessInstanceId(@Param("ruleBaseID") Integer ruleBaseID,@Param("sessionID") Integer sessionID, @Param("processInstanceId") String processInstanceId);
+    List<ProcessExecution> findAllStartedProcessByRuleBaseIDAndSessionIDAndProcessInstanceId(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionID") Integer sessionID, @Param("processInstanceId") String processInstanceId);
 
     @Query("select r from PlatformRuntimeInstance p,ProcessExecution r,SessionExecution s where s.platformRuntimeInstance = p  and p.endDate is null  and r.sessionExecution = s and r.endDate is null and p.ruleBaseID = :ruleBaseID and s.sessionId = :sessionID and r.ProcessInstanceId = :processInstanceId")
-    ProcessExecution findStartedProcessByRuleBaseIDBySessionIDAndProcessInstanceId(@Param("ruleBaseID") Integer ruleBaseID,@Param("sessionID") Integer sessionID, @Param("processInstanceId") String processInstanceId);
+    ProcessExecution findStartedProcessByRuleBaseIDBySessionIDAndProcessInstanceId(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionID") Integer sessionID, @Param("processInstanceId") String processInstanceId);
 }
