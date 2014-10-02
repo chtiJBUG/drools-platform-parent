@@ -1,6 +1,5 @@
 package org.chtijbug.drools.platform.web;
 
-import org.chtijbug.drools.guvnor.rest.model.Snapshot;
 import org.chtijbug.drools.platform.rules.config.Environment;
 import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
 import org.chtijbug.drools.platform.rules.management.RuleManager;
@@ -24,8 +23,8 @@ public class MockServices {
     public RuleManager ruleManager() throws Exception {
         RuleManager mock = mock(RuleManager.class);
         when(mock.getAvailableSnapshots()).thenReturn(newArrayList(
-                new Snapshot("1", "1-SNAPSHOT"),
-                new Snapshot("2", "2-SNAPSHOT")));
+                "1-SNAPSHOT",
+                "2-SNAPSHOT"));
         return mock;
     }
 
