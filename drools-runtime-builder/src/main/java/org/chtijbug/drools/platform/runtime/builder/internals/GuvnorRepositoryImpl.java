@@ -19,23 +19,101 @@ import java.util.Arrays;
 
 @Component
 public class GuvnorRepositoryImpl implements GuvnorRepository {
-    /** Class logger */
+    /**
+     * Class logger
+     */
     private static Logger logger = LoggerFactory.getLogger(GuvnorRepositoryImpl.class);
-    /** Package Asset Template file */
+    /**
+     * Package Asset Template file
+     */
     private static final String PACKAGE_ASSET_TEMPLATE = "/package.xml";
-    /** Package Asset Template file */
+    /**
+     * Package Asset Template file
+     */
     private static final String PROCESS_ASSET_TEMPLATE = "/process.xml";
-    /** URL to the remote Guvnor instance */
+    /**
+     * URL to the remote Guvnor instance
+     */
     private String baseUrl = "http://localhost:8080";
     /** */
     private String appName = "/drools-guvnor";
-    /** Base 64 encoded guvnor account for using REST API */
+    /**
+     * Base 64 encoded guvnor account for using REST API
+     */
     private final String auth;
 
-    public GuvnorRepositoryImpl(String baseUrl, String appName, String username, String password) {
-        this.baseUrl = baseUrl;
-        this.appName = appName;
-        this.auth = "Basic " + Base64Utility.encode((username + ":" + password).getBytes());
+
+    private String packageName;
+    private String packageVersion;
+    private String packageUsername;
+    private String packagePassword;
+    private String platformServer = "localhost";
+    private String ruleBaseid;
+    private Integer wsPort = 8080;
+    private String wsHost = "localhost";
+    private String jmsServer = "localhost";
+    private Integer jmsPort = 61616;
+
+    public GuvnorRepositoryImpl(String packageName, String packageVersion, String packageUsername, String packagePassword, String ruleBaseid) {
+        this.packageName = packageName;
+        this.packageVersion = packageVersion;
+        this.packageUsername = packageUsername;
+        this.packagePassword = packagePassword;
+        this.ruleBaseid = ruleBaseid;
+        this.auth = "Basic " + Base64Utility.encode((packageUsername + ":" + packagePassword).getBytes());
+    }
+
+
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public String getAuth() {
+        return auth;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public String getPackageVersion() {
+        return packageVersion;
+    }
+
+    public String getPackageUsername() {
+        return packageUsername;
+    }
+
+    public String getPackagePassword() {
+        return packagePassword;
+    }
+
+    public String getPlatformServer() {
+        return platformServer;
+    }
+
+    public String getRuleBaseid() {
+        return ruleBaseid;
+    }
+
+    public Integer getWsPort() {
+        return wsPort;
+    }
+
+    public String getWsHost() {
+        return wsHost;
+    }
+
+    public String getJmsServer() {
+        return jmsServer;
+    }
+
+    public Integer getJmsPort() {
+        return jmsPort;
     }
 
     @Override

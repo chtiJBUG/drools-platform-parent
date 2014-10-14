@@ -2,6 +2,7 @@ package org.chtijbug.drools.platform.runtime.builder;
 
 import com.google.common.base.Throwables;
 import org.apache.commons.io.IOUtils;
+import org.chtijbug.drools.platform.runtime.builder.internals.GuvnorRepositoryImpl;
 import org.chtijbug.drools.platform.runtime.utils.XpathQueryRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +22,11 @@ import static org.springframework.util.ResourceUtils.getFile;
 public class MavenProjectFactory {
     private static Logger logger = LoggerFactory.getLogger(MavenProjectFactory.class);
 
-    public MavenProject createNewWarMavenProject(InputStream wsdlContent, InputStream businessModelAsXsd, String basePackageName, String mavenPath) {
+    public MavenProject createNewWarMavenProject(InputStream wsdlContent, InputStream businessModelAsXsd, GuvnorRepositoryImpl guvnorRepository, String mavenPath) {
         logger.debug(">> createNewWarMavenProject(wsdlContent={}, businessModelAsXsd={})", wsdlContent, businessModelAsXsd);
         try {
             byte[] wsdlContentAsBytes = IOUtils.toByteArray(wsdlContent);
-            MavenProject mavenProject = createEmptyMavenProject(basePackageName, mavenPath);
+            MavenProject mavenProject = createEmptyMavenProject(guvnorRepository.getPackageName(), mavenPath);
             //___ Copy file into src/main/resources
             addWebServicesResources(mavenProject, new ByteArrayInputStream(wsdlContentAsBytes), businessModelAsXsd);
             //____ Copy chtijbug-spring.xml file
@@ -33,7 +34,7 @@ public class MavenProjectFactory {
             String executionService;
             executionService = xpathQueryRunner.executeXpath(BusinessPackageAuthoringManager.XPATH_EXECUTION_SERVICE);
             String targetNamespace = xpathQueryRunner.executeXpath(XPATH_TARGET_NAMESPACE);
-            addSpringResources(mavenProject, basePackageName, targetNamespace, executionService);
+            addSpringResources(mavenProject, guvnorRepository, targetNamespace, executionService);
             // File configFile = mavenProject.createSourceFile("com.pymma.drools.config", "RuleEngineConfig.java");
             // File originalConfigFile = ResourceUtils.getFile("classpath:file-templates/RuleEngineConfig");
             // FileUtils.copyFile(originalConfigFile, configFile);
@@ -45,7 +46,7 @@ public class MavenProjectFactory {
         }
     }
 
-    protected void addSpringResources(MavenProject mavenProject, String basePackageName, String targetNamespace, String executionService) {
+    protected void addSpringResources(MavenProject mavenProject, GuvnorRepositoryImpl guvnorRepository, String targetNamespace, String executionService) {
         try {
             /**
              * src/main/resources/spring
@@ -84,13 +85,13 @@ public class MavenProjectFactory {
              */
             File springWebInfFile3 = getFile("classpath:file-templates/platform-knowledge.properties");
             String springWebInfContent3 = readFileToString(springWebInfFile3);
-            springWebInfContent3 = springWebInfContent3.replaceAll("#packageName#", targetNamespace);
-            springWebInfContent3 = springWebInfContent3.replaceAll("#packageVersion#", targetNamespace);
-            springWebInfContent3 = springWebInfContent3.replaceAll("#packageUserName#", targetNamespace);
-            springWebInfContent3 = springWebInfContent3.replaceAll("#packagePassword##", targetNamespace);
-            springWebInfContent3 = springWebInfContent3.replaceAll("#wsport#", targetNamespace);
-            springWebInfContent3 = springWebInfContent3.replaceAll("#rulebaseid#", targetNamespace);
-            springWebInfContent3 = springWebInfContent3.replaceAll("#platformServer#", executionService);
+            springWebInfContent3 = springWebInfContent3.replaceAll("#packageName#", guvnorRepository.getPackageName());
+            springWebInfContent3 = springWebInfContent3.replaceAll("#packageVersion#", guvnorRepository.getPackageVersion());
+            springWebInfContent3 = springWebInfContent3.replaceAll("#packageUserName#", guvnorRepository.getPackageUsername());
+            springWebInfContent3 = springWebInfContent3.replaceAll("#packagePassword##", guvnorRepository.getPackagePassword());
+            springWebInfContent3 = springWebInfContent3.replaceAll("#wsport#", guvnorRepository.getWsPort().toString());
+            springWebInfContent3 = springWebInfContent3.replaceAll("#rulebaseid#", guvnorRepository.getRuleBaseid());
+            springWebInfContent3 = springWebInfContent3.replaceAll("#platformServer#", guvnorRepository.getPlatformServer());
             File springWebInfFolder3 = new File(mavenProject.resourcesFolder, "spring");
             if (!springWebInfFolder3.exists() && !springWebInfFolder3.mkdir())
                 throw new RuntimeException("Unable to create spring resources directory. Execution will stop");

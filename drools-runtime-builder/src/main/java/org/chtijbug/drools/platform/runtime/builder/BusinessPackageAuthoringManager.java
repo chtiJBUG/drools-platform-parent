@@ -4,6 +4,7 @@ import com.google.common.base.Throwables;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.cxf.common.util.StringUtils;
+import org.chtijbug.drools.platform.runtime.builder.internals.GuvnorRepositoryImpl;
 import org.chtijbug.drools.platform.runtime.utils.XpathQueryRunner;
 import org.chtijbug.drools.platform.runtime.utils.Xsd2JarTransformer;
 import org.slf4j.Logger;
@@ -39,20 +40,23 @@ public class BusinessPackageAuthoringManager {
      * Guvnor Repository which is responsible of the Business Assets authoring, versioning etc...
      */
     @Resource
-    private GuvnorRepository guvnorRepository;
+    private GuvnorRepositoryImpl guvnorRepository;
     @Resource
     private Xsd2JarTransformer modelTransformer;
     @Resource
     private MavenProjectFactory mavenProjectFactory;
 
-    public BusinessPackageAuthoringManager(GuvnorRepository guvnorRepository) {
+    private String mavenPath;
+
+    public BusinessPackageAuthoringManager(GuvnorRepositoryImpl guvnorRepository) {
         this.guvnorRepository = guvnorRepository;
     }
 
-    public BusinessPackageAuthoringManager(GuvnorRepository guvnorRepository, Xsd2JarTransformer xsd2JarTransformer, MavenProjectFactory mavenProjectFactory) {
+    public BusinessPackageAuthoringManager(GuvnorRepositoryImpl guvnorRepository, Xsd2JarTransformer xsd2JarTransformer, MavenProjectFactory mavenProjectFactory, String mavenPath) {
         this(guvnorRepository);
         this.modelTransformer = xsd2JarTransformer;
         this.mavenProjectFactory = mavenProjectFactory;
+        this.mavenPath = mavenPath;
     }
 
     /** */
@@ -83,27 +87,27 @@ public class BusinessPackageAuthoringManager {
         }
     }
 
-    public void generateExecutionService(InputStream wsdlContent, InputStream businessModelAsXsd, String basePackageName, String mavenPath) {
-        logger.debug(">> generateExecutionService(wsdlContent={}, businessModelAsXsd={}, basePackageName={})", wsdlContent, businessModelAsXsd, basePackageName);
+    public void generateExecutionService(InputStream wsdlContent, InputStream businessModelAsXsd) {
+        logger.debug(">> generateExecutionService(wsdlContent={}, businessModelAsXsd={}, basePackageName={})", wsdlContent, businessModelAsXsd, guvnorRepository.getPackageName());
         try {
             //___ Create target project folder in maven style
             byte[] wsdlBytes = IOUtils.toByteArray(wsdlContent);
-            MavenProject mavenProject = mavenProjectFactory.createNewWarMavenProject(new ByteArrayInputStream(wsdlBytes), businessModelAsXsd, basePackageName, mavenPath);
+            MavenProject mavenProject = mavenProjectFactory.createNewWarMavenProject(new ByteArrayInputStream(wsdlBytes), businessModelAsXsd, guvnorRepository, mavenPath);
             //___ Generate all files based on maven-cxf-plugin
             mavenProject.generateSources();
             //___ Create the Impl file according to the Port name from the wsdl
-            File executionServiceClassFile = mavenProject.createSourceFile(basePackageName, EXECUTION_SERVICE_CLASS_NAME);
+            File executionServiceClassFile = mavenProject.createSourceFile(guvnorRepository.getPackageName(), EXECUTION_SERVICE_CLASS_NAME);
 
-            ClassSourceCodeInjector classSourceCodeInjector = new ClassSourceCodeInjector(executionServiceClassFile, new ByteArrayInputStream(wsdlBytes), basePackageName);
+            ClassSourceCodeInjector classSourceCodeInjector = new ClassSourceCodeInjector(executionServiceClassFile, new ByteArrayInputStream(wsdlBytes), guvnorRepository.getPackageName());
 
             File classFile = mavenProject.getSourceFile(StringUtils.capitalize(classSourceCodeInjector.getKeywordValue(PORT_TYPE)).concat(".java"));
             List<ProcessStructure> processStructures = extractMethodStructures(classFile);
             classSourceCodeInjector.customize(processStructures);
 
 
-            File executionServiceInterfaceFile = mavenProject.createSourceFile(basePackageName, EXECUTION_SERVICE_INTERFACE_NAME);
+            File executionServiceInterfaceFile = mavenProject.createSourceFile(guvnorRepository.getPackageName(), EXECUTION_SERVICE_INTERFACE_NAME);
 
-            InterfaceSourceCodeInjector interfaceSourceCodeInjector = new InterfaceSourceCodeInjector(executionServiceInterfaceFile, new ByteArrayInputStream(wsdlBytes), basePackageName);
+            InterfaceSourceCodeInjector interfaceSourceCodeInjector = new InterfaceSourceCodeInjector(executionServiceInterfaceFile, new ByteArrayInputStream(wsdlBytes), guvnorRepository.getPackageName());
             File interfaceFile = mavenProject.getSourceFile(StringUtils.capitalize(interfaceSourceCodeInjector.getKeywordValue(InterfaceSourceCodeInjector.Keyword2.PORT_TYPE)).concat(".java"));
             List<ProcessStructure> processStructures2 = extractMethodStructures(interfaceFile);
             interfaceSourceCodeInjector.customize(processStructures2);
