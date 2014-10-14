@@ -1,13 +1,11 @@
 package org.chtijbug.drools.platform.runtime.builder;
 
 import com.google.common.base.Throwables;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.chtijbug.drools.platform.runtime.utils.XpathQueryRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -23,11 +21,11 @@ import static org.springframework.util.ResourceUtils.getFile;
 public class MavenProjectFactory {
     private static Logger logger = LoggerFactory.getLogger(MavenProjectFactory.class);
 
-    public MavenProject createNewWarMavenProject(InputStream wsdlContent, InputStream businessModelAsXsd, String basePackageName) {
+    public MavenProject createNewWarMavenProject(InputStream wsdlContent, InputStream businessModelAsXsd, String basePackageName, String mavenPath) {
         logger.debug(">> createNewWarMavenProject(wsdlContent={}, businessModelAsXsd={})", wsdlContent, businessModelAsXsd);
         try {
             byte[] wsdlContentAsBytes = IOUtils.toByteArray(wsdlContent);
-            MavenProject mavenProject = createEmptyMavenProject(basePackageName);
+            MavenProject mavenProject = createEmptyMavenProject(basePackageName, mavenPath);
             //___ Copy file into src/main/resources
             addWebServicesResources(mavenProject, new ByteArrayInputStream(wsdlContentAsBytes), businessModelAsXsd);
             //____ Copy chtijbug-spring.xml file
@@ -36,9 +34,9 @@ public class MavenProjectFactory {
             executionService = xpathQueryRunner.executeXpath(BusinessPackageAuthoringManager.XPATH_EXECUTION_SERVICE);
             String targetNamespace = xpathQueryRunner.executeXpath(XPATH_TARGET_NAMESPACE);
             addSpringResources(mavenProject, basePackageName, targetNamespace, executionService);
-            File configFile = mavenProject.createSourceFile("com.pymma.drools.config", "RuleEngineConfig.java");
-            File originalConfigFile = ResourceUtils.getFile("classpath:file-templates/RuleEngineConfig");
-            FileUtils.copyFile(originalConfigFile, configFile);
+            // File configFile = mavenProject.createSourceFile("com.pymma.drools.config", "RuleEngineConfig.java");
+            // File originalConfigFile = ResourceUtils.getFile("classpath:file-templates/RuleEngineConfig");
+            // FileUtils.copyFile(originalConfigFile, configFile);
             return mavenProject;
         } catch (IOException e) {
             throw Throwables.propagate(e);
@@ -49,23 +47,55 @@ public class MavenProjectFactory {
 
     protected void addSpringResources(MavenProject mavenProject, String basePackageName, String targetNamespace, String executionService) {
         try {
-            //____ src/main/resources
-            File springBeansConfFile = getFile("classpath:file-templates/chtijbug-spring.xml");
+            /**
+             * src/main/resources/spring
+             */
+            File springBeansConfFile = getFile("classpath:file-templates/application-context.xml");
             String springBeansConfContent = readFileToString(springBeansConfFile);
-            springBeansConfContent = springBeansConfContent.replaceAll("#basePackageName#", basePackageName);
+            // springBeansConfContent = springBeansConfContent.replaceAll("#basePackageName#", basePackageName);
             File springResourcesFolder = new File(mavenProject.resourcesFolder, "spring");
             if (!springResourcesFolder.exists() && !springResourcesFolder.mkdir())
                 throw new RuntimeException("Unable to create spring resources directory. Execution will stop");
-            mavenProject.addSpringConfigurationFile(springResourcesFolder, "chtijbug-spring.xml", springBeansConfContent);
-            //____ src/main/webapp/WEB-INF/spring
-            File springWebInfFile = getFile("classpath:file-templates/rule-engine-servlet.xml");
+            mavenProject.addSpringConfigurationFile(springResourcesFolder, "application-context.xml", springBeansConfContent);
+            /**
+             * _ src/main/webapp/WEB-INF
+             */
+            File springWebInfFile = getFile("classpath:file-templates/soap-servlet.xml");
             String springWebInfContent = readFileToString(springWebInfFile);
-            springWebInfContent = springWebInfContent.replaceAll("#targetNamespace#", targetNamespace);
-            springWebInfContent = springWebInfContent.replaceAll("#wsdlServiceName#", executionService);
-            File springWebInfFolder = new File(mavenProject.webinfFolder, "spring");
+            //springWebInfContent = springWebInfContent.replaceAll("#targetNamespace#", targetNamespace);
+            //springWebInfContent = springWebInfContent.replaceAll("#wsdlServiceName#", executionService);
+            File springWebInfFolder = new File(mavenProject.webinfFolder, "");
             if (!springWebInfFolder.exists() && !springWebInfFolder.mkdir())
                 throw new RuntimeException("Unable to create spring resources directory. Execution will stop");
-            mavenProject.addSpringConfigurationFile(springWebInfFolder, "rule-engine-servlet.xml", springWebInfContent);
+            mavenProject.addSpringConfigurationFile(springWebInfFolder, "soap-servlet.xml", springWebInfContent);
+            /**
+             *  src/main/webapp/WEB-INF
+             */
+            File springWebInfFile2 = getFile("classpath:file-templates/websocket-servlet.xml");
+            String springWebInfContent2 = readFileToString(springWebInfFile2);
+            //springWebInfContent = springWebInfContent.replaceAll("#targetNamespace#", targetNamespace);
+            //springWebInfContent = springWebInfContent.replaceAll("#wsdlServiceName#", executionService);
+            File springWebInfFolder2 = new File(mavenProject.webinfFolder, "");
+            if (!springWebInfFolder2.exists() && !springWebInfFolder2.mkdir())
+                throw new RuntimeException("Unable to create spring resources directory. Execution will stop");
+            mavenProject.addSpringConfigurationFile(springWebInfFolder2, "websocket-servlet.xml", springWebInfContent2);
+            /**
+             * src/main/resources/spring/
+             */
+            File springWebInfFile3 = getFile("classpath:file-templates/platform-knowledge.properties");
+            String springWebInfContent3 = readFileToString(springWebInfFile3);
+            springWebInfContent3 = springWebInfContent3.replaceAll("#packageName#", targetNamespace);
+            springWebInfContent3 = springWebInfContent3.replaceAll("#packageVersion#", targetNamespace);
+            springWebInfContent3 = springWebInfContent3.replaceAll("#packageUserName#", targetNamespace);
+            springWebInfContent3 = springWebInfContent3.replaceAll("#packagePassword##", targetNamespace);
+            springWebInfContent3 = springWebInfContent3.replaceAll("#wsport#", targetNamespace);
+            springWebInfContent3 = springWebInfContent3.replaceAll("#rulebaseid#", targetNamespace);
+            springWebInfContent3 = springWebInfContent3.replaceAll("#platformServer#", executionService);
+            File springWebInfFolder3 = new File(mavenProject.resourcesFolder, "spring");
+            if (!springWebInfFolder3.exists() && !springWebInfFolder3.mkdir())
+                throw new RuntimeException("Unable to create spring resources directory. Execution will stop");
+            mavenProject.addSpringConfigurationFile(springWebInfFolder3, "platform-knowledge.properties", springWebInfContent3);
+
         } catch (IOException e) {
             throw Throwables.propagate(e);
         }
@@ -85,7 +115,7 @@ public class MavenProjectFactory {
         }
     }
 
-    protected MavenProject createEmptyMavenProject(String basePackageName) {
+    protected MavenProject createEmptyMavenProject(String basePackageName, String mavenPath) {
         try {
             File projectFolder = File.createTempFile("tmp-dir", "");
             if (projectFolder.delete() && !projectFolder.mkdir())
@@ -94,7 +124,7 @@ public class MavenProjectFactory {
             File pomFile = getFile("classpath:file-templates/pom.xml");
             String pomFileContent = readFileToString(pomFile);
             pomFileContent = pomFileContent.replaceAll("#basePackageName#", basePackageName);
-            return new MavenProject(projectFolder, pomFileContent);
+            return new MavenProject(projectFolder, pomFileContent, mavenPath);
         } catch (IOException e) {
             throw Throwables.propagate(e);
         }

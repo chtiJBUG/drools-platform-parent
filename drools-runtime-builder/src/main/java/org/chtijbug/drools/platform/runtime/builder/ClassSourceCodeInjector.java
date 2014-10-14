@@ -12,12 +12,12 @@ import java.util.Map;
 
 import static java.util.Map.Entry;
 import static org.apache.commons.io.FileUtils.*;
-import static org.chtijbug.drools.platform.runtime.builder.SourceCodeInjector.Keyword.ENDPOINT_INTERFACE_CLASSNAME;
-import static org.chtijbug.drools.platform.runtime.builder.SourceCodeInjector.Keyword.PORT_TYPE;
+import static org.chtijbug.drools.platform.runtime.builder.ClassSourceCodeInjector.Keyword.ENDPOINT_INTERFACE_CLASSNAME;
+import static org.chtijbug.drools.platform.runtime.builder.ClassSourceCodeInjector.Keyword.PORT_TYPE;
 import static org.springframework.util.ResourceUtils.getFile;
 import static org.springframework.util.StringUtils.capitalize;
 
-public class SourceCodeInjector {
+public class ClassSourceCodeInjector {
     protected static final String EXECUTION_SERVICE_TEMPLATE_RESOURCE = "classpath:file-templates/java-class-template";
     protected static final String METHOD_TEMPLATE_RESOURCE = "classpath:file-templates/method-impl-template";
 
@@ -25,13 +25,13 @@ public class SourceCodeInjector {
     private final File toBeCodeInjected;
     private Map<Keyword, String> keywords;
 
-    protected SourceCodeInjector() {
+    protected ClassSourceCodeInjector() {
         // nop
         this.toBeCodeInjected = null;
     }
 
 
-    public SourceCodeInjector(File toBeCodeInjected, InputStream wsdlContent, String basePackageName) {
+    public ClassSourceCodeInjector(File toBeCodeInjected, InputStream wsdlContent, String basePackageName) {
         try {
             this.toBeCodeInjected = toBeCodeInjected;
             copyFile(

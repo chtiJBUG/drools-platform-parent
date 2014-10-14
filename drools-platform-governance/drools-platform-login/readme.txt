@@ -83,7 +83,7 @@ INSERT INTO guvnorusers_groups values (3,1);
     required debug=true;
     };
 
-    8 – Before runing Tomcat create in %TOMCAT_HOME%/bin a setenv.sh file if you running on linux or setenv.bat on windows with this content (Working on linux)
+6)  – Before runing Tomcat create in %TOMCAT_HOME%/bin a setenv.sh file if you running on linux or setenv.bat on windows with this content (Working on linux)
        export JAVA_OPTS
     put this
     CATALINA_OPTS="-Xms1536m -Xmx6536m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=556m -XX:+DisableExplicitGC -Djava.security.auth.login.config=/home/nheron/workspace-ivy-showroom/apache-tomcat-7.0.53/conf/jaasConfig"

@@ -52,7 +52,7 @@ public class BusinessPackageAuthoringManagerTest {
         InputStream wsdlContent = FileUtils.openInputStream(FileUtils.toFile(wsdlFile));
         InputStream modelContent = FileUtils.openInputStream(FileUtils.toFile(modelFile));
 
-        toTest.generateExecutionService(wsdlContent, modelContent, "com.pymma.drools");
+        toTest.generateExecutionService(wsdlContent, modelContent, "com.pymma.drools", "/home/nheron/workspace-chtiJBUG/apache-maven-3.1.1");
     }
 
 

@@ -20,8 +20,10 @@ public class MavenProject {
     protected final File webappFolder;
     protected final File webinfFolder;
     protected final File wsdlFolder;
+    protected String mavenPath;
 
-    public MavenProject(File projectFolder, String pomFileContent) {
+    public MavenProject(File projectFolder, String pomFileContent, String mavenPath) {
+        this.mavenPath = mavenPath;
         this.srcFolder = addSubFolder(projectFolder, "src/main/java");
         this.resourcesFolder = addSubFolder(projectFolder, "src/main/resources");
         this.wsdlFolder = addSubFolder(resourcesFolder, "wsdl");
@@ -51,7 +53,8 @@ public class MavenProject {
 
     private void launchMavenCommand(String lifeCycle) {
         try {
-            ProcessBuilder builder = new ProcessBuilder("mvn", "-f", this.pomFile.getAbsolutePath(), lifeCycle);
+            String localM2Repo = "-Dmaven.repo.local=" + this.mavenPath + "/m2";
+            ProcessBuilder builder = new ProcessBuilder(this.mavenPath + "/bin/mvn", "-X", "-f", this.pomFile.getAbsolutePath(), lifeCycle, localM2Repo);
             Process process = builder.start();
             BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
@@ -61,7 +64,7 @@ public class MavenProject {
             }
             int exitStatus = process.waitFor();
             if (exitStatus != 0)
-                throw new RuntimeException("Error while running mvn "+lifeCycle+" command");
+                throw new RuntimeException("Error while running mvn " + lifeCycle + " command");
         } catch (IOException | InterruptedException e) {
             logger.error("Error while running mvn clean command");
             throw Throwables.propagate(e);

@@ -21,12 +21,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.chtijbug.drools.platform.runtime.builder.SourceCodeInjector.Keyword.PORT_TYPE;
+import static org.chtijbug.drools.platform.runtime.builder.ClassSourceCodeInjector.Keyword.PORT_TYPE;
 
 @Service
 public class BusinessPackageAuthoringManager {
     private static Logger logger = LoggerFactory.getLogger(BusinessPackageAuthoringManager.class);
-    protected static final String EXECUTION_SERVICE_CLASS_NAME = "ExecutionServiceImpl";
+    protected static final String EXECUTION_SERVICE_CLASS_NAME = "ServiceCalculate";
+    protected static final String EXECUTION_SERVICE_INTERFACE_NAME = "IServiceCalculate";
     protected static final String XPATH_PACKAGE_NAME = "//wsdl:definitions/@name";
     protected static final String XPATH_PROCESSES_NAMES = "//wsdl:portType/wsdl:operation/@name";
     protected static final String XPATH_XSD_NAME = "//wsdl:types/xsd:schema/xsd:import/@schemaLocation";
@@ -82,22 +83,31 @@ public class BusinessPackageAuthoringManager {
         }
     }
 
-    public void generateExecutionService(InputStream wsdlContent, InputStream businessModelAsXsd, String basePackageName) {
+    public void generateExecutionService(InputStream wsdlContent, InputStream businessModelAsXsd, String basePackageName, String mavenPath) {
         logger.debug(">> generateExecutionService(wsdlContent={}, businessModelAsXsd={}, basePackageName={})", wsdlContent, businessModelAsXsd, basePackageName);
         try {
             //___ Create target project folder in maven style
             byte[] wsdlBytes = IOUtils.toByteArray(wsdlContent);
-            MavenProject mavenProject = mavenProjectFactory.createNewWarMavenProject(new ByteArrayInputStream(wsdlBytes), businessModelAsXsd, basePackageName);
+            MavenProject mavenProject = mavenProjectFactory.createNewWarMavenProject(new ByteArrayInputStream(wsdlBytes), businessModelAsXsd, basePackageName, mavenPath);
             //___ Generate all files based on maven-cxf-plugin
             mavenProject.generateSources();
             //___ Create the Impl file according to the Port name from the wsdl
             File executionServiceClassFile = mavenProject.createSourceFile(basePackageName, EXECUTION_SERVICE_CLASS_NAME);
 
-            SourceCodeInjector sourceCodeInjector = new SourceCodeInjector(executionServiceClassFile, new ByteArrayInputStream(wsdlBytes), basePackageName);
+            ClassSourceCodeInjector classSourceCodeInjector = new ClassSourceCodeInjector(executionServiceClassFile, new ByteArrayInputStream(wsdlBytes), basePackageName);
 
-            File interfaceFile = mavenProject.getSourceFile(StringUtils.capitalize(sourceCodeInjector.getKeywordValue(PORT_TYPE)).concat(".java"));
-            List<ProcessStructure> processStructures = extractMethodStructures(interfaceFile);
-            sourceCodeInjector.customize(processStructures);
+            File classFile = mavenProject.getSourceFile(StringUtils.capitalize(classSourceCodeInjector.getKeywordValue(PORT_TYPE)).concat(".java"));
+            List<ProcessStructure> processStructures = extractMethodStructures(classFile);
+            classSourceCodeInjector.customize(processStructures);
+
+
+            File executionServiceInterfaceFile = mavenProject.createSourceFile(basePackageName, EXECUTION_SERVICE_INTERFACE_NAME);
+
+            InterfaceSourceCodeInjector interfaceSourceCodeInjector = new InterfaceSourceCodeInjector(executionServiceInterfaceFile, new ByteArrayInputStream(wsdlBytes), basePackageName);
+            File interfaceFile = mavenProject.getSourceFile(StringUtils.capitalize(interfaceSourceCodeInjector.getKeywordValue(InterfaceSourceCodeInjector.Keyword2.PORT_TYPE)).concat(".java"));
+            List<ProcessStructure> processStructures2 = extractMethodStructures(interfaceFile);
+            interfaceSourceCodeInjector.customize(processStructures2);
+
 
             //___ Package all these into a war file...
             InputStream warFileInputStream = mavenProject.buildUpPackage();
@@ -127,7 +137,7 @@ public class BusinessPackageAuthoringManager {
                 method = method.replaceAll("\n", "");
                 method = method.replaceAll("   ", "");
                 String[] methodSignatureItems = method.split(" ");
-                if (methodSignatureItems.length ==0 || methodSignatureItems.length > 4)
+                if (methodSignatureItems.length == 0 || methodSignatureItems.length > 4)
                     throw new RuntimeException("The current version of the Execution Service Generator only supports 1 parameter per method");
                 String ouputClass = methodSignatureItems[0];
                 String methodName = methodSignatureItems[1];

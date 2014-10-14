@@ -25,16 +25,16 @@ import java.util.List;
 import static org.apache.commons.io.FileUtils.openInputStream;
 import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.chtijbug.drools.platform.runtime.builder.SourceCodeInjector.Keyword;
+import static org.chtijbug.drools.platform.runtime.builder.ClassSourceCodeInjector.Keyword;
 import static org.springframework.util.ResourceUtils.getFile;
 
-public class SourceCodeInjectorTest {
+public class ClassSourceCodeInjectorTest {
 
     @Test
     public void should_get_6_keywords_fully_extracted() throws Exception {
 
         InputStream wsdlContent = openInputStream(getFile("classpath:newWSDL1.wsdl"));
-        SourceCodeInjector sci = new SourceCodeInjector();
+        ClassSourceCodeInjector sci = new ClassSourceCodeInjector();
         sci.extractAllKeywords(wsdlContent, "com.pymma.drools");
         assertThat(sci.getKeywords()).hasSize(6);
 
@@ -50,14 +50,14 @@ public class SourceCodeInjectorTest {
     @Test
     public void should_get_Impl_class_customized() throws Exception {
 
-       String expectedContent = readFileToString(getFile("classpath:expected-generated-class"));
+        String expectedContent = readFileToString(getFile("classpath:expected-generated-class"));
         InputStream wsdlContent = openInputStream(getFile("classpath:newWSDL1.wsdl"));
 
         File tmpFile = File.createTempFile("Service.java", "");
-        SourceCodeInjector sourceCodeInjector = new SourceCodeInjector(tmpFile,wsdlContent, "com.pymma.drools.runtime");
+        ClassSourceCodeInjector classSourceCodeInjector = new ClassSourceCodeInjector(tmpFile, wsdlContent, "com.pymma.drools.runtime");
 
         List<ProcessStructure> processes = Arrays.asList(new ProcessStructure("mainProcess", "Input", "Output"));
-        sourceCodeInjector.customize(processes);
+        classSourceCodeInjector.customize(processes);
 
         String toBeTest = readFileToString(tmpFile);
 
