@@ -54,7 +54,12 @@ public class MavenProject {
     private void launchMavenCommand(String lifeCycle) {
         try {
             String localM2Repo = "-Dmaven.repo.local=" + this.mavenPath + "/m2";
-            ProcessBuilder builder = new ProcessBuilder(this.mavenPath + "/bin/mvn", "-X", "-f", this.pomFile.getAbsolutePath(), lifeCycle, localM2Repo);
+            String mvnCommand = "mvn";
+            if (this.mavenPath != null && this.mavenPath.length() > 0) {
+                mvnCommand = this.mavenPath + "/bin/mvn";
+            }
+            ProcessBuilder builder = new ProcessBuilder(mvnCommand, "-X", "-f", this.pomFile.getAbsolutePath(), lifeCycle, localM2Repo);
+
             Process process = builder.start();
             BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
 

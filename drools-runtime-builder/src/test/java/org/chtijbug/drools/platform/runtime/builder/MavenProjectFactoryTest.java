@@ -16,6 +16,7 @@
 
 package org.chtijbug.drools.platform.runtime.builder;
 
+import org.chtijbug.drools.platform.runtime.builder.internals.GuvnorRepositoryImpl;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,7 +48,7 @@ public class MavenProjectFactoryTest {
         originalPomFileContent = originalPomFileContent.replaceAll("#basePackageName#", BASE_PACKAGE_NAME);
 
         //____ Test project structures and folders
-        MavenProject mavenProject = mavenProjectFactory.createEmptyMavenProject(BASE_PACKAGE_NAME);
+        MavenProject mavenProject = mavenProjectFactory.createEmptyMavenProject(BASE_PACKAGE_NAME, "");
         assertThat(mavenProject).isNotNull();
         assertThat(mavenProject.srcFolder).exists();
         assertThat(mavenProject.resourcesFolder).exists();
@@ -63,7 +64,7 @@ public class MavenProjectFactoryTest {
 
     @Test
     public void should_get_all_webservice_artifacts_copied() throws Exception {
-        MavenProject mavenProject = mavenProjectFactory.createEmptyMavenProject(BASE_PACKAGE_NAME);
+        MavenProject mavenProject = mavenProjectFactory.createEmptyMavenProject(BASE_PACKAGE_NAME, "");
         assertThat(mavenProject).isNotNull();
 
         File originalWsdl = getFile("classpath:newWSDL1.wsdl");
@@ -96,7 +97,7 @@ public class MavenProjectFactoryTest {
 
     @Test
     public void should_get_all_spring_resources_copied() throws Exception {
-        MavenProject mavenProject = mavenProjectFactory.createEmptyMavenProject(BASE_PACKAGE_NAME);
+        MavenProject mavenProject = mavenProjectFactory.createEmptyMavenProject(BASE_PACKAGE_NAME, "");
         assertThat(mavenProject).isNotNull();
 
         File originalBeansFile = getFile("classpath:file-templates/chtijbug-spring.xml");
@@ -107,7 +108,10 @@ public class MavenProjectFactoryTest {
         String originalServletContent = readFileToString(originalServletFile);
         originalServletContent = originalServletContent.replaceAll("#targetNamespace#", "http://pymma.com/drools");
         originalServletContent = originalServletContent.replaceAll("#wsdlServiceName#", "testExecutionService");
-        mavenProjectFactory.addSpringResources(mavenProject, "com.pymma.drools", "http://pymma.com/drools", "testExecutionService");
+
+        GuvnorRepositoryImpl guvnorRepository = new GuvnorRepositoryImpl("loyalty", "latest", "admin", "admin", "500");
+
+        mavenProjectFactory.addSpringResources(mavenProject, guvnorRepository, "http://pymma.com/drools", "testExecutionService");
 
         assertThat(mavenProject.resourcesFolder).isDirectory();
         File beansFile = new File(mavenProject.resourcesFolder, "spring/chtijbug-spring.xml");
@@ -125,7 +129,8 @@ public class MavenProjectFactoryTest {
     public void should_get_full_maven_project_generated() throws IOException {
         File originalWsdl = getFile("classpath:newWSDL1.wsdl");
         File originalXsd = getFile("classpath:model.xsd");
-        MavenProject mavenProject = mavenProjectFactory.createNewWarMavenProject(openInputStream(originalWsdl), openInputStream(originalXsd), "com.pymma.drools");
+        GuvnorRepositoryImpl guvnorRepository = new GuvnorRepositoryImpl("loyalty", "latest", "admin", "admin", "500");
+        MavenProject mavenProject = mavenProjectFactory.createNewWarMavenProject(openInputStream(originalWsdl), openInputStream(originalXsd), guvnorRepository, "com.pymma.drools");
         assertThat(mavenProject).isNotNull();
 
         mavenProject.generateSources();

@@ -29,7 +29,7 @@ public class GuvnorRepositoryImplTestCase {
     @Test
     @Ignore
     public void testCreatePackage() throws IOException {
-        GuvnorRepositoryImpl toTest = new GuvnorRepositoryImpl("http://localhost:8080", "/drools-guvnor", "tomcat", "tomcat");
+        GuvnorRepositoryImpl toTest = new GuvnorRepositoryImpl("loyalty", "latest", "tomcat", "tomcat", "255");
 
         toTest.createBusinessPackage("pymma");
 
@@ -40,7 +40,7 @@ public class GuvnorRepositoryImplTestCase {
     public void testCreateModel() throws IOException {
         InputStream inputStream = Class.class.getResource("/model.jar").openStream();
 
-        GuvnorRepositoryImpl toTest = new GuvnorRepositoryImpl("http://localhost:8080", "/drools-guvnor", "tomcat", "tomcat");
+        GuvnorRepositoryImpl toTest = new GuvnorRepositoryImpl("loyalty", "latest", "tomcat", "tomcat", "255");
 
         toTest.createBusinessModel("pymma", inputStream);
     }
@@ -48,7 +48,7 @@ public class GuvnorRepositoryImplTestCase {
     @Test
     @Ignore
     public void testCreateProcess() throws IOException {
-        GuvnorRepositoryImpl toTest = new GuvnorRepositoryImpl("http://localhost:8080", "/drools-guvnor", "tomcat", "tomcat");
+        GuvnorRepositoryImpl toTest = new GuvnorRepositoryImpl("loyalty", "latest", "tomcat", "tomcat", "255");
 
         toTest.createBusinessProcess("pymma", "new-process");
 
