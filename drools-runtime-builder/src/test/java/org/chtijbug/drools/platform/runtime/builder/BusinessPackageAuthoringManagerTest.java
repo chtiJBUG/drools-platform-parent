@@ -44,7 +44,7 @@ public class BusinessPackageAuthoringManagerTest {
     @Ignore
     public void should_get_webservice_project_folder_generated() throws Exception {
         GuvnorRepositoryImpl guvnorRepository = new GuvnorRepositoryImpl("com.pymma.drools", "LATEST", "admin", "admin", "500");
-        BusinessPackageAuthoringManager toTest = new BusinessPackageAuthoringManager(guvnorRepository, null, new MavenProjectFactory(), "/home/nheron/workspace-chtiJBUG/apache-maven-3.1.1");
+        BusinessPackageAuthoringManager toTest = new BusinessPackageAuthoringManager(guvnorRepository, null, new MavenProjectFactory(), "/home/nheron/workspace-chtiJBUG/apache-maven-3.1.1", "/home/nheron/workspace-chtiJBUG/baseTestDirectory");
 
 
         URL wsdlFile = this.getClass().getResource("/newWSDL1.wsdl");

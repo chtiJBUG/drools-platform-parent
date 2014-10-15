@@ -48,7 +48,7 @@ public class MavenProjectFactoryTest {
         originalPomFileContent = originalPomFileContent.replaceAll("#basePackageName#", BASE_PACKAGE_NAME);
 
         //____ Test project structures and folders
-        MavenProject mavenProject = mavenProjectFactory.createEmptyMavenProject(BASE_PACKAGE_NAME, "");
+        MavenProject mavenProject = mavenProjectFactory.createEmptyMavenProject(BASE_PACKAGE_NAME, "", "");
         assertThat(mavenProject).isNotNull();
         assertThat(mavenProject.srcFolder).exists();
         assertThat(mavenProject.resourcesFolder).exists();
@@ -64,7 +64,7 @@ public class MavenProjectFactoryTest {
 
     @Test
     public void should_get_all_webservice_artifacts_copied() throws Exception {
-        MavenProject mavenProject = mavenProjectFactory.createEmptyMavenProject(BASE_PACKAGE_NAME, "");
+        MavenProject mavenProject = mavenProjectFactory.createEmptyMavenProject(BASE_PACKAGE_NAME, "", "");
         assertThat(mavenProject).isNotNull();
 
         File originalWsdl = getFile("classpath:newWSDL1.wsdl");
@@ -97,7 +97,7 @@ public class MavenProjectFactoryTest {
 
     @Test
     public void should_get_all_spring_resources_copied() throws Exception {
-        MavenProject mavenProject = mavenProjectFactory.createEmptyMavenProject(BASE_PACKAGE_NAME, "");
+        MavenProject mavenProject = mavenProjectFactory.createEmptyMavenProject(BASE_PACKAGE_NAME, "", "");
         assertThat(mavenProject).isNotNull();
 
         File originalBeansFile = getFile("classpath:file-templates/chtijbug-spring.xml");
@@ -130,7 +130,7 @@ public class MavenProjectFactoryTest {
         File originalWsdl = getFile("classpath:newWSDL1.wsdl");
         File originalXsd = getFile("classpath:model.xsd");
         GuvnorRepositoryImpl guvnorRepository = new GuvnorRepositoryImpl("loyalty", "latest", "admin", "admin", "500");
-        MavenProject mavenProject = mavenProjectFactory.createNewWarMavenProject(openInputStream(originalWsdl), openInputStream(originalXsd), guvnorRepository, "com.pymma.drools");
+        MavenProject mavenProject = mavenProjectFactory.createNewWarMavenProject(openInputStream(originalWsdl), openInputStream(originalXsd), guvnorRepository, "", "");
         assertThat(mavenProject).isNotNull();
 
         mavenProject.generateSources();

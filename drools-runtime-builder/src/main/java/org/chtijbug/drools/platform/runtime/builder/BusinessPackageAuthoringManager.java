@@ -47,16 +47,18 @@ public class BusinessPackageAuthoringManager {
     private MavenProjectFactory mavenProjectFactory;
 
     private String mavenPath;
+    private String baseGeneratedPath;
 
     public BusinessPackageAuthoringManager(GuvnorRepositoryImpl guvnorRepository) {
         this.guvnorRepository = guvnorRepository;
     }
 
-    public BusinessPackageAuthoringManager(GuvnorRepositoryImpl guvnorRepository, Xsd2JarTransformer xsd2JarTransformer, MavenProjectFactory mavenProjectFactory, String mavenPath) {
+    public BusinessPackageAuthoringManager(GuvnorRepositoryImpl guvnorRepository, Xsd2JarTransformer xsd2JarTransformer, MavenProjectFactory mavenProjectFactory, String mavenPath, String baseGeneratedPath) {
         this(guvnorRepository);
         this.modelTransformer = xsd2JarTransformer;
         this.mavenProjectFactory = mavenProjectFactory;
         this.mavenPath = mavenPath;
+        this.baseGeneratedPath = baseGeneratedPath;
     }
 
     /** */
@@ -92,7 +94,7 @@ public class BusinessPackageAuthoringManager {
         try {
             //___ Create target project folder in maven style
             byte[] wsdlBytes = IOUtils.toByteArray(wsdlContent);
-            MavenProject mavenProject = mavenProjectFactory.createNewWarMavenProject(new ByteArrayInputStream(wsdlBytes), businessModelAsXsd, guvnorRepository, mavenPath);
+            MavenProject mavenProject = mavenProjectFactory.createNewWarMavenProject(new ByteArrayInputStream(wsdlBytes), businessModelAsXsd, guvnorRepository, mavenPath, baseGeneratedPath);
             //___ Generate all files based on maven-cxf-plugin
             mavenProject.generateSources();
             //___ Create the Impl file according to the Port name from the wsdl

@@ -21,9 +21,11 @@ public class MavenProject {
     protected final File webinfFolder;
     protected final File wsdlFolder;
     protected String mavenPath;
+    protected String baseGeneratedPath;
 
-    public MavenProject(File projectFolder, String pomFileContent, String mavenPath) {
+    public MavenProject(File projectFolder, String pomFileContent, String mavenPath, String baseGeneratedPath) {
         this.mavenPath = mavenPath;
+        this.baseGeneratedPath = baseGeneratedPath;
         this.srcFolder = addSubFolder(projectFolder, "src/main/java");
         this.resourcesFolder = addSubFolder(projectFolder, "src/main/resources");
         this.wsdlFolder = addSubFolder(resourcesFolder, "wsdl");

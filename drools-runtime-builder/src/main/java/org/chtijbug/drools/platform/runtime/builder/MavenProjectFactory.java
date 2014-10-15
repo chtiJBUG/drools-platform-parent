@@ -22,11 +22,11 @@ import static org.springframework.util.ResourceUtils.getFile;
 public class MavenProjectFactory {
     private static Logger logger = LoggerFactory.getLogger(MavenProjectFactory.class);
 
-    public MavenProject createNewWarMavenProject(InputStream wsdlContent, InputStream businessModelAsXsd, GuvnorRepositoryImpl guvnorRepository, String mavenPath) {
+    public MavenProject createNewWarMavenProject(InputStream wsdlContent, InputStream businessModelAsXsd, GuvnorRepositoryImpl guvnorRepository, String mavenPath, String baseGeneratedPath) {
         logger.debug(">> createNewWarMavenProject(wsdlContent={}, businessModelAsXsd={})", wsdlContent, businessModelAsXsd);
         try {
             byte[] wsdlContentAsBytes = IOUtils.toByteArray(wsdlContent);
-            MavenProject mavenProject = createEmptyMavenProject(guvnorRepository.getPackageName(), mavenPath);
+            MavenProject mavenProject = createEmptyMavenProject(guvnorRepository.getPackageName(), mavenPath, baseGeneratedPath);
             //___ Copy file into src/main/resources
             addWebServicesResources(mavenProject, new ByteArrayInputStream(wsdlContentAsBytes), businessModelAsXsd);
             //____ Copy chtijbug-spring.xml file
@@ -85,11 +85,17 @@ public class MavenProjectFactory {
              */
             File springWebInfFile3 = getFile("classpath:file-templates/platform-knowledge.properties");
             String springWebInfContent3 = readFileToString(springWebInfFile3);
+            springWebInfContent3 = springWebInfContent3.replaceAll("#baseUrl#", guvnorRepository.getBaseUrl());
+
             springWebInfContent3 = springWebInfContent3.replaceAll("#packageName#", guvnorRepository.getPackageName());
             springWebInfContent3 = springWebInfContent3.replaceAll("#packageVersion#", guvnorRepository.getPackageVersion());
             springWebInfContent3 = springWebInfContent3.replaceAll("#packageUserName#", guvnorRepository.getPackageUsername());
-            springWebInfContent3 = springWebInfContent3.replaceAll("#packagePassword##", guvnorRepository.getPackagePassword());
+            springWebInfContent3 = springWebInfContent3.replaceAll("#packagePassword#", guvnorRepository.getPackagePassword());
             springWebInfContent3 = springWebInfContent3.replaceAll("#wsport#", guvnorRepository.getWsPort().toString());
+            springWebInfContent3 = springWebInfContent3.replaceAll("#wsHost#", guvnorRepository.getWsHost());
+            springWebInfContent3 = springWebInfContent3.replaceAll("#jmsServer#", guvnorRepository.getJmsServer());
+            springWebInfContent3 = springWebInfContent3.replaceAll("#jmsPort#", guvnorRepository.getJmsPort().toString());
+
             springWebInfContent3 = springWebInfContent3.replaceAll("#rulebaseid#", guvnorRepository.getRuleBaseid());
             springWebInfContent3 = springWebInfContent3.replaceAll("#platformServer#", guvnorRepository.getPlatformServer());
             File springWebInfFolder3 = new File(mavenProject.resourcesFolder, "spring");
@@ -116,16 +122,22 @@ public class MavenProjectFactory {
         }
     }
 
-    protected MavenProject createEmptyMavenProject(String basePackageName, String mavenPath) {
+    protected MavenProject createEmptyMavenProject(String basePackageName, String mavenPath, String baseGeneratedPath) {
         try {
-            File projectFolder = File.createTempFile("tmp-dir", "");
+
+            File projectFolder = null;
+            if (baseGeneratedPath != null && baseGeneratedPath.length() > 0) {
+                projectFolder = new File(baseGeneratedPath + "/" + basePackageName);
+            } else {
+                projectFolder = File.createTempFile("tmp-dir", "");
+            }
             if (projectFolder.delete() && !projectFolder.mkdir())
                 throw new RuntimeException("Unable to create temporary directory. Execution will stop");
             //_____ Create standard maven structure for web application
             File pomFile = getFile("classpath:file-templates/pom.xml");
             String pomFileContent = readFileToString(pomFile);
             pomFileContent = pomFileContent.replaceAll("#basePackageName#", basePackageName);
-            return new MavenProject(projectFolder, pomFileContent, mavenPath);
+            return new MavenProject(projectFolder, pomFileContent, mavenPath, baseGeneratedPath);
         } catch (IOException e) {
             throw Throwables.propagate(e);
         }
