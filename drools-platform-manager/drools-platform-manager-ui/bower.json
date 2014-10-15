@@ -16,7 +16,7 @@
     "font-awesome": "4.1.0",
     "underscore": "1.6.0",
       "angular-growl-notifications": "0.7.0",
-      "AngularStomp": "56e650adc9",
+      "AngularStomp": "latest",
       "stomp-websocket": "2.3.3",
       "angular-highlightjs": "0.3.0",
       "sockjs": "0.3.4",
