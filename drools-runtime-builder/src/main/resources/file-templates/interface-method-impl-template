@@ -1,2 +1,2 @@
-    @WebMethod(operationName = "#methodName")
+    @WebMethod(operationName = "#methodName#")
     public #outputClass# #methodName#(#inputClass# input) ;

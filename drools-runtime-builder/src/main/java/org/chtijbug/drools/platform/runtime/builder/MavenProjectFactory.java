@@ -63,7 +63,7 @@ public class MavenProjectFactory {
              */
             File springWebInfFile = getFile("classpath:file-templates/soap-servlet.xml");
             String springWebInfContent = readFileToString(springWebInfFile);
-            //springWebInfContent = springWebInfContent.replaceAll("#targetNamespace#", targetNamespace);
+            springWebInfContent = springWebInfContent.replaceAll("#basePackageName#", guvnorRepository.getPackageName());
             //springWebInfContent = springWebInfContent.replaceAll("#wsdlServiceName#", executionService);
             File springWebInfFolder = new File(mavenProject.webinfFolder, "");
             if (!springWebInfFolder.exists() && !springWebInfFolder.mkdir())
@@ -102,6 +102,18 @@ public class MavenProjectFactory {
             if (!springWebInfFolder3.exists() && !springWebInfFolder3.mkdir())
                 throw new RuntimeException("Unable to create spring resources directory. Execution will stop");
             mavenProject.addSpringConfigurationFile(springWebInfFolder3, "platform-knowledge.properties", springWebInfContent3);
+
+            /**
+             * src/main/resources/
+             */
+            File springBeansConfFile4 = getFile("classpath:file-templates/log4j.properties");
+            String springBeansConfContent4 = readFileToString(springBeansConfFile4);
+            // springBeansConfContent = springBeansConfContent.replaceAll("#basePackageName#", basePackageName);
+            File springResourcesFolder4 = new File(mavenProject.resourcesFolder, "");
+            if (!springResourcesFolder4.exists() && !springResourcesFolder4.mkdir())
+                throw new RuntimeException("Unable to create spring resources directory. Execution will stop");
+            mavenProject.addSpringConfigurationFile(springResourcesFolder4, "log4j.properties", springBeansConfContent4);
+
 
         } catch (IOException e) {
             throw Throwables.propagate(e);
