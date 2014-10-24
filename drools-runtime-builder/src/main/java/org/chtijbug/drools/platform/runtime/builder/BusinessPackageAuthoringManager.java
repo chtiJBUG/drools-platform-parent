@@ -62,20 +62,20 @@ public class BusinessPackageAuthoringManager {
     }
 
     /** */
-    public void createBusinessPackage(InputStream wsdlContent, InputStream businessModelAsXsd, String sourcePackageName) {
+    public void createBusinessPackage(InputStream wsdlContent, InputStream businessModelAsXsd) {
         logger.debug(">> createBusinessPackage(wsdlContent={}, businessModelAsXsd)", wsdlContent, businessModelAsXsd);
         try {
             XpathQueryRunner xpathQueryRunner = new XpathQueryRunner(wsdlContent);
             String packageName = xpathQueryRunner.executeXpath(XPATH_PACKAGE_NAME);
             List<String> allProcessesName = xpathQueryRunner.executeXpathAsList(XPATH_PROCESSES_NAMES);
-            this.guvnorRepository.createBusinessPackage(packageName);
+            this.guvnorRepository.createBusinessPackage(guvnorRepository.getPackageName());
             File modelFile = File.createTempFile("model", ".xsd");
 
             FileUtils.writeLines(modelFile, IOUtils.readLines(businessModelAsXsd));
-            InputStream modelInputStream = modelTransformer.transformXsd2Jar(sourcePackageName, modelFile);
-            this.guvnorRepository.createBusinessModel(packageName, modelInputStream);
+            InputStream modelInputStream = modelTransformer.transformXsd2Jar(guvnorRepository.getPackageName(), modelFile);
+            this.guvnorRepository.createBusinessModel(guvnorRepository.getPackageName(), modelInputStream);
             for (String processName : allProcessesName) {
-                this.guvnorRepository.createBusinessProcess(packageName, processName);
+                this.guvnorRepository.createBusinessProcess(guvnorRepository.getPackageName(), processName);
             }
             // Everything should be created on guvnor
         } catch (XPathExpressionException e) {
