@@ -18,6 +18,7 @@ package org.chtijbug.drools.platform.runtime.builder;
 import org.apache.commons.io.FileUtils;
 import org.chtijbug.drools.platform.runtime.builder.internals.GuvnorRepositoryImpl;
 import org.chtijbug.drools.platform.runtime.utils.Xsd2JarTransformer;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -26,7 +27,7 @@ import java.net.URL;
 public class BusinessPackageAuthoringManagerTest {
 
     @Test
-    // @Ignore
+    @Ignore
     public void should_get_everything_generated_on_guvnor() throws Exception {
         GuvnorRepositoryImpl guvnorRepository = new GuvnorRepositoryImpl("com.pymma.drools", "LATEST", "admin", "admin", "598");
         Xsd2JarTransformer xsd2JarTransformer = new Xsd2JarTransformer();
@@ -41,7 +42,7 @@ public class BusinessPackageAuthoringManagerTest {
     }
 
     @Test
-    //@Ignore
+    @Ignore
     public void should_get_webservice_project_folder_generated() throws Exception {
         GuvnorRepositoryImpl guvnorRepository = new GuvnorRepositoryImpl("com.pymma.drools", "LATEST", "admin", "admin", "598");
         Xsd2JarTransformer xsd2JarTransformer = new Xsd2JarTransformer();
