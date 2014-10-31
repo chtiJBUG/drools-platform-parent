@@ -88,8 +88,10 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
                     jmsConnected = true;
                     jmsConnectedSemaphore.release();
                 } catch (JMSException e) {
+                    LOG.error("ServletJmsStorageHistoryListener.initJmsConnection.JMSException", e);
                     throw e;
                 } catch (InterruptedException e) {
+                    LOG.error("ServletJmsStorageHistoryListener.initJmsConnection.InterruptedException", e);
                     throw e;
                 }
 
@@ -113,7 +115,10 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
              * If no connection is possible, cache the history Event
              */
             cachedHistoryEvents.add(historyEvent);
+
+            LOG.debug("Storing to cache event" + historyEvent.toString());
             jmsConnectedSemaphore.release();
+
         } else {
             try {
                 /**
@@ -122,12 +127,16 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
                 for (HistoryEvent cachedhistoryEvent : cachedHistoryEvents) {
                     ObjectMessage cachedmsg = session.createObjectMessage(cachedhistoryEvent);
                     producer.send(cachedmsg);
+                    LOG.debug("Sending Cached Event" + cachedhistoryEvent.toString());
                 }
                 cachedHistoryEvents.clear();
                 ObjectMessage msg = session.createObjectMessage(historyEvent);
                 producer.send(msg);
+                LOG.debug("Sending JMS Event" + historyEvent.toString());
             } catch (JMSException e) {
                 DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("JMSHistoryEvent", "FireEvent", e);
+
+                LOG.error("ServletJmsStorageHistoryListener.fireEvent.JMSException", e);
                 throw droolsChtijbugException;
             } finally {
                 jmsConnectedSemaphore.release();
@@ -163,10 +172,12 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
     }
 
     public void initJMSConnection() throws DroolsChtijbugException {
+        LOG.debug("<<ServletJmsStorageHistoryListener");
         this.ruleBaseID = this.platformKnowledgeBaseJavaEE.getRuleBaseID();
         this.platformServer = this.platformKnowledgeBaseJavaEE.getPlatformServer();
         this.platformKnowledgeBaseJavaEE.setServletJmsStorageHistoryListener(this);
         this.initJmsConnection();
         this.platformKnowledgeBaseJavaEE.startConnectionToPlatform();
+        LOG.debug(">>ServletJmsStorageHistoryListener");
     }
 }
