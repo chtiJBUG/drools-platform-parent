@@ -46,9 +46,6 @@ public class PlatformRuntimeInstanceRepositoryCacheService {
         return platformRuntimeInstanceRepository.findByRuleBaseIDAndStartDateAndEndDateNull(ruleBaseId, startDate);
     }
 
-    public List<PlatformRuntimeInstance> findByHostnameAndEndDateNull(String hostname) {
-        return platformRuntimeInstanceRepository.findByHostnameAndEndDateNull(hostname);
-    }
 
     public List<PlatformRuntimeInstance> findByPackageNameActiveRuntime(String packageName) {
         return platformRuntimeInstanceRepository.findByPackageNameActiveRuntime(packageName);

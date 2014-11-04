@@ -67,7 +67,10 @@ public class RuntimeResource {
                     @Nullable
                     @Override
                     public RuntimeInstance apply(@Nullable PlatformRuntimeInstance platformRuntimeInstance) {
-                        String url = "http://" + platformRuntimeInstance.getHostname() + ":" + platformRuntimeInstance.getPort() + platformRuntimeInstance.getEndPoint();
+                        String hostname = platformRuntimeInstance.getPlatformRuntimeDefinition().getDeploymentHost().getHostname();
+                        Integer portNumber = platformRuntimeInstance.getPlatformRuntimeDefinition().getWebsocketPort();
+                        String endPointName = platformRuntimeInstance.getPlatformRuntimeDefinition().getWebsocketEndpoint();
+                        String url = "http://" + hostname + ":" + portNumber + endPointName;
                         String rulePackage = null;
                         String version = null;
                         PlatformRuntimeDefinition platformRuntimeDefinition = platformRuntimeInstance.getPlatformRuntimeDefinition();
@@ -204,10 +207,13 @@ public class RuntimeResource {
                         output.setVersion(guvnorResource.getGuvnor_packageVersion());
 
                     }
+                    String hostname = runtimeInstance.getPlatformRuntimeDefinition().getDeploymentHost().getHostname();
+                    Integer portNumber = runtimeInstance.getPlatformRuntimeDefinition().getWebsocketPort();
+                    String endPointName = runtimeInstance.getPlatformRuntimeDefinition().getWebsocketEndpoint();
 
                     //___ Différence entre runtimeURL et hostname par rapport aux filtres ?
-                    output.setRuntimeURL(runtimeInstance.getHostname() + ":" + runtimeInstance.getPort() + runtimeInstance.getEndPoint());
-                    output.setHostname(runtimeInstance.getHostname() + ":" + runtimeInstance.getPort() + runtimeInstance.getEndPoint());
+                    output.setRuntimeURL(hostname + ":" + portNumber + endPointName);
+                    output.setHostname(hostname + ":" + portNumber + endPointName);
 
                     output.setStatus(runtimeInstance.getStatus().toString());
                     //output.setStatus(sessionExecution.getSessionExecutionStatus().toString());

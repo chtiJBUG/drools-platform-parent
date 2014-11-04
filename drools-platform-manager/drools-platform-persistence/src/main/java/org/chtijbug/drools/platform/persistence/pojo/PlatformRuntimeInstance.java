@@ -33,9 +33,6 @@ public class PlatformRuntimeInstance implements Serializable {
     @SequenceGenerator(name = "platform_runtime_instance_id_seq", sequenceName = "platform_runtime_instance_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "platform_runtime_instance_id_seq")
     private Long id;
-    private String hostname;
-    private Integer port;
-    private String endPoint = "/runtime";
     @Column(nullable = false)
     private Date startDate;
     private Date endDate;
@@ -60,10 +57,6 @@ public class PlatformRuntimeInstance implements Serializable {
     public PlatformRuntimeInstance() {
     }
 
-    public PlatformRuntimeInstance(String hostname, int port) {
-        this.hostname = hostname;
-        this.port = port;
-    }
 
     public Long getId() {
         return id;
@@ -73,29 +66,6 @@ public class PlatformRuntimeInstance implements Serializable {
         this.id = id;
     }
 
-    public String getHostname() {
-        return hostname;
-    }
-
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
-    }
-
-    public Integer getPort() {
-        return port;
-    }
-
-    public void setPort(Integer port) {
-        this.port = port;
-    }
-
-    public String getEndPoint() {
-        return endPoint;
-    }
-
-    public void setEndPoint(String endPoint) {
-        this.endPoint = endPoint;
-    }
 
     public Date getStartDate() {
         return startDate;
@@ -185,31 +155,17 @@ public class PlatformRuntimeInstance implements Serializable {
         PlatformRuntimeInstance that = (PlatformRuntimeInstance) o;
 
         if (!startEventID.equals(that.startEventID)) return false;
-        if (!hostname.equals(that.hostname)) return false;
-        if (!port.equals(that.port)) return false;
         if (!ruleBaseID.equals(that.ruleBaseID)) return false;
         if (!startDate.equals(that.startDate)) return false;
 
         return true;
     }
 
-    @Override
-    public int hashCode() {
-        int result = hostname.hashCode();
-        result = 31 * result + port.hashCode();
-        result = 31 * result + startDate.hashCode();
-        result = 31 * result + startEventID.hashCode();
-        result = 31 * result + ruleBaseID.hashCode();
-        return result;
-    }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this).
                 append("id", id).
-                append("hostname", hostname).
-                append("port", port).
-                append("endPoint", endPoint).
                 append("startDate", startDate).
                 append("endDate", endDate).
                 append("status", status).

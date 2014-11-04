@@ -86,13 +86,17 @@ public class WebSocketClient
         while (retryNumber < this.numberRetries && connected == false) {
             try {
                 ClientManager client = ClientManager.createClient();
+                String hostname = platformRuntimeInstance.getPlatformRuntimeDefinition().getDeploymentHost().getHostname();
+                Integer portNumber = platformRuntimeInstance.getPlatformRuntimeDefinition().getWebsocketPort();
+                String endPointName = platformRuntimeInstance.getPlatformRuntimeDefinition().getWebsocketEndpoint();
                 this.session = client.connectToServer(
                         this,
                         ClientEndpointConfig.Builder.create()
                                 .encoders(Arrays.<Class<? extends Encoder>>asList(PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class))
                                 .decoders(Arrays.<Class<? extends Decoder>>asList(PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class))
                                 .build(),
-                        URI.create("ws://" + platformRuntimeInstance.getHostname() + ":" + platformRuntimeInstance.getPort() + platformRuntimeInstance.getEndPoint())
+
+                        URI.create("ws://" + hostname + ":" + portNumber + endPointName)
                 );
                 connected = true;
                 LOG.info("Successfully Connected to " + platformRuntimeInstance.toString());

@@ -41,6 +41,19 @@ public class PlatformRuntimeDefinition implements Serializable {
 
     private String couldInstanceStartWithNewRuleVersion;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "deploymenthost_id_fk", referencedColumnName = "id")
+    private DeploymentHost deploymentHost;
+
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "platformserver_id_fk", referencedColumnName = "id")
+    private PlatformServer platformServer;
+
+    private String websocketEndpoint;
+
+    private Integer websocketPort;
+
     public PlatformRuntimeDefinition() {
     }
 
@@ -85,4 +98,38 @@ public class PlatformRuntimeDefinition implements Serializable {
     public void setCouldInstanceStartWithNewRuleVersion(String couldInstanceStartWithNewRuleVersion) {
         this.couldInstanceStartWithNewRuleVersion = couldInstanceStartWithNewRuleVersion;
     }
+
+    public String getWebsocketEndpoint() {
+        return websocketEndpoint;
+    }
+
+    public void setWebsocketEndpoint(String websocketEndpoint) {
+        this.websocketEndpoint = websocketEndpoint;
+    }
+
+    public Integer getWebsocketPort() {
+        return websocketPort;
+    }
+
+    public void setWebsocketPort(Integer websocketPort) {
+        this.websocketPort = websocketPort;
+    }
+
+    public DeploymentHost getDeploymentHost() {
+        return deploymentHost;
+    }
+
+    public void setDeploymentHost(DeploymentHost deploymentHost) {
+        this.deploymentHost = deploymentHost;
+    }
+
+    public PlatformServer getPlatformServer() {
+        return platformServer;
+    }
+
+    public void setPlatformServer(PlatformServer platformServer) {
+        this.platformServer = platformServer;
+    }
+
+
 }

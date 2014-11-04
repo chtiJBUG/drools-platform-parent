@@ -39,7 +39,6 @@ public interface PlatformRuntimeInstanceRepository extends JpaRepository<Platfor
 
     PlatformRuntimeInstance findByRuleBaseIDAndStartDateAndEndDateNull(Integer ruleBaseId, Date startDate);
 
-    public List<PlatformRuntimeInstance> findByHostnameAndEndDateNull(String hostname);
 
     @Query(value = "select pri " +
             "from PlatformRuntimeInstance pri,PlatformRuntimeDefinition prd ,DroolsResource drs " +

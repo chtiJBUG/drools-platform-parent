@@ -84,7 +84,7 @@ public class PlatformRunTimeBeanTest {
 
 
         RuleBasePackage ruleBasePackage = RuleBaseBuilder.createPackageBasePackageWithListener(historyListener, "ruleflow2.drl", "RuleFlowProcess2.bpmn2");
-        List<PlatformRuntimeInstance> platform1 = platformRuntimeInstanceRepository.findByHostnameAndEndDateNull("localhost");
+        List<PlatformRuntimeInstance> platform1 = null; //platformRuntimeInstanceRepository.findByHostnameAndEndDateNull("localhost");
         Assert.assertTrue(platform1.size() == 1);
         PlatformRuntimeInstance platforRuntime = platform1.get(0);
         Assert.assertTrue(platforRuntime.getEndDate() == null);

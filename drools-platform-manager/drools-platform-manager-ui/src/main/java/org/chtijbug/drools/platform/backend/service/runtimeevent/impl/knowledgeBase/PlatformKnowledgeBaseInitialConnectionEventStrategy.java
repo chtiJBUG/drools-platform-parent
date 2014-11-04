@@ -28,13 +28,13 @@ import org.chtijbug.drools.platform.entity.PlatformResourceFile;
 import org.chtijbug.drools.platform.entity.RequestRuntimePlarform;
 import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseInitialConnectionEvent;
+import org.chtijbug.drools.platform.persistence.DeploymentHostRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeDefinition;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstanceStatus;
+import org.chtijbug.drools.platform.persistence.PlatformServerRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +42,7 @@ import javax.websocket.DeploymentException;
 import javax.websocket.EncodeException;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 
 @Component
@@ -57,6 +58,19 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
 
     @Autowired
     PlatformRuntimeDefinitionRepositoryCacheService platformRuntimeDefinitionRepository;
+
+    @Autowired
+    PlatformServerRepositoryCacheService platformServerRepository;
+
+    @Autowired
+    DeploymentHostRepositoryCacheService deploymentHostRepository;
+
+
+    @Value(value = "${runtimeSiteTopology.guvnorUserName}")
+    private String guvnorUserName;
+
+    @Value(value = "${runtimeSiteTopology.guvnorPassword}")
+    private String guvnorPassword;
 
     @Override
     @Transactional(value = "transactionManager")
@@ -106,6 +120,21 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
                         platformRuntimeDefinition.getDroolsRessourcesDefinition().add(droolsResource);
                     } else if (resourceFile instanceof GuvnorResourceFile) {
                         GuvnorResourceFile guvnorResourceFile = (GuvnorResourceFile) resourceFile;
+                        List<PlatformServer> platformServers = platformServerRepository.findAll();
+                        if (platformServers.size() == 0) {
+                            PlatformServer platformServer = new PlatformServer(guvnorResourceFile.getGuvnor_url(), guvnorResourceFile.getGuvnor_appName(), guvnorUserName, guvnorPassword);
+                            platformRuntimeDefinition.setPlatformServer(platformServer);
+                        }
+                        if (platformServers.size() == 1) {
+                            platformRuntimeDefinition.setPlatformServer(platformServers.get(0));
+                        }
+                        DeploymentHost deploymentHost = deploymentHostRepository.findByHostnameAndPort(platformKnowledgeBaseInitialConnectionEvent.getHostname(), platformKnowledgeBaseInitialConnectionEvent.getPort());
+                        if (deploymentHost == null) {
+                            deploymentHost = new DeploymentHost(platformKnowledgeBaseInitialConnectionEvent.getHostname(), platformKnowledgeBaseInitialConnectionEvent.getPort(), "tomcat", "tomcat");
+                        }
+                        platformRuntimeDefinition.setDeploymentHost(deploymentHost);
+                        platformRuntimeDefinition.setWebsocketEndpoint(platformKnowledgeBaseInitialConnectionEvent.getEndPoint());
+                        platformRuntimeDefinition.setWebsocketPort(platformKnowledgeBaseInitialConnectionEvent.getPort());
                         droolsResource = new DroolsResource(guvnorResourceFile.getGuvnor_url(), guvnorResourceFile.getGuvnor_appName(), guvnorResourceFile.getGuvnor_packageName(), guvnorResourceFile.getGuvnor_packageVersion());
                         droolsResource.setStartEventID(platformKnowledgeBaseInitialConnectionEvent.getEventID());
                         platformRuntimeDefinition.getDroolsRessourcesDefinition().add(droolsResource);
@@ -118,9 +147,6 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
             platformRuntimeInstance.setRuleBaseID(platformKnowledgeBaseInitialConnectionEvent.getRuleBaseID());
             platformRuntimeInstance.setStartEventID(platformKnowledgeBaseInitialConnectionEvent.getEventID());
             platformRuntimeInstance.setStartDate(platformKnowledgeBaseInitialConnectionEvent.getStartDate());
-            platformRuntimeInstance.setHostname(platformKnowledgeBaseInitialConnectionEvent.getHostname());
-            platformRuntimeInstance.setPort(platformKnowledgeBaseInitialConnectionEvent.getPort());
-            platformRuntimeInstance.setEndPoint(platformKnowledgeBaseInitialConnectionEvent.getEndPoint());
             platformRuntimeInstance.setPlatformRuntimeDefinition(platformRuntimeDefinition);
             platformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.INITMODE);
             platformRuntimeDefinition.getPlatformRuntimeInstances().add(platformRuntimeInstance);
