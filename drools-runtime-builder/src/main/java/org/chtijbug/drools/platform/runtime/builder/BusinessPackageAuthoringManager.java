@@ -93,7 +93,7 @@ public class BusinessPackageAuthoringManager {
         logger.debug(">> generateExecutionService(wsdlContent={}, businessModelAsXsd={}, basePackageName={})", wsdlContent, businessModelAsXsd, guvnorRepository.getPackageName());
         try {
             //___ Create target project folder in maven style
-            byte[] wsdlBytes = IOUtils.toByteArray(wsdlContent);
+            byte[] wsdlBytes =IOUtils.toByteArray(wsdlContent) ;
             MavenProject mavenProject = mavenProjectFactory.createNewWarMavenProject(new ByteArrayInputStream(wsdlBytes), businessModelAsXsd, guvnorRepository, mavenPath, baseGeneratedPath);
             //___ Generate all files based on maven-cxf-plugin
             mavenProject.generateSources();

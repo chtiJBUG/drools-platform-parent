@@ -2,55 +2,108 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.chtijbug.drools</groupId>
-        <artifactId>drools-platform-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-    </parent>
+  <parent>
+    <groupId>org.chtijbug.drools</groupId>
+    <artifactId>drools-platform-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
 
-    <artifactId>drools-runtime-builder</artifactId>
-    <properties>
-        <toolsjar>${java.home}/../Classes/classes.jar</toolsjar>
-    </properties>
+  <artifactId>drools-runtime-builder</artifactId>
+  <properties>
+    <toolsjar>${java.home}/../Classes/classes.jar</toolsjar>
+  </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-bundle-jaxrs</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.xmlbeans</groupId>
-            <artifactId>xmlbeans</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.sun</groupId>
-            <artifactId>tools</artifactId>
-            <version>1.7</version>
-            <scope>system</scope>
-            <systemPath>${java.home}/../lib/tools.jar</systemPath>
-        </dependency>
-    </dependencies>
+
+<build>
+         <finalName>drools-platform-code-generator</finalName>
+         <plugins>
+             <!-- The configuration of maven-assembly-plugin -->
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-assembly-plugin</artifactId>
+                 <version>2.2.2</version>
+                 <!-- The configuration of the plugin -->
+                 <configuration>
+                     <!-- Specifies the configuration file of the assembly plugin -->
+                     <descriptors>
+                         <descriptor>src/main/assembly/assembly.xml</descriptor>
+                     </descriptors>
+                 </configuration>
+               <executions>
+                   <execution>
+                     <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                     <phase>package</phase> <!-- bind to the packaging phase -->
+                     <goals>
+                       <goal>single</goal>
+                     </goals>
+                   </execution>
+                 </executions>
+             </plugin>
+             <!-- The configuration of maven-jar-plugin -->
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-jar-plugin</artifactId>
+                 <version>2.3.1</version>
+                 <!-- The configuration of the plugin -->
+                 <configuration>
+                     <!-- Configuration of the archiver -->
+                     <archive>
+                         <!-- Manifest specific configuration -->
+                         <manifest>
+                             <!-- Classpath is added to the manifest of the created jar file. -->
+                             <addClasspath>true</addClasspath>
+                             <!--
+                                 Configures the classpath prefix. This configuration option is
+                                 used to specify that all needed libraries are found under lib/
+                                 directory.
+                             -->
+                             <classpathPrefix>lib/</classpathPrefix>
+                             <!-- Specifies the main class of the application -->
+                             <mainClass>org.chtijbug.drools.platform.runtime.CodeGeneratorService</mainClass>
+                         </manifest>
+                     </archive>
+                 </configuration>
+             </plugin>
+         </plugins>
+     </build>
+  <dependencies>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-bundle-jaxrs</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlbeans</groupId>
+      <artifactId>xmlbeans</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.sun</groupId>
+      <artifactId>tools</artifactId>
+      <version>1.7</version>
+      <scope>system</scope>
+      <systemPath>${java.home}/../lib/tools.jar</systemPath>
+    </dependency>
+  </dependencies>
 
 </project>

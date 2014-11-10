@@ -42,9 +42,10 @@ public class BusinessPackageAuthoringManagerTest {
     }
 
     @Test
-    @Ignore
+    //@Ignore
     public void should_get_webservice_project_folder_generated() throws Exception {
         GuvnorRepositoryImpl guvnorRepository = new GuvnorRepositoryImpl("com.pymma.drools", "LATEST", "admin", "admin", "598");
+        guvnorRepository.setBaseUrl("http://localhost:10080");
         Xsd2JarTransformer xsd2JarTransformer = new Xsd2JarTransformer();
         BusinessPackageAuthoringManager toTest = new BusinessPackageAuthoringManager(guvnorRepository, xsd2JarTransformer, new MavenProjectFactory(), "/home/nheron/workspace-chtiJBUG/apache-maven-3.1.1", "/home/nheron/workspace-chtiJBUG/baseTestDirectory");
 

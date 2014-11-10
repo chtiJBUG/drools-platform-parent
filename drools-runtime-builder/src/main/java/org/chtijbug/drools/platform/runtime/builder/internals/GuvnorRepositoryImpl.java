@@ -116,6 +116,34 @@ public class GuvnorRepositoryImpl implements GuvnorRepository {
         return jmsPort;
     }
 
+    public void setPlatformServer(String platformServer) {
+        this.platformServer = platformServer;
+    }
+
+    public void setWsPort(Integer wsPort) {
+        this.wsPort = wsPort;
+    }
+
+    public void setWsHost(String wsHost) {
+        this.wsHost = wsHost;
+    }
+
+    public void setJmsServer(String jmsServer) {
+        this.jmsServer = jmsServer;
+    }
+
+    public void setJmsPort(Integer jmsPort) {
+        this.jmsPort = jmsPort;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
     @Override
     public void createBusinessPackage(String businessPackage) {
         logger.debug(">> createBusinessPackage(businessPackage=%s)", businessPackage);
