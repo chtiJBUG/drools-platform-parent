@@ -37,7 +37,7 @@ public class ServiceCalculate implements IServiceCalculate {
     public Output mainProcess(Input input) {
         logger.info("Executing operation mainProcess");
         try {
-            fireAllRules(input, "mainProcess");
+            fireAllRules(input, "com.pymma.drools.runtime.mainProcess");
             return input;
         } catch (java.lang.Exception ex) {
             logger.error("Executing operation mainProcess",ex);

@@ -1,7 +1,7 @@
     public #outputClass# #methodName#(#inputClass# input) {
         logger.info("Executing operation #methodName#");
         try {
-            fireAllRules(input, "#methodName#");
+            fireAllRules(input, "#packageName#.#methodName#");
             return input;
         } catch (java.lang.Exception ex) {
             logger.error("Executing operation #methodName#",ex);

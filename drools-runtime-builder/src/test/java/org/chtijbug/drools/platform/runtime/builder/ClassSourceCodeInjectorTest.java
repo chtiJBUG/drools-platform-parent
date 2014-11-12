@@ -57,7 +57,7 @@ public class ClassSourceCodeInjectorTest {
         ClassSourceCodeInjector classSourceCodeInjector = new ClassSourceCodeInjector(tmpFile, wsdlContent, "com.pymma.drools.runtime");
 
         List<ProcessStructure> processes = Arrays.asList(new ProcessStructure("mainProcess", "Input", "Output"));
-        classSourceCodeInjector.customize(processes);
+        classSourceCodeInjector.customize(processes, "com.pymma.drools.runtime");
 
         String toBeTest = readFileToString(tmpFile);
 

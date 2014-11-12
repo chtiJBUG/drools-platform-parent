@@ -43,7 +43,7 @@ public class ClassSourceCodeInjector {
         }
     }
 
-    public void customize(List<ProcessStructure> processes) {
+    public void customize(List<ProcessStructure> processes, String basePackageName) {
         try {
             String fileContent = readFileToString(this.toBeCodeInjected);
             for (Entry<Keyword, String> entry : keywords.entrySet()) {
@@ -56,6 +56,7 @@ public class ClassSourceCodeInjector {
                 methodTemplate = methodTemplate.replaceAll("#methodName#", processStructure.getProcessName());
                 methodTemplate = methodTemplate.replaceAll("#inputClass#", processStructure.getInputClassname());
                 methodTemplate = methodTemplate.replaceAll("#outputClass#", processStructure.getOutputClassname());
+                methodTemplate = methodTemplate.replaceAll("#packageName#", basePackageName);
                 methodBuilder.append(methodTemplate).append("\n\n");
             }
             fileContent = fileContent.replaceAll("#METHODS#", methodBuilder.toString());

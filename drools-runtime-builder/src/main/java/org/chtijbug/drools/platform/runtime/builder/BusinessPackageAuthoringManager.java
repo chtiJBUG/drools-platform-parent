@@ -104,7 +104,7 @@ public class BusinessPackageAuthoringManager {
 
             File classFile = mavenProject.getSourceFile(StringUtils.capitalize(classSourceCodeInjector.getKeywordValue(PORT_TYPE)).concat(".java"));
             List<ProcessStructure> processStructures = extractMethodStructures(classFile);
-            classSourceCodeInjector.customize(processStructures);
+            classSourceCodeInjector.customize(processStructures, guvnorRepository.getPackageName());
 
 
             File executionServiceInterfaceFile = mavenProject.createSourceFile(guvnorRepository.getPackageName(), EXECUTION_SERVICE_INTERFACE_NAME);
