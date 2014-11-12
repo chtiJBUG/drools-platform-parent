@@ -21,10 +21,18 @@ import java.nio.file.Paths;
  */
 public class CodeGeneratorService {
 
+
+    private BusinessPackageAuthoringManager businessPackageAuthoringManager;
+
+    private URL wsdlFile;
+
+    private URL modelFile;
+
     public static void main(String args[]) throws Exception {
         CodeGeneratorService codeGeneratorService = new CodeGeneratorService();
         codeGeneratorService.createProject();
     }
+
 
     public void createProject() throws IOException {
 
@@ -65,26 +73,42 @@ public class CodeGeneratorService {
             jmsHost = "localhost";
         }
         String mavenInstallDir = getStringFromCommandLine("Enter Maven Install Dir ");
+
+        String generateBaseDirectory = getStringFromCommandLine("Enter base directory  [~/temp]");
+        if (generateBaseDirectory == null || generateBaseDirectory.length() == 0) {
+            generateBaseDirectory = "~/temp";
+        }
+
+
         GuvnorRepositoryImpl guvnorRepository = new GuvnorRepositoryImpl(packageName, packageVersion, userName, password, ruleBaseId);
         guvnorRepository.setBaseUrl(guvnorUrl);
         guvnorRepository.setWsPort(Integer.valueOf(wsPort));
         guvnorRepository.setWsHost(wsHost);
         guvnorRepository.setJmsServer(jmsHost);
         Xsd2JarTransformer xsd2JarTransformer = new Xsd2JarTransformer();
-        BusinessPackageAuthoringManager businessPackageAuthoringManager = new BusinessPackageAuthoringManager(guvnorRepository, xsd2JarTransformer, new MavenProjectFactory(), mavenInstallDir, "./");
+        businessPackageAuthoringManager = new BusinessPackageAuthoringManager(guvnorRepository, xsd2JarTransformer, new MavenProjectFactory(), mavenInstallDir, generateBaseDirectory);
         String wsdlFileString = getStringFromCommandLine("Enter wsdl");
         String xsdFileString = getStringFromCommandLine("Enter xsd");
-        URL wsdlFile = Paths.get(wsdlFileString).toUri().toURL();
-        URL modelFile = Paths.get(xsdFileString).toUri().toURL();
-        InputStream wsdlContentStep1 = FileUtils.openInputStream(FileUtils.toFile(wsdlFile));
-        InputStream modelContentStep1 = FileUtils.openInputStream(FileUtils.toFile(modelFile));
-        businessPackageAuthoringManager.createBusinessPackage(wsdlContentStep1, modelContentStep1);
+        wsdlFile = Paths.get(wsdlFileString).toUri().toURL();
+        modelFile = Paths.get(xsdFileString).toUri().toURL();
+        createWarApp();
+        createGuvnorProject();
+    }
+
+    private void createWarApp() throws IOException {
         InputStream wsdlContentStep2 = FileUtils.openInputStream(FileUtils.toFile(wsdlFile));
         InputStream modelContentStep2 = FileUtils.openInputStream(FileUtils.toFile(modelFile));
 
         businessPackageAuthoringManager.generateExecutionService(wsdlContentStep2, modelContentStep2);
+
     }
 
+    private void createGuvnorProject() throws IOException {
+        InputStream wsdlContentStep1 = FileUtils.openInputStream(FileUtils.toFile(wsdlFile));
+        InputStream modelContentStep1 = FileUtils.openInputStream(FileUtils.toFile(modelFile));
+        businessPackageAuthoringManager.createBusinessPackage(wsdlContentStep1, modelContentStep1);
+
+    }
 
     private String getStringFromCommandLine(String textToDisplay) {
         System.out.print(textToDisplay + ": ");
