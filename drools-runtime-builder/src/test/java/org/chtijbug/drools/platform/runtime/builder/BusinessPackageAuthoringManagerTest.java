@@ -42,7 +42,7 @@ public class BusinessPackageAuthoringManagerTest {
     }
 
     @Test
-    //@Ignore
+    @Ignore
     public void should_get_webservice_project_folder_generated() throws Exception {
         GuvnorRepositoryImpl guvnorRepository = new GuvnorRepositoryImpl("com.pymma.drools", "LATEST", "admin", "admin", "598");
         guvnorRepository.setBaseUrl("http://localhost:10080");
