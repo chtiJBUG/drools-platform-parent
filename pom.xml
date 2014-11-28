@@ -35,8 +35,8 @@
     <activemq-version>5.8.0</activemq-version>
 
     <drools.version>5.6.0.Final</drools.version>
-    <guvnor.verion>5.6.1.chtijbug-SNAPSHOT</guvnor.verion>
-    <chtijbug.framework.version>2.0.0-SNAPSHOT</chtijbug.framework.version>
+    <guvnor.verion>5.6.1.chtijbug</guvnor.verion>
+    <chtijbug.framework.version>1.2.0</chtijbug.framework.version>
     <tomcat.deployment.path>/</tomcat.deployment.path>
     <tomcat.deployment.warFile>axins.war</tomcat.deployment.warFile>
     <tomcat.deployment.url>http://localhost:8080/manager/text</tomcat.deployment.url>
@@ -69,9 +69,9 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git@bitbucket.org:pymma/drools-platform-parent.git</connection>
-    <url>scm:git:git@bitbucket.org:pymma/drools-platform-parent.git</url>
-    <developerConnection>scm:git:git@bitbucket.org:pymma/drools-platform-parent.git</developerConnection>
+    <connection>scm:git:git@github.com:chtiJBUG/drools-platform-parent.git</connection>
+    <url>scm:git:git@github.com:chtiJBUG/drools-platform-parent.git</url>
+    <developerConnection>scm:git:git@github.com:chtiJBUG/drools-platform-parent.git</developerConnection>
   </scm>
   <issueManagement>
     <system>Jira</system>
@@ -102,6 +102,62 @@
           <showDeprecation>true</showDeprecation>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.5.1</version>
+        <configuration>
+          <useReleaseProfile>false</useReleaseProfile>
+          <releaseProfiles>release</releaseProfiles>
+          <goals>deploy</goals>
+          <!-- Manually push changes (including git tags) after nexus staged repo is successfully closed -->
+
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <arguments>-DskipTests</arguments>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.2.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.5</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9.1</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+
     </plugins>
   </build>
 
