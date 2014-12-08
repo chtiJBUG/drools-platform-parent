@@ -69,6 +69,13 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
 
     private JavaDialect javaDialect = null;
 
+
+    /**
+     * classLoader for osgi
+     */
+    private ClassLoader projectClassLoader = null;
+
+
     public DroolsPlatformKnowledgeBaseJavaSE() {
     }
 
@@ -226,5 +233,13 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
 
     public void setDroolsResources(List<DroolsResource> droolsResources) {
         this.droolsResources = droolsResources;
+    }
+
+    public ClassLoader getProjectClassLoader() {
+        return projectClassLoader;
+    }
+
+    public void setProjectClassLoader(ClassLoader projectClassLoader) {
+        this.projectClassLoader = projectClassLoader;
     }
 }

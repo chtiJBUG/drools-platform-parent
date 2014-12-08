@@ -44,6 +44,11 @@ public class RuntimeWebSocketServerService {
 
                 break;
             case loadNewRuleVersion:
+                ClassLoader classLoader = Thread.currentThread()
+                        .getContextClassLoader();
+                if (droolsPlatformKnowledgeBaseJavaSE.getProjectClassLoader() != null) {
+                    Thread.currentThread().setContextClassLoader(droolsPlatformKnowledgeBaseJavaSE.getProjectClassLoader());
+                }
                 List<DroolsResource> droolsResources = PlatformManagementKnowledgeBeanServiceFactory.extract(bean.getResourceFileList(), guvnorUsername, guvnorPassword);
                 try {
                     droolsPlatformKnowledgeBaseJavaSE.RecreateKBaseWithNewRessources(droolsResources);
@@ -55,6 +60,10 @@ public class RuntimeWebSocketServerService {
                     bean.setDroolsChtijbugException(droolsChtijbugException);
                     bean.setRequestStatus(RequestStatus.FAILURE);
                     this.sendMessage(bean);
+                } finally {
+                    if (droolsPlatformKnowledgeBaseJavaSE.getProjectClassLoader() != null && classLoader != null) {
+                        Thread.currentThread().setContextClassLoader(classLoader);
+                    }
                 }
                 break;
         }

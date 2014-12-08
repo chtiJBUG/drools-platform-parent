@@ -1,9 +1,9 @@
 package org.chtijbug.drools.platform.runtime.javase.websocket;
 
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBaseRuntime;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServerInstance;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
+import org.chtijbug.drools.platform.runtime.javase.DroolsPlatformKnowledgeBaseJavaSE;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.glassfish.tyrus.server.Server;
 
@@ -28,9 +28,10 @@ public class WebSocketServer implements WebSocketServerInstance {
     private String ws_endpoint = "/runtime";
     Server localWebSocketServer;
 
-    public DroolsPlatformKnowledgeBaseRuntime droolsPlatformKnowledgeBase;
 
-    public WebSocketServer(String ws_hostname, int ws_port, DroolsPlatformKnowledgeBaseRuntime droolsPlatformKnowledgeBase) throws UnknownHostException {
+    public DroolsPlatformKnowledgeBaseJavaSE droolsPlatformKnowledgeBase;
+
+    public WebSocketServer(String ws_hostname, int ws_port, DroolsPlatformKnowledgeBaseJavaSE droolsPlatformKnowledgeBase) throws UnknownHostException {
         this.ws_hostname = ws_hostname;
         this.ws_port = ws_port;
         this.droolsPlatformKnowledgeBase = droolsPlatformKnowledgeBase;
@@ -39,10 +40,24 @@ public class WebSocketServer implements WebSocketServerInstance {
 
     public void run() {
         this.localWebSocketServer = new Server(ws_hostname, ws_port, "/", userProperties, RuntimeWebSocketServerService.class);
+        ClassLoader classLoader = Thread.currentThread()
+                .getContextClassLoader();
+        ClassLoader currentClassloader = this.getClass().getClassLoader();
+
+        if (classLoader != null) {
+            this.droolsPlatformKnowledgeBase.setProjectClassLoader(classLoader);
+            Thread.currentThread().setContextClassLoader(currentClassloader);
+        }
+
         try {
             localWebSocketServer.start();
         } catch (DeploymentException e) {
             LOG.error("WebSocketServer.run", e);
+
+        } finally {
+            if (classLoader != null) {
+                Thread.currentThread().setContextClassLoader(classLoader);
+            }
         }
     }
 
