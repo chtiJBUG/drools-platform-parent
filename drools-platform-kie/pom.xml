@@ -61,6 +61,7 @@
     </dependencies>
 
     <build>
+    <finalName>kie-wb</finalName>
         <plugins>
             <!-- special handling for WAS8.5 as sisu-inject-bean:2.2.3 contains javax.inject classes which conflicts with WAS-->
             <plugin>
@@ -106,7 +107,8 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>kie-drools-wb-${project.version}</finalName>
+                    <finalName>kie-wb</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
                           <descriptor>${project.basedir}/src/main/community/assembly-kie-drools-wb-tomcat-7.xml</descriptor>
                       </descriptors>
