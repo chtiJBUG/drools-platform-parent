@@ -86,6 +86,7 @@
     <module>drools-platform-manager</module>
     <module>drools-platform-example</module>
     <module>drools-platform-runtime</module>
+    <module>drools-platform-kie</module>
   </modules>
 
 
