@@ -34,7 +34,7 @@
 
     <drools.version>5.6.0.Final</drools.version>
     <guvnor.verion>5.6.2.chtijbug</guvnor.verion>
-    <chtijbug.framework.version>1.5.0</chtijbug.framework.version>
+    <chtijbug.framework.version> 2.0.0-SNAPSHOT</chtijbug.framework.version>
     <tomcat.deployment.path>/</tomcat.deployment.path>
     <tomcat.deployment.warFile>axins.war</tomcat.deployment.warFile>
     <tomcat.deployment.url>http://localhost:8080/manager/text</tomcat.deployment.url>
