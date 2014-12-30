@@ -27,6 +27,7 @@ import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.RuleBaseSession;
 import org.chtijbug.drools.runtime.impl.RuleBaseStatefulSession;
 import org.chtijbug.drools.runtime.mbeans.StatefulSessionSupervision;
+import org.drools.ObjectFilter;
 
 import java.util.Collection;
 
@@ -169,5 +170,10 @@ public class DroolsPlatformSession implements RuleBaseSession {
     @Override
     public int getRuleBaseID() {
         return this.ruleBaseStatefulSession.getRuleBaseID();
+    }
+
+    @Override
+    public Collection<Object> getObjects(ObjectFilter objectFilter) {
+        return this.ruleBaseStatefulSession.getObjects(objectFilter);
     }
 }
