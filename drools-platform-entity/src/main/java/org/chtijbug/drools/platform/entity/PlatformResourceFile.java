@@ -27,10 +27,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class PlatformResourceFile {
     private String fileName;
     private String content;
-    private String guvnor_url = null;
-    private String guvnor_appName;
-    private String guvnor_packageName;
-    private String guvnor_packageVersion;
+    private String workbenchURL = null;
+    private String groupId;
+    private String artifactId;
+    private String version;
     private String guvnor_userName;
     private String guvnor_password;
 
@@ -42,11 +42,11 @@ public class PlatformResourceFile {
         this.content = content;
     }
 
-    public PlatformResourceFile(String guvnor_url, String guvnor_appName, String guvnor_packageName, String guvnor_packageVersion, String guvnor_userName, String guvnor_password) {
-        this.guvnor_url = guvnor_url;
-        this.guvnor_appName = guvnor_appName;
-        this.guvnor_packageName = guvnor_packageName;
-        this.guvnor_packageVersion = guvnor_packageVersion;
+    public PlatformResourceFile(String workbenchURL, String groupId, String artifactId,String version, String guvnor_userName, String guvnor_password) {
+        this.workbenchURL = workbenchURL;
+        this.groupId = groupId;
+        this.artifactId = artifactId;
+        this.version = version;
         this.guvnor_userName = guvnor_userName;
         this.guvnor_password = guvnor_password;
     }
@@ -59,20 +59,20 @@ public class PlatformResourceFile {
         return content;
     }
 
-    public String getGuvnor_url() {
-        return guvnor_url;
+    public String getWorkbenchURL() {
+        return workbenchURL;
     }
 
-    public String getGuvnor_appName() {
-        return guvnor_appName;
+    public String getGroupId() {
+        return groupId;
     }
 
-    public String getGuvnor_packageName() {
-        return guvnor_packageName;
+    public String getArtifactId() {
+        return artifactId;
     }
 
-    public String getGuvnor_packageVersion() {
-        return guvnor_packageVersion;
+    public String getVersion() {
+        return version;
     }
 
     public String getGuvnor_userName() {
@@ -88,10 +88,10 @@ public class PlatformResourceFile {
         final StringBuffer sb = new StringBuffer("PlatformResourceFile{");
         sb.append("fileName='").append(fileName).append('\'');
         sb.append(", content='").append(content).append('\'');
-        sb.append(", guvnor_url='").append(guvnor_url).append('\'');
-        sb.append(", guvnor_appName='").append(guvnor_appName).append('\'');
-        sb.append(", guvnor_packageName='").append(guvnor_packageName).append('\'');
-        sb.append(", guvnor_packageVersion='").append(guvnor_packageVersion).append('\'');
+        sb.append(", workbenchURL='").append(workbenchURL).append('\'');
+        sb.append(", groupId='").append(groupId).append('\'');
+        sb.append(", artifactId='").append(artifactId).append('\'');
+        sb.append(", version='").append(version).append('\'');
         sb.append(", guvnor_userName='").append(guvnor_userName).append('\'');
         sb.append(", guvnor_password='").append(guvnor_password).append('\'');
         sb.append('}');

@@ -55,7 +55,7 @@ public class SynchronizationTaskWithGuvnor {
                     /**
                      if (asset.getType().equals("gdst")) {
                      try {
-                     DecisionTable decisionTableGuvnorFormat = guvnorRepositoryConnector.getGuidedDecisionTable(packageName, asset.getName());
+                     DecisionTable decisionTableGuvnorFormat = guvnorRepositoryConnector.getGuidedDecisionTable(packageName, asset.getArtifactId());
                      decisionTableAssetManagementService.SynchronizeInDBContent(packageName, asset, decisionTableGuvnorFormat);
                      } catch (GuvnorConnexionFailedException e) {
                      e.printStackTrace();

@@ -10,10 +10,10 @@
                 </div>
                 <div class="panel-body">
                     <!-- Search form -->
-                    <form role="form" name="NewPackageForm">
+                    <form role="form" artifactId="NewPackageForm">
                         <div class="form-group" ng-class="namePackageSelectClass">
-                            <label for="package-name-select">Rule Package Name</label>
-                            <select id="package-name-select" ui-select2="selectPackage" ng-model="package"
+                            <label for="package-artifactId-select">Rule Package Name</label>
+                            <select id="package-artifactId-select" ui-select2="selectPackage" ng-model="package"
                                     class="form-control"
                                     style="padding:0;height:auto;width:auto;"
                                     data-placeholder="Select a package">
@@ -25,8 +25,8 @@
                         <div class="form-group">
                             <label for="ipt-version">Rule Package Version </label>
                             <small>(Optional)</small>
-                            <input id="ipt-version" class="form-control" name="versionSearched" type="text"
-                                   placeholder="Please enter the new rule package version name" data-ng-model="version"
+                            <input id="ipt-version" class="form-control" artifactId="versionSearched" type="text"
+                                   placeholder="Please enter the new rule package version artifactId" data-ng-model="version"
                                    ng-pattern="/^.*+.[0-9]+.[0-9]+$/">
                         </div>
                         <div class="checkbox">
@@ -74,7 +74,7 @@
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
-                                    <th class="bold">Package name</th>
+                                    <th class="bold">Package artifactId</th>
                                     <th>Version</th>
                                     <th>Status</th>
                                 </tr>
@@ -84,7 +84,7 @@
                                     <!-- data-target links the line to the context menu -->
                                     <tr context-menu="onRightClick(packageVersion)" data-target="myMenu"
                                         ng-repeat="packageVersion in packageVersionsList">
-                                        <td>{{packageVersion.packageName}}</td>
+                                        <td>{{packageVersion.groupId}}</td>
                                         <td>{{packageVersion.version}}</td>
                                         <td>
                                             <span ng-show="!packageVersion.isRelease" class="label label-warning">
@@ -136,10 +136,10 @@
                                     <h4 ng-show="isReleaseButtonEnabled" class="modal-title">Release the version</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form role="form" name="NewVersionPackageForm">
+                                    <form role="form" artifactId="NewVersionPackageForm">
                                         <div class="form-group" ng-class="iptNewVersion">
                                             <label for="newVersion">Version</label> <span ng-show="alreadyExist" class="label label-warning">Version already existing</span>
-                                            <input id="newVersion" class="form-control" placeholder="x.y.z" name="newVersion"
+                                            <input id="newVersion" class="form-control" placeholder="x.y.z" artifactId="newVersion"
                                                   ng-model="newVersion" ng-disabled="isVersionFieldDisabled"
                                                    required ng-pattern="/^[0-9]+.[0-9]+.[0-9]+$/" />
 
@@ -148,7 +148,7 @@
                                             <label for="assetStatusSelect">Asset status</label>
                                             <select id="assetStatusSelect"
                                                     class="form-control"
-                                                    name="assetStatusSelect"
+                                                    artifactId="assetStatusSelect"
                                                     style="padding:0;height:auto;width:auto;"
                                                     ui-select2="filtersOptions"
                                                     multiple
@@ -201,7 +201,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <p>
-                                        Package name : <code>{{package}}</code>    Version : <code>{{newVersion}}</code>
+                                        Package artifactId : <code>{{package}}</code>    Version : <code>{{newVersion}}</code>
                                     <span ng-show="isSnapshot" class="label label-warning"><small>
                                         SNAPSHOT
                                     </small></span>

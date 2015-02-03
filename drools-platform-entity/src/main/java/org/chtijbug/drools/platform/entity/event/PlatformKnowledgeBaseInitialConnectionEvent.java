@@ -31,7 +31,7 @@ public class PlatformKnowledgeBaseInitialConnectionEvent extends KnowledgeBaseEv
     private int port;
     private Date startDate;
 
-    public PlatformKnowledgeBaseInitialConnectionEvent(int eventID, Date dateEvent, int ruleBaseID) {
+    public PlatformKnowledgeBaseInitialConnectionEvent(long eventID, Date dateEvent, long ruleBaseID) {
         super(eventID, dateEvent, ruleBaseID);
         this.startDate = dateEvent;
     }

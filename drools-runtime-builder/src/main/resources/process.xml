@@ -2,7 +2,7 @@
 <atom:entry xmlns:atom="http://www.w3.org/2005/Atom">
     <atom:title>%s</atom:title>
     <atom:author>
-        <atom:name>pymma</atom:name>
+        <atom:artifactId>pymma</atom:artifactId>
     </atom:author>
     <atom:summary></atom:summary>
     <metadata>

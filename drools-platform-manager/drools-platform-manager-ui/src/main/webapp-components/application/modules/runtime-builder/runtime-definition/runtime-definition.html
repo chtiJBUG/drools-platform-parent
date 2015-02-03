@@ -6,7 +6,7 @@
         </div>
 
         <div class="panel-body">
-            <form name="artifactsDefinitionsForm" class="form-horizontal" role="form" ng-submit="validateDefinitions(artifactsDefinitionsForm)">
+            <form artifactId="artifactsDefinitionsForm" class="form-horizontal" role="form" ng-submit="validateDefinitions(artifactsDefinitionsForm)">
                 <div class="form-group">
                     <label for="artefactHost" class="col-sm-3 control-label">Base URL</label>
 
@@ -19,7 +19,7 @@
                     <label for="artefactApp" class="col-sm-3 control-label">Root context</label>
 
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" style="width:80%;" id="artefactApp" placeholder="webapp name"
+                        <input type="text" class="form-control" style="width:80%;" id="artefactApp" placeholder="webapp artifactId"
                                value="{{artifact.appName}}" required>
                     </div>
                 </div>

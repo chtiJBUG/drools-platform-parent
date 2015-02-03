@@ -20,7 +20,7 @@
     </util:list>
 
   <bean id="platformRunner" class="org.chtijbug.drools.platform.runtime.javase.DroolsPlatformKnowledgeBaseJavaSE"
-          init-method="initPlatformRuntime" destroy-method="cleanup">
+          init-method="initPlatformRuntime" destroy-method="dispose">
         <property name="ruleBaseID" value="${knowledge.rulebaseid}"/>
         <property name="webSocketHostname" value="${ws.hostname}"/>
         <property name="webSocketPort" value="${ws.port}"/>

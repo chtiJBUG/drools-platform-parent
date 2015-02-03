@@ -17,9 +17,8 @@ package org.chtijbug.drools.platform.backend.service.runtimeevent.impl.knowledge
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.DrlResourceFile;
-import org.chtijbug.drools.entity.history.GuvnorResourceFile;
 import org.chtijbug.drools.entity.history.HistoryEvent;
-import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseAddRessourceEvent;
+import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseAddResourceEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
@@ -41,7 +40,7 @@ public class KnowledgeBaseAddRessourceEventStrategy extends AbstractEventHandler
     @Override
     @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
-        KnowledgeBaseAddRessourceEvent knowledgeBaseAddRessourceEvent = (KnowledgeBaseAddRessourceEvent) historyEvent;
+        KnowledgeBaseAddResourceEvent knowledgeBaseAddRessourceEvent = (KnowledgeBaseAddResourceEvent) historyEvent;
         List<PlatformRuntimeInstance> existingPlatformRuntimeInstances = platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(knowledgeBaseAddRessourceEvent.getRuleBaseID());
         if (existingPlatformRuntimeInstances.size() == 1) {
             PlatformRuntimeInstance existingPlatformRuntimeInstance = existingPlatformRuntimeInstances.get(0);
@@ -66,6 +65,6 @@ public class KnowledgeBaseAddRessourceEventStrategy extends AbstractEventHandler
 
     @Override
     public boolean isEventSupported(HistoryEvent historyEvent) {
-        return historyEvent instanceof KnowledgeBaseAddRessourceEvent;
+        return historyEvent instanceof KnowledgeBaseAddResourceEvent;
     }
 }

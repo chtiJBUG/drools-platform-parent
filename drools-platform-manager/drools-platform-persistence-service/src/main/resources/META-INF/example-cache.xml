@@ -44,48 +44,48 @@
         http://www.springframework.org/schema/util/spring-util.xsd">
   <bean id="grid.cfg" class="org.gridgain.grid.GridConfiguration">
     <!-- Set to local host address just for examples. -->
-    <property name="localHost" value="127.0.0.1"/>
+    <property artifactId="localHost" value="127.0.0.1"/>
 
     <!-- Set to true to enable grid-aware class loading for examples, default is false. -->
-    <property name="peerClassLoadingEnabled" value="true"/>
+    <property artifactId="peerClassLoadingEnabled" value="true"/>
 
-    <property name="marshaller">
+    <property artifactId="marshaller">
       <bean class="org.gridgain.grid.marshaller.optimized.GridOptimizedMarshaller">
         <!-- Set to false to allow non-serializable objects in examples, default is true. -->
-        <property name="requireSerializable" value="false"/>
+        <property artifactId="requireSerializable" value="false"/>
       </bean>
     </property>
 
     <!-- Enable cache events for examples. -->
-    <property name="includeEventTypes">
+    <property artifactId="includeEventTypes">
       <util:constant static-field="org.gridgain.grid.events.GridEventType.EVTS_CACHE"/>
     </property>
 
     <!-- Cache configurations (all properties are optional). -->
-    <property name="cacheConfiguration">
+    <property artifactId="cacheConfiguration">
       <list>
         <!-- Partitioned cache example configuration (Atomic mode). -->
 
         <bean parent="cache-template">
-          <property name="name" value="local_tx_indexruleasset"/>
-          <property name="cacheMode" value="LOCAL"/>
-          <property name="atomicityMode" value="TRANSACTIONAL"/>
+          <property artifactId="artifactId" value="local_tx_indexruleasset"/>
+          <property artifactId="cacheMode" value="LOCAL"/>
+          <property artifactId="atomicityMode" value="TRANSACTIONAL"/>
         </bean>
 
         <bean parent="cache-template">
-          <property name="name" value="local_tx_indexruleexecution"/>
-          <property name="cacheMode" value="LOCAL"/>
-          <property name="atomicityMode" value="TRANSACTIONAL"/>
+          <property artifactId="artifactId" value="local_tx_indexruleexecution"/>
+          <property artifactId="cacheMode" value="LOCAL"/>
+          <property artifactId="atomicityMode" value="TRANSACTIONAL"/>
         </bean>
         <bean parent="cache-template">
-          <property name="name" value="local_tx_indexruleflowgroup"/>
-          <property name="cacheMode" value="LOCAL"/>
-          <property name="atomicityMode" value="TRANSACTIONAL"/>
+          <property artifactId="artifactId" value="local_tx_indexruleflowgroup"/>
+          <property artifactId="cacheMode" value="LOCAL"/>
+          <property artifactId="atomicityMode" value="TRANSACTIONAL"/>
         </bean>
         <bean parent="cache-template">
-          <property name="name" value="local_tx_indexsessionexecution"/>
-          <property name="cacheMode" value="LOCAL"/>
-          <property name="atomicityMode" value="TRANSACTIONAL"/>
+          <property artifactId="artifactId" value="local_tx_indexsessionexecution"/>
+          <property artifactId="cacheMode" value="LOCAL"/>
+          <property artifactId="atomicityMode" value="TRANSACTIONAL"/>
         </bean>
 
 
@@ -93,13 +93,13 @@
     </property>
 
     <!-- Explicitly configure TCP discovery SPI to provide list of initial nodes. -->
-    <property name="discoverySpi">
+    <property artifactId="discoverySpi">
       <bean class="org.gridgain.grid.spi.discovery.tcp.GridTcpDiscoverySpi">
-        <property name="ipFinder">
+        <property artifactId="ipFinder">
           <!-- Uncomment multicast IP finder to enable multicast-based discovery of initial nodes. -->
           <!--<bean class="org.gridgain.grid.spi.discovery.tcp.ipfinder.multicast.GridTcpDiscoveryMulticastIpFinder">-->
           <bean class="org.gridgain.grid.spi.discovery.tcp.ipfinder.vm.GridTcpDiscoveryVmIpFinder">
-            <property name="addresses">
+            <property artifactId="addresses">
               <list>
                 <!-- In distributed environment, replace with actual host IP address. -->
                 <value>127.0.0.1:47500..47509</value>
@@ -111,10 +111,10 @@
     </property>
 
     <!-- Allow indexing SPI to index primitive values (required for CachePopularNumbersExample). -->
-    <property name="indexingSpi">
+    <property artifactId="indexingSpi">
       <list>
         <bean class="org.gridgain.grid.spi.indexing.h2.GridH2IndexingSpi">
-          <property name="defaultIndexPrimitiveKey" value="true"/>
+          <property artifactId="defaultIndexPrimitiveKey" value="true"/>
         </bean>
       </list>
     </property>
@@ -123,15 +123,15 @@
   <!-- Template for all example cache configurations. -->
   <bean id="cache-template" abstract="true" class="org.gridgain.grid.cache.GridCacheConfiguration">
     <!-- Initial cache size. -->
-    <property name="startSize" value="3000000"/>
+    <property artifactId="startSize" value="3000000"/>
 
     <!-- Set synchronous preloading (default is asynchronous). -->
-    <property name="preloadMode" value="SYNC"/>
+    <property artifactId="preloadMode" value="SYNC"/>
 
     <!-- Set to FULL_SYNC for examples, default is PRIMARY_SYNC. -->
-    <property name="writeSynchronizationMode" value="FULL_SYNC"/>
+    <property artifactId="writeSynchronizationMode" value="FULL_SYNC"/>
 
     <!-- Set to true to enable indexing for query examples, default value is false. -->
-    <property name="queryIndexEnabled" value="true"/>
+    <property artifactId="queryIndexEnabled" value="true"/>
   </bean>
 </beans>

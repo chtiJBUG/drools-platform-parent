@@ -6,7 +6,7 @@
     <jaxb:globalBindings localScoping="nested"
                          collectionType="java.util.ArrayList"
                          generateValueClass="true"  >
-        <jaxb:javaType name="java.util.Calendar" xmlType="xs:date" hasNsContext="true"
+        <jaxb:javaType artifactId="java.util.Calendar" xmlType="xs:date" hasNsContext="true"
                        parseMethod="javax.xml.bind.DatatypeConverter.parseDate"
                        printMethod="javax.xml.bind.DatatypeConverter.printDate"/>
         <xjc:serializable uid="2"/>

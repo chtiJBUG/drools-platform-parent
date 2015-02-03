@@ -28,7 +28,7 @@ import java.util.Date;
 public class PlatformKnowledgeBaseShutdownEvent extends KnowledgeBaseCreatedEvent {
     private Date endDate;
 
-    public PlatformKnowledgeBaseShutdownEvent(int eventID, Date dateEvent, int ruleBaseID, Date endDate) {
+    public PlatformKnowledgeBaseShutdownEvent(long eventID, Date dateEvent, long ruleBaseID, Date endDate) {
         super(eventID, dateEvent, ruleBaseID);
         this.endDate = endDate;
     }

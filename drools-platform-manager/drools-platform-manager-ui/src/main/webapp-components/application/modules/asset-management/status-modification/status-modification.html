@@ -10,10 +10,10 @@
                 </div>
                 <div class="panel-body">
                     <!-- Search form -->
-                    <form role="form" name="SearchForm">
+                    <form role="form" artifactId="SearchForm">
                         <div class="form-group" ng-class="namePackageSelectClass" >
-                            <label for="package-name-select">Rule Package Name</label>
-                            <select id="package-name-select" ui-select2="selectPackage" ng-model="package"
+                            <label for="package-artifactId-select">Rule Package Name</label>
+                            <select id="package-artifactId-select" ui-select2="selectPackage" ng-model="package"
                                     class="form-control"
                                     style="padding:0;height:auto;width:auto;"
                                     data-placeholder="Select a package">
@@ -68,7 +68,7 @@
                             <table class="table table-hover table-striped">
                                 <thead>
                                 <tr>
-                                    <th class="bold">Asset name</th>
+                                    <th class="bold">Asset artifactId</th>
                                     <th>Asset Type</th>
                                     <th>Current status</th>
                                     <th>Promote ?</th>
@@ -76,7 +76,7 @@
                                 </thead>
                                 <tbody>
                                 <tr ng-repeat="asset in assets">
-                                    <td>{{asset.name}}</td>
+                                    <td>{{asset.artifactId}}</td>
                                     <td>{{asset.type}}</td>
                                     <td>{{asset.status}}</td>
                                     <td>

@@ -9,7 +9,7 @@
 
 
   <bean id="calculateService" class="#basePackageName#.ServiceCalculate">
-    <property name="ruleBasePackage" ref="platformRunner"/>
+    <property artifactId="ruleBasePackage" ref="platformRunner"/>
   </bean>
   <!-- JAX-WS Service Endpoint -->
   <jaxws:endpoint id="personService" implementor="#calculateService" address="/calculateService"/>

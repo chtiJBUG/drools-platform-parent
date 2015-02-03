@@ -16,7 +16,8 @@
 package org.chtijbug.drools.platform.core;
 
 import org.chtijbug.drools.entity.history.DrlResourceFile;
-import org.chtijbug.drools.entity.history.GuvnorResourceFile;
+import org.chtijbug.drools.entity.history.ResourceFile;
+import org.chtijbug.drools.entity.history.WorkbenchResource;
 import org.chtijbug.drools.platform.core.droolslistener.PlatformHistoryListener;
 import org.chtijbug.drools.platform.core.droolslistener.RuleBaseReady;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServerInstance;
@@ -27,15 +28,10 @@ import org.chtijbug.drools.runtime.impl.JavaDialect;
 import org.chtijbug.drools.runtime.impl.RuleBaseSingleton;
 import org.chtijbug.drools.runtime.impl.RuleBaseStatefulSession;
 import org.chtijbug.drools.runtime.listener.HistoryListener;
-import org.chtijbug.drools.runtime.resource.Bpmn2DroolsResource;
-import org.chtijbug.drools.runtime.resource.DrlDroolsResource;
-import org.chtijbug.drools.runtime.resource.DroolsResource;
-import org.chtijbug.drools.runtime.resource.GuvnorDroolsResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -45,11 +41,12 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
      * Class Logger
      */
     private static Logger logger = LoggerFactory.getLogger(DroolsPlatformKnowledgeBase.class);
+    private List<ResourceFile> droolsResources;
 
     /**
      * Rule base ID (UID for the runtime
      */
-    private Integer ruleBaseID;
+    private Long ruleBaseID;
     /**
      * Rule base singleton (Knwledge session factory)
      */
@@ -57,7 +54,6 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
     /** */
     private PlatformHistoryListener historyListener;
 
-    private List<DroolsResource> droolsResources = new ArrayList<>();
     /**
      * Instant messaging channel *
      */
@@ -75,68 +71,50 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
      * Runtime internal Status
      */
     private boolean isReady = false;
-
+    private String groupId;
+    private String artifactId;
+    private String version;
     private String guvnorUsername;
     private String guvnorPassword;
-    private JavaDialect javaDialect = null;
 
     public DroolsPlatformKnowledgeBase() {/* nop*/}
 
-    public DroolsPlatformKnowledgeBase(Integer ruleBaseID, List<DroolsResource> droolsResources, JavaDialect javaDialect, WebSocketServerInstance webSocketServer, PlatformHistoryListener historyListener) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
-        this.ruleBaseID = ruleBaseID;
-        this.droolsResources = droolsResources;
-        this.webSocketServer = webSocketServer;
-        this.historyListener = historyListener;
-        this.javaDialect = javaDialect;
-        this.webSocketHostname = webSocketServer.getHostName();
-        this.webSocketPort = webSocketServer.getPort();
-        this.webSocketEndPoint = webSocketServer.getEndPoint();
-        initPlatformRuntime();
-    }
 
-    public DroolsPlatformKnowledgeBase(Integer ruleBaseID, List<DroolsResource> droolsResources, WebSocketServerInstance webSocketServer, PlatformHistoryListener historyListener) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
+
+    public DroolsPlatformKnowledgeBase(Long ruleBaseID, List<ResourceFile> droolsResources, WebSocketServerInstance webSocketServer, PlatformHistoryListener historyListener,String groupId,String artifactId,String version) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
         this.ruleBaseID = ruleBaseID;
         this.droolsResources = droolsResources;
         this.webSocketServer = webSocketServer;
         this.historyListener = historyListener;
         this.webSocketHostname = webSocketServer.getHostName();
         this.webSocketPort = webSocketServer.getPort();
+        this.groupId = groupId;
+        this.artifactId=artifactId;
+        this.version = version;
         initPlatformRuntime();
     }
 
 
     public void initPlatformRuntime() throws DroolsChtijbugException, InterruptedException, UnknownHostException {
         logger.debug(">>createPackageBasePackage");
-        ruleBasePackage = new RuleBaseSingleton(this.ruleBaseID, RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, this.historyListener);
-        if (javaDialect != null) {
-            ruleBasePackage.setJavaDialect(this.javaDialect);
-        }
+        ruleBasePackage = new RuleBaseSingleton(this.ruleBaseID, RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, this.historyListener,this.groupId,this.artifactId,this.version);
+
         PlatformKnowledgeBaseInitialConnectionEvent platformKnowledgeBaseInitialConnectionEvent = new PlatformKnowledgeBaseInitialConnectionEvent(-1, new Date(), this.ruleBaseID);
         platformKnowledgeBaseInitialConnectionEvent.setRuleBaseID(this.ruleBaseID);
-        platformKnowledgeBaseInitialConnectionEvent.setSessionId(-1);
+        platformKnowledgeBaseInitialConnectionEvent.setSessionId(new Long(-1));
         platformKnowledgeBaseInitialConnectionEvent.setHostname(this.webSocketHostname);
         platformKnowledgeBaseInitialConnectionEvent.setPort(this.webSocketPort);
         platformKnowledgeBaseInitialConnectionEvent.setEndPoint(this.webSocketEndPoint);
-        if (droolsResources.size() == 1 && droolsResources.get(0) instanceof GuvnorDroolsResource) {
-            GuvnorDroolsResource guvnorDroolsResource = (GuvnorDroolsResource) droolsResources.get(0);
-            GuvnorResourceFile guvnorResourceFile = new GuvnorResourceFile(guvnorDroolsResource.getBaseUrl(), guvnorDroolsResource.getWebappName(), guvnorDroolsResource.getPackageName(), guvnorDroolsResource.getPackageVersion(), guvnorDroolsResource.getUsername(), guvnorDroolsResource.getPassword());
-            platformKnowledgeBaseInitialConnectionEvent.getResourceFiles().add(guvnorResourceFile);
-            ruleBasePackage.setGuvnor_username(guvnorResourceFile.getGuvnor_userName());
-            ruleBasePackage.setGuvnor_password(guvnorResourceFile.getGuvnor_password());
-            this.guvnorUsername = guvnorResourceFile.getGuvnor_userName();
-            this.guvnorPassword = guvnorResourceFile.getGuvnor_password();
+        if (droolsResources.size() == 1 && droolsResources.get(0) instanceof WorkbenchResource) {
+            WorkbenchResource droolsResource = (WorkbenchResource)droolsResources.get(0);
+            platformKnowledgeBaseInitialConnectionEvent.getResourceFiles().add(droolsResource);
+            this.guvnorUsername = droolsResource.getUserName();
+            this.guvnorPassword = droolsResource.getPassword();
             //historyListener.fireEvent(platformKnowledgeBaseInitialConnectionEvent);
         } else {
-            for (DroolsResource droolsResource : droolsResources) {
-                if (droolsResource instanceof DrlDroolsResource) {
-                    DrlDroolsResource drlDroolsResource = (DrlDroolsResource) droolsResource;
+            for (ResourceFile droolsResource : droolsResources) {
+                if (droolsResource instanceof DrlResourceFile) {
                     DrlResourceFile drlResourceFile = new DrlResourceFile();
-                    drlResourceFile.setFileName(drlDroolsResource.getFileName());
-                    platformKnowledgeBaseInitialConnectionEvent.getResourceFiles().add(drlResourceFile);
-                } else if (droolsResource instanceof Bpmn2DroolsResource) {
-                    Bpmn2DroolsResource drlDroolsRessource = (Bpmn2DroolsResource) droolsResource;
-                    DrlResourceFile drlResourceFile = new DrlResourceFile();
-                    drlResourceFile.setFileName(drlDroolsRessource.getFileName());
                     platformKnowledgeBaseInitialConnectionEvent.getResourceFiles().add(drlResourceFile);
                 }
             }
@@ -187,29 +165,13 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
     }
 
     @Override
-    public void createKBase(DroolsResource... res) throws DroolsChtijbugException {
-        this.ruleBasePackage.createKBase(res);
+    public void loadKBase(String version) throws DroolsChtijbugException {
+        this.ruleBasePackage.loadKBase(version);
     }
 
-    @Override
-    public void createKBase(List<DroolsResource> res) throws DroolsChtijbugException {
-        this.ruleBasePackage.createKBase(res);
-    }
 
-    @Override
-    public void RecreateKBaseWithNewRessources(DroolsResource... res) throws DroolsChtijbugException {
-        this.ruleBasePackage.RecreateKBaseWithNewRessources(res);
-    }
 
-    @Override
-    public void RecreateKBaseWithNewRessources(List<DroolsResource> res) throws DroolsChtijbugException {
-        this.ruleBasePackage.RecreateKBaseWithNewRessources(res);
-    }
 
-    @Override
-    public void ReloadWithSameRessources() throws DroolsChtijbugException {
-        this.ruleBasePackage.ReloadWithSameRessources();
-    }
 
     @Override
     public HistoryListener getHistoryListener() {
@@ -217,7 +179,7 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
     }
 
     @Override
-    public int getRuleBaseID() {
+    public Long getRuleBaseID() {
         return this.ruleBaseID;
     }
 
@@ -227,11 +189,6 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
         this.shutdown();
     }
 
-    @Override
-    public void cleanup() {
-        this.ruleBasePackage.cleanup();
-        this.webSocketServer.end();
-    }
 
     public boolean isReady() {
         return isReady;
@@ -250,7 +207,7 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
         this.isReady = ready;
     }
 
-    public void setRuleBaseID(Integer ruleBaseID) {
+    public void setRuleBaseID(Long ruleBaseID) {
         this.ruleBaseID = ruleBaseID;
     }
 
@@ -294,11 +251,11 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
         this.platformQueueName = platformQueueName;
     }
 
-    public List<DroolsResource> getDroolsResources() {
+    public List<ResourceFile> getDroolsResources() {
         return droolsResources;
     }
 
-    public void setDroolsResources(List<DroolsResource> droolsResources) {
+    public void setDroolsResources(List<ResourceFile> droolsResources) {
         this.droolsResources = droolsResources;
     }
 

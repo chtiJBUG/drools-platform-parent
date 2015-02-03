@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
-  <display-name>Drools Platform - Administration UI</display-name>
+  <display-artifactId>Drools Platform - Administration UI</display-artifactId>
 
   <!--Spring root context -->
   <context-param>
-    <param-name>contextConfigLocation</param-name>
+    <param-artifactId>contextConfigLocation</param-artifactId>
     <param-value>classpath*:META-INF/spring/spring-application-context.xml</param-value>
   </context-param>
   <listener>
@@ -14,69 +14,69 @@
 
   <!-- Reads request input using UTF-8 encoding -->
   <filter>
-    <filter-name>characterEncodingFilter</filter-name>
+    <filter-artifactId>characterEncodingFilter</filter-artifactId>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
     <async-supported>true</async-supported>
     <init-param>
-      <param-name>encoding</param-name>
+      <param-artifactId>encoding</param-artifactId>
       <param-value>UTF-8</param-value>
     </init-param>
     <init-param>
-      <param-name>forceEncoding</param-name>
+      <param-artifactId>forceEncoding</param-artifactId>
       <param-value>true</param-value>
     </init-param>
   </filter>
   <filter-mapping>
-    <filter-name>characterEncodingFilter</filter-name>
+    <filter-artifactId>characterEncodingFilter</filter-artifactId>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
 
   <!-- Spring security -->
   <filter>
-    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-artifactId>springSecurityFilterChain</filter-artifactId>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     <async-supported>true</async-supported>
   </filter>
   <filter-mapping>
-    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-artifactId>springSecurityFilterChain</filter-artifactId>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
   <!-- Compress the HTTP response -->
   <!--filter>
-      <filter-name>GZIPFilter</filter-name>
+      <filter-artifactId>GZIPFilter</filter-artifactId>
       <filter-class>org.chtijbug.drools.platform.web.filter.GZIPFilter</filter-class>
   </filter>
   <filter-mapping>
-      <filter-name>GZIPFilter</filter-name>
+      <filter-artifactId>GZIPFilter</filter-artifactId>
       <url-pattern>/*</url-pattern>
   </filter-mapping-->
 
   <!-- Rewrite for Angular HTML5 mode -->
   <filter>
-    <filter-name>UrlRewriteFilter</filter-name>
+    <filter-artifactId>UrlRewriteFilter</filter-artifactId>
     <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
     <async-supported>true</async-supported>
     <init-param>
-      <param-name>logLevel</param-name>
+      <param-artifactId>logLevel</param-artifactId>
       <param-value>slf4j</param-value>
     </init-param>
   </filter>
   <filter-mapping>
-    <filter-name>UrlRewriteFilter</filter-name>
+    <filter-artifactId>UrlRewriteFilter</filter-artifactId>
     <url-pattern>/*</url-pattern>
     <dispatcher>REQUEST</dispatcher>
   </filter-mapping>
 
   <!-- Replace the <base> element with the context endPoint-->
   <filter>
-    <filter-name>DynamicBaseFilter</filter-name>
+    <filter-artifactId>DynamicBaseFilter</filter-artifactId>
     <filter-class>org.chtijbug.drools.platform.web.filter.DynamicBaseFilter</filter-class>
     <async-supported>true</async-supported>
   </filter>
   <filter-mapping>
-    <filter-name>DynamicBaseFilter</filter-name>
+    <filter-artifactId>DynamicBaseFilter</filter-artifactId>
     <url-pattern>/index.html</url-pattern>
     <dispatcher>REQUEST</dispatcher>
     <dispatcher>FORWARD</dispatcher>
@@ -84,17 +84,17 @@
 
   <!-- Spring MVC Servlet -->
   <servlet>
-    <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+    <servlet-artifactId>Spring MVC Dispatcher Servlet</servlet-artifactId>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <init-param>
-      <param-name>contextConfigLocation</param-name>
+      <param-artifactId>contextConfigLocation</param-artifactId>
       <param-value>classpath*:META-INF/spring/servlet-context.xml</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
     <async-supported>true</async-supported>
   </servlet>
   <servlet-mapping>
-    <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+    <servlet-artifactId>Spring MVC Dispatcher Servlet</servlet-artifactId>
     <url-pattern>/server/*</url-pattern>
   </servlet-mapping>
 

@@ -10,11 +10,11 @@
                 </div>
                 <div class="panel-body">
                     <!-- Search form -->
-                    <form role="form" name="SearchForm">
+                    <form role="form" artifactId="SearchForm">
                         <h4>Guvnor</h4>
                         <div class="form-group" ng-class="namePackageSelectClass">
-                            <label for="package-name-select">Rule Package Name</label>
-                            <select id="package-name-select" ui-select2="selectPackage" ng-model="filters.packageName"
+                            <label for="package-artifactId-select">Rule Package Name</label>
+                            <select id="package-artifactId-select" ui-select2="selectPackage" ng-model="filters.groupId"
                                     class="form-control"
                                     style="padding:0;height:auto;width:auto;"
                                     data-placeholder="Select a package">
@@ -52,7 +52,7 @@
                                 <h4>Runtime</h4>
                                 <label for="IPaddr">Hostname</label>
                                 <small>(Optional)</small>
-                                <input id="IPaddr" class="form-control" name="hostname" type="text"
+                                <input id="IPaddr" class="form-control" artifactId="hostname" type="text"
                                        placeholder="Enter the hostname" data-ng-model="filters.hostname">
                                 <br>
 
@@ -115,7 +115,7 @@
                                     <th class="bold">Rulebase ID</th>
                                     <th class="bold">Runtime URL</th>
                                     <!--th class="bold">Status</th-->
-                                    <th class="bold">Rule Package name</th>
+                                    <th class="bold">Rule Package artifactId</th>
                                     <th class="bold">Session Execution ID</th>
                                     <th class="bold">Started at</th>
                                     <th class="bold">Ended at</th>
@@ -176,7 +176,7 @@
                                 <legend class="scheduler-border">Process Details</legend>
                                 <ul class="list-unstyled">
                                     <li>
-                                        <b>Process name : </b>{{allSessionExecutionDetails.processDetails.processName}}
+                                        <b>Process artifactId : </b>{{allSessionExecutionDetails.processDetails.processName}}
                                     </li>
                                     <li>
                                         <b>Process Execution status : </b>{{allSessionExecutionDetails.processDetails.processExecutionStatus}}
@@ -191,14 +191,14 @@
                                 <div class="col-md-3">
                                     <fieldset>
                                         <legend>Filter the details</legend>
-                                        <form role="form" name="SearchDetailsForm">
+                                        <form role="form" artifactId="SearchDetailsForm">
                                             <h4>Rule</h4>
                                             <div class="form-group" ng-class="ruleName">
 
-                                                <select id="rule-name-select" ui-select2="selectRuleName" ng-model="detailsFilters.ruleNameSelect"
+                                                <select id="rule-artifactId-select" ui-select2="selectRuleName" ng-model="detailsFilters.ruleNameSelect"
                                                         class="form-control"
                                                         style="padding:0;height:auto;width:auto;"
-                                                        data-placeholder="Select the rule name">
+                                                        data-placeholder="Select the rule artifactId">
                                                     <option value=""></option>
                                                     <option ng-repeat="r in ruleNameList" value="{{r}}">{{r}}
                                                     </option>
@@ -231,10 +231,10 @@
 
                                             <div class="form-group" ng-class="fullClassName">
 
-                                                <select id="full-class-name-select" ui-select2="selectFullClassName" ng-model="detailsFilters.fullClassNameSelect"
+                                                <select id="full-class-artifactId-select" ui-select2="selectFullClassName" ng-model="detailsFilters.fullClassNameSelect"
                                                         class="form-control"
                                                         style="padding:0;height:auto;width:auto;"
-                                                        data-placeholder="Select a class name">
+                                                        data-placeholder="Select a class artifactId">
                                                     <option value=""></option>
                                                     <option ng-repeat="f in fullClassNameList" value="{{f}}">{{f}}
                                                     </option>
@@ -269,7 +269,7 @@
                                                 <div class="col-md-6">
                                                     <ul class="list-unstyled">
                                                         <li><b>Rule Execution Name : </b>{{ruleExecutionDetails.ruleName}}</li>
-                                                        <li><b>Rule Package Name : </b>{{ruleExecutionDetails.packageName}}</li>
+                                                        <li><b>Rule Package Name : </b>{{ruleExecutionDetails.groupId}}</li>
                                                         <li>
                                                             <b><a  ng-click="whenFacts = !whenFacts;"><i ng-show="!whenFacts" class="fa fa fa-plus-square-o"></i><i ng-show="whenFacts" class="fa fa-minus-square-o"></i> whenFacts </a>:</b> <br>
                                                             <!-- Had to add style="..." to keep indentation instead of class="list-unstyled" from bootstrap which doesn't keep indentation in addition of removing bullets -->
@@ -296,14 +296,14 @@
                                                                 <!-- I had to add style="..." to keep indentation instead of class="list-unstyled" from bootstrap which doesn't keep indentation in addition of removing bullets -->
                                                                 <ul collapse="!ruleAssetBool" style="list-style-type:none;">
                                                                     <li>
-                                                                        <b>Asset name :</b> {{ruleExecutionDetails.ruleAsset.assetName}}
+                                                                        <b>Asset artifactId :</b> {{ruleExecutionDetails.ruleAsset.assetName}}
                                                                     </li>
                                                                     <li>
                                                                         <b><a  ng-click="ruleAssetCategoryBool = !ruleAssetCategoryBool;"><i ng-show="!ruleAssetCategoryBool" class="fa fa fa-plus-square-o"></i><i ng-show="ruleAssetCategoryBool" class="fa fa-minus-square-o"></i> Rule Asset Category </a>:</b> <br>
                                                                         <ul collapse="!ruleAssetCategoryBool">
                                                                             <li ng-repeat="ruleCategoryItem in ruleExecutionDetails.ruleAsset.ruleAssetCategory">
                                                                                 <b>ID :</b> {{ruleCategoryItem.id}}
-                                                                                <b>Category name :</b> {{ruleCategoryItem.categoryName}}
+                                                                                <b>Category artifactId :</b> {{ruleCategoryItem.categoryName}}
                                                                             </li>
                                                                         </ul>
                                                                     </li>
