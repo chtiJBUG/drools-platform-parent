@@ -36,12 +36,12 @@ public class SessionExecution {
     @ManyToOne
     @JoinColumn(name = "platform_runtime_instance_id", referencedColumnName = "id")
     private PlatformRuntimeInstance platformRuntimeInstance;
-    private Integer sessionId;
+    private Long sessionId;
     @Column(nullable = false)
     private Date startDate;
     private Date endDate;
-    private Integer startEventID;
-    private Integer stopEventID;
+    private Long startEventID;
+    private Long stopEventID;
     @Enumerated(EnumType.STRING)
     private SessionExecutionStatus sessionExecutionStatus;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sessionExecution")
@@ -72,11 +72,11 @@ public class SessionExecution {
         this.platformRuntimeInstance = platformRuntimeInstance;
     }
 
-    public Integer getSessionId() {
+    public Long getSessionId() {
         return sessionId;
     }
 
-    public void setSessionId(Integer sessionId) {
+    public void setSessionId(Long sessionId) {
         this.sessionId = sessionId;
     }
 
@@ -96,19 +96,19 @@ public class SessionExecution {
         this.endDate = endDate;
     }
 
-    public Integer getStartEventID() {
+    public Long getStartEventID() {
         return startEventID;
     }
 
-    public void setStartEventID(Integer startEventID) {
+    public void setStartEventID(Long startEventID) {
         this.startEventID = startEventID;
     }
 
-    public Integer getStopEventID() {
+    public Long getStopEventID() {
         return stopEventID;
     }
 
-    public void setStopEventID(Integer stopEventID) {
+    public void setStopEventID(Long stopEventID) {
         this.stopEventID = stopEventID;
     }
 

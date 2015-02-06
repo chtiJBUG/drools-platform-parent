@@ -34,7 +34,7 @@ public class WebSocketSessionManager {
 
     private static final Logger LOG = Logger.getLogger(WebSocketSessionManager.class);
 
-    private Map<Integer, WebSocketClient> webSocketClientList = new HashMap<>();
+    private Map<Long, WebSocketClient> webSocketClientList = new HashMap<>();
 
     @Value(value = "${knowledge.numberRetriesConnectionToRuntime}")
     private int numberRetries;
@@ -54,11 +54,11 @@ public class WebSocketSessionManager {
 
     }
 
-    public Set<Integer> getAllRuleBaseID() {
+    public Set<Long> getAllRuleBaseID() {
         return webSocketClientList.keySet();
     }
 
-    public void removeClient(Integer ruleBaseID) throws IOException {
+    public void removeClient(Long ruleBaseID) throws IOException {
         WebSocketClient webSocketClient = this.webSocketClientList.get(ruleBaseID);
         if (webSocketClient != null) {
             webSocketClient.closeSession();
@@ -66,7 +66,7 @@ public class WebSocketSessionManager {
         this.webSocketClientList.remove(ruleBaseID);
     }
 
-    public Boolean exists(Integer ruleBaseID) {
+    public Boolean exists(Long ruleBaseID) {
         boolean result = false;
         if (webSocketClientList.containsKey(ruleBaseID)) {
             result = true;
@@ -77,7 +77,7 @@ public class WebSocketSessionManager {
     }
 
 
-    public Boolean isAlive(Integer ruleBaseID) {
+    public Boolean isAlive(Long ruleBaseID) {
         boolean result = false;
         if (this.webSocketClientList != null && this.webSocketClientList.get(ruleBaseID) != null) {
             Heartbeat heartbeat = this.webSocketClientList.get(ruleBaseID).getHeartbeat();
@@ -93,7 +93,7 @@ public class WebSocketSessionManager {
         return result;
     }
 
-    public WebSocketClient getWebSocketClient(Integer ruleBaseID) {
+    public WebSocketClient getWebSocketClient(Long ruleBaseID) {
         WebSocketClient webSocketClient = null;
         if (webSocketClientList.containsKey(ruleBaseID)) {
             webSocketClient = webSocketClientList.get(ruleBaseID);

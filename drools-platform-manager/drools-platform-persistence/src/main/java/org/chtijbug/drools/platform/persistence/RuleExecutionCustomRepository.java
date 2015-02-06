@@ -20,9 +20,9 @@ import org.chtijbug.drools.platform.persistence.pojo.RuleExecution;
 
 public interface RuleExecutionCustomRepository {
 
-    RuleExecution findByRuleBaseIDAndSessionIDAndRuleFlowNameAndRuleName(Integer ruleBaseID, Integer sessionId, String ruleFlowGroup, String ruleName);
+    RuleExecution findByRuleBaseIDAndSessionIDAndRuleFlowNameAndRuleName(Long ruleBaseID, Long sessionId, String ruleFlowGroup, String ruleName);
 
 
-    RuleExecution findActiveRuleByRuleBaseIDAndSessionIDAndRuleName(Integer ruleBaseID, Integer sessionId, String ruleName);
+    RuleExecution findActiveRuleByRuleBaseIDAndSessionIDAndRuleName(Long ruleBaseID, Long sessionId, String ruleName);
 
 }

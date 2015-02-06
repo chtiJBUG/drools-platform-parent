@@ -16,13 +16,14 @@
 package org.chtijbug.drools.platform.backend.service.runtimeevent.impl.knowledgeBase;
 
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.entity.history.DrlResourceFile;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseDelResourceEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
+import org.chtijbug.drools.runtime.resource.FileKnowledgeResource;
+import org.chtijbug.drools.runtime.resource.WorkbenchKnowledgeResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,16 +47,16 @@ public class KnowledgeBaseDelRessourceEventStrategy extends AbstractEventHandler
         if (existingPlatformRuntimeInstances.size() == 1) {
             PlatformRuntimeInstance existingPlatformRuntimeInstance = existingPlatformRuntimeInstances.get(0);
 
-            if (knowledgeBaseDelResourceEvent.getResourceFiles().size() == 1 && knowledgeBaseDelResourceEvent.getResourceFiles().get(0) instanceof GuvnorResourceFile) {
+            if (knowledgeBaseDelResourceEvent.getKnowledgeResources().size() == 1 && knowledgeBaseDelResourceEvent.getKnowledgeResources().get(0) instanceof WorkbenchKnowledgeResource) {
                 for (DroolsResource existingResource : existingPlatformRuntimeInstance.getDroolsRessources()) {
                     existingResource.setEndDate(knowledgeBaseDelResourceEvent.getDateEvent());
                     existingPlatformRuntimeInstance.setStopEventID(knowledgeBaseDelResourceEvent.getEventID());
                 }
 
             } else {
-                DrlResourceFile drlResourceFile = (DrlResourceFile) knowledgeBaseDelResourceEvent.getResourceFiles().get(0);
+                FileKnowledgeResource drlResourceFile = (FileKnowledgeResource) knowledgeBaseDelResourceEvent.getKnowledgeResources().get(0);
                 for (DroolsResource existingResource : existingPlatformRuntimeInstance.getDroolsRessources()) {
-                    if (existingResource.getFileName().equals(drlResourceFile.getFileName())) {
+                    if (existingResource.getFileName().equals(drlResourceFile.getPath())) {
                         existingResource.setEndDate(knowledgeBaseDelResourceEvent.getDateEvent());
                         existingResource.setStopEventID(knowledgeBaseDelResourceEvent.getEventID());
                     }

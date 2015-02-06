@@ -43,7 +43,7 @@ public class SessionExecutionRepositoryImpl implements SessionExecutionCustomRep
      */
 
     @Override
-    public SessionExecution findByRuleBaseIDAndSessionIdAndEndDateIsNull(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionId") Integer sessionId) {
+    public SessionExecution findByRuleBaseIDAndSessionIdAndEndDateIsNull(@Param("ruleBaseID") Long ruleBaseID, @Param("sessionId") Long sessionId) {
         logger.debug(">> findByRuleBaseIDAndSessionIdAndEndDateIsNull");
         SessionExecution sessionExecutionFound = null;
         try {

@@ -76,8 +76,8 @@ public class RuntimeResource {
                         PlatformRuntimeDefinition platformRuntimeDefinition = platformRuntimeInstance.getPlatformRuntimeDefinition();
                         if (!platformRuntimeDefinition.getDroolsRessourcesDefinition().isEmpty()) {
                             DroolsResource guvnorResource = platformRuntimeDefinition.getDroolsRessourcesDefinition().get(0);
-                            rulePackage = guvnorResource.getGuvnor_packageName();
-                            version = guvnorResource.getGuvnor_packageVersion();
+                            rulePackage = guvnorResource.getArtifactId();
+                            version = guvnorResource.getVersion();
                         }
                         return new RuntimeInstance(platformRuntimeInstance.getId(), platformRuntimeInstance.getRuleBaseID(), url, rulePackage, version);
                     }
@@ -201,10 +201,10 @@ public class RuntimeResource {
 
                     if (guvnorResource.getEndDate() == null) {
 
-                        String guvnorUrl = guvnorResource.getGuvnor_url() + guvnorResource.getGuvnor_appName();
+                        String guvnorUrl = guvnorResource.getGuvnor_url() + guvnorResource.getGroupId();
                         output.setGuvnorUrl(guvnorUrl);
-                        output.setRulePackage(guvnorResource.getGuvnor_packageName());
-                        output.setVersion(guvnorResource.getGuvnor_packageVersion());
+                        output.setRulePackage(guvnorResource.getArtifactId());
+                        output.setVersion(guvnorResource.getVersion());
 
                     }
                     String hostname = runtimeInstance.getPlatformRuntimeDefinition().getDeploymentHost().getHostname();

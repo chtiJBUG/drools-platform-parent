@@ -38,15 +38,15 @@ public class FireAllRulesExecution {
     @ManyToOne
     private SessionExecution sessionExecution;
 
-    private Integer startEventID;
+    private Long startEventID;
 
     @Enumerated(EnumType.STRING)
     private FireAllRulesExecutionStatus fireAllRulesExecutionStatus;
 
 
-    private Integer stopEventID;
+    private Long stopEventID;
 
-    private Integer maxRulesEventID;
+    private Long maxRulesEventID;
 
     public FireAllRulesExecution() {
     }
@@ -75,11 +75,11 @@ public class FireAllRulesExecution {
         this.endDate = endDate;
     }
 
-    public Integer getStartEventID() {
+    public Long getStartEventID() {
         return startEventID;
     }
 
-    public void setStartEventID(Integer startEventID) {
+    public void setStartEventID(Long startEventID) {
         this.startEventID = startEventID;
     }
 
@@ -124,19 +124,19 @@ public class FireAllRulesExecution {
     }
 
 
-    public Integer getStopEventID() {
+    public Long getStopEventID() {
         return stopEventID;
     }
 
-    public void setStopEventID(Integer stopEventID) {
+    public void setStopEventID(Long stopEventID) {
         this.stopEventID = stopEventID;
     }
 
-    public Integer getMaxRulesEventID() {
+    public Long getMaxRulesEventID() {
         return maxRulesEventID;
     }
 
-    public void setMaxRulesEventID(Integer maxRulesEventID) {
+    public void setMaxRulesEventID(Long maxRulesEventID) {
         this.maxRulesEventID = maxRulesEventID;
     }
 

@@ -17,5 +17,5 @@ package org.chtijbug.drools.platform.backend.wsclient.listener;
 
 
 public interface IsAliveListener {
-    public void messageReceived(Integer ruleBaseID);
+    public void messageReceived(Long ruleBaseID);
 }

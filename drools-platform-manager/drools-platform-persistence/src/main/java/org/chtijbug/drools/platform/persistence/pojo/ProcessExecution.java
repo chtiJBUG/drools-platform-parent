@@ -41,9 +41,9 @@ public class ProcessExecution {
     @Enumerated(EnumType.STRING)
     private ProcessExecutionStatus processExecutionStatus;
 
-    private Integer startEventID;
+    private Long startEventID;
 
-    private Integer stopEventID;
+    private Long stopEventID;
 
     @ManyToOne
     @JoinColumn(name = "sessionexecution_id", referencedColumnName = "id")
@@ -95,19 +95,19 @@ public class ProcessExecution {
         this.endDate = endDate;
     }
 
-    public Integer getStartEventID() {
+    public Long getStartEventID() {
         return startEventID;
     }
 
-    public void setStartEventID(Integer startEventID) {
+    public void setStartEventID(Long startEventID) {
         this.startEventID = startEventID;
     }
 
-    public Integer getStopEventID() {
+    public Long getStopEventID() {
         return stopEventID;
     }
 
-    public void setStopEventID(Integer stopEventID) {
+    public void setStopEventID(Long stopEventID) {
         this.stopEventID = stopEventID;
     }
 

@@ -16,7 +16,7 @@
 package org.chtijbug.drools.platform.runtime.javase;
 
 import com.google.common.base.Throwables;
-import org.chtijbug.drools.entity.history.ResourceFile;
+import org.chtijbug.drools.entity.history.KnowledgeResource;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBaseRuntime;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServerInstance;
@@ -52,7 +52,7 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
     /** */
     private WebSocketServerInstance runtimeWebSocketServerService;
 
-    private List<ResourceFile> droolsResources = new ArrayList<>();
+    private List<KnowledgeResource> droolsResources = new ArrayList<>();
     /**
      * Instant messaging channel *
      */
@@ -81,10 +81,13 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
 
 
 
-    public DroolsPlatformKnowledgeBaseJavaSE(Long ruleBaseID, List<ResourceFile> droolsResources,
+    public DroolsPlatformKnowledgeBaseJavaSE(Long ruleBaseID,String groupId,String artifactId,String version, List<KnowledgeResource> droolsResources,
                                              String webSocketHostname, int webSocketPort,
                                              String platformServer) {
         this.ruleBaseID = ruleBaseID;
+        this.groupId= groupId;
+        this.artifactId = artifactId;
+        this.version = version;
         this.droolsResources = droolsResources;
         this.webSocketHostname = webSocketHostname;
         this.webSocketPort = webSocketPort;
@@ -92,10 +95,13 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
         initPlatformRuntime();
     }
 
-    public DroolsPlatformKnowledgeBaseJavaSE(Long ruleBaseID, List<ResourceFile> droolsResources,
+    public DroolsPlatformKnowledgeBaseJavaSE(Long ruleBaseID,String groupId,String artifactId,String version, List<KnowledgeResource> droolsResources,
                                              String webSocketHostname,
                                              String platformServer) {
         this.ruleBaseID = ruleBaseID;
+        this.groupId= groupId;
+        this.artifactId = artifactId;
+        this.version = version;
         this.droolsResources = droolsResources;
         this.webSocketHostname = webSocketHostname;
         this.platformServer = platformServer;
@@ -151,6 +157,10 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
         ruleBasePackage.dispose();
     }
 
+    @Override
+    public void RecreateKBaseWithNewResources(List<KnowledgeResource> droolsResources) {
+        this.ruleBasePackage.RecreateKBaseWithNewResources(droolsResources);
+    }
 
 
     @Override
@@ -160,7 +170,7 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
 
 
 
-    public List<ResourceFile> getDroolsResources() {
+    public List<KnowledgeResource> getDroolsResources() {
         return this.droolsResources;
     }
 
@@ -200,7 +210,7 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
         this.platformPort = platformPort;
     }
 
-    public void setDroolsResources(List<ResourceFile> droolsResources) {
+    public void setDroolsResources(List<KnowledgeResource> droolsResources) {
         this.droolsResources = droolsResources;
     }
 

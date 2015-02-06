@@ -39,7 +39,7 @@ public class JmsStorageHistoryListener implements PlatformHistoryListener {
 
     private static final Logger LOG = Logger.getLogger(JmsStorageHistoryListener.class);
 
-    private Integer ruleBaseID;
+    private Long ruleBaseID;
 
     private MessageProducer producer;
 
@@ -94,7 +94,7 @@ public class JmsStorageHistoryListener implements PlatformHistoryListener {
     }
 
     public void shutdown() {
-        final PlatformKnowledgeBaseShutdownEvent platformKnowledgeBaseShutdownEvent = new PlatformKnowledgeBaseShutdownEvent(-1, new Date(), Integer.valueOf(this.ruleBaseID).intValue(), new Date());
+        final PlatformKnowledgeBaseShutdownEvent platformKnowledgeBaseShutdownEvent = new PlatformKnowledgeBaseShutdownEvent(-1, new Date(), Long.valueOf(this.ruleBaseID).intValue(), new Date());
 
         try {
             this.fireEvent(platformKnowledgeBaseShutdownEvent);

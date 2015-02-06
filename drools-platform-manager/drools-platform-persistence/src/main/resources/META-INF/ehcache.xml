@@ -1,7 +1,7 @@
 <ehcache>
   <diskStore path="java.io.tmpdir"/>
 
-  <cache artifactId="sampleCache1"
+  <cache name="sampleCache1"
          maxElementsInMemory="10000"
          eternal="false"
          overflowToDisk="true"

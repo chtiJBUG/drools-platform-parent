@@ -1,8 +1,8 @@
 package org.chtijbug.drools.platform.runtime.javase;
 
 
-import org.chtijbug.drools.runtime.resource.DroolsResource;
-import org.chtijbug.drools.runtime.resource.GuvnorDroolsResource;
+import org.chtijbug.drools.entity.history.KnowledgeResource;
+import org.chtijbug.drools.runtime.resource.WorkbenchKnowledgeResource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,16 +18,14 @@ public class Main {
     public static void main(String args[]) throws Exception {
 
 
-        GuvnorDroolsResource guvnorRessource = GuvnorDroolsResource
-                .createGuvnorRessource("http://localhost:8080", "drools-guvnor",
-                        "loyalty", "LATEST",
-                        "admin", "admin");
+        WorkbenchKnowledgeResource guvnorRessource = new WorkbenchKnowledgeResource("http://localhost:8080", "drools-guvnor",
+                        "loyalty", "LATEST");
 
-        List<DroolsResource> droolsResources = new ArrayList<>();
+        List<KnowledgeResource> droolsResources = new ArrayList<>();
 
         droolsResources.add(guvnorRessource);
         DroolsPlatformKnowledgeBaseJavaSE ruleBasePackage = new DroolsPlatformKnowledgeBaseJavaSE();
-        ruleBasePackage.setRuleBaseID(5500);
+        ruleBasePackage.setRuleBaseID(5500L);
         ruleBasePackage.setWebSocketHostname("192.168.2.11");
         ruleBasePackage.setPlatformServer("192.168.2.11");
         ruleBasePackage.setDroolsResources(droolsResources);

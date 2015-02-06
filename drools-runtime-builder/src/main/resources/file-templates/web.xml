@@ -3,11 +3,11 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
          http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
-  <display-artifactId>CXF Example Webservice</display-artifactId>
+  <display-name>CXF Example Webservice</display-name>
 
 
   <context-param>
-    <param-artifactId>contextConfigLocation</param-artifactId>
+    <param-name>contextConfigLocation</param-name>
     <param-value>classpath:spring/application-context.xml</param-value>
   </context-param>
 
@@ -18,32 +18,32 @@
 
 
   <servlet>
-    <servlet-artifactId>websocket</servlet-artifactId>
+    <servlet-name>websocket</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <init-param>
-      <param-artifactId>config-location</param-artifactId>
+      <param-name>config-location</param-name>
       <param-value>/WEB-INF/websocket-servlet.xml</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
   <servlet>
-    <servlet-artifactId>soap</servlet-artifactId>
+    <servlet-name>soap</servlet-name>
     <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
     <init-param>
-      <param-artifactId>config-location</param-artifactId>
+      <param-name>config-location</param-name>
       <param-value>/WEB-INF/soap-servlet.xml</param-value>
     </init-param>
     <load-on-startup>2</load-on-startup>
   </servlet>
 
   <servlet-mapping>
-    <servlet-artifactId>soap</servlet-artifactId>
+    <servlet-name>soap</servlet-name>
     <url-pattern>/service/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-artifactId>websocket</servlet-artifactId>
+    <servlet-name>websocket</servlet-name>
     <url-pattern>/socket/*</url-pattern>
   </servlet-mapping>
 

@@ -46,7 +46,7 @@ public class RuleflowGroupRepositoryCacheService {
     @Autowired
     RuleflowGroupRepository ruleflowGroupRepository;
 
-    public List<RuleflowGroup> findAllStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(Integer ruleBaseID, Integer sessionID, String processInstanceID, String ruleFlowGroupName) {
+    public List<RuleflowGroup> findAllStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(Long ruleBaseID, Long sessionID, String processInstanceID, String ruleFlowGroupName) {
         List<RuleflowGroup> result = null;
         GridCacheProjection<Long, IndexRuleFlowGroup> ruleFlowGroupCache = getCache();
         GridCacheQueries<Long, IndexRuleFlowGroup> queries = ruleFlowGroupCache.queries();
@@ -68,7 +68,7 @@ public class RuleflowGroupRepositoryCacheService {
     }
 
 
-    public RuleflowGroup findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(Integer ruleBaseID, Integer sessionID, String processInstanceID, String ruleFlowGroupName) {
+    public RuleflowGroup findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(Long ruleBaseID, Long sessionID, String processInstanceID, String ruleFlowGroupName) {
         RuleflowGroup result = null;
         GridCacheProjection<Long, IndexRuleFlowGroup> ruleFlowGroupCache = getCache();
         GridCacheQueries<Long, IndexRuleFlowGroup> queries = ruleFlowGroupCache.queries();
@@ -88,7 +88,7 @@ public class RuleflowGroupRepositoryCacheService {
     }
 
 
-    public RuleflowGroup findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndRuleflowgroupName(Integer ruleBaseID, Integer sessionID, String ruleFlowGroupName) {
+    public RuleflowGroup findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndRuleflowgroupName(Long ruleBaseID, Long sessionID, String ruleFlowGroupName) {
         RuleflowGroup result = null;
         GridCacheProjection<Long, IndexRuleFlowGroup> ruleFlowGroupCache = getCache();
         GridCacheQueries<Long, IndexRuleFlowGroup> queries = ruleFlowGroupCache.queries();
@@ -108,7 +108,7 @@ public class RuleflowGroupRepositoryCacheService {
     }
 
 
-    public void save(Integer ruleBaseID, Integer sessionID, Integer processIntanceId, RuleflowGroup ruleflowGroup) {
+    public void save(Long ruleBaseID, Long sessionID, Long processIntanceId, RuleflowGroup ruleflowGroup) {
 
 
         RuleflowGroup savedObject = this.ruleflowGroupRepository.save(ruleflowGroup);

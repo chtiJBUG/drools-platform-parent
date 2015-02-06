@@ -31,13 +31,13 @@ import java.util.List;
 @Component
 public interface PlatformRuntimeInstanceRepository extends JpaRepository<PlatformRuntimeInstance, Long>, PlatformRuntimeInstanceCustomRepository {
 
-    List<PlatformRuntimeInstance> findByRuleBaseIDAndEndDateNull(Integer ruleBaseId);
+    List<PlatformRuntimeInstance> findByRuleBaseIDAndEndDateNull(Long ruleBaseId);
 
-    List<PlatformRuntimeInstance> findByRuleBaseIDAndShutdowDateNull(Integer ruleBaseId);
+    List<PlatformRuntimeInstance> findByRuleBaseIDAndShutdowDateNull(Long ruleBaseId);
 
-    PlatformRuntimeInstance findByRuleBaseID(Integer ruleBaseId);
+    PlatformRuntimeInstance findByRuleBaseID(Long ruleBaseId);
 
-    PlatformRuntimeInstance findByRuleBaseIDAndStartDateAndEndDateNull(Integer ruleBaseId, Date startDate);
+    PlatformRuntimeInstance findByRuleBaseIDAndStartDateAndEndDateNull(Long ruleBaseId, Date startDate);
 
 
     @Query(value = "select pri " +
@@ -45,7 +45,7 @@ public interface PlatformRuntimeInstanceRepository extends JpaRepository<Platfor
             "where pri.platformRuntimeDefinition = prd " +
             "and drs member of prd.droolsRessourcesDefinition " +
             "and pri.endDate is null " +
-            "and drs.guvnor_packageName=:packageName")
+            "and drs.version=:packageName")
     public List<PlatformRuntimeInstance> findByPackageNameActiveRuntime(@Param("packageName") String packageName);
 
 
@@ -53,7 +53,7 @@ public interface PlatformRuntimeInstanceRepository extends JpaRepository<Platfor
             "from PlatformRuntimeInstance pri,PlatformRuntimeDefinition prd ,DroolsResource drs " +
             "where pri.platformRuntimeDefinition = prd " +
             "and drs member of prd.droolsRessourcesDefinition " +
-            "and drs.guvnor_packageName=:packageName")
+            "and drs.version=:packageName")
     public List<PlatformRuntimeInstance> findByPackageNameAllRuntime(@Param("packageName") String packageName);
 
 }

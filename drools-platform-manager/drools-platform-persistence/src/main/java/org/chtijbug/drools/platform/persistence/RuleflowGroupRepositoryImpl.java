@@ -26,7 +26,7 @@ public class RuleflowGroupRepositoryImpl implements RuleflowGroupCustomRepositor
     //  @Query("select r from PlatformRuntimeInstance pp,SessionExecution s,ProcessExecution p,RuleflowGroup r where s.platformRuntimeInstance=pp and pp.endDate is null and p.sessionExecution=s and  r.processExecution=p and pp.ruleBaseID= :ruleBaseID and s.sessionId =:sessionID  and p.ProcessInstanceId = :processInstanceID and r.endDate is null and r.ruleflowGroup = :ruleFlowGroupName")
 
     @Override
-    public List<RuleflowGroup> findAllStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionID") Integer sessionID, @Param("processInstanceID") String processInstanceID, @Param("ruleFlowGroupName") String ruleFlowGroupName) {
+    public List<RuleflowGroup> findAllStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(@Param("ruleBaseID") Long ruleBaseID, @Param("sessionID") Long sessionID, @Param("processInstanceID") String processInstanceID, @Param("ruleFlowGroupName") String ruleFlowGroupName) {
         logger.debug(">> findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName");
         try {
             String jpaQuery = "select r.id,  r.enddate,  r.ruleflowgroup,  r.ruleflowgroupstatus,  r.startdate,  r.starteventid, \n" +
@@ -63,7 +63,7 @@ public class RuleflowGroupRepositoryImpl implements RuleflowGroupCustomRepositor
      * "and r.ruleflowGroup = :ruleFlowGroupName")
      */
     @Override
-    public RuleflowGroup findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionID") Integer sessionID, @Param("processInstanceID") String processInstanceID, @Param("ruleFlowGroupName") String ruleFlowGroupName) {
+    public RuleflowGroup findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(@Param("ruleBaseID") Long ruleBaseID, @Param("sessionID") Long sessionID, @Param("processInstanceID") String processInstanceID, @Param("ruleFlowGroupName") String ruleFlowGroupName) {
         logger.debug(">> findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName");
         try {
             String jpaQuery = "select r.id,  r.enddate,  r.ruleflowgroup,  r.ruleflowgroupstatus,  r.startdate,  r.starteventid, \n" +
@@ -95,7 +95,7 @@ public class RuleflowGroupRepositoryImpl implements RuleflowGroupCustomRepositor
     //   @Query("select r from PlatformRuntimeInstance pp,SessionExecution s,ProcessExecution p,RuleflowGroup r where s.platformRuntimeInstance=pp and pp.endDate is null and p.sessionExecution=s and  r.processExecution=p and pp.ruleBaseID= :ruleBaseID and s.sessionId =:sessionID  and r.endDate is null and r.ruleflowGroup = :ruleFlowGroupName")
 
     @Override
-    public List<RuleflowGroup> findAllStartedRuleFlowGroupByRuleBaseIDAndSessionAndRuleflowgroupName(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionID") Integer sessionID, @Param("ruleFlowGroupName") String ruleFlowGroupName) {
+    public List<RuleflowGroup> findAllStartedRuleFlowGroupByRuleBaseIDAndSessionAndRuleflowgroupName(@Param("ruleBaseID") Long ruleBaseID, @Param("sessionID") Long sessionID, @Param("ruleFlowGroupName") String ruleFlowGroupName) {
         logger.debug(">> findAllStartedRuleFlowGroupByRuleBaseIDAndSessionAndRuleflowgroupName");
         try {
             String jpaQuery = "select r.id,  r.enddate,  r.ruleflowgroup,  r.ruleflowgroupstatus,  r.startdate,  r.starteventid, \n" +
@@ -125,7 +125,7 @@ public class RuleflowGroupRepositoryImpl implements RuleflowGroupCustomRepositor
     //   @Query("select r from PlatformRuntimeInstance pp,SessionExecution s,ProcessExecution p,RuleflowGroup r where s.platformRuntimeInstance=pp and pp.endDate is null  and p.sessionExecution=s and  r.processExecution=p and pp.ruleBaseID= :ruleBaseID and s.sessionId =:sessionID  and r.endDate is null and r.ruleflowGroup = :ruleFlowGroupName")
 
     @Override
-    public RuleflowGroup findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndRuleflowgroupName(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionID") Integer sessionID, @Param("ruleFlowGroupName") String ruleFlowGroupName) {
+    public RuleflowGroup findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndRuleflowgroupName(@Param("ruleBaseID") Long ruleBaseID, @Param("sessionID") Long sessionID, @Param("ruleFlowGroupName") String ruleFlowGroupName) {
         logger.debug(">> findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndRuleflowgroupName");
         try {
             String jpaQuery = "select r.id,  r.enddate,  r.ruleflowgroup,  r.ruleflowgroupstatus,  r.startdate,  r.starteventid, \n" +

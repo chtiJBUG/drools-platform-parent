@@ -32,7 +32,7 @@ public class RuleExecutionRepositoryImpl implements RuleExecutionCustomRepositor
     private EntityManager entityManager;
 
     @Override
-    public RuleExecution findByRuleBaseIDAndSessionIDAndRuleFlowNameAndRuleName(Integer ruleBaseID, Integer sessionId, String ruleFlowGroup, String ruleName) {
+    public RuleExecution findByRuleBaseIDAndSessionIDAndRuleFlowNameAndRuleName(Long ruleBaseID, Long sessionId, String ruleFlowGroup, String ruleName) {
         logger.debug(">> findByRuleBaseIDAndSessionIDAndRuleFlowNameAndRuleName");
         RuleExecution ruleExecutionFound = null;
         try {
@@ -77,7 +77,7 @@ public class RuleExecutionRepositoryImpl implements RuleExecutionCustomRepositor
     }
 
     //@Override
-    public RuleExecution findActiveRuleInSessionByRuleBaseIDAndSessionID(Integer ruleBaseID, Integer sessionId) {
+    public RuleExecution findActiveRuleInSessionByRuleBaseIDAndSessionID(Long ruleBaseID, Long sessionId) {
         RuleExecution ruleExecutionFound = null;
         logger.debug(">> findActiveRuleInSessionByRuleBaseIDAndSessionID");
         try {
@@ -109,7 +109,7 @@ public class RuleExecutionRepositoryImpl implements RuleExecutionCustomRepositor
     }
 
     //@Override
-    public RuleExecution findActiveRuleInRuleFlowGroupByRuleBaseIDAndSessionID(Integer ruleBaseID, Integer sessionId) {
+    public RuleExecution findActiveRuleInRuleFlowGroupByRuleBaseIDAndSessionID(Long ruleBaseID, Long sessionId) {
         logger.debug(">> findActiveRuleInRuleFlowGroupByRuleBaseIDAndSessionID");
         RuleExecution ruleExecutionFound = null;
         try {
@@ -144,7 +144,7 @@ public class RuleExecutionRepositoryImpl implements RuleExecutionCustomRepositor
     }
 
     @Override
-    public RuleExecution findActiveRuleByRuleBaseIDAndSessionIDAndRuleName(Integer ruleBaseID, Integer sessionId, String ruleName) {
+    public RuleExecution findActiveRuleByRuleBaseIDAndSessionIDAndRuleName(Long ruleBaseID, Long sessionId, String ruleName) {
         logger.debug(">> findActiveRuleInRuleFlowGroupByRuleBaseIDAndSessionID");
         RuleExecution ruleExecutionFound = null;
         try {

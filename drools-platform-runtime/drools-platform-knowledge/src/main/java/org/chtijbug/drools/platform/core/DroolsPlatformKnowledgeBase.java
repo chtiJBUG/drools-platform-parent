@@ -15,16 +15,15 @@
  */
 package org.chtijbug.drools.platform.core;
 
-import org.chtijbug.drools.entity.history.DrlResourceFile;
-import org.chtijbug.drools.entity.history.ResourceFile;
-import org.chtijbug.drools.entity.history.WorkbenchResource;
+import org.chtijbug.drools.runtime.resource.FileKnowledgeResource;
+import org.chtijbug.drools.entity.history.KnowledgeResource;
+import org.chtijbug.drools.runtime.resource.WorkbenchKnowledgeResource;
 import org.chtijbug.drools.platform.core.droolslistener.PlatformHistoryListener;
 import org.chtijbug.drools.platform.core.droolslistener.RuleBaseReady;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServerInstance;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseInitialConnectionEvent;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.RuleBaseSession;
-import org.chtijbug.drools.runtime.impl.JavaDialect;
 import org.chtijbug.drools.runtime.impl.RuleBaseSingleton;
 import org.chtijbug.drools.runtime.impl.RuleBaseStatefulSession;
 import org.chtijbug.drools.runtime.listener.HistoryListener;
@@ -41,7 +40,7 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
      * Class Logger
      */
     private static Logger logger = LoggerFactory.getLogger(DroolsPlatformKnowledgeBase.class);
-    private List<ResourceFile> droolsResources;
+    private List<KnowledgeResource> droolsResources;
 
     /**
      * Rule base ID (UID for the runtime
@@ -81,7 +80,7 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
 
 
 
-    public DroolsPlatformKnowledgeBase(Long ruleBaseID, List<ResourceFile> droolsResources, WebSocketServerInstance webSocketServer, PlatformHistoryListener historyListener,String groupId,String artifactId,String version) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
+    public DroolsPlatformKnowledgeBase(Long ruleBaseID, List<KnowledgeResource> droolsResources, WebSocketServerInstance webSocketServer, PlatformHistoryListener historyListener,String groupId,String artifactId,String version) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
         this.ruleBaseID = ruleBaseID;
         this.droolsResources = droolsResources;
         this.webSocketServer = webSocketServer;
@@ -105,17 +104,17 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
         platformKnowledgeBaseInitialConnectionEvent.setHostname(this.webSocketHostname);
         platformKnowledgeBaseInitialConnectionEvent.setPort(this.webSocketPort);
         platformKnowledgeBaseInitialConnectionEvent.setEndPoint(this.webSocketEndPoint);
-        if (droolsResources.size() == 1 && droolsResources.get(0) instanceof WorkbenchResource) {
-            WorkbenchResource droolsResource = (WorkbenchResource)droolsResources.get(0);
-            platformKnowledgeBaseInitialConnectionEvent.getResourceFiles().add(droolsResource);
+        if (droolsResources.size() == 1 && droolsResources.get(0) instanceof WorkbenchKnowledgeResource) {
+            WorkbenchKnowledgeResource droolsResource = (WorkbenchKnowledgeResource)droolsResources.get(0);
+            platformKnowledgeBaseInitialConnectionEvent.getKnowledgeResources().add(droolsResource);
             this.guvnorUsername = droolsResource.getUserName();
             this.guvnorPassword = droolsResource.getPassword();
             //historyListener.fireEvent(platformKnowledgeBaseInitialConnectionEvent);
         } else {
-            for (ResourceFile droolsResource : droolsResources) {
-                if (droolsResource instanceof DrlResourceFile) {
-                    DrlResourceFile drlResourceFile = new DrlResourceFile();
-                    platformKnowledgeBaseInitialConnectionEvent.getResourceFiles().add(drlResourceFile);
+            for (KnowledgeResource droolsResource : droolsResources) {
+                if (droolsResource instanceof FileKnowledgeResource) {
+                    FileKnowledgeResource drlResourceFile = new FileKnowledgeResource();
+                    platformKnowledgeBaseInitialConnectionEvent.getKnowledgeResources().add(drlResourceFile);
                 }
             }
         }
@@ -189,6 +188,11 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
         this.shutdown();
     }
 
+    @Override
+    public void RecreateKBaseWithNewResources(List<KnowledgeResource> droolsResources) {
+        this.ruleBasePackage.RecreateKBaseWithNewResources(droolsResources);
+    }
+
 
     public boolean isReady() {
         return isReady;
@@ -251,11 +255,11 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
         this.platformQueueName = platformQueueName;
     }
 
-    public List<ResourceFile> getDroolsResources() {
+    public List<KnowledgeResource> getDroolsResources() {
         return droolsResources;
     }
 
-    public void setDroolsResources(List<ResourceFile> droolsResources) {
+    public void setDroolsResources(List<KnowledgeResource> droolsResources) {
         this.droolsResources = droolsResources;
     }
 

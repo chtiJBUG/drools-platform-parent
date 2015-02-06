@@ -39,6 +39,10 @@
       <groupId>org.chtijbug.drools</groupId>
       <artifactId>drools-platform-entity</artifactId>
     </dependency>
+      <dependency>
+          <groupId>org.chtijbug.drools</groupId>
+          <artifactId>drools-framework-runtime-base</artifactId>
+      </dependency>
     <!-- Rest Plumb -->
     <dependency>
       <groupId>com.jayway.jsonpath</groupId>
@@ -105,11 +109,6 @@
       <artifactId>xbean-spring</artifactId>
     </dependency>
     <!-- Test -->
-    <dependency>
-      <groupId>org.chtijbug.drools</groupId>
-      <artifactId>drools-framework-runtime-base</artifactId>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>

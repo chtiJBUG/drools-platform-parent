@@ -15,12 +15,11 @@
  */
 package org.chtijbug.platform.example.simplebpmn;
 
+import org.chtijbug.drools.entity.history.KnowledgeResource;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBaseRuntime;
 import org.chtijbug.drools.platform.runtime.javase.DroolsPlatformKnowledgeBaseJavaSE;
 import org.chtijbug.drools.runtime.RuleBaseSession;
-import org.chtijbug.drools.runtime.resource.Bpmn2DroolsResource;
-import org.chtijbug.drools.runtime.resource.DrlDroolsResource;
-import org.chtijbug.drools.runtime.resource.DroolsResource;
+import org.chtijbug.drools.runtime.resource.FileKnowledgeResource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +30,13 @@ public class SimpleBPMNClient {
 
         DroolsPlatformKnowledgeBaseRuntime droolsPlatformKnowledgeBase = null;
         try {
-            DrlDroolsResource drlFile = DrlDroolsResource.createClassPathResource("ruleflow2.drl");
-            Bpmn2DroolsResource bpmnFile = Bpmn2DroolsResource.createClassPathResource("RuleFlowProcess2.bpmn2");
-            List<DroolsResource> droolsResources = new ArrayList<>();
+
+            FileKnowledgeResource drlFile = FileKnowledgeResource.createDRLClassPathResource("ruleflow2.drl");
+            FileKnowledgeResource bpmnFile = FileKnowledgeResource.createBPMN2ClassPathResource("RuleFlowProcess2.bpmn2");
+            List<KnowledgeResource> droolsResources = new ArrayList<>();
             droolsResources.add(drlFile);
             droolsResources.add(bpmnFile);
-            droolsPlatformKnowledgeBase = new DroolsPlatformKnowledgeBaseJavaSE(12, droolsResources, "localhost", 22500, "localhost");
+            droolsPlatformKnowledgeBase = new DroolsPlatformKnowledgeBaseJavaSE(12L, "group","artifact","version",droolsResources, "localhost", 22500, "localhost");
             while (droolsPlatformKnowledgeBase.isReady() == false) {
                 System.out.println("sleep");
                 Thread.sleep(2000);

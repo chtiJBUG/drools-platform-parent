@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions artifactId="newWSDL1" targetNamespace="http://j2ee.netbeans.org/wsdl/BpelModule1/src/newWSDL1"
+<definitions name="newWSDL1" targetNamespace="http://j2ee.netbeans.org/wsdl/BpelModule1/src/newWSDL1"
              xmlns="http://schemas.xmlsoap.org/wsdl/"
              xmlns:xsd="http://www.w3.org/2001/XMLSchema"
              xmlns:tns="http://j2ee.netbeans.org/wsdl/BpelModule1/src/newWSDL1"
@@ -11,39 +11,39 @@
             <xsd:import namespace="http://xml.netbeans.org/schema/newXMLDocument" schemaLocation="model.xsd"/>
         </xsd:schema>
     </types>
-    <message artifactId="newWSDL1OperationRequest">
-        <part artifactId="part1" element="ns:input"/>
+    <message name="newWSDL1OperationRequest">
+        <part name="part1" element="ns:input"/>
     </message>
-    <message artifactId="newWSDL1OperationResponse">
-        <part artifactId="part1" element="ns:output"/>
+    <message name="newWSDL1OperationResponse">
+        <part name="part1" element="ns:output"/>
     </message>
-    <portType artifactId="newWSDL1PortType">
-        <operation artifactId="newWSDL1Operation">
-            <input artifactId="input1" message="tns:newWSDL1OperationRequest"/>
-            <output artifactId="output1" message="tns:newWSDL1OperationResponse"/>
+    <portType name="newWSDL1PortType">
+        <operation name="newWSDL1Operation">
+            <input name="input1" message="tns:newWSDL1OperationRequest"/>
+            <output name="output1" message="tns:newWSDL1OperationResponse"/>
         </operation>
     </portType>
-    <binding artifactId="newWSDL1PortTypeBinding" type="tns:newWSDL1PortType">
+    <binding name="newWSDL1PortTypeBinding" type="tns:newWSDL1PortType">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-        <operation artifactId="newWSDL1Operation">
+        <operation name="newWSDL1Operation">
             <soap:operation/>
-            <input artifactId="input1">
+            <input name="input1">
                 <soap:body use="literal"/>
             </input>
-            <output artifactId="output1">
+            <output name="output1">
                 <soap:body use="literal"/>
             </output>
         </operation>
     </binding>
-    <service artifactId="newWSDL1Service">
-        <port artifactId="newWSDL1PortTypeBindingPort" binding="tns:newWSDL1PortTypeBinding">
+    <service name="newWSDL1Service">
+        <port name="newWSDL1PortTypeBindingPort" binding="tns:newWSDL1PortTypeBinding">
             <soap:address location="http://localhost:${HttpDefaultPort}/service"/>
         </port>
     </service>
-    <plnk:partnerLinkType artifactId="newWSDL1">
+    <plnk:partnerLinkType name="newWSDL1">
         <!-- A partner link type is automatically generated when a new port type is added. Partner link types are used by BPEL processes. 
 In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
 A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.-->
-        <plnk:role artifactId="newWSDL1PortTypeRole" portType="tns:newWSDL1PortType"/>
+        <plnk:role name="newWSDL1PortTypeRole" portType="tns:newWSDL1PortType"/>
     </plnk:partnerLinkType>
 </definitions>

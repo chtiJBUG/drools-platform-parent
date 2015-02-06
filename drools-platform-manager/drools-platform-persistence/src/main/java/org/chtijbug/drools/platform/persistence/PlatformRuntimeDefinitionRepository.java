@@ -29,6 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface PlatformRuntimeDefinitionRepository extends JpaRepository<PlatformRuntimeDefinition, Long> {
 
 
-    PlatformRuntimeDefinition findByRuleBaseID(Integer ruleBaseId);
+    PlatformRuntimeDefinition findByRuleBaseID(Long ruleBaseId);
 
 }

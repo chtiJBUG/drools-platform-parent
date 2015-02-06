@@ -20,14 +20,14 @@ package org.chtijbug.drools.platform.web.model;
  */
 public class RuntimeInstance {
     private Long id;
-    private Integer ruleBaseId;
+    private Long ruleBaseId;
     private String url;
     private String rulePackage;
     private String version;
 
     public RuntimeInstance() {/* nop */}
 
-    public RuntimeInstance(Long id, Integer ruleBaseId, String url, String rulePackage, String version) {
+    public RuntimeInstance(Long id, Long ruleBaseId, String url, String rulePackage, String version) {
         this.id = id;
         this.ruleBaseId = ruleBaseId;
         this.url = url;
@@ -43,11 +43,11 @@ public class RuntimeInstance {
         this.id = id;
     }
 
-    public Integer getRuleBaseId() {
+    public Long getRuleBaseId() {
         return ruleBaseId;
     }
 
-    public void setRuleBaseId(Integer ruleBaseId) {
+    public void setRuleBaseId(Long ruleBaseId) {
         this.ruleBaseId = ruleBaseId;
     }
 

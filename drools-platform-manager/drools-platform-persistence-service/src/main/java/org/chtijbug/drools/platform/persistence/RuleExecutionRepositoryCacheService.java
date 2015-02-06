@@ -45,7 +45,7 @@ public class RuleExecutionRepositoryCacheService {
     RuleExecutionRepository ruleExecutionRepository;
 
 
-    public RuleExecution findByRuleBaseIDAndSessionIDAndRuleFlowNameAndRuleName(Integer ruleBaseID, Integer sessionId, String ruleFlowGroup, String ruleName) {
+    public RuleExecution findByRuleBaseIDAndSessionIDAndRuleFlowNameAndRuleName(Long ruleBaseID, Long sessionId, String ruleFlowGroup, String ruleName) {
 
         RuleExecution result = null;
         GridCacheProjection<Long, IndexRuleExecution> ruleExecutionCache = getCache();
@@ -67,7 +67,7 @@ public class RuleExecutionRepositoryCacheService {
     }
 
 
-    public RuleExecution findActiveRuleByRuleBaseIDAndSessionIDAndRuleName(Integer ruleBaseID, Integer sessionId, String ruleName) {
+    public RuleExecution findActiveRuleByRuleBaseIDAndSessionIDAndRuleName(Long ruleBaseID, Long sessionId, String ruleName) {
         RuleExecution result = null;
         GridCacheProjection<Long, IndexRuleExecution> ruleExecutionCache = getCache();
         GridCacheQueries<Long, IndexRuleExecution> queries = ruleExecutionCache.queries();
@@ -87,7 +87,7 @@ public class RuleExecutionRepositoryCacheService {
     }
 
 
-    public void save(Integer ruleBaseID, Integer sessionID, String ruleFlowGroupName, RuleExecution ruleExecution) {
+    public void save(Long ruleBaseID, Long sessionID, String ruleFlowGroupName, RuleExecution ruleExecution) {
 
 
         RuleExecution savedObject = this.ruleExecutionRepository.save(ruleExecution);

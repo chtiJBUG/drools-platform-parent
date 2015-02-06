@@ -28,13 +28,13 @@ public class FireAllRulesExecutionRepositoryCacheService {
     @Autowired
     FireAllRulesExecutionRepository fireAllRulesExecutionRepository;
 
-    public List<FireAllRulesExecution> findAllStartedFireAllRulesBySessionID(Integer sessionID) {
+    public List<FireAllRulesExecution> findAllStartedFireAllRulesBySessionID(Long sessionID) {
 
         return fireAllRulesExecutionRepository.findAllStartedFireAllRulesBySessionID(sessionID);
     }
 
 
-    public FireAllRulesExecution findStartedFireAllRulesBySessionID(Integer sessionID) {
+    public FireAllRulesExecution findStartedFireAllRulesBySessionID(Long sessionID) {
         return fireAllRulesExecutionRepository.findStartedFireAllRulesBySessionID(sessionID);
     }
 

@@ -1,7 +1,7 @@
 package org.chtijbug.drools.platform.runtime.javase.websocket;
 
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.entity.history.ResourceFile;
+import org.chtijbug.drools.entity.history.KnowledgeResource;
 import org.chtijbug.drools.platform.core.PlatformManagementKnowledgeBeanServiceFactory;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.entity.RequestStatus;
@@ -49,9 +49,9 @@ public class RuntimeWebSocketServerService {
                 if (droolsPlatformKnowledgeBaseJavaSE.getProjectClassLoader() != null) {
                     Thread.currentThread().setContextClassLoader(droolsPlatformKnowledgeBaseJavaSE.getProjectClassLoader());
                 }
-                List<ResourceFile> droolsResources = PlatformManagementKnowledgeBeanServiceFactory.extract(bean.getResourceFileList(), guvnorUsername, guvnorPassword);
+                List<KnowledgeResource> droolsResources = PlatformManagementKnowledgeBeanServiceFactory.extract(bean.getResourceFileList(), guvnorUsername, guvnorPassword);
                 try {
-                    droolsPlatformKnowledgeBaseJavaSE.RecreateKBaseWithNewRessources(droolsResources);
+                    droolsPlatformKnowledgeBaseJavaSE.RecreateKBaseWithNewResources(droolsResources);
                     bean.setRequestStatus(RequestStatus.SUCCESS);
                     this.sendMessage(bean);
                     this.droolsPlatformKnowledgeBaseJavaSE.setRuleBaseStatus(true);

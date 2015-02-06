@@ -20,7 +20,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "drools_resource", indexes = {@Index(columnList = "guvnor_packageName")})
+@Table(name = "drools_resource", indexes = {@Index(columnList = "artifactId")})
 @Cacheable(value = true)
 public class DroolsResource {
 
@@ -31,11 +31,11 @@ public class DroolsResource {
     @Column
     private String guvnor_url;
     @Column
-    private String guvnor_appName;
+    private String groupId;
     @Column
-    private String guvnor_packageName;
+    private String artifactId;
     @Column
-    private String guvnor_packageVersion;
+    private String version;
     @Column
     private String fileName;
     @Lob
@@ -53,11 +53,11 @@ public class DroolsResource {
     public DroolsResource() {
     }
 
-    public DroolsResource(String guvnor_url, String guvnor_appName, String guvnor_packageName, String guvnor_packageVersion) {
+    public DroolsResource(String guvnor_url, String groupId, String artifactId, String version) {
         this.guvnor_url = guvnor_url;
-        this.guvnor_appName = guvnor_appName;
-        this.guvnor_packageName = guvnor_packageName;
-        this.guvnor_packageVersion = guvnor_packageVersion;
+        this.groupId = groupId;
+        this.artifactId = artifactId;
+        this.version = version;
     }
 
     public DroolsResource(String fileName, String fileContent) {
@@ -77,16 +77,16 @@ public class DroolsResource {
         return guvnor_url;
     }
 
-    public String getGuvnor_appName() {
-        return guvnor_appName;
+    public String getGroupId() {
+        return groupId;
     }
 
-    public String getGuvnor_packageName() {
-        return guvnor_packageName;
+    public String getArtifactId() {
+        return artifactId;
     }
 
-    public String getGuvnor_packageVersion() {
-        return guvnor_packageVersion;
+    public String getVersion() {
+        return version;
     }
 
     public String getFileName() {
@@ -113,8 +113,8 @@ public class DroolsResource {
         this.endDate = endDate;
     }
 
-    public void setGuvnor_packageVersion(String guvnor_packageVersion) {
-        this.guvnor_packageVersion = guvnor_packageVersion;
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     public Long getStartEventID() {
@@ -140,9 +140,9 @@ public class DroolsResource {
 
         DroolsResource that = (DroolsResource) o;
 
-        if (!guvnor_appName.equals(that.guvnor_appName)) return false;
-        if (!guvnor_packageName.equals(that.guvnor_packageName)) return false;
-        if (!guvnor_packageVersion.equals(that.guvnor_packageVersion)) return false;
+        if (!groupId.equals(that.groupId)) return false;
+        if (!artifactId.equals(that.artifactId)) return false;
+        if (!version.equals(that.version)) return false;
         if (!guvnor_url.equals(that.guvnor_url)) return false;
 
         return true;
@@ -151,9 +151,9 @@ public class DroolsResource {
     @Override
     public int hashCode() {
         int result = guvnor_url.hashCode();
-        result = 31 * result + guvnor_appName.hashCode();
-        result = 31 * result + guvnor_packageName.hashCode();
-        result = 31 * result + guvnor_packageVersion.hashCode();
+        result = 31 * result + groupId.hashCode();
+        result = 31 * result + artifactId.hashCode();
+        result = 31 * result + version.hashCode();
         return result;
     }
 
@@ -161,9 +161,9 @@ public class DroolsResource {
     public String toString() {
         final StringBuffer sb = new StringBuffer("DroolsResource{");
         sb.append("guvnor_url='").append(guvnor_url).append('\'');
-        sb.append(", guvnor_appName='").append(guvnor_appName).append('\'');
-        sb.append(", guvnor_packageName='").append(guvnor_packageName).append('\'');
-        sb.append(", guvnor_packageVersion='").append(guvnor_packageVersion).append('\'');
+        sb.append(", groupId='").append(groupId).append('\'');
+        sb.append(", artifactId='").append(artifactId).append('\'');
+        sb.append(", version='").append(version).append('\'');
         sb.append(", fileName='").append(fileName).append('\'');
         sb.append(", fileContent='").append(fileContent).append('\'');
         sb.append('}');

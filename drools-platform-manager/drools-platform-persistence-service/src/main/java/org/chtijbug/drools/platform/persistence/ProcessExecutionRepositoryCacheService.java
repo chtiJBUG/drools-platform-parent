@@ -28,12 +28,12 @@ public class ProcessExecutionRepositoryCacheService {
     @Autowired
     ProcessExecutionRepository processExecutionRepository;
 
-    public List<ProcessExecution> findAllStartedProcessByRuleBaseIDAndSessionIDAndProcessInstanceId(Integer ruleBaseID, Integer sessionID, String processInstanceId) {
+    public List<ProcessExecution> findAllStartedProcessByRuleBaseIDAndSessionIDAndProcessInstanceId(Long ruleBaseID, Long sessionID, String processInstanceId) {
         return this.processExecutionRepository.findAllStartedProcessByRuleBaseIDAndSessionIDAndProcessInstanceId(ruleBaseID, sessionID, processInstanceId);
     }
 
 
-    public ProcessExecution findStartedProcessByRuleBaseIDBySessionIDAndProcessInstanceId(Integer ruleBaseID, Integer sessionID, String processInstanceId) {
+    public ProcessExecution findStartedProcessByRuleBaseIDBySessionIDAndProcessInstanceId(Long ruleBaseID, Long sessionID, String processInstanceId) {
 
         return this.processExecutionRepository.findStartedProcessByRuleBaseIDBySessionIDAndProcessInstanceId(ruleBaseID, sessionID, processInstanceId);
 

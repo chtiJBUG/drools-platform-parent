@@ -17,13 +17,13 @@
 package org.chtijbug.drools.platform.runtime.servlet.websocket;
 
 import org.apache.log4j.Logger;
+import org.chtijbug.drools.entity.history.KnowledgeResource;
 import org.chtijbug.drools.platform.core.PlatformManagementKnowledgeBeanServiceFactory;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServerInstance;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.platform.runtime.servlet.DroolsPlatformKnowledgeBaseJavaEE;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
-import org.chtijbug.drools.runtime.resource.DroolsResource;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -71,9 +71,9 @@ public class SpringWebSocketServer extends TextWebSocketHandler implements WebSo
                 this.sendMessage(bean);
                 break;
             case loadNewRuleVersion:
-                List<DroolsResource> droolsResources = PlatformManagementKnowledgeBeanServiceFactory.extract(bean.getResourceFileList(), platformKnowledgeBaseJavaEE.getGuvnorUsername(), platformKnowledgeBaseJavaEE.getGuvnorPassword());
+                List<KnowledgeResource> droolsResources = PlatformManagementKnowledgeBeanServiceFactory.extract(bean.getResourceFileList(), platformKnowledgeBaseJavaEE.getGuvnorUsername(), platformKnowledgeBaseJavaEE.getGuvnorPassword());
                 try {
-                    platformKnowledgeBaseJavaEE.RecreateKBaseWithNewRessources(droolsResources);
+                    platformKnowledgeBaseJavaEE.RecreateKBaseWithNewResources(droolsResources);
                     bean.setRequestStatus(RequestStatus.SUCCESS);
                     this.sendMessage(bean);
                     this.platformKnowledgeBaseJavaEE.setRuleBaseStatus(true);

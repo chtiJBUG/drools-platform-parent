@@ -60,6 +60,7 @@ public class ClassSourceCodeInjector {
                 methodBuilder.append(methodTemplate).append("\n\n");
             }
             fileContent = fileContent.replaceAll("#METHODS#", methodBuilder.toString());
+            fileContent = fileContent.replaceAll("#groupId#", basePackageName);
 
             writeStringToFile(this.toBeCodeInjected, fileContent, false);
         } catch (IOException e) {

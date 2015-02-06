@@ -24,13 +24,13 @@ import java.io.Serializable;
 public class IndexRuleFlowGroup implements Serializable {
 
     @GridCacheQuerySqlField
-    private Integer rulebaseid;
+    private Long rulebaseid;
 
     @GridCacheQuerySqlField
-    private Integer sessionid;
+    private Long sessionid;
 
     @GridCacheQuerySqlField
-    private Integer processintanceid;
+    private Long processintanceid;
 
     @GridCacheQuerySqlField
     private String ruleflowgroupname;
@@ -40,27 +40,27 @@ public class IndexRuleFlowGroup implements Serializable {
     public IndexRuleFlowGroup() {
     }
 
-    public Integer getRulebaseid() {
+    public Long getRulebaseid() {
         return rulebaseid;
     }
 
-    public void setRulebaseid(Integer rulebaseid) {
+    public void setRulebaseid(Long rulebaseid) {
         this.rulebaseid = rulebaseid;
     }
 
-    public Integer getSessionid() {
+    public Long getSessionid() {
         return sessionid;
     }
 
-    public void setSessionid(Integer sessionid) {
+    public void setSessionid(Long sessionid) {
         this.sessionid = sessionid;
     }
 
-    public Integer getProcessintanceid() {
+    public Long getProcessintanceid() {
         return processintanceid;
     }
 
-    public void setProcessintanceid(Integer processintanceid) {
+    public void setProcessintanceid(Long processintanceid) {
         this.processintanceid = processintanceid;
     }
 

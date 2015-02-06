@@ -20,5 +20,5 @@ import org.chtijbug.drools.platform.entity.PlatformResourceFile;
 import java.util.List;
 
 public interface VersionInfosListener {
-    public void messageReceived(Integer ruleBaseID, List<PlatformResourceFile> platformResourceFiles);
+    public void messageReceived(Long ruleBaseID, List<PlatformResourceFile> platformResourceFiles);
 }

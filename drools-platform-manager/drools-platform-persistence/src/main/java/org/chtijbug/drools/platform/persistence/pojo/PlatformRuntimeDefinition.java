@@ -31,7 +31,7 @@ public class PlatformRuntimeDefinition implements Serializable {
     private Long id;
 
     @Column(nullable = false)
-    private Integer ruleBaseID;
+    private Long ruleBaseID;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "platformRuntimeDefinition", fetch = FetchType.LAZY)
     private List<PlatformRuntimeInstance> platformRuntimeInstances = new ArrayList<>();
@@ -67,11 +67,11 @@ public class PlatformRuntimeDefinition implements Serializable {
     }
 
 
-    public Integer getRuleBaseID() {
+    public Long getRuleBaseID() {
         return ruleBaseID;
     }
 
-    public void setRuleBaseID(Integer ruleBaseID) {
+    public void setRuleBaseID(Long ruleBaseID) {
         this.ruleBaseID = ruleBaseID;
     }
 

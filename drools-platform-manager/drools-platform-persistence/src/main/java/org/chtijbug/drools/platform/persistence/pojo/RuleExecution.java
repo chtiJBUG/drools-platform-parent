@@ -35,9 +35,9 @@ public class RuleExecution {
     private Date startDate;
     private Date endDate;
 
-    private Integer startEventID;
+    private Long startEventID;
 
-    private Integer stopEventID;
+    private Long stopEventID;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "rule_execution_whenFacts")
@@ -107,19 +107,19 @@ public class RuleExecution {
         this.id = id;
     }
 
-    public Integer getStartEventID() {
+    public Long getStartEventID() {
         return startEventID;
     }
 
-    public void setStartEventID(Integer startEventID) {
+    public void setStartEventID(Long startEventID) {
         this.startEventID = startEventID;
     }
 
-    public Integer getStopEventID() {
+    public Long getStopEventID() {
         return stopEventID;
     }
 
-    public void setStopEventID(Integer stopEventID) {
+    public void setStopEventID(Long stopEventID) {
         this.stopEventID = stopEventID;
     }
 

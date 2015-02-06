@@ -19,5 +19,5 @@ import org.chtijbug.drools.platform.persistence.pojo.RealTimeParameters;
 
 
 public interface JMXInfosListener {
-    public void messageReceived(Integer ruleBaseID, RealTimeParameters realTimeParameters);
+    public void messageReceived(Long ruleBaseID, RealTimeParameters realTimeParameters);
 }

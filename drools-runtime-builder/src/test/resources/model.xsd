@@ -4,25 +4,25 @@
             targetNamespace="http://xml.netbeans.org/schema/newXMLDocument"
             xmlns:tns="http://xml.netbeans.org/schema/newXMLDocument"
             elementFormDefault="qualified">
-    <xsd:complexType artifactId="Person">
+    <xsd:complexType name="Person">
         <xsd:sequence>
-            <xsd:element artifactId="artifactId" type="xsd:string"/>
-            <xsd:element artifactId="surname" type="xsd:string"></xsd:element>
-            <xsd:element artifactId="birthDate" type="xsd:date"></xsd:element>
-            <xsd:element artifactId="sexe" type="xsd:string"></xsd:element>
-            <xsd:element artifactId="newElement" type="tns:Adress"></xsd:element>
+            <xsd:element name="name" type="xsd:string"/>
+            <xsd:element name="surname" type="xsd:string"></xsd:element>
+            <xsd:element name="birthDate" type="xsd:date"></xsd:element>
+            <xsd:element name="sexe" type="xsd:string"></xsd:element>
+            <xsd:element name="newElement" type="tns:Adress"></xsd:element>
         </xsd:sequence>
     </xsd:complexType>
-    <xsd:complexType artifactId="Adress">
+    <xsd:complexType name="Adress">
         <xsd:sequence>
-            <xsd:element artifactId="streetNumber" type="xsd:string"/>
-            <xsd:element artifactId="streetName" type="xsd:string"></xsd:element>
-            <xsd:element artifactId="zipCode" type="xsd:string"></xsd:element>
-            <xsd:element artifactId="cityName" type="xsd:string"></xsd:element>
-            <xsd:element artifactId="countryName" type="xsd:string"></xsd:element>
+            <xsd:element name="streetNumber" type="xsd:string"/>
+            <xsd:element name="streetName" type="xsd:string"></xsd:element>
+            <xsd:element name="zipCode" type="xsd:string"></xsd:element>
+            <xsd:element name="cityName" type="xsd:string"></xsd:element>
+            <xsd:element name="countryName" type="xsd:string"></xsd:element>
 
         </xsd:sequence>
     </xsd:complexType>
-    <xsd:element artifactId="input" type="tns:Person"/>
-    <xsd:element artifactId="output" type="tns:Person"/>
+    <xsd:element name="input" type="tns:Person"/>
+    <xsd:element name="output" type="tns:Person"/>
 </xsd:schema>

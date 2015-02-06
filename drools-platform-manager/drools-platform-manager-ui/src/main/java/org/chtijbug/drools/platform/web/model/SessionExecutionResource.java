@@ -16,10 +16,10 @@
 package org.chtijbug.drools.platform.web.model;
 
 public class SessionExecutionResource {
-    private Integer ruleBaseID;
+    private Long ruleBaseID;
     private String rulePackage;
     private String version;
-    private Integer sessionId;
+    private Long sessionId;
     private String runtimeURL;
     private String guvnorUrl;
     private String hostname;
@@ -31,7 +31,7 @@ public class SessionExecutionResource {
 
     public SessionExecutionResource() { /*nop*/ }
 
-    public SessionExecutionResource(Integer ruleBaseID, String rulePackage, String version, Integer sessionId, String runtimeURL, String guvnorUrl, String hostname, String status, String startDate, String endDate) {
+    public SessionExecutionResource(Long ruleBaseID, String rulePackage, String version, Long sessionId, String runtimeURL, String guvnorUrl, String hostname, String status, String startDate, String endDate) {
         this.ruleBaseID = ruleBaseID;
         this.rulePackage = rulePackage;
         this.version = version;
@@ -44,11 +44,11 @@ public class SessionExecutionResource {
         EndDate = endDate;
     }
 
-    public Integer getRuleBaseID() {
+    public Long getRuleBaseID() {
         return ruleBaseID;
     }
 
-    public void setRuleBaseID(Integer ruleBaseID) {
+    public void setRuleBaseID(Long ruleBaseID) {
         this.ruleBaseID = ruleBaseID;
     }
 
@@ -68,11 +68,11 @@ public class SessionExecutionResource {
         this.version = version;
     }
 
-    public Integer getSessionId() {
+    public Long getSessionId() {
         return sessionId;
     }
 
-    public void setSessionId(Integer sessionId) {
+    public void setSessionId(Long sessionId) {
         this.sessionId = sessionId;
     }
 

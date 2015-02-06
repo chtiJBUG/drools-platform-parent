@@ -42,6 +42,9 @@ public class RuntimeSiteTopology {
      */
     private String guvnorUrl = "http://localhost:8080";
     private String guvnorApplicationName = "drools-guvnor";
+    private String organizationalUnitName;
+
+    private String repositoryName;
     private String guvnorPackageName = "default";
     private String guvnorUserName = "admin";
     private String guvnorPassword = "admin";
@@ -133,10 +136,28 @@ public class RuntimeSiteTopology {
         return allEnvironments;
     }
 
+    public String getOrganizationalUnitName() {
+        return organizationalUnitName;
+    }
+
+    public void setOrganizationalUnitName(String organizationalUnitName) {
+        this.organizationalUnitName = organizationalUnitName;
+    }
+
+    public String getRepositoryName() {
+        return repositoryName;
+    }
+
+    public void setRepositoryName(String repositoryName) {
+        this.repositoryName = repositoryName;
+    }
+
     public GuvnorConnexionConfiguration buildGuvnorConfiguration() {
         return new GuvnorConnexionConfiguration(
                 getGuvnorUrl(),
                 getGuvnorApplicationName(),
+                getOrganizationalUnitName(),
+                getRepositoryName(),
                 getGuvnorPackageName(),
                 getGuvnorUserName(),
                 getGuvnorPassword());

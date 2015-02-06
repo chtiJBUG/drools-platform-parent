@@ -30,19 +30,19 @@ public class PlatformRuntimeInstanceRepositoryCacheService {
     @Autowired
     PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
-    public List<PlatformRuntimeInstance> findByRuleBaseIDAndEndDateNull(Integer ruleBaseId) {
+    public List<PlatformRuntimeInstance> findByRuleBaseIDAndEndDateNull(Long ruleBaseId) {
         return platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(ruleBaseId);
     }
 
-    public List<PlatformRuntimeInstance> findByRuleBaseIDAndShutdowDateNull(Integer ruleBaseId) {
+    public List<PlatformRuntimeInstance> findByRuleBaseIDAndShutdowDateNull(Long ruleBaseId) {
         return platformRuntimeInstanceRepository.findByRuleBaseIDAndShutdowDateNull(ruleBaseId);
     }
 
-    public PlatformRuntimeInstance findByRuleBaseID(Integer ruleBaseId) {
+    public PlatformRuntimeInstance findByRuleBaseID(Long ruleBaseId) {
         return platformRuntimeInstanceRepository.findByRuleBaseID(ruleBaseId);
     }
 
-    public PlatformRuntimeInstance findByRuleBaseIDAndStartDateAndEndDateNull(Integer ruleBaseId, Date startDate) {
+    public PlatformRuntimeInstance findByRuleBaseIDAndStartDateAndEndDateNull(Long ruleBaseId, Date startDate) {
         return platformRuntimeInstanceRepository.findByRuleBaseIDAndStartDateAndEndDateNull(ruleBaseId, startDate);
     }
 

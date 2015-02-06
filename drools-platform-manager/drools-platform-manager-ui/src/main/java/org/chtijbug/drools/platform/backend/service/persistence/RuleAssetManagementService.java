@@ -112,18 +112,7 @@ public class RuleAssetManagementService {
         }
     }
 
-    @Transactional
-    public void synchronizeInDBGuvnorCategories(String packageName, Asset asset) {
-        String assetName = asset.getName();
-        List<String> assetCategorylist = new ArrayList<>();
-        for (AssetCategory element : asset.getCategories()) {
-            String assetCategory = element.getName();
-            if (assetCategory != null && assetCategory.length() > 0) {
-                assetCategorylist.add(assetCategory);
-            }
-        }
-        this.getRuleAssetWithCategory(packageName, assetName, assetCategorylist, new Integer(asset.getVersionNumber()));
-    }
+
 
 
 }

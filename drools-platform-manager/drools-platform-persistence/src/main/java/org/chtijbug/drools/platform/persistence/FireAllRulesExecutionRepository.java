@@ -31,10 +31,10 @@ import java.util.List;
 public interface FireAllRulesExecutionRepository extends JpaRepository<FireAllRulesExecution, Long> {
 
     @Query("select r from FireAllRulesExecution r,SessionExecution s where r.sessionExecution = s and s.endDate is null and r.endDate is null and s.sessionId = :sessionID")
-    List<FireAllRulesExecution> findAllStartedFireAllRulesBySessionID(@Param("sessionID") Integer sessionID);
+    List<FireAllRulesExecution> findAllStartedFireAllRulesBySessionID(@Param("sessionID") Long sessionID);
 
     @Query("select r from FireAllRulesExecution r,SessionExecution s where r.sessionExecution = s and s.endDate is null and  r.endDate is null and s.sessionId = :sessionID")
-    FireAllRulesExecution findStartedFireAllRulesBySessionID(@Param("sessionID") Integer sessionID);
+    FireAllRulesExecution findStartedFireAllRulesBySessionID(@Param("sessionID") Long sessionID);
 
 
 }

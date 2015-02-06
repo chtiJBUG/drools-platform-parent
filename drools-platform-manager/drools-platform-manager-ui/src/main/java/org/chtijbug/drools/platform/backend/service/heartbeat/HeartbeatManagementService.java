@@ -37,7 +37,7 @@ public class HeartbeatManagementService {
     public void SynchronizeGuvnorCategories() {
 
 
-        for (Integer ruleBaseID : webSocketSessionManager.getAllRuleBaseID()) {
+        for (Long ruleBaseID : webSocketSessionManager.getAllRuleBaseID()) {
             WebSocketClient webSocketClient = webSocketSessionManager.getWebSocketClient(ruleBaseID);
             try {
                 if (webSocketClient.getSession().isOpen()) {

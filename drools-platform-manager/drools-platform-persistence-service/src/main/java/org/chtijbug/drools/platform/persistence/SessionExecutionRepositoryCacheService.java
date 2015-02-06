@@ -70,7 +70,7 @@ public class SessionExecutionRepositoryCacheService {
     }
 
     @Transactional
-    public SessionExecution findByRuleBaseIDAndSessionIdAndEndDateIsNull(Integer ruleBaseID, Integer sessionId) {
+    public SessionExecution findByRuleBaseIDAndSessionIdAndEndDateIsNull(Long ruleBaseID, Long sessionId) {
         SessionExecution result = null;
         GridCacheProjection<Long, IndexSessionExecution> ruleFlowGroupCache = getCache();
         GridCacheQueries<Long, IndexSessionExecution> queries = ruleFlowGroupCache.queries();
@@ -93,7 +93,7 @@ public class SessionExecutionRepositoryCacheService {
     }
 
 
-    public void save(Integer ruleBaseID, Integer sessionID, SessionExecution sessionExecution) {
+    public void save(Long ruleBaseID, Long sessionID, SessionExecution sessionExecution) {
 
 
         SessionExecution savedObject = this.sessionExecutionRepository.save(sessionExecution);

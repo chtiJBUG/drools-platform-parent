@@ -23,13 +23,13 @@ import java.util.List;
 public interface RuleflowGroupCustomRepository {
 
 
-    List<RuleflowGroup> findAllStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(Integer ruleBaseID, Integer sessionID, String processInstanceID, String ruleFlowGroupName);
+    List<RuleflowGroup> findAllStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(Long ruleBaseID, Long sessionID, String processInstanceID, String ruleFlowGroupName);
 
-    RuleflowGroup findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(Integer ruleBaseID, Integer sessionID, String processInstanceID, String ruleFlowGroupName);
+    RuleflowGroup findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndProcessInstanceIdAndRuleflowgroupName(Long ruleBaseID, Long sessionID, String processInstanceID, String ruleFlowGroupName);
 
-    List<RuleflowGroup> findAllStartedRuleFlowGroupByRuleBaseIDAndSessionAndRuleflowgroupName(Integer ruleBaseID, Integer sessionID, String ruleFlowGroupName);
+    List<RuleflowGroup> findAllStartedRuleFlowGroupByRuleBaseIDAndSessionAndRuleflowgroupName(Long ruleBaseID, Long sessionID, String ruleFlowGroupName);
 
-    RuleflowGroup findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndRuleflowgroupName(Integer ruleBaseID, Integer sessionID, String ruleFlowGroupName);
+    RuleflowGroup findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndRuleflowgroupName(Long ruleBaseID, Long sessionID, String ruleFlowGroupName);
 
 
 }

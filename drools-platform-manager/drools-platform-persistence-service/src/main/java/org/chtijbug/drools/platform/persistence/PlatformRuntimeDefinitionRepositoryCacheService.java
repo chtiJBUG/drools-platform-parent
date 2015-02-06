@@ -25,7 +25,7 @@ public class PlatformRuntimeDefinitionRepositoryCacheService {
     @Autowired
     PlatformRuntimeDefinitionRepository platformRuntimeDefinitionRepository;
 
-    public PlatformRuntimeDefinition findByRuleBaseID(Integer ruleBaseId) {
+    public PlatformRuntimeDefinition findByRuleBaseID(Long ruleBaseId) {
         return this.platformRuntimeDefinitionRepository.findByRuleBaseID(ruleBaseId);
     }
 
