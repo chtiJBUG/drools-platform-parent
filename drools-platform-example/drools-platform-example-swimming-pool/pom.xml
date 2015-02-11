@@ -9,7 +9,7 @@
   <packaging>pom</packaging>
   <artifactId>drools-platform-example-swimming-pool</artifactId>
   <modules>
-    <module>swimming-pool-model</module>
+
     <module>swimming-pool-soap-server</module>
   </modules>
 

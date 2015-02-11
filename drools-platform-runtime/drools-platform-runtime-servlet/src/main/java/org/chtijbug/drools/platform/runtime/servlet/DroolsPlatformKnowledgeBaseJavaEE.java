@@ -46,9 +46,6 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
      * Rule base ID (UID for the runtime
      */
     private Long ruleBaseID;
-    private String groupId;
-    private String artifactId;
-    private String version;
     /**
      * Rule base singleton (Knowledge session factory)
      */
@@ -84,6 +81,11 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
     private String platformQueueName = "historyEventQueue";
 
     private JavaDialect javaDialect = null;
+    private String groupId;
+    private String artifactId;
+    private String version;
+    private String username;
+    private String password;
 
     public DroolsPlatformKnowledgeBaseJavaEE() {
     }
@@ -277,5 +279,45 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
 
     public List<KnowledgeResource> getDroolsResources() {
         return droolsResources;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setArtifactId(String artifactId) {
+        this.artifactId = artifactId;
+    }
+
+    public String getArtifactId() {
+        return artifactId;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

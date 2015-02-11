@@ -69,6 +69,8 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
     private String groupId;
     private String artifactId;
     private String version;
+    private String username;
+    private String password;
 
     /**
      * classLoader for osgi
@@ -246,5 +248,19 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
         this.version = version;
     }
 
+    public String getUsername() {
+        return username;
+    }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

@@ -43,11 +43,11 @@
     </plugins>
   </build>
   <dependencies>
-    <dependency>
-      <groupId>org.chtijbug.drools</groupId>
-      <artifactId>loyalty-model</artifactId>
-      <version>${project.version}</version>
-    </dependency>
+      <dependency>
+          <groupId>org.chtijbug.drools.samples</groupId>
+          <artifactId>chtijbug-samples-loyalty-model</artifactId>
+          <version>${chtijbug.samples.loyalty.model}</version>
+      </dependency>
     <dependency>
       <groupId>org.chtijbug.drools</groupId>
       <artifactId>drools-platform-runtime-servlet</artifactId>

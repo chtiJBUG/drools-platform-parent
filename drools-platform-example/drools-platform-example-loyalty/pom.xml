@@ -11,7 +11,6 @@
 
   <packaging>pom</packaging>
   <modules>
-    <module>loyalty-model</module>
     <module>loyalty-java-client</module>
     <module>loyalty-soap-server</module>
   </modules>

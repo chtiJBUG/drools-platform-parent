@@ -44,9 +44,9 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>org.chtijbug.drools</groupId>
-      <artifactId>swimming-pool-model</artifactId>
-      <version>${project.version}</version>
+        <groupId>org.chtijbug.drools</groupId>
+        <artifactId>chtijbug-samples-swimming-pool-model</artifactId>
+        <version>${chtijbug.samples.swimmingpool.model}</version>
     </dependency>
     <dependency>
       <groupId>org.chtijbug.drools</groupId>

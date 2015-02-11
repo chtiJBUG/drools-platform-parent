@@ -21,7 +21,8 @@
     <junit.version>4.11</junit.version>
     <org.slf4j.slf4j.version>1.7.5</org.slf4j.slf4j.version>
     <log4j-version>1.2.14</log4j-version>
-
+    <chtijbug.samples.loyalty.model>0.5.1-SNAPSHOT</chtijbug.samples.loyalty.model>
+    <chtijbug.samples.swimmingpool.model>0.5.1-SNAPSHOT</chtijbug.samples.swimmingpool.model>
     <org.springframework.version>4.0.5.RELEASE</org.springframework.version>
     <org.springframework.security.version>3.1.3.RELEASE</org.springframework.security.version>
     <springdata.version>1.6.0.RELEASE</springdata.version>
