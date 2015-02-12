@@ -44,7 +44,7 @@
   </build>
   <dependencies>
     <dependency>
-        <groupId>org.chtijbug.drools</groupId>
+        <groupId>org.chtijbug.drools.samples</groupId>
         <artifactId>chtijbug-samples-swimming-pool-model</artifactId>
 
         <version>0.5.1-SNAPSHOT</version>
