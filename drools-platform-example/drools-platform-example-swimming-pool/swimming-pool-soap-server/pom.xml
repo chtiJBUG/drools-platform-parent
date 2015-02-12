@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.chtijbug.drools</groupId>
     <artifactId>drools-platform-example-swimming-pool</artifactId>
-    <version>0.5.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>swimming-pool-soap-server</artifactId>
 
@@ -46,7 +46,8 @@
     <dependency>
         <groupId>org.chtijbug.drools</groupId>
         <artifactId>chtijbug-samples-swimming-pool-model</artifactId>
-        <version>${chtijbug.samples.swimmingpool.model}</version>
+
+        <version>0.5.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.chtijbug.drools</groupId>

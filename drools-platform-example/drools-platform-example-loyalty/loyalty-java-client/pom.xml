@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.chtijbug.drools</groupId>
         <artifactId>drools-platform-example-loyalty</artifactId>
-        <version>0.5.1-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>loyalty-java-client</artifactId>
