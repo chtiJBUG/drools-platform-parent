@@ -27,8 +27,11 @@ import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.RuleBaseSession;
 import org.chtijbug.drools.runtime.impl.RuleBaseStatefulSession;
 import org.kie.api.runtime.ObjectFilter;
+import org.kie.api.runtime.process.ProcessInstance;
+import org.kie.api.runtime.process.WorkItemHandler;
 
 import java.util.Collection;
+import java.util.Map;
 
 public class DroolsPlatformSession implements RuleBaseSession {
 
@@ -143,5 +146,26 @@ public class DroolsPlatformSession implements RuleBaseSession {
     @Override
     public Collection<? extends java.lang.Object> getObjects(ObjectFilter objectFilter) {
         return this.ruleBaseStatefulSession.getObjects(objectFilter);
+    }
+
+    @Override
+    public void completeWorkItem(long processId, Map<String, Object> vars) {
+        this.ruleBaseStatefulSession.completeWorkItem(processId,vars);
+    }
+
+    @Override
+    public void abortWorkItem(long processId) {
+        this.ruleBaseStatefulSession.abortWorkItem(processId);
+
+    }
+
+    @Override
+    public void registerWorkItemHandler(String workItemName, WorkItemHandler workItemHandler) {
+        this.ruleBaseStatefulSession.registerWorkItemHandler(workItemName,workItemHandler);
+    }
+
+    @Override
+    public ProcessInstance startProcess(String processName, Map<String, Object> vars) {
+        return this.ruleBaseStatefulSession.startProcess(processName,vars);
     }
 }
