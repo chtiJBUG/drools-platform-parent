@@ -126,6 +126,13 @@ public class DroolsPlatformSession implements RuleBaseSession {
     }
 
     @Override
+    public Object fireAllRulesAndStartProcessWithParam(Object inputObject, String processName) throws DroolsChtijbugException {
+        Object returnObject = this.ruleBaseStatefulSession.fireAllRulesAndStartProcessWithParam(inputObject, processName);
+        this.sentJMXInfo();
+        return returnObject;
+    }
+
+    @Override
     public void startProcess(String processName) {
         this.ruleBaseStatefulSession.startProcess(processName);
     }
@@ -196,7 +203,7 @@ public class DroolsPlatformSession implements RuleBaseSession {
     }
 
     @Override
-    public ProcessInstance StartProcess(String processName, Map<String, Object> vars) {
-        return this.ruleBaseStatefulSession.StartProcess(processName,vars);
+    public ProcessInstance startProcess(String processName, Map<String, Object> vars) {
+        return this.ruleBaseStatefulSession.startProcess(processName, vars);
     }
 }
