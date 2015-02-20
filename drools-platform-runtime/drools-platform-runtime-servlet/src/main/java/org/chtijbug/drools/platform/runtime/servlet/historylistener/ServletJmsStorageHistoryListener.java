@@ -37,8 +37,8 @@ import java.util.concurrent.Semaphore;
 public class ServletJmsStorageHistoryListener implements PlatformHistoryListener {
 
     private String platformQueueName = "historyEventQueue";
-    private Integer platformPort = 61616;
-    private String platformServer;
+    private Integer jmsPort = 61616;
+    private String jmsServer;
 
     private static final Logger LOG = Logger.getLogger(ServletJmsStorageHistoryListener.class);
 
@@ -68,7 +68,7 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
 
         int numberRetries = new Integer(this.numberRetriesString);
         int timeToWaitBetweenTwoRetries = new Integer(this.timeToWaitBetweenTwoRetriesString);
-        String url = "tcp://" + this.platformServer + ":" + this.platformPort;
+        String url = "tcp://" + this.jmsServer + ":" + this.jmsPort;
         ConnectionFactory factory = new ActiveMQConnectionFactory(url);
         Connection connection = null;
         JMSConnectionListener jmsConnectionListener = new JMSConnectionListener() {
@@ -174,7 +174,8 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
     public void initJMSConnection() throws DroolsChtijbugException {
         LOG.debug("<<ServletJmsStorageHistoryListener");
         this.ruleBaseID = this.platformKnowledgeBaseJavaEE.getRuleBaseID();
-        this.platformServer = this.platformKnowledgeBaseJavaEE.getPlatformServer();
+        this.jmsServer = this.platformKnowledgeBaseJavaEE.getJmsServer();
+        this.jmsPort = this.platformKnowledgeBaseJavaEE.getJmsPort();
         this.platformKnowledgeBaseJavaEE.setServletJmsStorageHistoryListener(this);
         this.initJmsConnection();
         this.platformKnowledgeBaseJavaEE.startConnectionToPlatform();

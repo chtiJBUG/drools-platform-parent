@@ -76,7 +76,9 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
      */
     private String platformServer;
 
-    private Integer platformPort = 61616;
+    private String jmsServer;
+
+    private Integer jmsPort = 61616;
 
     private String platformQueueName = "historyEventQueue";
 
@@ -87,11 +89,12 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
 
     public DroolsPlatformKnowledgeBaseJavaEE(Integer ruleBaseID, List<DroolsResource> droolsResources,
                                              String webSocketHostname,
-                                             String platformServer, JavaDialect javaDialect) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
+                                             String platformServer,Integer jmsPort, JavaDialect javaDialect) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
         this.ruleBaseID = ruleBaseID;
         this.droolsResources = droolsResources;
         this.webSocketHostname = webSocketHostname;
         this.platformServer = platformServer;
+        this.jmsPort = jmsPort;
         this.javaDialect = javaDialect;
         initPlatformRuntime();
     }
@@ -263,8 +266,20 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
         this.platformServer = platformServer;
     }
 
-    public void setPlatformPort(Integer platformPort) {
-        this.platformPort = platformPort;
+    public void setJmsPort(Integer jmsPort) {
+        this.jmsPort = jmsPort;
+    }
+
+    public Integer getJmsPort() {
+        return jmsPort;
+    }
+
+    public String getJmsServer() {
+        return jmsServer;
+    }
+
+    public void setJmsServer(String jmsServer) {
+        this.jmsServer = jmsServer;
     }
 
     public void setDroolsResources(List<DroolsResource> droolsResources) {
