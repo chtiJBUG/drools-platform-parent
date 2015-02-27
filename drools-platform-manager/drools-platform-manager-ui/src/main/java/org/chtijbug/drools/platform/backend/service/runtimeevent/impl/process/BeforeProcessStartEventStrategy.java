@@ -21,6 +21,7 @@ import org.chtijbug.drools.entity.history.process.BeforeProcessStartHistoryEvent
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.ProcessExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
 import org.chtijbug.drools.platform.persistence.pojo.ProcessExecution;
 import org.chtijbug.drools.platform.persistence.pojo.ProcessExecutionStatus;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
@@ -71,5 +72,15 @@ public class BeforeProcessStartEventStrategy extends AbstractEventHandlerStrateg
     public boolean isEventSupported(HistoryEvent historyEvent) {
 
         return historyEvent instanceof BeforeProcessStartHistoryEvent;
+    }
+
+    @Override
+    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
+        if (platformRuntimeMode==PlatformRuntimeMode.Debug) {
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

@@ -90,4 +90,14 @@ public class BeforeRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
 
         return historyEvent instanceof BeforeRuleFiredHistoryEvent;
     }
+
+    @Override
+    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
+        if (platformRuntimeMode==PlatformRuntimeMode.Debug) {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

@@ -22,6 +22,7 @@ import org.chtijbug.drools.entity.history.process.AfterNodeInstanceTriggeredHist
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.ProcessExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.RuleflowGroupRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
 import org.chtijbug.drools.platform.persistence.pojo.ProcessExecution;
 import org.chtijbug.drools.platform.persistence.pojo.RuleflowGroup;
 import org.chtijbug.drools.platform.persistence.pojo.RuleflowGroupStatus;
@@ -71,5 +72,15 @@ public class AfterNodeInstanceTriggeredEventStrategy extends AbstractEventHandle
     public boolean isEventSupported(HistoryEvent historyEvent) {
 
         return historyEvent instanceof AfterNodeInstanceTriggeredHistoryEvent;
+    }
+
+    @Override
+    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
+        if (platformRuntimeMode==PlatformRuntimeMode.Debug) {
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

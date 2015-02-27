@@ -186,4 +186,9 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
     public boolean isEventSupported(HistoryEvent historyEvent) {
         return historyEvent instanceof PlatformKnowledgeBaseInitialConnectionEvent;
     }
+
+    @Override
+    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
+        return true;
+    }
 }

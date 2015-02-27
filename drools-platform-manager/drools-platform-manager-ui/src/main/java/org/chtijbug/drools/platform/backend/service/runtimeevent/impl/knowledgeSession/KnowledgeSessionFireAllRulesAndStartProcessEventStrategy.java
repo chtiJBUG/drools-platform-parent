@@ -24,6 +24,7 @@ import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositor
 import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.Fact;
 import org.chtijbug.drools.platform.persistence.pojo.FactType;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -79,5 +80,15 @@ public class KnowledgeSessionFireAllRulesAndStartProcessEventStrategy extends Ab
     public boolean isEventSupported(HistoryEvent historyEvent) {
 
         return historyEvent instanceof SessionFireAllRulesAndStartProcess;
+    }
+
+    @Override
+    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
+        if (platformRuntimeMode==PlatformRuntimeMode.Debug) {
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

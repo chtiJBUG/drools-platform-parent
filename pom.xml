@@ -603,6 +603,12 @@
         <env-name>release</env-name>
       </properties>
     </profile>
+      <profile>
+          <id>docker</id>
+          <properties>
+              <env-name>docker</env-name>
+          </properties>
+      </profile>
 
 
   </profiles>

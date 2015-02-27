@@ -22,6 +22,7 @@ import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHa
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecutionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,5 +71,10 @@ public class KnowledgeSessionCreateEventStrategy extends AbstractEventHandlerStr
     public boolean isEventSupported(HistoryEvent historyEvent) {
 
         return historyEvent instanceof SessionCreatedEvent;
+    }
+
+    @Override
+    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
+        return true;
     }
 }

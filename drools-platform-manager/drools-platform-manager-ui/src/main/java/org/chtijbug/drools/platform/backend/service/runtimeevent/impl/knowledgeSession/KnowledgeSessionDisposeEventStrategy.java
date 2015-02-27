@@ -21,6 +21,7 @@ import org.chtijbug.drools.entity.history.session.SessionDisposedEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecutionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,5 +59,10 @@ public class KnowledgeSessionDisposeEventStrategy extends AbstractEventHandlerSt
     public boolean isEventSupported(HistoryEvent historyEvent) {
 
         return historyEvent instanceof SessionDisposedEvent;
+    }
+
+    @Override
+    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
+        return true;
     }
 }

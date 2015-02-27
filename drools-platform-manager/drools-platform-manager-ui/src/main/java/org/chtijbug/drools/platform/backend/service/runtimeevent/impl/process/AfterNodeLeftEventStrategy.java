@@ -21,6 +21,7 @@ import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.process.AfterNodeLeftHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.RuleflowGroupRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
 import org.chtijbug.drools.platform.persistence.pojo.RuleflowGroup;
 import org.chtijbug.drools.platform.persistence.pojo.RuleflowGroupStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +56,15 @@ public class AfterNodeLeftEventStrategy extends AbstractEventHandlerStrategy {
     public boolean isEventSupported(HistoryEvent historyEvent) {
 
         return historyEvent instanceof AfterNodeLeftHistoryEvent;
+    }
+
+    @Override
+    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
+        if (platformRuntimeMode==PlatformRuntimeMode.Debug) {
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

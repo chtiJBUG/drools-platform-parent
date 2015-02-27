@@ -24,6 +24,7 @@ import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHa
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,5 +68,10 @@ public class KnowledgeBaseAddRessourceEventStrategy extends AbstractEventHandler
     @Override
     public boolean isEventSupported(HistoryEvent historyEvent) {
         return historyEvent instanceof KnowledgeBaseAddRessourceEvent;
+    }
+
+    @Override
+    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
+        return true;
     }
 }

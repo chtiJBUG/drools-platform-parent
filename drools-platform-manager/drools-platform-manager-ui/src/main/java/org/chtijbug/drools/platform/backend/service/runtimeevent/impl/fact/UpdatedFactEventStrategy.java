@@ -21,10 +21,7 @@ import org.chtijbug.drools.entity.history.fact.UpdatedFactHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.RuleExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.pojo.Fact;
-import org.chtijbug.drools.platform.persistence.pojo.FactType;
-import org.chtijbug.drools.platform.persistence.pojo.RuleExecution;
-import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
+import org.chtijbug.drools.platform.persistence.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,5 +84,15 @@ public class UpdatedFactEventStrategy extends AbstractEventHandlerStrategy {
     public boolean isEventSupported(HistoryEvent historyEvent) {
 
         return historyEvent instanceof UpdatedFactHistoryEvent;
+    }
+
+    @Override
+    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
+        if (platformRuntimeMode==PlatformRuntimeMode.Debug) {
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

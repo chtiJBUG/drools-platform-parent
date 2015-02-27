@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.process.AfterProcessStartHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
 import org.springframework.stereotype.Component;
 
 
@@ -36,5 +37,15 @@ public class AfterProcessStartEventStrategy extends AbstractEventHandlerStrategy
     public boolean isEventSupported(HistoryEvent historyEvent) {
 
         return historyEvent instanceof AfterProcessStartHistoryEvent;
+    }
+
+    @Override
+    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
+        if (platformRuntimeMode==PlatformRuntimeMode.Debug) {
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

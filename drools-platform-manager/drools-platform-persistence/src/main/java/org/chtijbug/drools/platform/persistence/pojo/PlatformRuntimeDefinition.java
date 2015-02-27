@@ -33,6 +33,9 @@ public class PlatformRuntimeDefinition implements Serializable {
     @Column(nullable = false)
     private Integer ruleBaseID;
 
+    @Enumerated(EnumType.STRING)
+    private PlatformRuntimeMode platformRuntimeMode = PlatformRuntimeMode.Debug;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "platformRuntimeDefinition", fetch = FetchType.LAZY)
     private List<PlatformRuntimeInstance> platformRuntimeInstances = new ArrayList<>();
 
@@ -97,6 +100,14 @@ public class PlatformRuntimeDefinition implements Serializable {
 
     public void setCouldInstanceStartWithNewRuleVersion(String couldInstanceStartWithNewRuleVersion) {
         this.couldInstanceStartWithNewRuleVersion = couldInstanceStartWithNewRuleVersion;
+    }
+
+    public PlatformRuntimeMode getPlatformRuntimeMode() {
+        return platformRuntimeMode;
+    }
+
+    public void setPlatformRuntimeMode(PlatformRuntimeMode platformRuntimeMode) {
+        this.platformRuntimeMode = platformRuntimeMode;
     }
 
     public String getWebsocketEndpoint() {

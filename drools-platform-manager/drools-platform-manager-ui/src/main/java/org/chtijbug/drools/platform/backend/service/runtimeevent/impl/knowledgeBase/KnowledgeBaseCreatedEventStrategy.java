@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseCreatedEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,5 +37,10 @@ public class KnowledgeBaseCreatedEventStrategy extends AbstractEventHandlerStrat
     @Override
     public boolean isEventSupported(HistoryEvent historyEvent) {
         return historyEvent instanceof KnowledgeBaseCreatedEvent;
+    }
+
+    @Override
+    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
+        return true;
     }
 }
