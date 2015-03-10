@@ -15,25 +15,39 @@
  */
 package org.chtijbug.drools.platform.web.model;
 
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeDefinition;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeEnvironment;
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
+
 /**
  * Created by alexandre on 06/06/2014.
  */
 public class RuntimeInstance {
+
     private Long id;
     private Integer ruleBaseId;
     private String url;
     private String rulePackage;
     private String version;
-
+    private String environment;
+    private String mode;
+    private String status;
     public RuntimeInstance() {/* nop */}
 
-    public RuntimeInstance(Long id, Integer ruleBaseId, String url, String rulePackage, String version) {
+
+
+    public RuntimeInstance(Long id, Integer ruleBaseId, String url, String rulePackage, String version, String environment, String mode, String status) {
         this.id = id;
         this.ruleBaseId = ruleBaseId;
         this.url = url;
         this.rulePackage = rulePackage;
         this.version = version;
+        this.environment=environment;
+        this.mode=mode;
+        this.status=status;
     }
+
+
 
     public Long getId() {
         return id;
@@ -73,5 +87,29 @@ public class RuntimeInstance {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getEnvironment() {
+        return environment;
+    }
+
+    public void setEnvironment(String environment) {
+        this.environment = environment;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

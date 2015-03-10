@@ -59,7 +59,10 @@ droolsPlatformApp.config(function ($routeProvider) {
                 templateUrl: 'modules/runtime-monitoring/runtime-analysis/runtime-analysis.html',
                 controller: 'runtimeAnalysisController'
             }).
-
+            when('/runtimeManagement', {
+                templateUrl: 'modules/runtime-management/runtime-management.html',
+                controller: 'runtimeManagementController'
+            }).
             otherwise({
                 redirectTo: '/home'
             });

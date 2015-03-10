@@ -18,6 +18,7 @@ package org.chtijbug.drools.platform.backend.service.runtimeevent.impl.knowledge
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEvent;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
@@ -33,6 +34,8 @@ import java.util.List;
 public class PlatformKnowledgeBaseShutdownEventStrategy extends AbstractEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(PlatformKnowledgeBaseShutdownEventStrategy.class);
 
+    @Autowired
+    WebSocketSessionManager webSocketSessionManager;
 
     @Autowired
     PlatformRuntimeInstanceRepositoryCacheService platformRuntimeInstanceRepository;
@@ -47,6 +50,7 @@ public class PlatformKnowledgeBaseShutdownEventStrategy extends AbstractEventHan
             if (existingPlatformRuntimeInstances.size() == 1) {
                 existingPlatformRuntimeInstances.get(0).setShutdowDate(platformKnowledgeBaseShutdownEvent.getDateEvent());
                 platformRuntimeInstanceRepository.save(existingPlatformRuntimeInstances.get(0));
+                webSocketSessionManager.removeClient(platformKnowledgeBaseShutdownEvent.getRuleBaseID());
             }
         } catch (Exception e) {
             LOG.error(platformKnowledgeBaseShutdownEvent, e);
