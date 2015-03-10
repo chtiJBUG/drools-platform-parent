@@ -31,6 +31,9 @@ import java.util.List;
 @Component
 public interface PlatformRuntimeInstanceRepository extends JpaRepository<PlatformRuntimeInstance, Long>, PlatformRuntimeInstanceCustomRepository {
 
+
+    List<PlatformRuntimeInstance> findAll();
+
     List<PlatformRuntimeInstance> findByRuleBaseIDAndEndDateNull(Integer ruleBaseId);
 
     List<PlatformRuntimeInstance> findByRuleBaseIDAndShutdowDateNull(Integer ruleBaseId);

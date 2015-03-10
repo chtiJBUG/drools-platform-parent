@@ -36,6 +36,9 @@ public class PlatformRuntimeDefinition implements Serializable {
     @Enumerated(EnumType.STRING)
     private PlatformRuntimeMode platformRuntimeMode = PlatformRuntimeMode.Debug;
 
+    @Enumerated(EnumType.STRING)
+    private PlatformRuntimeEnvironment platformRuntimeEnvironment = PlatformRuntimeEnvironment.PROD;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "platformRuntimeDefinition", fetch = FetchType.LAZY)
     private List<PlatformRuntimeInstance> platformRuntimeInstances = new ArrayList<>();
 
@@ -108,6 +111,14 @@ public class PlatformRuntimeDefinition implements Serializable {
 
     public void setPlatformRuntimeMode(PlatformRuntimeMode platformRuntimeMode) {
         this.platformRuntimeMode = platformRuntimeMode;
+    }
+
+    public PlatformRuntimeEnvironment getPlatformRuntimeEnvironment() {
+        return platformRuntimeEnvironment;
+    }
+
+    public void setPlatformRuntimeEnvironment(PlatformRuntimeEnvironment platformRuntimeEnvironment) {
+        this.platformRuntimeEnvironment = platformRuntimeEnvironment;
     }
 
     public String getWebsocketEndpoint() {

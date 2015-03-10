@@ -30,6 +30,11 @@ public class PlatformRuntimeInstanceRepositoryCacheService {
     @Autowired
     PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
+
+    public List<PlatformRuntimeInstance> findAll() {
+        return platformRuntimeInstanceRepository.findAll();
+    }
+
     public List<PlatformRuntimeInstance> findByRuleBaseIDAndEndDateNull(Integer ruleBaseId) {
         return platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(ruleBaseId);
     }
