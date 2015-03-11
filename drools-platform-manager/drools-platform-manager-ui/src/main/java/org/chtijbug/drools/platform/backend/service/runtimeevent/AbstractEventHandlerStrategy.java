@@ -18,8 +18,10 @@ package org.chtijbug.drools.platform.backend.service.runtimeevent;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepository;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeDefinition;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
+import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -28,20 +30,32 @@ public abstract class AbstractEventHandlerStrategy {
     @Autowired
     PlatformRuntimeDefinitionRepositoryCacheService platformRuntimeDefinitionRepositoryCacheService;
 
+    @Autowired
+    SessionExecutionRepositoryCacheService sessionExecutionRepositoryCacheService;
+
     public void handleMessage(HistoryEvent historyEvent) {
-        PlatformRuntimeDefinition platformRuntimeDefinition = platformRuntimeDefinitionRepositoryCacheService.findByRuleBaseID(historyEvent.getRuleBaseID());
+        PlatformRuntimeMode platformRuntimeMode = PlatformRuntimeMode.Debug;
+        if (historyEvent != null & historyEvent.getSessionId() > 0) {
+            SessionExecution sessionExecution = sessionExecutionRepositoryCacheService.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
+            if (sessionExecution != null) {
+                platformRuntimeMode = sessionExecution.getPlatformRuntimeMode();
+            }
+        } else {
+            PlatformRuntimeDefinition platformRuntimeDefinition = platformRuntimeDefinitionRepositoryCacheService.findByRuleBaseID(historyEvent.getRuleBaseID());
+            if (platformRuntimeDefinition != null) {
+                platformRuntimeMode = platformRuntimeDefinition.getPlatformRuntimeMode();
+            }
+        }
+
+
         if (isEventSupported(historyEvent)) {
-            if (platformRuntimeDefinition!=null){
-                PlatformRuntimeMode platformRuntimeMode = platformRuntimeDefinition.getPlatformRuntimeMode();
-                if (isLevelCompatible(platformRuntimeMode)) {
-                    handleMessageInternally(historyEvent);
-                }
-            }else{
+            if (isLevelCompatible(platformRuntimeMode)) {
                 handleMessageInternally(historyEvent);
             }
-
         }
+
     }
+
 
     protected abstract void handleMessageInternally(HistoryEvent historyEvent);
 

@@ -22,26 +22,18 @@ DroolsPlatformControllers.controller('runtimeManagementController', function ($r
     $scope.productionRuntimes = [];
     $scope.integrationRuntimes = [];
     $scope.developmentRuntimes = [];
-    $http.get('./server/runtime/all')
+    $scope.package="all";
+    $http.get('./server/rules_package/list')
         .success(function (data) {
-            for (var runtime in data){
-                var aRuntime =data[runtime];
-                if (aRuntime.environment == "PROD") {
-                    $scope.productionRuntimes.push(aRuntime)
-                }
-                if (aRuntime.environment == "INT") {
-                    $scope.integrationRuntimes.push(aRuntime)
-                }
-                if (aRuntime.environment == "DEV") {
-                    $scope.developmentRuntimes.push(aRuntime)
-                }
-            }
+            $scope.packagesList = data;
         })
         .error(function (error, status) {
             console.log("[Error] Error HTTP " + status);
             console.log(error);
         });
 
+
+   loadRuntimePanel("all")
     /* Input select */
     $scope.filters = {};
     $scope.assets = undefined;
@@ -57,92 +49,106 @@ DroolsPlatformControllers.controller('runtimeManagementController', function ($r
     $scope.filtersOptions = {
         selectOnBlur: true
     };
-    $scope.allRuntimes = undefined;
-    $http.get('./server/runtime/all')
-        .success(function (data) {
-            $scope.allRuntimes = data;
-        })
-        .error(function (error, status) {
-            console.log("[Error] Error HTTP " + status);
-            console.log(error);
-        });
-
-
+    function sortByRuleBaseID (a, b) {
+        if (a.ruleBaseId > b.ruleBaseId)
+            return 1;
+        if (a.ruleBaseId < b.ruleBaseId)
+            return -1;
+        // a doit être égale à b
+        return 0;
+    }
+    function loadRuntimePanel(packageName) {
+        $http.get('./server/runtime/all')
+            .success(function (data) {
+                $scope.productionRuntimes = [];
+                $scope.integrationRuntimes = [];
+                $scope.developmentRuntimes = [];
+                for (var runtime in data){
+                    var aRuntime =data[runtime];
+                    if (packageName=="all" || packageName==aRuntime.rulePackage) {
+                        if (aRuntime.environment == "PROD") {
+                            $scope.productionRuntimes.push(aRuntime)
+                        }
+                        if (aRuntime.environment == "INT") {
+                            $scope.integrationRuntimes.push(aRuntime)
+                        }
+                        if (aRuntime.environment == "DEV") {
+                            $scope.developmentRuntimes.push(aRuntime)
+                        }
+                    }
+                }
+                $scope.developmentRuntimes.sort(sortByRuleBaseID);
+                $scope.integrationRuntimes.sort(sortByRuleBaseID);
+                $scope.productionRuntimes.sort(sortByRuleBaseID);
+            })
+            .error(function (error, status) {
+                console.log("[Error] Error HTTP " + status);
+                console.log(error);
+            });
+    }
     $scope.search = function () {
-        var filters = $scope.filters;
         var packageSelected = $scope.package;
-        if (filters == undefined) {
-            $scope.assetStatusSelectClass = "form-group has-error has-feedback";
-            console.log("'[Error] filters : any filters chosen");
-        }
-        else if (packageSelected == "" && filters.length == 0) {
-            $scope.namePackageSelectClass = "form-group has-error has-feedback";
-            $scope.assetStatusSelectClass = "form-group has-error has-feedback";
-            console.log("'[Error] filters : you must choose the package");
-        } else if (filters.length == 0) {
-            /* When mistake happens display the tooltip */
-            $scope.assetStatusSelectClass = "form-group has-error has-feedback";
-            return;
-        } else if (packageSelected == "") {
+        if (packageSelected == "") {
             /* When mistake happens display the tooltip */
             $scope.namePackageSelectClass = "form-group has-error has-feedback";
-            $scope.assetStatusSelectClass = "form-group";
             return;
         } else {
             $scope.namePackageSelectClass = "form-group";
-            $scope.assetStatusSelectClass = "form-group";
+            loadRuntimePanel(packageSelected);
+            $scope.package=packageSelected;
+            $scope.showCancelButton = true;
             //$("#popoverBtn").popover('destroy');
-            $http.post('./server/rule_status/' + packageSelected, JSON.stringify(filters))
-                .success(function (data) {
-                    $scope.showCancelButton = true;
-                    $scope.assets = data;
-                    console.log('[Success] ' + data);
-                })
-                .error(function (error, status) {
-                    $scope.showCancelButton = true;
-                    $scope.noAssetSent = true;
-                    $scope.status = status;
-                    console.log("[Error] Error HTTP " + status);
-                    console.log(error);
-                });
+
         }
     };
     $scope.reset = function () {
         $scope.showCancelButton = false;
-        $scope.package = undefined;
-        $scope.filters = undefined;
-        $scope.assets = undefined;
         $scope.namePackageSelectClass = "form-group";
-        $scope.assetStatusSelectClass = "form-group";
+        loadRuntimePanel("all");
+        $scope.package="all";
         console.log("[Info] Values reset");
     }
 
-    $scope.promoteAssetsStatus = function () {
-        var packageSelected = $scope.package;
-        var assetsToPromote = _.where($scope.assets, {selected: true});
-        var data = {assetsToPromote: assetsToPromote, assetStatuses: $scope.filters};
-        $http.post('./server/rule_status/' + packageSelected + '/promote', data)
+    $scope.changeRuntimeMode = function (runtime) {
+        var newMode='';
+        if (runtime.mode=="Debug"){
+            newMode="Info";
+        }else{
+            newMode="Debug";
+        }
+        $http.post('./server/runtime/mode/' + runtime.ruleBaseId + '/' + newMode)
             .success(function (data) {
-                $scope.assets = data;
+                var selectedpackage=$scope.package;
+                if( typeof selectedpackage === 'undefined' || selectedpackage === null || selectedpackage==""){
+                    loadRuntimePanel("all");
+                }else{
+                    loadRuntimePanel($scope.package);
+                }
+                console.log('[Success] ' + data);
             })
             .error(function (error, status) {
-                console.log("[Error] Error HTTP " + status + " (Promote Asset status)");
+                console.log("[Error] Error HTTP " + status);
                 console.log(error);
             });
-    };
 
-    $scope.demoteAssetsStatus = function () {
-        var packageSelected = $scope.package;
-        var assetsToDemote = _.where($scope.assets, {selected: true});
-        var data = {assetsToDemote: assetsToDemote, assetStatuses: $scope.filters};
-        $http.post('./server/rule_status/' + packageSelected + '/demote', data)
+    };
+    $scope.changeRuntimeEnv = function (runtime,newEnv) {
+
+        $http.post('./server/runtime/env/' + runtime.ruleBaseId + '/' + newEnv)
             .success(function (data) {
-                $scope.assets = data;
+                var selectedpackage=$scope.package;
+                if( typeof selectedpackage === 'undefined' || selectedpackage === null || selectedpackage==""){
+                    loadRuntimePanel("all");
+                }else{
+                    loadRuntimePanel($scope.package);
+                }
+                console.log('[Success] ' + data);
             })
             .error(function (error, status) {
-                console.log("[Error] Error HTTP " + status + " (Demote Asset status)");
+                console.log("[Error] Error HTTP " + status);
                 console.log(error);
             });
+
     };
 
 });

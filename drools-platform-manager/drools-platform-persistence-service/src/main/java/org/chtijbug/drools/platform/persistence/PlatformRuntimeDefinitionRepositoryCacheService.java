@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -47,6 +48,10 @@ public class PlatformRuntimeDefinitionRepositoryCacheService {
 
     @Autowired
     PlatformRuntimeDefinitionRepository platformRuntimeDefinitionRepository;
+
+    public List<PlatformRuntimeDefinition> findAll(){
+       return platformRuntimeDefinitionRepository.findAll();
+    }
 
     public PlatformRuntimeDefinition findByRuleBaseID(Integer ruleBaseId) {
         PlatformRuntimeDefinition result = null;

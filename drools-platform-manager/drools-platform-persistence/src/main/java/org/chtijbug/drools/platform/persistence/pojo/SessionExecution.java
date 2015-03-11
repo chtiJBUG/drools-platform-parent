@@ -43,6 +43,9 @@ public class SessionExecution {
     private Integer startEventID;
     private Integer stopEventID;
     @Enumerated(EnumType.STRING)
+    private PlatformRuntimeMode platformRuntimeMode = PlatformRuntimeMode.Debug;
+
+    @Enumerated(EnumType.STRING)
     private SessionExecutionStatus sessionExecutionStatus;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sessionExecution")
     private List<RuleExecution> ruleExecutions = new ArrayList<RuleExecution>();
@@ -169,5 +172,13 @@ public class SessionExecution {
 
     public Date getProcessingStopDate() {
         return processingStopDate;
+    }
+
+    public void setPlatformRuntimeMode(PlatformRuntimeMode platformRuntimeMode) {
+        this.platformRuntimeMode = platformRuntimeMode;
+    }
+
+    public PlatformRuntimeMode getPlatformRuntimeMode() {
+        return platformRuntimeMode;
     }
 }

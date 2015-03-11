@@ -42,8 +42,7 @@ public class PlatformRuntimeInstance implements Serializable {
     private Integer startEventID;
     private Integer stopEventID;
     private Integer ruleBaseID;
-    @Enumerated(EnumType.STRING)
-    private PlatformRuntimeMode platformRuntimeMode = PlatformRuntimeMode.Debug;
+
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<DroolsResource> droolsRessources = new ArrayList<>();
@@ -125,13 +124,7 @@ public class PlatformRuntimeInstance implements Serializable {
         this.ruleBaseID = ruleBaseID;
     }
 
-    public PlatformRuntimeMode getPlatformRuntimeMode() {
-        return platformRuntimeMode;
-    }
 
-    public void setPlatformRuntimeMode(PlatformRuntimeMode platformRuntimeMode) {
-        this.platformRuntimeMode = platformRuntimeMode;
-    }
 
     public List<DroolsResource> getDroolsRessources() {
         return droolsRessources;
@@ -182,7 +175,6 @@ public class PlatformRuntimeInstance implements Serializable {
                 ", startEventID=" + startEventID +
                 ", stopEventID=" + stopEventID +
                 ", ruleBaseID=" + ruleBaseID +
-                ", platformRuntimeMode=" + platformRuntimeMode +
                 '}';
     }
 }

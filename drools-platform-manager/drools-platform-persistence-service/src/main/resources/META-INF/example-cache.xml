@@ -87,7 +87,11 @@
           <property name="cacheMode" value="LOCAL"/>
           <property name="atomicityMode" value="TRANSACTIONAL"/>
         </bean>
-
+          <bean parent="cache-template">
+              <property name="name" value="local_tx_indexplatformruntimedefinition"/>
+              <property name="cacheMode" value="LOCAL"/>
+              <property name="atomicityMode" value="TRANSACTIONAL"/>
+          </bean>
 
       </list>
     </property>
