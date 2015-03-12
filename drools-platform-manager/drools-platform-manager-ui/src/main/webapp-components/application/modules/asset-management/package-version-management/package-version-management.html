@@ -41,6 +41,7 @@
                             <button id="btn-search" class="btn btn-info pull-right"
                                     data-ng-click="searchPackage()"><i class="fa fa-search"></i> Search
                             </button>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -107,9 +108,13 @@
                                                    ng-click="showWizzard('release')">Release</a>
                                             </li>
                                             <li ng-show="isSnapshot" class="divider"></li>
-                                            <li role="presentation">
+                                            <li ng-show="isSnapshot"  role="presentation">
                                                 <a class="pointer" role="menuitem" tabindex="-1"
-                                                   ng-click="showDeploy()">Deploy</a>
+                                                   ng-click="showDeploy('SNAPSHOT')">Deploy</a>
+                                            </li>
+                                            <li ng-show="!isSnapshot"  role="presentation">
+                                            <a class="pointer" role="menuitem" tabindex="-1"
+                                               ng-click="showDeploy('PROD')">Deploy</a>
                                             </li>
                                             <li ng-show="isSnapshot" class="divider"></li>
                                             <li ng-show="isSnapshot" role="presentation">

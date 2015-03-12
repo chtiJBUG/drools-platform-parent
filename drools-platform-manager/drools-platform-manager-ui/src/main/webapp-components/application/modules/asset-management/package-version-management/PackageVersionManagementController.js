@@ -168,13 +168,35 @@ DroolsPlatformControllers.controller('packageVersionManagementController', ['$ro
             $('#Wizzard').modal('hide');
         };
         //___ Modal for : Deploy
-        $scope.showDeploy = function () {
+        $scope.showDeploy = function (type) {
 
             var packageSelected = $scope.package;
             //___ Get the list according to the params chosen
             $http.get('./server/runtime/' + packageSelected)
                     .success(function (data) {
-                        $scope.activeRuntimeList = data;
+                        $scope.activeRuntimeList = [];
+
+                    for (var runtime in data){
+                        var aRuntime =data[runtime];
+                        if (type=="SNAPSHOT" && aRuntime.environment =="DEV"){
+                            $scope.activeRuntimeList.push(aRuntime);
+                        }
+                        if (type != "SNAPSHOT" && aRuntime.environment !="DEV" ){
+                            $scope.activeRuntimeList.push(aRuntime);
+                        }
+
+                    }
+
+
+
+
+
+
+
+
+
+
+
                         console.log("[Success] Active runtime list got successfully");
                     })
                     .error(function (error, status) {
