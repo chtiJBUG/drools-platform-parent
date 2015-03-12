@@ -176,16 +176,16 @@ DroolsPlatformControllers.controller('packageVersionManagementController', ['$ro
                     .success(function (data) {
                         $scope.activeRuntimeList = [];
 
-                    for (var runtime in data){
-                        var aRuntime =data[runtime];
-                        if (type=="SNAPSHOT" && aRuntime.environment =="DEV"){
-                            $scope.activeRuntimeList.push(aRuntime);
+                        for (var runtime in data){
+                            var aRuntime =data[runtime];
+                            if (type=="SNAPSHOT" && aRuntime.environment =="DEV"){
+                                $scope.activeRuntimeList.push(aRuntime);
+                            }
+                            if (type != "SNAPSHOT" && aRuntime.environment !="DEV" ){
+                                $scope.activeRuntimeList.push(aRuntime);
+                            }
                         }
-                        if (type != "SNAPSHOT" && aRuntime.environment !="DEV" ){
-                            $scope.activeRuntimeList.push(aRuntime);
-                        }
-
-                    }
+                        $scope.activeRuntimeList.sort(sortByEnvAndRuleBaseID);
                         console.log("[Success] Active runtime list got successfully");
                     })
                     .error(function (error, status) {
@@ -196,6 +196,22 @@ DroolsPlatformControllers.controller('packageVersionManagementController', ['$ro
 
             $('#Deployment').modal('show');
         };
+
+        function sortByEnvAndRuleBaseID (a, b) {
+            if (a.environment > b.environment){
+                return 1;
+            } else if (a.environment < b.environment){
+                return -1;
+            }else {
+
+                if (a.ruleBaseId > b.ruleBaseId)
+                    return 1;
+                if (a.ruleBaseId < b.ruleBaseId)
+                    return -1;
+                // a doit être égale à b
+                return 0;
+            }
+        }
         $scope.closeDeploy = function () {
             _.each($scope.activeRuntimeList, function (runtime) {
                 runtime.isSelected = false;
