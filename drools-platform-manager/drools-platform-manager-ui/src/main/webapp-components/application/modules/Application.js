@@ -26,7 +26,8 @@ var droolsPlatformApp = angular.module('droolsPlatformApp', [
     'ngSanitize',
     'ngAnimate',
     'hljs',
-    'angularSpinner'
+    'angularSpinner',
+    'googlechart'
 
 ]);
 

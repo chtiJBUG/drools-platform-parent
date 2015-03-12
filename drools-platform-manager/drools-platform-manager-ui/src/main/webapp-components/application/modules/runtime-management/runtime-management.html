@@ -22,21 +22,7 @@
                                 </option>
                             </select>
                         </div>
-                        <!--
-                        <div class="form-group" ng-class="assetStatusSelectClass">
-                            <label for="asset-status-select">Asset Status</label>
-                            <select id="asset-status-select"
-                                    class="form-control"
-                                    style="padding:0;height:auto;width:auto;"
-                                    ui-select2="filtersOptions"
-                                    multiple
-                                    ng-model="filters"
-                                    data-placeholder="Select Status filters">
-                                <option ng-repeat="stat in statuses" value="{{stat.assetStatus}}">{{stat.description}}
-                                </option>
-                            </select>
-                        </div>
-                        -->
+
                         <div class="form-group">
                             <button id="btn-cancel" class="btn btn-warning pull-left" ng-show="showCancelButton" ng-click="reset()">
                                 <i class="fa fa-reply"></i>
@@ -77,6 +63,7 @@
                                     <th>Move to</th>
                                     <th>Move to</th>
                                     <th>Mode</th>
+                                    <th>Details</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -92,6 +79,10 @@
                                     </td>
                                     <td>
                                         <button class="btn-panel" ng-click="changeRuntimeMode(runtime)">{{runtime.mode}}
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="btn-panel" ng-click="showDetails(runtime)">Statistics
                                         </button>
                                     </td>
                                     <!--td>
@@ -140,6 +131,7 @@
                                     <th>Move to</th>
                                     <th>Move to</th>
                                     <th>Mode</th>
+                                    <th>Details</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -158,6 +150,10 @@
                                     </td>
                                     <td>
                                         <button class="btn-panel" ng-click="changeRuntimeMode(runtime)">{{runtime.mode}}
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="btn-panel" ng-click="showDetails(runtime)">Statistics
                                         </button>
                                     </td>
                                     <!--td>
@@ -206,6 +202,7 @@
                                     <th>Move to </th>
                                     <th>Move to</th>
                                     <th>Mode</th>
+                                    <th>Details</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -224,11 +221,11 @@
                                         <button class="btn-panel" ng-click="changeRuntimeMode(runtime)">{{runtime.mode}}
                                         </button>
                                     </td>
-                                    <!--td>
-                                        <label>
-                                            <input type="checkbox" data-ng-model="asset.selected"/>
-                                        </label>
-                                    </td-->
+                                    <td>
+                                        <button class="btn-panel" ng-click="showDetails(runtime)">Statistics
+                                        </button>
+                                    </td>
+
                                 </tr>
                                 </tbody>
                             </table>
@@ -245,6 +242,33 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Modal :  Deployment -->
+            <div id="Details" class="modal fade" data-backdrop="static">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Runtime statistics</h4>
+                        </div>
+                        <div google-chart chart="chartObject" style="{{cssStyle}}"></div>
+                        <div class="modal-footer">
+                            <button id="btn-closeDeploy" class="btn btn-danger pull-left"
+                                    ng-click="closeDetails()">
+                                Close
+                            </button>
+                            <!--
+                            <button id="btn-deploy"
+                                    class="btn btn-success pull-right" ng-click="closeDetails()">
+                                <span>Close</span>
+                            </button>
+                            -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
         </div>
     </div>
 
