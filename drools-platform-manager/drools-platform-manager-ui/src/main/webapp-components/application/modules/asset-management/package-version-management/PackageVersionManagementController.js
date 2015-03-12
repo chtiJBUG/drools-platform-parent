@@ -186,17 +186,6 @@ DroolsPlatformControllers.controller('packageVersionManagementController', ['$ro
                         }
 
                     }
-
-
-
-
-
-
-
-
-
-
-
                         console.log("[Success] Active runtime list got successfully");
                     })
                     .error(function (error, status) {
