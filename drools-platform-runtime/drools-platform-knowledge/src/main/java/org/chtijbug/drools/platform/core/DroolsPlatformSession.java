@@ -206,4 +206,14 @@ public class DroolsPlatformSession implements RuleBaseSession {
     public ProcessInstance startProcess(String processName, Map<String, Object> vars) {
         return this.ruleBaseStatefulSession.startProcess(processName, vars);
     }
+
+    @Override
+    public boolean isDisableJsonObjecttext() {
+        return this.ruleBaseStatefulSession.isDisableJsonObjecttext();
+    }
+
+    @Override
+    public void setDisableJsonObjecttext(boolean disableJsonObjecttext) {
+        this.ruleBaseStatefulSession.setDisableJsonObjecttext(disableJsonObjecttext);
+    }
 }
