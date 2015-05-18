@@ -92,7 +92,8 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
             PlatformRuntimeInstance platformRuntimeInstance = null;
             platformRuntimeDefinition = platformRuntimeDefinitionRepository.findByRuleBaseID(ruleBaseId);
             if (platformRuntimeDefinition != null) {
-                for (PlatformRuntimeInstance existingPlatformRuntimeInstance : platformRuntimeDefinition.getPlatformRuntimeInstances()) {
+                List<PlatformRuntimeInstance> instances = platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(ruleBaseId);
+                for (PlatformRuntimeInstance existingPlatformRuntimeInstance : instances) {
                     if (existingPlatformRuntimeInstance != null && existingPlatformRuntimeInstance.getEndDate() == null) {
                         existingPlatformRuntimeInstance.setEndDate(new Date());
                         existingPlatformRuntimeInstance.setShutdowDate(new Date());
@@ -149,7 +150,7 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
             platformRuntimeInstance.setStartDate(platformKnowledgeBaseInitialConnectionEvent.getStartDate());
             platformRuntimeInstance.setPlatformRuntimeDefinition(platformRuntimeDefinition);
             platformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.INITMODE);
-            platformRuntimeDefinition.getPlatformRuntimeInstances().add(platformRuntimeInstance);
+            platformRuntimeInstance.setPlatformRuntimeDefinition(platformRuntimeDefinition);
 
 
             try {
