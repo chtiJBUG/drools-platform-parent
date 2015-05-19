@@ -16,10 +16,17 @@
 package org.chtijbug.drools.platform.persistence;
 
 
+import org.chtijbug.drools.platform.persistence.pojo.Fact;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FactRepositoryCacheService {
+    @Autowired
+    FactRepository factRepository;
 
+    public Fact save(Fact newFact){
+        return this.factRepository.save(newFact);
+    }
 
 }

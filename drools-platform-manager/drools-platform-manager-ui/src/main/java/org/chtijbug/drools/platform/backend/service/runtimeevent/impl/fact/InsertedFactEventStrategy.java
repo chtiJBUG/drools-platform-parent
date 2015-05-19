@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.fact.InsertedFactHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
+import org.chtijbug.drools.platform.persistence.FactRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.RuleExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.*;
@@ -37,6 +38,9 @@ public class InsertedFactEventStrategy extends AbstractEventHandlerStrategy {
     @Autowired
     SessionExecutionRepositoryCacheService sessionExecutionRepository;
 
+    @Autowired
+    FactRepositoryCacheService factRepositoryCacheService;
+
     @Override
     @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
@@ -50,8 +54,10 @@ public class InsertedFactEventStrategy extends AbstractEventHandlerStrategy {
         RuleExecution existingInSessionRuleExecution = null;
         if (insertedFactHistoryEvent.getRuleName() == null) {  // inserted from a session
             SessionExecution sessionExecution = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(insertedFactHistoryEvent.getRuleBaseID(), insertedFactHistoryEvent.getSessionId());
-            sessionExecution.getFacts().add(fact);
-            sessionExecutionRepository.save(insertedFactHistoryEvent.getRuleBaseID(), insertedFactHistoryEvent.getSessionId(), sessionExecution);
+            //sessionExecution.getFacts().add(fact);
+            fact.setSessionExecution(sessionExecution);
+            factRepositoryCacheService.save(fact);
+           // sessionExecutionRepository.save(insertedFactHistoryEvent.getRuleBaseID(), insertedFactHistoryEvent.getSessionId(), sessionExecution);
 
         } else if (insertedFactHistoryEvent.getRuleName() != null && insertedFactHistoryEvent.getRuleflowGroup() == null) {   // inserted from a rule that is not in a ruleflow/process
             existingInSessionRuleExecution = ruleExecutionRepository.findActiveRuleByRuleBaseIDAndSessionIDAndRuleName(insertedFactHistoryEvent.getRuleBaseID(), insertedFactHistoryEvent.getSessionId(), insertedFactHistoryEvent.getRuleName());

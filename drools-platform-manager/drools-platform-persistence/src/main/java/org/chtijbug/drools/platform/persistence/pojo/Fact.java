@@ -44,6 +44,10 @@ public class Fact {
     @Enumerated(EnumType.STRING)
     private FactType factType;
 
+    @ManyToOne
+    private SessionExecution sessionExecution;
+
+
     private Integer eventid;
 
     public Fact() {
@@ -105,15 +109,27 @@ public class Fact {
         this.eventid = eventid;
     }
 
+    public SessionExecution getSessionExecution() {
+        return sessionExecution;
+    }
+
+    public void setSessionExecution(SessionExecution sessionExecution) {
+        this.sessionExecution = sessionExecution;
+    }
+
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("FactRuntime{");
+        final StringBuffer sb = new StringBuffer("Fact{");
         sb.append("id=").append(id);
         sb.append(", jsonFact='").append(jsonFact).append('\'');
         sb.append(", objectVersion=").append(objectVersion);
         sb.append(", fullClassName='").append(fullClassName).append('\'');
         sb.append(", modificationDate=").append(modificationDate);
-        sb.append(", factRuntimeType=").append(factType);
+        sb.append(", factType=").append(factType);
+        if (sessionExecution!= null) {
+            sb.append(", sessionExecution=").append(sessionExecution);
+        }
+        sb.append(", eventid=").append(eventid);
         sb.append('}');
         return sb.toString();
     }
