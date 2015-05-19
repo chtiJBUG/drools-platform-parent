@@ -94,9 +94,13 @@ public class SessionExecutionRepositoryCacheService {
 
 
     public void save(Integer ruleBaseID, Integer sessionID, SessionExecution sessionExecution) {
+        SessionExecution savedObject = null;
+        try {
 
-
-        SessionExecution savedObject = this.sessionExecutionRepository.save(sessionExecution);
+            savedObject = this.sessionExecutionRepository.save(sessionExecution);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         GridCacheProjection<Long, IndexSessionExecution> sessionExecutionCache = getCache();
         boolean newCachedObjet = false;

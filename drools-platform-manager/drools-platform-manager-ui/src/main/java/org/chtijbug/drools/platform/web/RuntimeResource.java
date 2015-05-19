@@ -188,13 +188,18 @@ public class RuntimeResource {
             final SessionExecution sessionExecution = sessionExecutionRepository.findByIdForUI(Id);
             // final SessionExecution sessionExecution = sessionExecutionRepository.findDetailsBySessionId(sessionID);
             SessionExecutionDetailsResource executionDetailsResource = new SessionExecutionDetailsResource();
-            ProcessExecution processExecution = sessionExecution.getProcessExecutions().get(0);
-            ProcessDetails processDetails = new ProcessDetails();
-
+            ProcessExecution processExecution=null;
+             ProcessDetails processDetails = new ProcessDetails();
             List<Fact> inputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.INPUTDATA));
             List<Fact> outputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.OUTPUTDATA));
-
+            for (Fact inputFact : inputFactList) {
+                executionDetailsResource.setInputObject(inputFact.getJsonFact());
+            }
+            for (Fact outputFact : outputFactList) {
+                executionDetailsResource.setOutputObject(outputFact.getJsonFact());
+            }
             if (sessionExecution.getProcessExecutions().size() != 0) {
+                processExecution = sessionExecution.getProcessExecutions().get(0);
                 processDetails.setProcessName(processExecution.getProcessName());
 
                 if (processExecution.getProcessVersion() != null) {
@@ -230,12 +235,7 @@ public class RuntimeResource {
                     }
                     executionDetailsResource.addRuleFlowGroup(ruleFlowGroupDetails);
                 }
-                for (Fact inputFact : inputFactList) {
-                    executionDetailsResource.setInputObject(inputFact.getJsonFact());
-                }
-                for (Fact outputFact : outputFactList) {
-                    executionDetailsResource.setOutputObject(outputFact.getJsonFact());
-                }
+
                 //logger.debug("Skipping this entry {}", sessionId);
             }
             return executionDetailsResource;

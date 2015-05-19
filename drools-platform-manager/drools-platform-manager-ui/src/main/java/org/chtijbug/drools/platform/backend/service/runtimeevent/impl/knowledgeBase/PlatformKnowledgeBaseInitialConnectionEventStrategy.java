@@ -178,7 +178,7 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
                 LOG.error(" handleMessage(PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent) ", e);
                 e.printStackTrace();
             } finally {
-                platformRuntimeDefinitionRepository.save(platformRuntimeDefinition);
+                platformRuntimeInstanceRepository.save(platformRuntimeInstance);
             }
         }
     }
