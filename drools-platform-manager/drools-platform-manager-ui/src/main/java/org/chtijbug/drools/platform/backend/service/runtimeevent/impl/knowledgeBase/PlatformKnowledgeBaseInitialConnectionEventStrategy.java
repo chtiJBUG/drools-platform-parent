@@ -110,6 +110,9 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
                     }
                 }
                 //TODO : if saving the instance, do not save next.
+                if (platformRuntimeDefinition.getDeploymentHost()!=null) {
+                    platformRuntimeDefinition.getDeploymentHost().setHostname(platformKnowledgeBaseInitialConnectionEvent.getHostname());
+                }
                 platformRuntimeDefinitionRepository.save(platformRuntimeDefinition);
             } else {
                 platformRuntimeDefinition = new PlatformRuntimeDefinition();
@@ -146,7 +149,6 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
 
 
             }
-            platformRuntimeDefinition.setWebsocketEndpoint(platformKnowledgeBaseInitialConnectionEvent.getHostname());
             platformRuntimeInstance = new PlatformRuntimeInstance();
             platformRuntimeInstance.setRuleBaseID(platformKnowledgeBaseInitialConnectionEvent.getRuleBaseID());
             platformRuntimeInstance.setStartEventID(platformKnowledgeBaseInitialConnectionEvent.getEventID());
