@@ -216,4 +216,14 @@ public class DroolsPlatformSession implements RuleBaseSession {
     public void setDisableJsonObjecttext(boolean disableJsonObjecttext) {
         this.ruleBaseStatefulSession.setDisableJsonObjecttext(disableJsonObjecttext);
     }
+
+    @Override
+    public boolean isDisableFactHandlerListener() {
+        return this.ruleBaseStatefulSession.isDisableFactHandlerListener();
+    }
+
+    @Override
+    public void setDisableFactHandlerListener(boolean disableFactHandlerListener) {
+        this.ruleBaseStatefulSession.setDisableFactHandlerListener(disableFactHandlerListener);
+    }
 }
