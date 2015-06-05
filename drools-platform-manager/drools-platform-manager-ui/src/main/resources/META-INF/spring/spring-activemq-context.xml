@@ -17,7 +17,7 @@
       <amq:amqPersistenceAdapter directory="${jms.basedir}" maxFileLength="32mb"/>
     </amq:persistenceAdapter>
     <amq:transportConnectors>
-      <amq:transportConnector uri="tcp://${jms.server}:${jms.port}"/>
+      <amq:transportConnector uri="tcp://${jms.server}:${jms.port}?transport.useInactivityMonitor=false"/>
       <amq:transportConnector uri="stomp://${jms.server}:${stomp.port}"/>
     </amq:transportConnectors>
   </amq:broker>

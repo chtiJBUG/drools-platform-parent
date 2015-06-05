@@ -68,7 +68,7 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
 
         int numberRetries = new Integer(this.numberRetriesString);
         int timeToWaitBetweenTwoRetries = new Integer(this.timeToWaitBetweenTwoRetriesString);
-        String url = "tcp://" + this.jmsServer + ":" + this.jmsPort+"?transport.useInactivityMonitor=false";
+        String url = "tcp://" + this.jmsServer + ":" + this.jmsPort;
         ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(url);
         Connection connection = null;
         JMSConnectionListener jmsConnectionListener = new JMSConnectionListener() {
