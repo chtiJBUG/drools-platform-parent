@@ -70,6 +70,7 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
         String url = "tcp://" + this.jmsServer + ":" + this.jmsPort;
         ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(url);
         this.jmsTemplate = new JmsTemplate(factory);
+        this.jmsConnected=true;
 
     }
 
