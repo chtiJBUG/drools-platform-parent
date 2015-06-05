@@ -68,8 +68,8 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
 
         int numberRetries = new Integer(this.numberRetriesString);
         int timeToWaitBetweenTwoRetries = new Integer(this.timeToWaitBetweenTwoRetriesString);
-        String url = "tcp://" + this.jmsServer + ":" + this.jmsPort;
-        ConnectionFactory factory = new ActiveMQConnectionFactory(url);
+        String url = "tcp://" + this.jmsServer + ":" + this.jmsPort+"?transport.useInactivityMonitor=false";
+        ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(url);
         Connection connection = null;
         JMSConnectionListener jmsConnectionListener = new JMSConnectionListener() {
             @Override
@@ -110,6 +110,7 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
             DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("ServletJmsStorageHistoryListener.fireEvent", "Acquire not possible", e);
             throw droolsChtijbugException;
         }
+
         if (jmsConnected == false) {
             /**
              * If no connection is possible, cache the history Event

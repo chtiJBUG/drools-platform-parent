@@ -15,6 +15,8 @@
  */
 package org.chtijbug.drools.platform.runtime.servlet.historylistener;
 
+import org.apache.activemq.ActiveMQConnection;
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 
@@ -33,7 +35,7 @@ public class CreateJMSConnectionThread extends Thread {
     JMSConnectionListener jmsConnectionListener;
     private static final Logger LOG = Logger.getLogger(ServletJmsStorageHistoryListener.class);
 
-    public CreateJMSConnectionThread(JMSConnectionListener jmsConnectionListener, int numberRetries, ConnectionFactory factory, long timeToWaitBetweenTwoRetries) {
+    public CreateJMSConnectionThread(JMSConnectionListener jmsConnectionListener, int numberRetries, ActiveMQConnectionFactory factory, long timeToWaitBetweenTwoRetries) {
         this.numberRetries = numberRetries;
         this.jmsConnectionListener = jmsConnectionListener;
         this.factory = factory;
@@ -51,6 +53,7 @@ public class CreateJMSConnectionThread extends Thread {
         while (retryNumber < numberRetries && connected == false) {
             try {
                 connection = factory.createConnection();
+
                 connected = true;
                 this.jmsConnectionListener.connected(connection);
             } catch (Exception e) {

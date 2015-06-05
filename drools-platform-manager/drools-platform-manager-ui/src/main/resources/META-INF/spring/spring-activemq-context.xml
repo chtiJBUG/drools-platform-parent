@@ -13,6 +13,7 @@
   <amq:broker brokerName="brokerService" persistent="true" useShutdownHook="true"
               xmlns="http://activemq.apache.org/schema/core">
     <amq:persistenceAdapter>
+
       <amq:amqPersistenceAdapter directory="${jms.basedir}" maxFileLength="32mb"/>
     </amq:persistenceAdapter>
     <amq:transportConnectors>
