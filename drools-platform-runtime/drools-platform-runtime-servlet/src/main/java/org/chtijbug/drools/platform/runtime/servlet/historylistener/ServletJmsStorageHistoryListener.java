@@ -45,7 +45,7 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
 
     private Integer ruleBaseID;
 
-    JmsTemplate jmsTemplate;
+    private JmsTemplate jmsTemplate;
 
 
     private boolean jmsConnected = false;
