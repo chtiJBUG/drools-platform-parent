@@ -24,9 +24,10 @@ import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEv
 import org.chtijbug.drools.platform.runtime.servlet.DroolsPlatformKnowledgeBaseJavaEE;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.jms.*;
+import javax.jms.JMSException;
 import java.util.Date;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -44,9 +45,8 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
 
     private Integer ruleBaseID;
 
-    private MessageProducer producer;
+    JmsTemplate jmsTemplate;
 
-    private Session session;
 
     private boolean jmsConnected = false;
 
@@ -66,39 +66,11 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
 
     public void initJmsConnection() throws DroolsChtijbugException {
 
-        int numberRetries = new Integer(this.numberRetriesString);
-        int timeToWaitBetweenTwoRetries = new Integer(this.timeToWaitBetweenTwoRetriesString);
+
         String url = "tcp://" + this.jmsServer + ":" + this.jmsPort;
         ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(url);
-        Connection connection = null;
-        JMSConnectionListener jmsConnectionListener = new JMSConnectionListener() {
-            @Override
-            public void connected(Connection connection) throws JMSException, InterruptedException {
-                try {
-                    session = connection.createSession(false,
-                            Session.AUTO_ACKNOWLEDGE);
-                    Queue queue = session.createQueue(platformQueueName);
-                    producer = session.createProducer(queue);
-                    jmsConnectedSemaphore.acquire();
-                    for (HistoryEvent cachedhistoryEvent : cachedHistoryEvents) {
-                        ObjectMessage cachedmsg = session.createObjectMessage(cachedhistoryEvent);
-                        producer.send(cachedmsg);
-                    }
-                    cachedHistoryEvents.clear();
-                    jmsConnected = true;
-                    jmsConnectedSemaphore.release();
-                } catch (JMSException e) {
-                    LOG.error("ServletJmsStorageHistoryListener.initJmsConnection.JMSException", e);
-                    throw e;
-                } catch (InterruptedException e) {
-                    LOG.error("ServletJmsStorageHistoryListener.initJmsConnection.InterruptedException", e);
-                    throw e;
-                }
+        this.jmsTemplate = new JmsTemplate(factory);
 
-            }
-        };
-        CreateJMSConnectionThread createJMSConnectionThread = new CreateJMSConnectionThread(jmsConnectionListener, numberRetries, factory, timeToWaitBetweenTwoRetries);
-        createJMSConnectionThread.start();
     }
 
 
@@ -126,19 +98,12 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
                  * If some history events were cached before, send them first
                  */
                 for (HistoryEvent cachedhistoryEvent : cachedHistoryEvents) {
-                    ObjectMessage cachedmsg = session.createObjectMessage(cachedhistoryEvent);
-                    producer.send(cachedmsg);
+                    this.jmsTemplate.send(platformQueueName, new PlatformMessageCreator(cachedhistoryEvent));
                     LOG.debug("Sending Cached Event" + cachedhistoryEvent.toString());
                 }
                 cachedHistoryEvents.clear();
-                ObjectMessage msg = session.createObjectMessage(historyEvent);
-                producer.send(msg);
+                this.jmsTemplate.send(platformQueueName, new PlatformMessageCreator(historyEvent));
                 LOG.debug("Sending JMS Event" + historyEvent.toString());
-            } catch (JMSException e) {
-                DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("JMSHistoryEvent", "FireEvent", e);
-
-                LOG.error("ServletJmsStorageHistoryListener.fireEvent.JMSException", e);
-                throw droolsChtijbugException;
             } finally {
                 jmsConnectedSemaphore.release();
             }
@@ -152,9 +117,6 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
 
         try {
             this.fireEvent(platformKnowledgeBaseShutdownEvent);
-            session.close();
-        } catch (JMSException e) {
-            LOG.error("Session Could not be closed", e);
         } catch (DroolsChtijbugException e) {
             LOG.error("Session Could not be closed", e);
         }
