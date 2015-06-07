@@ -24,6 +24,7 @@ import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEv
 import org.chtijbug.drools.platform.runtime.servlet.DroolsPlatformKnowledgeBaseJavaEE;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
@@ -69,7 +70,8 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
 
         String url = "tcp://" + this.jmsServer + ":" + this.jmsPort;
         ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(url);
-        this.jmsTemplate = new JmsTemplate(factory);
+        CachingConnectionFactory cacheFactory = new CachingConnectionFactory(factory);
+        this.jmsTemplate = new JmsTemplate(cacheFactory);
         this.jmsConnected=true;
 
     }

@@ -24,6 +24,8 @@ import org.chtijbug.drools.platform.core.droolslistener.PlatformHistoryListener;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEvent;
 import org.chtijbug.drools.platform.runtime.javase.DroolsPlatformKnowledgeBaseJavaSE;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
+import org.springframework.jms.connection.CachingConnectionFactory;
+import org.springframework.jms.core.JmsTemplate;
 
 import javax.jms.*;
 import java.io.Serializable;
@@ -41,18 +43,16 @@ public class JmsStorageHistoryListener implements PlatformHistoryListener {
 
     private Integer ruleBaseID;
 
-    private MessageProducer producer;
-
-    private Session session;
 
     private DroolsPlatformKnowledgeBaseRuntime droolsPlatformKnowledgeBase;
+    private JmsTemplate jmsTemplate;
 
     public JmsStorageHistoryListener(DroolsPlatformKnowledgeBaseRuntime droolsPlatformKnowledgeBase, String platformServer, Integer platformPort, String platformQueueName) throws DroolsChtijbugException {
         this.droolsPlatformKnowledgeBase = droolsPlatformKnowledgeBase;
         this.platformServer = platformServer;
         this.platformPort = platformPort;
         this.platformQueueName = platformQueueName;
-        this.ruleBaseID = droolsPlatformKnowledgeBase.getRuleBaseID();
+        this.ruleBaseID = this.droolsPlatformKnowledgeBase.getRuleBaseID();
         try {
             initJmsConnection();
         } catch (JMSException e) {
@@ -65,32 +65,13 @@ public class JmsStorageHistoryListener implements PlatformHistoryListener {
     private void initJmsConnection() throws JMSException {
         String url = "tcp://" + this.platformServer + ":" + this.platformPort;
         ConnectionFactory factory = new ActiveMQConnectionFactory(url);
-        try {
-            Connection connection = factory.createConnection();
-            session = connection.createSession(false,
-                    Session.AUTO_ACKNOWLEDGE);
-            Queue queue = session.createQueue(this.platformQueueName);
-            producer = session.createProducer(queue);
-        } catch (JMSException exp) {
-            // TODO handle properly exception
-            exp.printStackTrace();
-        }
+        CachingConnectionFactory cacheFactory = new CachingConnectionFactory(factory);
+        this.jmsTemplate = new JmsTemplate(cacheFactory);
     }
 
     @Override
     public void fireEvent(HistoryEvent historyEvent) throws DroolsChtijbugException {
-
-
-        final Serializable objectToSend = historyEvent;
-        try {
-            ObjectMessage msg = session.createObjectMessage(historyEvent);
-            producer.send(msg);
-        } catch (JMSException e) {
-            DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("JMSHistoryEvent", "FireEvent", e);
-            throw droolsChtijbugException;
-        }
-
-
+        this.jmsTemplate.send(platformQueueName, new PlatformMessageCreator(historyEvent));
     }
 
     public void shutdown() {
@@ -98,13 +79,9 @@ public class JmsStorageHistoryListener implements PlatformHistoryListener {
 
         try {
             this.fireEvent(platformKnowledgeBaseShutdownEvent);
-            session.close();
-        } catch (JMSException e) {
-            LOG.error("Session Could not be closed", e);
         } catch (DroolsChtijbugException e) {
             LOG.error("Session Could not be closed", e);
         }
-
     }
 
     @Override
