@@ -18,6 +18,7 @@ package org.chtijbug.drools.platform.runtime.javase;
 import com.google.common.base.Throwables;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBaseRuntime;
+import org.chtijbug.drools.platform.core.DroolsPlatformSession;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServerInstance;
 import org.chtijbug.drools.platform.runtime.javase.historylistener.JmsStorageHistoryListener;
 import org.chtijbug.drools.platform.runtime.javase.websocket.WebSocketServer;
@@ -136,9 +137,12 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
 
     @Override
     public RuleBaseSession createRuleBaseSession(int maxNumberRulesToExecute) throws DroolsChtijbugException {
-        return ruleBasePackage.createRuleBaseSession(maxNumberRulesToExecute);
+        return this.createRuleBaseSession(maxNumberRulesToExecute);
     }
-
+    @Override
+    public RuleBaseSession createRuleBaseSession(int maxNumberRulesToExecute, HistoryListener sessionHistoryListener) throws DroolsChtijbugException {
+        return ruleBasePackage.createRuleBaseSession(maxNumberRulesToExecute,sessionHistoryListener);
+    }
     @Override
     public void createKBase(DroolsResource... res) throws DroolsChtijbugException {
         ruleBasePackage.createKBase(res);
@@ -187,6 +191,11 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
     @Override
     public boolean isReady() {
         return this.ruleBasePackage.isReady();
+    }
+
+    @Override
+    public void disposePlatformRuleBaseSession(RuleBaseSession session) throws DroolsChtijbugException {
+        this.ruleBasePackage.disposePlatformRuleBaseSession(session);
     }
 
 

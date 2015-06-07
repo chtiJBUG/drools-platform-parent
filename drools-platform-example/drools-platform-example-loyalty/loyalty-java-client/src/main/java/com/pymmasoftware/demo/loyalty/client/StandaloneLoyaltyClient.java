@@ -43,7 +43,7 @@ public class StandaloneLoyaltyClient {
             }
             RuleBaseSession sessionStatefull = ruleBasePackage.createRuleBaseSession();
             sessionStatefull.fireAllRulesAndStartProcess(ticket, "P1");
-            sessionStatefull.dispose();
+            ruleBasePackage.disposePlatformRuleBaseSession(sessionStatefull);
         } catch (DroolsChtijbugException e) {
             logger.error("Error in fireallrules", e);
             throw Throwables.propagate(e);
