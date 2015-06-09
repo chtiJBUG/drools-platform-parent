@@ -45,7 +45,7 @@ public class SimpleBPMNClient {
                 RuleBaseSession ruleBaseSession = droolsPlatformKnowledgeBase.createRuleBaseSession();
                 Fibonacci fibonacci = new Fibonacci(0);
                 ruleBaseSession.fireAllRulesAndStartProcess(fibonacci, "P1");
-                ruleBaseSession.dispose();
+                droolsPlatformKnowledgeBase.disposePlatformRuleBaseSession(ruleBaseSession);
                 System.out.println("i= " + i);
             }
         } catch (Exception e) {

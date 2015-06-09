@@ -15,7 +15,10 @@
  */
 package org.chtijbug.drools.platform.core;
 
+import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.RuleBasePackage;
+import org.chtijbug.drools.runtime.RuleBaseSession;
+import org.chtijbug.drools.runtime.listener.HistoryListener;
 import org.chtijbug.drools.runtime.resource.DroolsResource;
 
 
@@ -31,4 +34,6 @@ public interface DroolsPlatformKnowledgeBaseRuntime extends RuleBasePackage {
 
 
     boolean isReady();
+
+    void disposePlatformRuleBaseSession(RuleBaseSession session) throws DroolsChtijbugException;
 }

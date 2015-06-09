@@ -17,9 +17,12 @@ package org.chtijbug.drools.platform.core;
 
 import org.chtijbug.drools.entity.history.DrlResourceFile;
 import org.chtijbug.drools.entity.history.GuvnorResourceFile;
+import org.chtijbug.drools.entity.history.HistoryContainer;
 import org.chtijbug.drools.platform.core.droolslistener.PlatformHistoryListener;
 import org.chtijbug.drools.platform.core.droolslistener.RuleBaseReady;
+import org.chtijbug.drools.platform.core.droolslistener.SessionHistoryListener;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServerInstance;
+import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseDisposeSessionEvent;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseInitialConnectionEvent;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.RuleBaseSession;
@@ -38,6 +41,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseRuntime, RuleBaseReady {
@@ -79,6 +84,10 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
     private String guvnorUsername;
     private String guvnorPassword;
     private JavaDialect javaDialect = null;
+
+
+    private ExecutorService executorService = Executors.newFixedThreadPool(5);
+
 
     public DroolsPlatformKnowledgeBase() {/* nop*/}
 
@@ -164,21 +173,23 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
 
     @Override
     public RuleBaseSession createRuleBaseSession() throws DroolsChtijbugException {
-        DroolsPlatformSession droolsPlatformSession = null;
-        if (isReady) {
-            RuleBaseStatefulSession created = (RuleBaseStatefulSession) this.ruleBasePackage.createRuleBaseSession();
-            droolsPlatformSession = new DroolsPlatformSession();
-            droolsPlatformSession.setRuntimeWebSocketServerService(this.webSocketServer);
-            droolsPlatformSession.setRuleBaseStatefulSession(created);
-        }
-        return droolsPlatformSession;
+        SessionHistoryListener sessionHistoryListener = new SessionHistoryListener();
+        return this.createRuleBaseSession(RuleBaseSingleton.DEFAULT_RULE_THRESHOLD, sessionHistoryListener);
     }
 
     @Override
     public RuleBaseSession createRuleBaseSession(int maxNumberRulesToExecute) throws DroolsChtijbugException {
+        SessionHistoryListener sessionHistoryListener = new SessionHistoryListener();
+        return this.createRuleBaseSession(maxNumberRulesToExecute, sessionHistoryListener);
+    }
+
+
+    @Override
+    public RuleBaseSession createRuleBaseSession(int maxNumberRulesToExecute, HistoryListener sessionHistoryListener) throws DroolsChtijbugException {
+
         DroolsPlatformSession droolsPlatformSession = null;
         if (isReady) {
-            RuleBaseStatefulSession created = (RuleBaseStatefulSession) this.ruleBasePackage.createRuleBaseSession(maxNumberRulesToExecute);
+            RuleBaseStatefulSession created = (RuleBaseStatefulSession) this.ruleBasePackage.createRuleBaseSession(maxNumberRulesToExecute, sessionHistoryListener);
             droolsPlatformSession = new DroolsPlatformSession();
             droolsPlatformSession.setRuntimeWebSocketServerService(this.webSocketServer);
             droolsPlatformSession.setRuleBaseStatefulSession(created);
@@ -236,6 +247,17 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
     public boolean isReady() {
         return isReady;
     }
+
+    @Override
+    public void disposePlatformRuleBaseSession(RuleBaseSession session) throws DroolsChtijbugException {
+        HistoryContainer historyContainer = session.getHistoryContainer();
+        PlatformKnowledgeBaseDisposeSessionEvent platformKnowledgeBaseDisposeSessionEvent = new PlatformKnowledgeBaseDisposeSessionEvent(-1, new Date(), this.ruleBaseID, historyContainer.getListHistoryEvent());
+        //TODO optimize
+        SendToJMSThread send = new SendToJMSThread(historyListener, platformKnowledgeBaseDisposeSessionEvent);
+        executorService.submit(send);
+        session.dispose();
+    }
+
 
     @Override
     public String toString() {

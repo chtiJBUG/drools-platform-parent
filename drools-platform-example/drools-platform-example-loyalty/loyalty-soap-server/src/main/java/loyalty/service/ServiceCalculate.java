@@ -16,6 +16,7 @@
 package loyalty.service;
 
 import loyalty.domains.Ticket;
+import org.chtijbug.drools.platform.core.DroolsPlatformSession;
 import org.chtijbug.drools.platform.runtime.servlet.DroolsPlatformKnowledgeBaseJavaEE;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.RuleBaseSession;
@@ -41,7 +42,8 @@ public class ServiceCalculate implements IServiceCalculate {
         try {
             sessionStatefull = platformKnowledgeBaseJavaEE.createRuleBaseSession();
             sessionStatefull.fireAllRulesAndStartProcess(ticket, "P1.P1");
-            sessionStatefull.dispose();
+            platformKnowledgeBaseJavaEE.disposePlatformRuleBaseSession(sessionStatefull);
+
         } catch (DroolsChtijbugException e) {
             logger.error("Error in fireallrules", e);
         }
