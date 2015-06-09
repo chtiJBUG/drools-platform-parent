@@ -4,6 +4,7 @@ import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public class SessionHistoryListener implements PlatformHistoryListener{
 
-    private List<HistoryEvent> historyEvents= new ArrayList<>();
+    private List<HistoryEvent> historyEvents= new LinkedList<>();
 
     public SessionHistoryListener() {
     }
