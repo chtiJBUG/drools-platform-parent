@@ -232,6 +232,10 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
         return this.ruleBaseID;
     }
 
+    public void setRuleBaseID(Integer ruleBaseID) {
+        this.ruleBaseID = ruleBaseID;
+    }
+
     @Override
     public void dispose() {
         this.ruleBasePackage.dispose();
@@ -251,13 +255,13 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
     @Override
     public void disposePlatformRuleBaseSession(RuleBaseSession session) throws DroolsChtijbugException {
         HistoryContainer historyContainer = session.getHistoryContainer();
+        session.dispose();
         PlatformKnowledgeBaseDisposeSessionEvent platformKnowledgeBaseDisposeSessionEvent = new PlatformKnowledgeBaseDisposeSessionEvent(-1, new Date(), this.ruleBaseID, historyContainer.getListHistoryEvent());
         //TODO optimize
         SendToJMSThread send = new SendToJMSThread(historyListener, platformKnowledgeBaseDisposeSessionEvent);
         executorService.submit(send);
-        session.dispose();
-    }
 
+    }
 
     @Override
     public String toString() {
@@ -270,10 +274,6 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
     @Override
     public void setRuleBaseStatus(boolean ready) {
         this.isReady = ready;
-    }
-
-    public void setRuleBaseID(Integer ruleBaseID) {
-        this.ruleBaseID = ruleBaseID;
     }
 
     public String getWebSocketHostname() {
