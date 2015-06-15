@@ -19,33 +19,22 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.DroolsFactObject;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionFireAllRulesAndStartProcess;
-import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractMemoryEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.SessionContext;
 import org.chtijbug.drools.platform.persistence.pojo.Fact;
 import org.chtijbug.drools.platform.persistence.pojo.FactType;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Component
-public class KnowledgeSessionFireAllRulesAndStartProcessEventStrategy extends AbstractEventHandlerStrategy {
+public class KnowledgeSessionFireAllRulesAndStartProcessEventStrategy extends AbstractMemoryEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(KnowledgeSessionFireAllRulesAndStartProcessEventStrategy.class);
 
-    @Autowired
-    PlatformRuntimeInstanceRepositoryCacheService platformRuntimeInstanceRepository;
-
-    @Autowired
-    SessionExecutionRepositoryCacheService sessionExecutionRepository;
-
     @Override
-    @Transactional
-    protected void handleMessageInternally(HistoryEvent historyEvent) {
+    public void handleMessageInternally(HistoryEvent historyEvent, SessionContext sessionContext) {
         SessionFireAllRulesAndStartProcess sessionFireAllRulesAndStartProcess = (SessionFireAllRulesAndStartProcess) historyEvent;
-        SessionExecution existingSessionRutime = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
+        SessionExecution existingSessionRutime = sessionContext.getSessionExecution();
         if (existingSessionRutime != null) {
             if (sessionFireAllRulesAndStartProcess.getInputObject() != null) {
                 DroolsFactObject inputObject = sessionFireAllRulesAndStartProcess.getInputObject();
@@ -69,26 +58,14 @@ public class KnowledgeSessionFireAllRulesAndStartProcessEventStrategy extends Ab
                 outputFact.setObjectVersion(outputObject.getObjectVersion());
                 existingSessionRutime.getFacts().add(outputFact);
             }
-
-            sessionExecutionRepository.save(sessionFireAllRulesAndStartProcess.getRuleBaseID(), sessionFireAllRulesAndStartProcess.getSessionId(), existingSessionRutime);
         }
 
         LOG.debug("SessionFireAllRulesAndStartProcess " + sessionFireAllRulesAndStartProcess.toString());
     }
-
     @Override
     public boolean isEventSupported(HistoryEvent historyEvent) {
 
         return historyEvent instanceof SessionFireAllRulesAndStartProcess;
     }
 
-    @Override
-    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
-        if (platformRuntimeMode==PlatformRuntimeMode.Debug) {
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
 }

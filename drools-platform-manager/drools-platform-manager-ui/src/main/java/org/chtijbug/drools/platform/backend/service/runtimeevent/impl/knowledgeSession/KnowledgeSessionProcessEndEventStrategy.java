@@ -18,18 +18,18 @@ package org.chtijbug.drools.platform.backend.service.runtimeevent.impl.knowledge
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionStartProcessEndEvent;
-import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractMemoryEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.SessionContext;
 import org.springframework.stereotype.Component;
 
 
 @Component
-public class KnowledgeSessionProcessEndEventStrategy extends AbstractEventHandlerStrategy {
+public class KnowledgeSessionProcessEndEventStrategy extends AbstractMemoryEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(KnowledgeSessionProcessEndEventStrategy.class);
 
 
     @Override
-    protected void handleMessageInternally(HistoryEvent historyEvent) {
+    public void handleMessageInternally(HistoryEvent historyEvent, SessionContext sessionContext) {
 
 
         LOG.debug("SessionStartProcessEndEvent " + historyEvent.toString());
@@ -39,15 +39,5 @@ public class KnowledgeSessionProcessEndEventStrategy extends AbstractEventHandle
     public boolean isEventSupported(HistoryEvent historyEvent) {
 
         return historyEvent instanceof SessionStartProcessEndEvent;
-    }
-
-    @Override
-    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
-        if (platformRuntimeMode==PlatformRuntimeMode.Debug) {
-            return true;
-        }
-        else{
-            return false;
-        }
     }
 }

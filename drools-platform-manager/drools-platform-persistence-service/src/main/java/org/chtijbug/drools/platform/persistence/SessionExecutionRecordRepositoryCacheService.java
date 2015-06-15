@@ -16,16 +16,13 @@
 package org.chtijbug.drools.platform.persistence;
 
 
-import org.chtijbug.drools.platform.persistence.pojo.ProcessExecution;
-import org.chtijbug.drools.platform.persistence.pojo.RuleflowGroup;
-import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
+import org.chtijbug.drools.platform.persistence.pojo.SessionExecutionRecord;
 import org.chtijbug.drools.platform.persistence.searchobjects.IndexSessionExecution;
 import org.gridgain.grid.GridException;
 import org.gridgain.grid.cache.GridCache;
 import org.gridgain.grid.cache.GridCacheProjection;
 import org.gridgain.grid.cache.query.GridCacheQueries;
 import org.gridgain.grid.cache.query.GridCacheQuery;
-import org.jdal.dao.jpa.JpaUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,38 +37,26 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 
 @Component
-public class SessionExecutionRepositoryCacheService {
-    private static Logger logger = getLogger(SessionExecutionRepositoryCacheService.class);
+public class SessionExecutionRecordRepositoryCacheService {
+    private static Logger logger = getLogger(SessionExecutionRecordRepositoryCacheService.class);
 
     @Autowired
     CacheSingleton cacheSingleton;
-
+    @Autowired
+    SessionExecutionRecordRepository sessionExecutionRecordRepository;
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Autowired
-    SessionExecutionRepository sessionExecutionRepository;
-
     @Transactional
-    public SessionExecution findByIdForUI(Long id) {
-        SessionExecution result = null;
-        result = this.sessionExecutionRepository.findOne(id);
-        if (result != null) {
-            JpaUtils.initialize(entityManager, result, 5);
-            for (ProcessExecution processExecution : result.getProcessExecutions()) {
-                for (RuleflowGroup ruleflowGroup : processExecution.getRuleflowGroups()) {
-                    JpaUtils.initialize(entityManager, ruleflowGroup, 5);
-                }
-            }
-
-
-        }
-        return result;
+    public SessionExecutionRecord findByIdForUI(Long id) {
+        SessionExecutionRecord work = null;
+        work = this.sessionExecutionRecordRepository.findOne(id);
+        return work;
     }
 
     @Transactional
-    public SessionExecution findByRuleBaseIDAndSessionIdAndEndDateIsNull(Integer ruleBaseID, Integer sessionId) {
-        SessionExecution result = null;
+    public SessionExecutionRecord findByRuleBaseIDAndSessionIdAndEndDateIsNull(Integer ruleBaseID, Integer sessionId) {
+        SessionExecutionRecord result = null;
         GridCacheProjection<Long, IndexSessionExecution> ruleFlowGroupCache = getCache();
         GridCacheQueries<Long, IndexSessionExecution> queries = ruleFlowGroupCache.queries();
         GridCacheQuery<Map.Entry<Long, IndexSessionExecution>> qry =
@@ -79,7 +64,7 @@ public class SessionExecutionRepositoryCacheService {
         try {
             Collection<Map.Entry<Long, IndexSessionExecution>> queryresult = qry.execute(ruleBaseID, sessionId).get();
             if (queryresult.size() != 1) {
-                result = this.sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(ruleBaseID, sessionId);
+                result = this.sessionExecutionRecordRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(ruleBaseID, sessionId);
                 if (result != null) {
                     this.save(ruleBaseID, sessionId, result);
                 }
@@ -93,11 +78,11 @@ public class SessionExecutionRepositoryCacheService {
     }
 
 
-    public void save(Integer ruleBaseID, Integer sessionID, SessionExecution sessionExecution) {
-        SessionExecution savedObject = null;
+    public void save(Integer ruleBaseID, Integer sessionID, SessionExecutionRecord sessionExecution) {
+        SessionExecutionRecord savedObject = null;
         try {
 
-            savedObject = this.sessionExecutionRepository.save(sessionExecution);
+            savedObject = this.sessionExecutionRecordRepository.save(sessionExecution);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -18,40 +18,29 @@ package org.chtijbug.drools.platform.backend.service.runtimeevent.impl.knowledge
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionDisposedEvent;
-import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractMemoryEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.SessionContext;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecutionStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
 
 @Component
-public class KnowledgeSessionDisposeEventStrategy extends AbstractEventHandlerStrategy {
+public class KnowledgeSessionDisposeEventStrategy extends AbstractMemoryEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(KnowledgeSessionDisposeEventStrategy.class);
 
-    @Autowired
-    PlatformRuntimeInstanceRepositoryCacheService platformRuntimeInstanceRepository;
 
-    @Autowired
-    SessionExecutionRepositoryCacheService sessionExecutionRepository;
 
     @Override
-    @Transactional
-    protected void handleMessageInternally(HistoryEvent historyEvent) {
+    public void handleMessageInternally(HistoryEvent historyEvent, SessionContext sessionContext) {
         SessionDisposedEvent sessionDisposedEvent = (SessionDisposedEvent) historyEvent;
-        SessionExecution existingSessionRutime = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
-
+        SessionExecution existingSessionRutime = sessionContext.getSessionExecution();
         existingSessionRutime.setEndDate(sessionDisposedEvent.getDateEvent());
         existingSessionRutime.setProcessingStopDate(new Date());
         existingSessionRutime.setStopEventID(sessionDisposedEvent.getEventID());
         existingSessionRutime.setSessionExecutionStatus(SessionExecutionStatus.DISPOSED);
-        sessionExecutionRepository.save(sessionDisposedEvent.getRuleBaseID(), sessionDisposedEvent.getSessionId(), existingSessionRutime);
         LOG.debug("SessionDisposedEvent " + historyEvent.toString());
     }
 
@@ -61,8 +50,4 @@ public class KnowledgeSessionDisposeEventStrategy extends AbstractEventHandlerSt
         return historyEvent instanceof SessionDisposedEvent;
     }
 
-    @Override
-    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
-        return true;
-    }
 }

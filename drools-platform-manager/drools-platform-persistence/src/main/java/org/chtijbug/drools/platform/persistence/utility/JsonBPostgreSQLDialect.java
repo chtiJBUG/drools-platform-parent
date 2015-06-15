@@ -13,13 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.chtijbug.drools.platform.persistence;
 
-import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
-import org.springframework.data.repository.query.Param;
+package org.chtijbug.drools.platform.persistence.utility;
 
 
-public interface SessionExecutionCustomRepository {
-    SessionExecution findByRuleBaseIDAndSessionIdAndEndDateIsNull(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionId") Integer sessionId);
+import org.hibernate.dialect.PostgreSQL9Dialect;
 
+import java.sql.Types;
+
+/**
+ * Wrap default PostgreSQL9Dialect with 'json' type.
+ *
+ * @author timfulmer
+ */
+public class JsonBPostgreSQLDialect extends PostgreSQL9Dialect {
+
+    public JsonBPostgreSQLDialect() {
+
+        super();
+
+        this.registerColumnType(Types.JAVA_OBJECT, "jsonb");
+    }
 }

@@ -18,33 +18,28 @@ package org.chtijbug.drools.platform.backend.service.runtimeevent.impl.process;
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.process.AfterProcessEndHistoryEvent;
-import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.ProcessExecutionRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractMemoryEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.SessionContext;
 import org.chtijbug.drools.platform.persistence.pojo.ProcessExecution;
 import org.chtijbug.drools.platform.persistence.pojo.ProcessExecutionStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 
 @Component
-public class AfterProcessEndHistoryEventStrategy extends AbstractEventHandlerStrategy {
+public class AfterProcessEndHistoryEventStrategy extends AbstractMemoryEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(AfterProcessEndHistoryEventStrategy.class);
-
-    @Autowired
-    ProcessExecutionRepositoryCacheService processExecutionRepository;
 
     @Override
     @Transactional
-    protected void handleMessageInternally(HistoryEvent historyEvent) {
+    public void handleMessageInternally(HistoryEvent historyEvent, SessionContext sessionContext) {
         AfterProcessEndHistoryEvent afterProcessEndHistoryEvent = (AfterProcessEndHistoryEvent) historyEvent;
 
-        ProcessExecution processExecution = processExecutionRepository.findStartedProcessByRuleBaseIDBySessionIDAndProcessInstanceId(afterProcessEndHistoryEvent.getRuleBaseID(), afterProcessEndHistoryEvent.getSessionId(), afterProcessEndHistoryEvent.getProcessInstance().getId());
+        ProcessExecution processExecution = sessionContext.getProcessExecution();
         processExecution.setEndDate(afterProcessEndHistoryEvent.getDateEvent());
         processExecution.setStopEventID(afterProcessEndHistoryEvent.getEventID());
         processExecution.setProcessExecutionStatus(ProcessExecutionStatus.JBPMSTOPPED);
-        processExecutionRepository.save(processExecution);
+        sessionContext.setProcessExecution(null);
         LOG.debug("AfterProcessEndHistoryEvent " + historyEvent.toString());
     }
 
@@ -52,15 +47,5 @@ public class AfterProcessEndHistoryEventStrategy extends AbstractEventHandlerStr
     public boolean isEventSupported(HistoryEvent historyEvent) {
 
         return historyEvent instanceof AfterProcessEndHistoryEvent;
-    }
-
-    @Override
-    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
-        if (platformRuntimeMode==PlatformRuntimeMode.Debug) {
-            return true;
-        }
-        else{
-            return false;
-        }
     }
 }

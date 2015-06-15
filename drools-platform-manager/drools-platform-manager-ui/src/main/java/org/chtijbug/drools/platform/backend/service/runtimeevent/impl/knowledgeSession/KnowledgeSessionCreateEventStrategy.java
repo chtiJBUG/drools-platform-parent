@@ -18,69 +18,37 @@ package org.chtijbug.drools.platform.backend.service.runtimeevent.impl.knowledge
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionCreatedEvent;
-import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractMemoryEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.SessionContext;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecutionStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.List;
 
 
 @Component
-public class KnowledgeSessionCreateEventStrategy extends AbstractEventHandlerStrategy {
+public class KnowledgeSessionCreateEventStrategy extends AbstractMemoryEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(KnowledgeSessionCreateEventStrategy.class);
 
-    @Autowired
-    PlatformRuntimeInstanceRepositoryCacheService platformRuntimeInstanceRepository;
-
-    @Autowired
-    SessionExecutionRepositoryCacheService sessionExecutionRepository;
 
     @Override
-    @Transactional
-    protected void handleMessageInternally(HistoryEvent historyEvent) {
+    public void handleMessageInternally(HistoryEvent historyEvent, SessionContext sessionContext) {
+        SessionExecution sessionExecution = new SessionExecution();
         SessionCreatedEvent sessionCreatedEvent = (SessionCreatedEvent) historyEvent;
-        SessionExecution existingSessionRutime = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
-        if (existingSessionRutime != null) {
-            existingSessionRutime.setEndDate(new Date());
-            existingSessionRutime.setSessionExecutionStatus(SessionExecutionStatus.CRASHED);
-            sessionExecutionRepository.save(sessionCreatedEvent.getRuleBaseID(), sessionCreatedEvent.getSessionId(), existingSessionRutime);
-        }
-        List<PlatformRuntimeInstance> platformRuntimeInstances = platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(sessionCreatedEvent.getRuleBaseID());
-        if (platformRuntimeInstances.size() == 1) {
-            PlatformRuntimeInstance platformRuntimeInstance = platformRuntimeInstances.get(0);
-            SessionExecution sessionExecution = new SessionExecution();
-            sessionExecution.setProcessingStartDate(new Date());
-            sessionExecution.setPlatformRuntimeInstance(platformRuntimeInstance);
-            sessionExecution.setStartDate(sessionCreatedEvent.getDateEvent());
-            sessionExecution.setSessionId(sessionCreatedEvent.getSessionId());
-            sessionExecution.setStartEventID(sessionCreatedEvent.getEventID());
-            sessionExecution.setSessionExecutionStatus(SessionExecutionStatus.STARTED);
-            if (platformRuntimeInstance.getPlatformRuntimeDefinition()!= null && platformRuntimeInstance.getPlatformRuntimeDefinition().getPlatformRuntimeMode() !=null) {
-                sessionExecution.setPlatformRuntimeMode(platformRuntimeInstance.getPlatformRuntimeDefinition().getPlatformRuntimeMode());
-            }else {
-                sessionExecution.setPlatformRuntimeMode(PlatformRuntimeMode.Debug);
-            }
-            sessionExecutionRepository.save(sessionCreatedEvent.getRuleBaseID(), sessionCreatedEvent.getSessionId(), sessionExecution);
-        }
+        sessionExecution.setProcessingStartDate(new Date());
+        sessionExecution.setStartDate(sessionCreatedEvent.getDateEvent());
+        sessionExecution.setSessionId(sessionCreatedEvent.getSessionId());
+        sessionExecution.setStartEventID(sessionCreatedEvent.getEventID());
+        sessionExecution.setSessionExecutionStatus(SessionExecutionStatus.STARTED);
+        sessionContext.setSessionExecution(sessionExecution);
+
         LOG.debug("SessionCreatedEvent " + historyEvent.toString());
     }
-
     @Override
     public boolean isEventSupported(HistoryEvent historyEvent) {
 
         return historyEvent instanceof SessionCreatedEvent;
     }
 
-    @Override
-    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
-        return true;
-    }
 }

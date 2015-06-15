@@ -16,12 +16,11 @@
 package org.chtijbug.drools.platform.backend.service.runtimeevent;
 
 import org.chtijbug.drools.entity.history.HistoryEvent;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepository;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRecordRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeDefinition;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
-import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
+import org.chtijbug.drools.platform.persistence.pojo.SessionExecutionRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -31,12 +30,12 @@ public abstract class AbstractEventHandlerStrategy {
     PlatformRuntimeDefinitionRepositoryCacheService platformRuntimeDefinitionRepositoryCacheService;
 
     @Autowired
-    SessionExecutionRepositoryCacheService sessionExecutionRepositoryCacheService;
+    SessionExecutionRecordRepositoryCacheService sessionExecutionRecordRepositoryCacheService;
 
     public void handleMessage(HistoryEvent historyEvent) {
         PlatformRuntimeMode platformRuntimeMode = PlatformRuntimeMode.Debug;
         if (historyEvent != null & historyEvent.getSessionId() > 0) {
-            SessionExecution sessionExecution = sessionExecutionRepositoryCacheService.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
+            SessionExecutionRecord sessionExecution = sessionExecutionRecordRepositoryCacheService.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
             if (sessionExecution != null) {
                 platformRuntimeMode = sessionExecution.getPlatformRuntimeMode();
             }

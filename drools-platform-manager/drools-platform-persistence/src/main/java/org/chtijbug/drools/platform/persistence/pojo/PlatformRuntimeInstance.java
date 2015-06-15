@@ -15,8 +15,6 @@
  */
 package org.chtijbug.drools.platform.persistence.pojo;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -48,7 +46,7 @@ public class PlatformRuntimeInstance implements Serializable {
     private List<DroolsResource> droolsRessources = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "platformRuntimeInstance")
-    private List<SessionExecution> sessionExecutions = new ArrayList<SessionExecution>();
+    private List<SessionExecutionRecord> sessionExecutions = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "platform_runtime_instance_id_fk", referencedColumnName = "id")
@@ -134,11 +132,11 @@ public class PlatformRuntimeInstance implements Serializable {
         this.droolsRessources = droolsResources;
     }
 
-    public List<SessionExecution> getSessionExecutions() {
+    public List<SessionExecutionRecord> getSessionExecutions() {
         return sessionExecutions;
     }
 
-    public void setSessionExecutions(List<SessionExecution> sessionExecutions) {
+    public void setSessionExecutions(List<SessionExecutionRecord> sessionExecutions) {
         this.sessionExecutions = sessionExecutions;
     }
 

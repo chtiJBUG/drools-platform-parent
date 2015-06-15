@@ -15,39 +15,28 @@
  */
 package org.chtijbug.drools.platform.persistence.pojo;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 
-@Entity
-@Table(name = "process_execution")
-@Cacheable(value = true)
+
 public class ProcessExecution {
 
-    @Id
-    @SequenceGenerator(name = "process_execution_id_seq", sequenceName = "process_execution_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "process_execution_id_seq")
-    private Long id;
 
-    @Column(nullable = false)
     private String processName;
 
-    @Column(nullable = false)
+
     private Date startDate;
     private Date endDate;
 
-    @Enumerated(EnumType.STRING)
+
     private ProcessExecutionStatus processExecutionStatus;
 
     private Integer startEventID;
 
     private Integer stopEventID;
 
-    @ManyToOne
-    @JoinColumn(name = "sessionexecution_id", referencedColumnName = "id")
-    private SessionExecution sessionExecution;
 
     private String ProcessInstanceId;
 
@@ -59,17 +48,11 @@ public class ProcessExecution {
 
     private String processId;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "processExecution")
+
     private List<RuleflowGroup> ruleflowGroups = new ArrayList<RuleflowGroup>();
 
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getProcessName() {
         return processName;
@@ -111,13 +94,7 @@ public class ProcessExecution {
         this.stopEventID = stopEventID;
     }
 
-    public SessionExecution getSessionExecution() {
-        return sessionExecution;
-    }
 
-    public void setSessionExecution(SessionExecution sessionExecution) {
-        this.sessionExecution = sessionExecution;
-    }
 
     public ProcessExecutionStatus getProcessExecutionStatus() {
         return processExecutionStatus;
@@ -179,7 +156,6 @@ public class ProcessExecution {
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("ProcessRuntime{");
-        sb.append("id=").append(id);
         sb.append(", processName='").append(processName).append('\'');
         sb.append(", startDate=").append(startDate);
         sb.append(", endDate=").append(endDate);
@@ -202,7 +178,6 @@ public class ProcessExecution {
         ProcessExecution that = (ProcessExecution) o;
 
         if (!processName.equals(that.processName)) return false;
-        if (!sessionExecution.equals(that.sessionExecution)) return false;
         if (!startDate.equals(that.startDate)) return false;
 
         return true;
@@ -212,7 +187,6 @@ public class ProcessExecution {
     public int hashCode() {
         int result = processName.hashCode();
         result = 31 * result + startDate.hashCode();
-        result = 31 * result + sessionExecution.hashCode();
         return result;
     }
 

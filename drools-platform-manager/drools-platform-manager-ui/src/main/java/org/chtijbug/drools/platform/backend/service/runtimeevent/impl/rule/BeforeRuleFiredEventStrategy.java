@@ -19,11 +19,9 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.DroolsFactObject;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.rule.BeforeRuleFiredHistoryEvent;
-import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractMemoryEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.SessionContext;
 import org.chtijbug.drools.platform.persistence.RuleAssetRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.RuleExecutionRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.RuleflowGroupRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,31 +29,33 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @Component
-public class BeforeRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
+public class BeforeRuleFiredEventStrategy extends AbstractMemoryEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(BeforeRuleFiredEventStrategy.class);
-    @Autowired
-    private RuleflowGroupRepositoryCacheService ruleflowGroupRepository;
 
-    @Autowired
-    private RuleExecutionRepositoryCacheService ruleExecutionRepository;
-
-    @Autowired
-    private SessionExecutionRepositoryCacheService sessionExecutionRepository;
 
     @Autowired
     private RuleAssetRepositoryCacheService ruleAssetRepository;
 
     @Override
     @Transactional
-    protected void handleMessageInternally(HistoryEvent historyEvent) {
+    public void handleMessageInternally(HistoryEvent historyEvent, SessionContext sessionContext) {
         BeforeRuleFiredHistoryEvent beforeRuleFiredHistoryEvent = (BeforeRuleFiredHistoryEvent) historyEvent;
         RuleExecution ruleExecution = new RuleExecution();
+        sessionContext.setRuleExecution(ruleExecution);
         if (beforeRuleFiredHistoryEvent.getRule().getRuleFlowGroup() != null && beforeRuleFiredHistoryEvent.getRule().getRuleFlowGroup().length() > 0) {
-            RuleflowGroup ruleflowGroup = ruleflowGroupRepository.findStartedRuleFlowGroupByRuleBaseIDAndSessionIDAndRuleflowgroupName(beforeRuleFiredHistoryEvent.getRuleBaseID(), beforeRuleFiredHistoryEvent.getSessionId(), beforeRuleFiredHistoryEvent.getRule().getRuleFlowGroup());
-            ruleExecution.setRuleflowGroup(ruleflowGroup);
+            String ruleFlowName = beforeRuleFiredHistoryEvent.getRule().getRuleFlowGroup();
+            RuleflowGroup ruleflowGroup = sessionContext.findRuleFlowGroup(ruleFlowName);
+            if (ruleflowGroup == null) {
+                ruleflowGroup = new RuleflowGroup();
+                ruleflowGroup.setRuleflowGroup(beforeRuleFiredHistoryEvent.getRule().getRuleFlowGroup());
+                sessionContext.getRuleflowGroups().add(ruleflowGroup);
+                sessionContext.getProcessExecution().getRuleflowGroups().add(ruleflowGroup);
+            }
+
+            ruleflowGroup.getRuleExecutionList().add(ruleExecution);
         } else {
-            SessionExecution sessionExecution = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(beforeRuleFiredHistoryEvent.getRuleBaseID(), beforeRuleFiredHistoryEvent.getSessionId());
-            ruleExecution.setSessionExecution(sessionExecution);
+            SessionExecution sessionExecution = sessionContext.getSessionExecution();
+            sessionExecution.getRuleExecutions().add(ruleExecution);
         }
         ruleExecution.setStartDate(beforeRuleFiredHistoryEvent.getDateEvent());
         ruleExecution.setRuleName(beforeRuleFiredHistoryEvent.getRule().getRuleName());
@@ -81,7 +81,6 @@ public class BeforeRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
                 ruleExecution.getWhenFacts().add(fact);
             }
         }
-        ruleExecutionRepository.save(beforeRuleFiredHistoryEvent.getRuleBaseID(), beforeRuleFiredHistoryEvent.getSessionId(), beforeRuleFiredHistoryEvent.getRule().getRuleFlowGroup(), ruleExecution);
         LOG.debug("BeforeRuleFiredHistoryEvent " + historyEvent.toString());
     }
 
@@ -91,13 +90,5 @@ public class BeforeRuleFiredEventStrategy extends AbstractEventHandlerStrategy {
         return historyEvent instanceof BeforeRuleFiredHistoryEvent;
     }
 
-    @Override
-    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
-        if (platformRuntimeMode==PlatformRuntimeMode.Debug) {
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
+
 }

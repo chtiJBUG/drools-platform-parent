@@ -24,7 +24,7 @@ import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepository;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.RealTimeParametersRepository;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepository;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRecordRepository;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeDefinition;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.RealTimeParameters;
@@ -43,19 +43,17 @@ import java.util.Arrays;
 public class WebSocketClient
         extends Endpoint {
     private final static org.slf4j.Logger logger = LoggerFactory.getLogger(WebSocketClient.class);
-
+    private static final Logger LOG = Logger.getLogger(WebSocketClient.class);
+    final private Heartbeat heartbeat = new Heartbeat();
     @Value(value = "${knowledge.numberRetriesConnectionToRuntime}")
     private int numberRetries;
-
-    private static final Logger LOG = Logger.getLogger(WebSocketClient.class);
     private PlatformRuntimeInstance platformRuntimeInstance;
     private int timeToWaitBetweenTwoRetries;
     private Session session;
     private PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
     private PlatformRuntimeDefinitionRepository platformRuntimeDefinitionRepository;
-    private SessionExecutionRepository sessionExecutionRepository;
+    private SessionExecutionRecordRepository sessionExecutionRecordRepository;
     private RealTimeParametersRepository realTimeParametersRepository;
-    final private Heartbeat heartbeat = new Heartbeat();
     private JMXInfosListener jmxInfosListeners;
     private HeartBeatListner heartBeatListner;
     private IsAliveListener isAliveListener;
@@ -65,7 +63,7 @@ public class WebSocketClient
     public WebSocketClient(PlatformRuntimeInstance platformRuntimeInstance, int numberRetries, int timeToWaitBetweenTwoRetries) throws DeploymentException, IOException {
         ApplicationContext applicationContext = AppContext.getApplicationContext();
         this.platformRuntimeInstanceRepository = applicationContext.getBean(PlatformRuntimeInstanceRepository.class);
-        this.sessionExecutionRepository = applicationContext.getBean(SessionExecutionRepository.class);
+        this.sessionExecutionRecordRepository = applicationContext.getBean(SessionExecutionRecordRepository.class);
         this.realTimeParametersRepository = applicationContext.getBean(RealTimeParametersRepository.class);
         this.jmxInfosListeners = applicationContext.getBean(JMXInfosListener.class);
         this.heartBeatListner = applicationContext.getBean(HeartBeatListner.class);

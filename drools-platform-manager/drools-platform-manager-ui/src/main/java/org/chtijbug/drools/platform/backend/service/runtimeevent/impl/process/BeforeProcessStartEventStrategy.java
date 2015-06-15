@@ -18,44 +18,23 @@ package org.chtijbug.drools.platform.backend.service.runtimeevent.impl.process;
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.process.BeforeProcessStartHistoryEvent;
-import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.ProcessExecutionRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractMemoryEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.SessionContext;
 import org.chtijbug.drools.platform.persistence.pojo.ProcessExecution;
 import org.chtijbug.drools.platform.persistence.pojo.ProcessExecutionStatus;
-import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
-import java.util.List;
 
 
 @Component
-public class BeforeProcessStartEventStrategy extends AbstractEventHandlerStrategy {
+public class BeforeProcessStartEventStrategy extends AbstractMemoryEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(BeforeProcessStartEventStrategy.class);
-    @Autowired
-    ProcessExecutionRepositoryCacheService processExecutionRepository;
-    @Autowired
-    private SessionExecutionRepositoryCacheService sessionExecutionRepository;
-
 
     @Override
-    @Transactional
-    protected void handleMessageInternally(HistoryEvent historyEvent) {
+    public void handleMessageInternally(HistoryEvent historyEvent, SessionContext sessionContext) {
         BeforeProcessStartHistoryEvent beforeProcessStartHistoryEvent = (BeforeProcessStartHistoryEvent) historyEvent;
-        List<ProcessExecution> processExecutions = processExecutionRepository.findAllStartedProcessByRuleBaseIDAndSessionIDAndProcessInstanceId(beforeProcessStartHistoryEvent.getRuleBaseID(), beforeProcessStartHistoryEvent.getSessionId(), beforeProcessStartHistoryEvent.getProcessInstance().getId());
-        for (ProcessExecution runningProcessExecution : processExecutions) {
-            runningProcessExecution.setEndDate(new Date());
-            runningProcessExecution.setProcessExecutionStatus(ProcessExecutionStatus.CRASHED);
-            processExecutionRepository.save(runningProcessExecution);
-        }
-        SessionExecution existingSessionRutime = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
 
         ProcessExecution processExecution = new ProcessExecution();
-        processExecution.setSessionExecution(existingSessionRutime);
+
         processExecution.setProcessInstanceId(beforeProcessStartHistoryEvent.getProcessInstance().getId());
         processExecution.setProcessName(beforeProcessStartHistoryEvent.getProcessInstance().getName());
         processExecution.setProcessPackageName(beforeProcessStartHistoryEvent.getProcessInstance().getPackageName());
@@ -64,7 +43,9 @@ public class BeforeProcessStartEventStrategy extends AbstractEventHandlerStrateg
         processExecution.setStartEventID(beforeProcessStartHistoryEvent.getEventID());
         processExecution.setStartDate(beforeProcessStartHistoryEvent.getDateEvent());
         processExecution.setProcessExecutionStatus(ProcessExecutionStatus.JBPMSTARTED);
-        processExecutionRepository.save(processExecution);
+        sessionContext.setProcessExecution(processExecution);
+        sessionContext.getSessionExecution().getProcessExecutions().add(processExecution);
+        sessionContext.getRuleflowGroups().clear();
         LOG.debug("BeforeProcessStartHistoryEvent " + historyEvent.toString());
     }
 
@@ -74,13 +55,5 @@ public class BeforeProcessStartEventStrategy extends AbstractEventHandlerStrateg
         return historyEvent instanceof BeforeProcessStartHistoryEvent;
     }
 
-    @Override
-    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
-        if (platformRuntimeMode==PlatformRuntimeMode.Debug) {
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
+
 }

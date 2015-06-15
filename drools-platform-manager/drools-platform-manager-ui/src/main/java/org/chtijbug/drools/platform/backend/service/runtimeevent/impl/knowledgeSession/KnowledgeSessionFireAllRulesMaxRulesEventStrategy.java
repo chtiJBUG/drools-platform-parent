@@ -18,54 +18,34 @@ package org.chtijbug.drools.platform.backend.service.runtimeevent.impl.knowledge
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionFireAllRulesMaxNumberReachedEvent;
-import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.FireAllRulesExecutionRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractMemoryEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.SessionContext;
 import org.chtijbug.drools.platform.persistence.pojo.FireAllRulesExecution;
 import org.chtijbug.drools.platform.persistence.pojo.FireAllRulesExecutionStatus;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 
 @Component
-public class KnowledgeSessionFireAllRulesMaxRulesEventStrategy extends AbstractEventHandlerStrategy {
+public class KnowledgeSessionFireAllRulesMaxRulesEventStrategy extends AbstractMemoryEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(KnowledgeSessionFireAllRulesMaxRulesEventStrategy.class);
 
-    @Autowired
-    FireAllRulesExecutionRepositoryCacheService fireAllRulesExecutionRepository;
-
-    @Autowired
-    SessionExecutionRepositoryCacheService sessionExecutionRepository;
 
     @Override
     @Transactional
-    protected void handleMessageInternally(HistoryEvent historyEvent) {
+    public void handleMessageInternally(HistoryEvent historyEvent, SessionContext sessionContext) {
         SessionFireAllRulesMaxNumberReachedEvent sessionFireAllRulesMaxNumberReachedEvent = (SessionFireAllRulesMaxNumberReachedEvent) historyEvent;
-        FireAllRulesExecution fireAllRulesExecution = fireAllRulesExecutionRepository.findStartedFireAllRulesBySessionID(historyEvent.getSessionId());
+        FireAllRulesExecution fireAllRulesExecution = sessionContext.getFireAllRulesExecution();
         fireAllRulesExecution.setMaxRulesEventID(sessionFireAllRulesMaxNumberReachedEvent.getEventID());
         fireAllRulesExecution.setEndDate(sessionFireAllRulesMaxNumberReachedEvent.getDateEvent());
         fireAllRulesExecution.setFireAllRulesExecutionStatus(FireAllRulesExecutionStatus.MAXNBRULES);
         fireAllRulesExecution.setNbreRulesFired(Long.valueOf(sessionFireAllRulesMaxNumberReachedEvent.getNumberOfRulesExecuted()));
         fireAllRulesExecution.setMaxNbreRulesDefinedForSession(Long.valueOf(sessionFireAllRulesMaxNumberReachedEvent.getMaxNumberOfRulesForSession()));
-        fireAllRulesExecutionRepository.save(fireAllRulesExecution);
         LOG.debug("SessionFireAllRulesMaxNumberReachedEvent " + historyEvent.toString());
     }
-
     @Override
     public boolean isEventSupported(HistoryEvent historyEvent) {
 
         return historyEvent instanceof SessionFireAllRulesMaxNumberReachedEvent;
-    }
-
-    @Override
-    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
-        if (platformRuntimeMode==PlatformRuntimeMode.Debug) {
-            return true;
-        }
-        else{
-            return false;
-        }
     }
 }

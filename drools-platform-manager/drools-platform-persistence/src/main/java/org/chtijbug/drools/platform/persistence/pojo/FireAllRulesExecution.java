@@ -15,18 +15,12 @@
  */
 package org.chtijbug.drools.platform.persistence.pojo;
 
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "fireallrules_execution")
+
 public class FireAllRulesExecution {
 
-    @Id
-    @SequenceGenerator(name = "fireallrules_execution_id_seq", sequenceName = "fireallrules_execution_platform_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fireallrules_execution_id_seq")
-    private Long id;
-    @Column(nullable = false)
+
     private Date startDate;
     private Date endDate;
 
@@ -35,12 +29,10 @@ public class FireAllRulesExecution {
 
     private Long executionTime;
 
-    @ManyToOne
-    private SessionExecution sessionExecution;
 
     private Integer startEventID;
 
-    @Enumerated(EnumType.STRING)
+
     private FireAllRulesExecutionStatus fireAllRulesExecutionStatus;
 
 
@@ -51,13 +43,7 @@ public class FireAllRulesExecution {
     public FireAllRulesExecution() {
     }
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Date getStartDate() {
         return startDate;
@@ -83,13 +69,7 @@ public class FireAllRulesExecution {
         this.startEventID = startEventID;
     }
 
-    public SessionExecution getSessionExecution() {
-        return sessionExecution;
-    }
 
-    public void setSessionExecution(SessionExecution sessionExecution) {
-        this.sessionExecution = sessionExecution;
-    }
 
     public Long getNbreRulesFired() {
         return nbreRulesFired;
@@ -143,7 +123,6 @@ public class FireAllRulesExecution {
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("FireRulesRuntime{");
-        sb.append("id=").append(id);
         sb.append(", startDate=").append(startDate);
         sb.append(", endDate=").append(endDate);
         sb.append(", nbreRulesFired=").append(nbreRulesFired);
@@ -162,7 +141,7 @@ public class FireAllRulesExecution {
 
         FireAllRulesExecution that = (FireAllRulesExecution) o;
 
-        if (!sessionExecution.equals(that.sessionExecution)) return false;
+
         if (!startDate.equals(that.startDate)) return false;
 
         return true;
@@ -171,7 +150,6 @@ public class FireAllRulesExecution {
     @Override
     public int hashCode() {
         int result = startDate.hashCode();
-        result = 31 * result + sessionExecution.hashCode();
         return result;
     }
 
