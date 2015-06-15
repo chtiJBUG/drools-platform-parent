@@ -19,16 +19,15 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import org.chtijbug.drools.guvnor.rest.ChtijbugDroolsRestException;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketClient;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRecordRepositoryCacheService;
 import org.chtijbug.drools.platform.persistence.pojo.*;
-import org.chtijbug.drools.platform.rules.management.AssetStatus;
-import org.chtijbug.drools.platform.web.annotation.JsonArg;
+import org.chtijbug.drools.platform.persistence.utility.JSONHelper;
 import org.chtijbug.drools.platform.web.model.*;
+import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +41,9 @@ import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.chtijbug.drools.platform.rules.management.AssetStatus.PROD;
-import static org.chtijbug.drools.platform.rules.management.AssetStatus.getEnum;
 
 /**
  * Created by IntelliJ IDEA.
@@ -63,7 +60,7 @@ public class RuntimeResource {
     @Autowired
     PlatformRuntimeInstanceRepositoryCacheService platformRuntimeInstanceRepository;
     @Autowired
-    SessionExecutionRepositoryCacheService sessionExecutionRepository;
+    SessionExecutionRecordRepositoryCacheService sessionExecutionRepository;
     @Autowired
     PlatformRuntimeDefinitionRepositoryCacheService platformRuntimeDefinitionRepositoryCacheService;
 
@@ -87,32 +84,32 @@ public class RuntimeResource {
                         String url = "http://" + hostname + ":" + portNumber + endPointName;
                         String rulePackage = null;
                         String version = null;
-                        String environment=null;
-                        String mode=null;
-                        String status=null;
+                        String environment = null;
+                        String mode = null;
+                        String status = null;
 
                         if (!platformRuntimeDefinition.getDroolsRessourcesDefinition().isEmpty()) {
                             DroolsResource guvnorResource = platformRuntimeDefinition.getDroolsRessourcesDefinition().get(0);
                             rulePackage = guvnorResource.getGuvnor_packageName();
                             version = guvnorResource.getGuvnor_packageVersion();
                         }
-                        if (platformRuntimeDefinition.getPlatformRuntimeEnvironment()!=null) {
+                        if (platformRuntimeDefinition.getPlatformRuntimeEnvironment() != null) {
                             environment = platformRuntimeDefinition.getPlatformRuntimeEnvironment().name();
-                        }else{
-                            environment= PlatformRuntimeEnvironment.PROD.name();
+                        } else {
+                            environment = PlatformRuntimeEnvironment.PROD.name();
                         }
-                        if (platformRuntimeDefinition.getPlatformRuntimeMode()!=null) {
+                        if (platformRuntimeDefinition.getPlatformRuntimeMode() != null) {
                             mode = platformRuntimeDefinition.getPlatformRuntimeMode().name();
-                        }else{
-                            mode= PlatformRuntimeMode.Debug.name();
+                        } else {
+                            mode = PlatformRuntimeMode.Debug.name();
                         }
                         WebSocketClient webSocketSession = webSocketSessionManager.getWebSocketClient(platformRuntimeDefinition.getRuleBaseID());
-                        if (webSocketSession!=null){
-                            status="Alive";
-                        }else {
-                            status="Not Running/Not Reachable";
+                        if (webSocketSession != null) {
+                            status = "Alive";
+                        } else {
+                            status = "Not Running/Not Reachable";
                         }
-                        return new RuntimeInstance(platformRuntimeDefinition.getId(), platformRuntimeDefinition.getRuleBaseID(), url, rulePackage, version,environment,mode,status);
+                        return new RuntimeInstance(platformRuntimeDefinition.getId(), platformRuntimeDefinition.getRuleBaseID(), url, rulePackage, version, environment, mode, status);
                     }
                 }
         );
@@ -135,32 +132,32 @@ public class RuntimeResource {
                         String url = "http://" + hostname + ":" + portNumber + endPointName;
                         String rulePackage = null;
                         String version = null;
-                        String environment=null;
-                        String mode=null;
-                        String status=null;
+                        String environment = null;
+                        String mode = null;
+                        String status = null;
                         PlatformRuntimeDefinition platformRuntimeDefinition = platformRuntimeInstance.getPlatformRuntimeDefinition();
                         if (!platformRuntimeDefinition.getDroolsRessourcesDefinition().isEmpty()) {
                             DroolsResource guvnorResource = platformRuntimeDefinition.getDroolsRessourcesDefinition().get(0);
                             rulePackage = guvnorResource.getGuvnor_packageName();
                             version = guvnorResource.getGuvnor_packageVersion();
                         }
-                        if (platformRuntimeDefinition.getPlatformRuntimeEnvironment()!=null) {
+                        if (platformRuntimeDefinition.getPlatformRuntimeEnvironment() != null) {
                             environment = platformRuntimeDefinition.getPlatformRuntimeEnvironment().name();
-                        }else{
-                            environment= PlatformRuntimeEnvironment.PROD.name();
+                        } else {
+                            environment = PlatformRuntimeEnvironment.PROD.name();
                         }
-                        if (platformRuntimeDefinition.getPlatformRuntimeMode()!=null) {
+                        if (platformRuntimeDefinition.getPlatformRuntimeMode() != null) {
                             mode = platformRuntimeDefinition.getPlatformRuntimeMode().name();
-                        }else{
-                            mode= PlatformRuntimeMode.Debug.name();
+                        } else {
+                            mode = PlatformRuntimeMode.Debug.name();
                         }
                         WebSocketClient webSocketSession = webSocketSessionManager.getWebSocketClient(platformRuntimeInstance.getRuleBaseID());
-                        if (webSocketSession!=null){
-                            status="Alive";
-                        }else {
-                            status="Not Running/Not Reachable";
+                        if (webSocketSession != null) {
+                            status = "Alive";
+                        } else {
+                            status = "Not Running/Not Reachable";
                         }
-                        return new RuntimeInstance(platformRuntimeInstance.getId(), platformRuntimeInstance.getRuleBaseID(), url, rulePackage, version,environment,mode,status);
+                        return new RuntimeInstance(platformRuntimeInstance.getId(), platformRuntimeInstance.getRuleBaseID(), url, rulePackage, version, environment, mode, status);
                     }
                 }
         );
@@ -185,11 +182,12 @@ public class RuntimeResource {
         logger.debug(">> findSessionExecutionDetails(sessionId= {})", Id);
         try {
             //____ Data from Database
-            final SessionExecution sessionExecution = sessionExecutionRepository.findByIdForUI(Id);
+            final SessionExecutionRecord sessionExecutionRecord = sessionExecutionRepository.findByIdForUI(Id);
+            SessionExecution sessionExecution = (SessionExecution) JSONHelper.getObjectFromJSONString(sessionExecutionRecord.getJsonSessionExecution(), SessionExecution.class);
             // final SessionExecution sessionExecution = sessionExecutionRepository.findDetailsBySessionId(sessionID);
             SessionExecutionDetailsResource executionDetailsResource = new SessionExecutionDetailsResource();
-            ProcessExecution processExecution=null;
-             ProcessDetails processDetails = new ProcessDetails();
+            ProcessExecution processExecution = null;
+            ProcessDetails processDetails = new ProcessDetails();
             List<Fact> inputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.INPUTDATA));
             List<Fact> outputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.OUTPUTDATA));
             for (Fact inputFact : inputFactList) {
@@ -239,9 +237,13 @@ public class RuntimeResource {
                 //logger.debug("Skipping this entry {}", sessionId);
             }
             return executionDetailsResource;
+        } catch (Exception e) {
+            DroolsChtijbugException ee = new DroolsChtijbugException("", "", e);
+            logger.error("   public SessionExecutionDetailsResource findSessionExecutionDetails(@PathVariable Long Id) {", ee);
         } finally {
             logger.debug("<< findSessionExecutionDetails()");
         }
+        return null;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/count")
@@ -265,7 +267,15 @@ public class RuntimeResource {
         logger.debug(">> findAllPlatformRuntimeInstanceByFilter(runtimeFilter= {})", runtimeFilter);
         try {
             //____ Extract data from database
-            final List<SessionExecution> allSessionExecutions = platformRuntimeInstanceRepository.findAllPlatformRuntimeInstanceByFilter(runtimeFilter);
+            final List<SessionExecutionRecord> allSessionExecutionsrecord = platformRuntimeInstanceRepository.findAllPlatformRuntimeInstanceByFilter(runtimeFilter);
+            List<SessionExecution> lists = new ArrayList<>();
+            for (SessionExecutionRecord record : allSessionExecutionsrecord) {
+                SessionExecution sessionExecution = (SessionExecution) JSONHelper.getObjectFromJSONString(record.getJsonSessionExecution(), SessionExecution.class);
+                sessionExecution.setPlatformRuntimeInstance(record.getPlatformRuntimeInstance());
+                sessionExecution.setId(record.getId());
+                lists.add(sessionExecution);
+            }
+            final List<SessionExecution> allSessionExecutions = lists;
             //___ TODO pour chacun de ces enregistrements, le convertir en objet JSON
             List<SessionExecutionResource> result = Lists.transform(allSessionExecutions, new Function<SessionExecution, SessionExecutionResource>() {
                 @Nullable
@@ -350,17 +360,18 @@ public class RuntimeResource {
 
         return Arrays.asList(FactType.WHEN.toString(), FactType.INSERTED.toString(), FactType.UPDATED_OLDVALUE.toString(), FactType.UPDATED_NEWVALUE.toString(), FactType.DELETED.toString(), FactType.INPUTDATA.toString(), FactType.OUTPUTDATA.toString());
     }
+
     @RequestMapping(method = RequestMethod.POST, value = "/mode/{ruleBaseId}/{newMode}")
-     @Consumes(value = MediaType.APPLICATION_JSON)
-     @Produces(value = MediaType.APPLICATION_JSON)
-     @ResponseBody
-     public void changeRuntimeMode(@PathVariable Integer ruleBaseId, @PathVariable String newMode) {
+    @Consumes(value = MediaType.APPLICATION_JSON)
+    @Produces(value = MediaType.APPLICATION_JSON)
+    @ResponseBody
+    public void changeRuntimeMode(@PathVariable Integer ruleBaseId, @PathVariable String newMode) {
         logger.debug(">> changeRuntimeMode(ruleBaseId={}, newMode={})", ruleBaseId, newMode);
         try {
             PlatformRuntimeDefinition targetInstance = platformRuntimeDefinitionRepositoryCacheService.findByRuleBaseID(ruleBaseId);
-            if (targetInstance!= null){
+            if (targetInstance != null) {
                 PlatformRuntimeMode realNewMode = PlatformRuntimeMode.valueOf(newMode);
-                if (realNewMode!=null){
+                if (realNewMode != null) {
                     targetInstance.setPlatformRuntimeMode(realNewMode);
                     platformRuntimeDefinitionRepositoryCacheService.save(targetInstance);
                 }
@@ -381,9 +392,9 @@ public class RuntimeResource {
         logger.debug(">> changeRuntimeEnv(ruleBaseId={}, newMode={})", ruleBaseId, newEnv);
         try {
             PlatformRuntimeDefinition targetInstance = platformRuntimeDefinitionRepositoryCacheService.findByRuleBaseID(ruleBaseId);
-            if (targetInstance!= null){
+            if (targetInstance != null) {
                 PlatformRuntimeEnvironment realNewEnv = PlatformRuntimeEnvironment.valueOf(newEnv);
-                if (realNewEnv!=null){
+                if (realNewEnv != null) {
                     targetInstance.setPlatformRuntimeEnvironment(realNewEnv);
                     platformRuntimeDefinitionRepositoryCacheService.save(targetInstance);
                 }

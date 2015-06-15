@@ -31,16 +31,13 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 
 public class PlatformRuntimeInstanceRepositoryImpl implements PlatformRuntimeInstanceCustomRepository {
-    private static Logger logger = getLogger(PlatformRuntimeInstanceRepositoryImpl.class);
-
     private static final String SELECT_QUERY_PART = "select execution ";
     private static final String COUNT_QUERY_PART = "select count(execution) ";
-
-    private static final String COMMON_QUERY_PART = "from SessionExecution execution , DroolsResource resource " +
+    private static final String COMMON_QUERY_PART = "from SessionExecutionRecord execution , DroolsResource resource " +
             "where resource.guvnor_packageName = :packageName and " +
             "resource member of execution.platformRuntimeInstance.platformRuntimeDefinition.droolsRessourcesDefinition and " +
             "resource.endDate is null ";
-
+    private static Logger logger = getLogger(PlatformRuntimeInstanceRepositoryImpl.class);
     @PersistenceContext
     private EntityManager entityManager;
 

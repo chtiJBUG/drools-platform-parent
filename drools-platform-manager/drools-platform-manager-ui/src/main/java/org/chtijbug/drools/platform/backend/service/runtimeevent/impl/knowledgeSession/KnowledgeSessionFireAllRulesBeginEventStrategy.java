@@ -18,50 +18,30 @@ package org.chtijbug.drools.platform.backend.service.runtimeevent.impl.knowledge
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionFireAllRulesBeginEvent;
-import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.FireAllRulesExecutionRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractMemoryEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.SessionContext;
 import org.chtijbug.drools.platform.persistence.pojo.FireAllRulesExecution;
 import org.chtijbug.drools.platform.persistence.pojo.FireAllRulesExecutionStatus;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
-import java.util.List;
 
 
 @Component
-public class KnowledgeSessionFireAllRulesBeginEventStrategy extends AbstractEventHandlerStrategy {
+public class KnowledgeSessionFireAllRulesBeginEventStrategy extends AbstractMemoryEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(KnowledgeSessionFireAllRulesBeginEventStrategy.class);
 
-    @Autowired
-    FireAllRulesExecutionRepositoryCacheService fireAllRulesExecutionRepository;
-
-    @Autowired
-    SessionExecutionRepositoryCacheService sessionExecutionRepository;
-
     @Override
-    @Transactional
-    protected void handleMessageInternally(HistoryEvent historyEvent) {
+    public void handleMessageInternally(HistoryEvent historyEvent, SessionContext sessionContext) {
         SessionFireAllRulesBeginEvent sessionFireAllRulesBeginEvent = (SessionFireAllRulesBeginEvent) historyEvent;
 
-        List<FireAllRulesExecution> fireAllRulesExecutions = fireAllRulesExecutionRepository.findAllStartedFireAllRulesBySessionID(historyEvent.getSessionId());
-        for (FireAllRulesExecution runningFireAllRulesExecution : fireAllRulesExecutions) {
-            runningFireAllRulesExecution.setEndDate(new Date());
-            runningFireAllRulesExecution.setFireAllRulesExecutionStatus(FireAllRulesExecutionStatus.CRASHED);
-            fireAllRulesExecutionRepository.save(runningFireAllRulesExecution);
-        }
-        SessionExecution existingSessionRutime = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(historyEvent.getRuleBaseID(), historyEvent.getSessionId());
+        SessionExecution existingSessionRutime = sessionContext.getSessionExecution();
 
         FireAllRulesExecution fireAllRulesExecution = new FireAllRulesExecution();
-        fireAllRulesExecution.setSessionExecution(existingSessionRutime);
         fireAllRulesExecution.setStartEventID(sessionFireAllRulesBeginEvent.getEventID());
         fireAllRulesExecution.setStartDate(sessionFireAllRulesBeginEvent.getDateEvent());
         fireAllRulesExecution.setFireAllRulesExecutionStatus(FireAllRulesExecutionStatus.STARTED);
-        fireAllRulesExecutionRepository.save(fireAllRulesExecution);
+        existingSessionRutime.getFireAllRulesExecutions().add(fireAllRulesExecution);
+        sessionContext.setFireAllRulesExecution(fireAllRulesExecution);
         LOG.debug("SessionFireAllRulesBeginEvent " + historyEvent.toString());
     }
 
@@ -69,15 +49,5 @@ public class KnowledgeSessionFireAllRulesBeginEventStrategy extends AbstractEven
     public boolean isEventSupported(HistoryEvent historyEvent) {
 
         return historyEvent instanceof SessionFireAllRulesBeginEvent;
-    }
-
-    @Override
-    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
-        if (platformRuntimeMode==PlatformRuntimeMode.Debug) {
-            return true;
-        }
-        else{
-            return false;
-        }
     }
 }

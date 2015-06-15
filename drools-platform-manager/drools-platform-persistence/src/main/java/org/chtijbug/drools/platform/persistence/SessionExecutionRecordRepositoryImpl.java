@@ -17,6 +17,7 @@
 package org.chtijbug.drools.platform.persistence;
 
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
+import org.chtijbug.drools.platform.persistence.pojo.SessionExecutionRecord;
 import org.slf4j.Logger;
 import org.springframework.data.repository.query.Param;
 
@@ -28,8 +29,8 @@ import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
 
 
-public class SessionExecutionRepositoryImpl implements SessionExecutionCustomRepository {
-    private static Logger logger = getLogger(SessionExecutionRepositoryImpl.class);
+public class SessionExecutionRecordRepositoryImpl implements SessionExecutionRecordCustomRepository {
+    private static Logger logger = getLogger(SessionExecutionRecordRepositoryImpl.class);
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -43,13 +44,13 @@ public class SessionExecutionRepositoryImpl implements SessionExecutionCustomRep
      */
 
     @Override
-    public SessionExecution findByRuleBaseIDAndSessionIdAndEndDateIsNull(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionId") Integer sessionId) {
+    public SessionExecutionRecord findByRuleBaseIDAndSessionIdAndEndDateIsNull(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionId") Integer sessionId) {
         logger.debug(">> findByRuleBaseIDAndSessionIdAndEndDateIsNull");
-        SessionExecution sessionExecutionFound = null;
+        SessionExecutionRecord sessionExecutionFound = null;
         try {
             String jpaQuery = "SELECT s.id, s.enddate, s.sessionexecutionstatus, s.sessionid, s.startdate, s.starteventid, \n" +
                     "  s.stopeventid, s.platform_runtime_instance_id\n" +
-                    "  FROM session_execution s, platform_runtime_instance p \n" +
+                    "  FROM session_execution_record s, platform_runtime_instance p \n" +
                     "  where s.platform_runtime_instance_id = p.id\n" +
                     "  and s.sessionid=:sessionid\n" +
                     "  and p.rulebaseid = :rulebaseID\n" +
@@ -58,7 +59,7 @@ public class SessionExecutionRepositoryImpl implements SessionExecutionCustomRep
             Query query = entityManager.createNativeQuery(jpaQuery, SessionExecution.class);
             query.setParameter("rulebaseID", ruleBaseID);
             query.setParameter("sessionid", sessionId);
-            List<SessionExecution> result = query.getResultList();
+            List<SessionExecutionRecord> result = query.getResultList();
             if (result.size() == 1) {
                 sessionExecutionFound = result.get(0);
             }

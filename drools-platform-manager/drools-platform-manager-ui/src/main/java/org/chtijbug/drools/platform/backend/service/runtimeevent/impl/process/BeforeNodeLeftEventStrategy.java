@@ -18,18 +18,18 @@ package org.chtijbug.drools.platform.backend.service.runtimeevent.impl.process;
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.process.BeforeNodeLeftHistoryEvent;
-import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractMemoryEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.SessionContext;
 import org.springframework.stereotype.Component;
 
 
 @Component
-public class BeforeNodeLeftEventStrategy extends AbstractEventHandlerStrategy {
+public class BeforeNodeLeftEventStrategy extends AbstractMemoryEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(BeforeNodeLeftEventStrategy.class);
 
 
     @Override
-    protected void handleMessageInternally(HistoryEvent historyEvent) {
+    public void handleMessageInternally(HistoryEvent historyEvent, SessionContext sessionContext) {
 
         LOG.debug("BeforeNodeLeftHistoryEvent " + historyEvent.toString());
     }
@@ -40,13 +40,5 @@ public class BeforeNodeLeftEventStrategy extends AbstractEventHandlerStrategy {
         return historyEvent instanceof BeforeNodeLeftHistoryEvent;
     }
 
-    @Override
-    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
-        if (platformRuntimeMode==PlatformRuntimeMode.Debug) {
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
+
 }

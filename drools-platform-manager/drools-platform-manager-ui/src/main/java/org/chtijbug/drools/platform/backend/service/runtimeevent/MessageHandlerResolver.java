@@ -27,8 +27,19 @@ public class MessageHandlerResolver {
     @Resource
     private List<AbstractEventHandlerStrategy> allStrategies;
 
+    @Resource
+    private List<AbstractMemoryEventHandlerStrategy> allMemoryStrategies;
+
     public AbstractEventHandlerStrategy resolveMessageHandler(HistoryEvent historyEvent) {
         for (AbstractEventHandlerStrategy strategy : allStrategies) {
+            if (strategy.isEventSupported(historyEvent))
+                return strategy;
+        }
+        return null;
+    }
+
+    public AbstractMemoryEventHandlerStrategy resolveMessageHandlerMemory(HistoryEvent historyEvent) {
+        for (AbstractMemoryEventHandlerStrategy strategy : allMemoryStrategies) {
             if (strategy.isEventSupported(historyEvent))
                 return strategy;
         }

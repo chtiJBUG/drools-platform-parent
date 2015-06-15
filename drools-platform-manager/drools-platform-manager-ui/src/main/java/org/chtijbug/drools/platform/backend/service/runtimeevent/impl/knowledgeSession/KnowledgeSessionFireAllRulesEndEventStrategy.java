@@ -18,54 +18,35 @@ package org.chtijbug.drools.platform.backend.service.runtimeevent.impl.knowledge
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.session.SessionFireAllRulesEndEvent;
-import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.FireAllRulesExecutionRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractMemoryEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.SessionContext;
 import org.chtijbug.drools.platform.persistence.pojo.FireAllRulesExecution;
 import org.chtijbug.drools.platform.persistence.pojo.FireAllRulesExecutionStatus;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 
 @Component
-public class KnowledgeSessionFireAllRulesEndEventStrategy extends AbstractEventHandlerStrategy {
+public class KnowledgeSessionFireAllRulesEndEventStrategy extends AbstractMemoryEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(KnowledgeSessionFireAllRulesEndEventStrategy.class);
-
-    @Autowired
-    FireAllRulesExecutionRepositoryCacheService fireAllRulesExecutionRepository;
-
-    @Autowired
-    SessionExecutionRepositoryCacheService sessionExecutionRepository;
 
     @Override
     @Transactional
-    protected void handleMessageInternally(HistoryEvent historyEvent) {
+    public void handleMessageInternally(HistoryEvent historyEvent, SessionContext sessionContext) {
         SessionFireAllRulesEndEvent sessionFireAllRulesEndEvent = (SessionFireAllRulesEndEvent) historyEvent;
-        FireAllRulesExecution fireAllRulesExecution = fireAllRulesExecutionRepository.findStartedFireAllRulesBySessionID(historyEvent.getSessionId());
+        FireAllRulesExecution fireAllRulesExecution = sessionContext.getFireAllRulesExecution();
         fireAllRulesExecution.setStopEventID(sessionFireAllRulesEndEvent.getEventID());
         fireAllRulesExecution.setEndDate(sessionFireAllRulesEndEvent.getDateEvent());
         fireAllRulesExecution.setFireAllRulesExecutionStatus(FireAllRulesExecutionStatus.STOPPED);
         fireAllRulesExecution.setNbreRulesFired(Long.valueOf(sessionFireAllRulesEndEvent.getNumberRulesExecuted()));
         fireAllRulesExecution.setExecutionTime(Long.valueOf(sessionFireAllRulesEndEvent.getExecutionTime()));
-        fireAllRulesExecutionRepository.save(fireAllRulesExecution);
+        sessionContext.setFireAllRulesExecution(null);
         LOG.debug("SessionFireAllRulesEndEvent " + historyEvent.toString());
     }
-
     @Override
     public boolean isEventSupported(HistoryEvent historyEvent) {
 
         return historyEvent instanceof SessionFireAllRulesEndEvent;
     }
 
-    @Override
-    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
-        if (platformRuntimeMode==PlatformRuntimeMode.Debug) {
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
 }

@@ -19,39 +19,34 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 
-@Entity
-@Table(name = "session_execution", indexes = {@Index(columnList = "sessionId")})
-@Cacheable(value = true)
+
 public class SessionExecution {
-    @Id
-    @SequenceGenerator(name = "session_execution_id_seq", sequenceName = "session_execution_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "session_execution_id_seq")
-    private Long id;
-    @ManyToOne
-    @JoinColumn(name = "platform_runtime_instance_id", referencedColumnName = "id")
+
+
     private PlatformRuntimeInstance platformRuntimeInstance;
+    private Long id;
     private Integer sessionId;
-    @Column(nullable = false)
     private Date startDate;
     private Date endDate;
     private Integer startEventID;
     private Integer stopEventID;
-    @Enumerated(EnumType.STRING)
+
     private PlatformRuntimeMode platformRuntimeMode = PlatformRuntimeMode.Debug;
 
-    @Enumerated(EnumType.STRING)
+
     private SessionExecutionStatus sessionExecutionStatus;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sessionExecution")
-    private List<RuleExecution> ruleExecutions = new ArrayList<RuleExecution>();
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "sessionExecution")
-    private List<ProcessExecution> processExecutions = new ArrayList<ProcessExecution>();
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+
+    private List<RuleExecution> ruleExecutions = new ArrayList<>();
+
+    private List<ProcessExecution> processExecutions = new ArrayList<>();
+
+    private List<FireAllRulesExecution> fireAllRulesExecutions = new ArrayList<>();
+
     private List<Fact> facts = new ArrayList<Fact>();
     private Date processingStartDate;
     private Date processingStopDate;
@@ -123,6 +118,14 @@ public class SessionExecution {
         this.sessionExecutionStatus = sessionExecutionStatus;
     }
 
+    public List<FireAllRulesExecution> getFireAllRulesExecutions() {
+        return fireAllRulesExecutions;
+    }
+
+    public void setFireAllRulesExecutions(List<FireAllRulesExecution> fireAllRulesExecutions) {
+        this.fireAllRulesExecutions = fireAllRulesExecutions;
+    }
+
     public List<RuleExecution> getRuleExecutions() {
         return ruleExecutions;
     }
@@ -158,27 +161,27 @@ public class SessionExecution {
         });
     }
 
-    public void setProcessingStartDate(Date processionStartDate) {
-        this.processingStartDate = processionStartDate;
-    }
-
     public Date getProcessingStartDate() {
         return processingStartDate;
     }
 
-    public void setProcessingStopDate(Date processingStopDate) {
-        this.processingStopDate = processingStopDate;
+    public void setProcessingStartDate(Date processionStartDate) {
+        this.processingStartDate = processionStartDate;
     }
 
     public Date getProcessingStopDate() {
         return processingStopDate;
     }
 
-    public void setPlatformRuntimeMode(PlatformRuntimeMode platformRuntimeMode) {
-        this.platformRuntimeMode = platformRuntimeMode;
+    public void setProcessingStopDate(Date processingStopDate) {
+        this.processingStopDate = processingStopDate;
     }
 
     public PlatformRuntimeMode getPlatformRuntimeMode() {
         return platformRuntimeMode;
+    }
+
+    public void setPlatformRuntimeMode(PlatformRuntimeMode platformRuntimeMode) {
+        this.platformRuntimeMode = platformRuntimeMode;
     }
 }

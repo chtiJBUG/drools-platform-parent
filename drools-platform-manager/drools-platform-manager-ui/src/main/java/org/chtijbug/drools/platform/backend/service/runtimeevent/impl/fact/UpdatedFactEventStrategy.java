@@ -18,27 +18,24 @@ package org.chtijbug.drools.platform.backend.service.runtimeevent.impl.fact;
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.fact.UpdatedFactHistoryEvent;
-import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.RuleExecutionRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.pojo.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractMemoryEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.SessionContext;
+import org.chtijbug.drools.platform.persistence.pojo.Fact;
+import org.chtijbug.drools.platform.persistence.pojo.FactType;
+import org.chtijbug.drools.platform.persistence.pojo.RuleExecution;
+import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 
 @Component
-public class UpdatedFactEventStrategy extends AbstractEventHandlerStrategy {
+public class UpdatedFactEventStrategy extends AbstractMemoryEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(UpdatedFactEventStrategy.class);
-    @Autowired
-    RuleExecutionRepositoryCacheService ruleExecutionRepository;
 
-    @Autowired
-    SessionExecutionRepositoryCacheService sessionExecutionRepository;
 
     @Override
     @Transactional
-    protected void handleMessageInternally(HistoryEvent historyEvent) {
+    public void handleMessageInternally(HistoryEvent historyEvent, SessionContext sessionContext) {
         UpdatedFactHistoryEvent updatedFactHistoryEvent = (UpdatedFactHistoryEvent) historyEvent;
         Fact factOldValue = new Fact();
         factOldValue.setFullClassName(updatedFactHistoryEvent.getObjectOldValue().getFullClassName());
@@ -54,45 +51,21 @@ public class UpdatedFactEventStrategy extends AbstractEventHandlerStrategy {
         factNewValue.setFactType(FactType.UPDATED_NEWVALUE);
         RuleExecution existingInSessionRuleExecution = null;
         if (updatedFactHistoryEvent.getRuleName() == null) {  // updated from a session
-            SessionExecution sessionExecution = sessionExecutionRepository.findByRuleBaseIDAndSessionIdAndEndDateIsNull(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId());
+            SessionExecution sessionExecution = sessionContext.getSessionExecution();
             sessionExecution.getFacts().add(factOldValue);
             sessionExecution.getFacts().add(factNewValue);
-            sessionExecutionRepository.save(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId(), sessionExecution);
-
-        } else if (updatedFactHistoryEvent.getRuleName() != null && updatedFactHistoryEvent.getRuleflowGroup() == null) {   // updated from a rule that is not in a ruleflow/process
-            existingInSessionRuleExecution = ruleExecutionRepository.findActiveRuleByRuleBaseIDAndSessionIDAndRuleName(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId(), updatedFactHistoryEvent.getRuleName());
-            if (existingInSessionRuleExecution != null) {
-                existingInSessionRuleExecution.getThenFacts().add(factOldValue);
-                existingInSessionRuleExecution.getThenFacts().add(factNewValue);
-                ruleExecutionRepository.save(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId(), updatedFactHistoryEvent.getRuleflowGroup(), existingInSessionRuleExecution);
-            }
-
-        } else { // updated from a rule in a ruleflowgroup/process
-            existingInSessionRuleExecution = ruleExecutionRepository.findByRuleBaseIDAndSessionIDAndRuleFlowNameAndRuleName(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId(), updatedFactHistoryEvent.getRuleflowGroup(), updatedFactHistoryEvent.getRuleName());
-            if (existingInSessionRuleExecution != null) {
-                existingInSessionRuleExecution.getThenFacts().add(factOldValue);
-                existingInSessionRuleExecution.getThenFacts().add(factNewValue);
-                ruleExecutionRepository.save(updatedFactHistoryEvent.getRuleBaseID(), updatedFactHistoryEvent.getSessionId(), updatedFactHistoryEvent.getRuleflowGroup(), existingInSessionRuleExecution);
-            }
+        } else {   // updated from a rule that is not in a ruleflow/process
+            existingInSessionRuleExecution = sessionContext.getRuleExecution();
+            existingInSessionRuleExecution.getThenFacts().add(factOldValue);
+            existingInSessionRuleExecution.getThenFacts().add(factNewValue);
         }
-
 
         LOG.debug("UpdatedFactHistoryEvent " + historyEvent.toString());
     }
-
     @Override
     public boolean isEventSupported(HistoryEvent historyEvent) {
 
         return historyEvent instanceof UpdatedFactHistoryEvent;
     }
 
-    @Override
-    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
-        if (platformRuntimeMode==PlatformRuntimeMode.Debug) {
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
 }

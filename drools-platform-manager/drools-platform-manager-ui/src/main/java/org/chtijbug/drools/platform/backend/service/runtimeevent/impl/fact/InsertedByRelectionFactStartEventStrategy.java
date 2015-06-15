@@ -18,20 +18,18 @@ package org.chtijbug.drools.platform.backend.service.runtimeevent.impl.fact;
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.fact.InsertedByReflectionFactStartHistoryEvent;
-import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractMemoryEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.SessionContext;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Component
-public class InsertedByRelectionFactStartEventStrategy extends AbstractEventHandlerStrategy {
+public class InsertedByRelectionFactStartEventStrategy extends AbstractMemoryEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(InsertedByRelectionFactStartEventStrategy.class);
 
 
     @Override
-    @Transactional
-    protected void handleMessageInternally(HistoryEvent historyEvent) {
+    public void handleMessageInternally(HistoryEvent historyEvent, SessionContext sessionContext) {
 
         LOG.debug("InsertedByReflectionFactStartHistoryEvent " + historyEvent.toString());
     }
@@ -42,8 +40,5 @@ public class InsertedByRelectionFactStartEventStrategy extends AbstractEventHand
         return historyEvent instanceof InsertedByReflectionFactStartHistoryEvent;
     }
 
-    @Override
-    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
-        return true;
-    }
+
 }

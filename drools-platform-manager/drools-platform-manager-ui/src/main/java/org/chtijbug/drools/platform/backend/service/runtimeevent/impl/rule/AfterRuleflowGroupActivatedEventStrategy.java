@@ -18,18 +18,18 @@ package org.chtijbug.drools.platform.backend.service.runtimeevent.impl.rule;
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFlowActivatedHistoryEvent;
-import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractMemoryEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.SessionContext;
 import org.springframework.stereotype.Component;
 
 
 @Component
-public class AfterRuleflowGroupActivatedEventStrategy extends AbstractEventHandlerStrategy {
+public class AfterRuleflowGroupActivatedEventStrategy extends AbstractMemoryEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(AfterRuleflowGroupActivatedEventStrategy.class);
 
 
     @Override
-    protected void handleMessageInternally(HistoryEvent historyEvent) {
+    public void handleMessageInternally(HistoryEvent historyEvent, SessionContext sessionContext) {
 
         LOG.debug("AfterRuleFlowActivatedHistoryEvent " + historyEvent.toString());
     }
@@ -40,13 +40,5 @@ public class AfterRuleflowGroupActivatedEventStrategy extends AbstractEventHandl
         return historyEvent instanceof AfterRuleFlowActivatedHistoryEvent;
     }
 
-    @Override
-    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
-        if (platformRuntimeMode==PlatformRuntimeMode.Debug) {
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
+
 }

@@ -15,7 +15,7 @@
  */
 package org.chtijbug.drools.platform.persistence.searchobjects;
 
-import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
+import org.chtijbug.drools.platform.persistence.pojo.SessionExecutionRecord;
 import org.gridgain.grid.cache.query.GridCacheQuerySqlField;
 
 import java.io.Serializable;
@@ -30,7 +30,7 @@ public class IndexSessionExecution implements Serializable {
     private Integer sessionid;
 
 
-    private SessionExecution sessionExecution;
+    private SessionExecutionRecord sessionExecution;
 
     public IndexSessionExecution() {
     }
@@ -62,11 +62,11 @@ public class IndexSessionExecution implements Serializable {
     }
 
 
-    public SessionExecution getSessionExecution() {
+    public SessionExecutionRecord getSessionExecution() {
         return sessionExecution;
     }
 
-    public void setSessionExecution(SessionExecution sessionExecution) {
+    public void setSessionExecution(SessionExecutionRecord sessionExecution) {
         this.sessionExecution = sessionExecution;
     }
 }

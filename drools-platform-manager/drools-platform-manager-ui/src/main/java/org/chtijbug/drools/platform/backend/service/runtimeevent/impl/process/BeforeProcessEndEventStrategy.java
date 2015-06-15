@@ -18,18 +18,18 @@ package org.chtijbug.drools.platform.backend.service.runtimeevent.impl.process;
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.process.BeforeProcessEndHistoryEvent;
-import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractMemoryEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.SessionContext;
 import org.springframework.stereotype.Component;
 
 
 @Component
-public class BeforeProcessEndEventStrategy extends AbstractEventHandlerStrategy {
+public class BeforeProcessEndEventStrategy extends AbstractMemoryEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(BeforeProcessEndEventStrategy.class);
 
 
     @Override
-    protected void handleMessageInternally(HistoryEvent historyEvent) {
+    public void handleMessageInternally(HistoryEvent historyEvent, SessionContext sessionContext) {
 
         LOG.debug("BeforeProcessStartHistoryEvent " + historyEvent.toString());
     }
@@ -40,13 +40,5 @@ public class BeforeProcessEndEventStrategy extends AbstractEventHandlerStrategy 
         return historyEvent instanceof BeforeProcessEndHistoryEvent;
     }
 
-    @Override
-    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
-        if (platformRuntimeMode==PlatformRuntimeMode.Debug) {
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
+
 }

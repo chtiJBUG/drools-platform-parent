@@ -18,35 +18,25 @@ package org.chtijbug.drools.platform.backend.service.runtimeevent.impl.process;
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.process.AfterVariableChangeChangedHistoryEvent;
-import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractMemoryEventHandlerStrategy;
+import org.chtijbug.drools.platform.backend.service.runtimeevent.SessionContext;
 import org.springframework.stereotype.Component;
 
 
 @Component
-public class AfterVariableChangeEventStrategy extends AbstractEventHandlerStrategy {
+public class AfterVariableChangeEventStrategy extends AbstractMemoryEventHandlerStrategy {
     private static final Logger LOG = Logger.getLogger(AfterVariableChangeEventStrategy.class);
 
 
     @Override
-    protected void handleMessageInternally(HistoryEvent historyEvent) {
+    public void handleMessageInternally(HistoryEvent historyEvent, SessionContext sessionContext) {
 
         LOG.debug("AfterVariableChangeChangedHistoryEvent " + historyEvent.toString());
     }
-
     @Override
     public boolean isEventSupported(HistoryEvent historyEvent) {
 
         return historyEvent instanceof AfterVariableChangeChangedHistoryEvent;
     }
 
-    @Override
-    public boolean isLevelCompatible(PlatformRuntimeMode platformRuntimeMode) {
-        if (platformRuntimeMode==PlatformRuntimeMode.Debug) {
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
 }
