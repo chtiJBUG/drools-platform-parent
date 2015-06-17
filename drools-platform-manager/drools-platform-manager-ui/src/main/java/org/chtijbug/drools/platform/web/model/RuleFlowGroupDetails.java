@@ -23,6 +23,11 @@ public class RuleFlowGroupDetails {
     private String ruleflowGroup;
     private List<RuleExecutionDetails> allRuleExecutionDetails = new ArrayList<RuleExecutionDetails>();
 
+    private int nbRuleToDisplay = 20;
+
+    private int position = 0;
+
+
     public RuleFlowGroupDetails() { /* nop */ }
 
     public RuleFlowGroupDetails(String ruleflowGroup, List<RuleExecutionDetails> allRuleExecutionDetails) {
@@ -48,5 +53,21 @@ public class RuleFlowGroupDetails {
 
     public void addRuleExecution(RuleExecutionDetails ruleExecutionDetails) {
         this.allRuleExecutionDetails.add(ruleExecutionDetails);
+    }
+
+    public int getNbRuleToDisplay() {
+        return nbRuleToDisplay;
+    }
+
+    public void setNbRuleToDisplay(int nbRuleToDisplay) {
+        this.nbRuleToDisplay = nbRuleToDisplay;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 }

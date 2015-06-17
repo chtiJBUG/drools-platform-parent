@@ -71,4 +71,26 @@ public class SessionExecutionDetailsResource {
     public void setOutputObject(String outputObject) {
         this.outputObject = outputObject;
     }
+
+    public SessionExecutionDetailsResource duplicate() {
+        SessionExecutionDetailsResource result = new SessionExecutionDetailsResource();
+        result.setInputObject(this.inputObject);
+        result.setOutputObject(this.outputObject);
+        if (this.executionStats != null) {
+            result.setExecutionStats(this.executionStats.duplicate());
+        }
+        result.setProcessDetails(this.processDetails.duplicate());
+        for (RuleFlowGroupDetails detail : allRuleFlowGroupDetails) {
+            RuleFlowGroupDetails newRFG = new RuleFlowGroupDetails();
+            result.addRuleFlowGroup(newRFG);
+            newRFG.setRuleflowGroup(detail.getRuleflowGroup());
+            newRFG.setPosition(detail.getPosition());
+            newRFG.setNbRuleToDisplay(detail.getNbRuleToDisplay());
+            for (int j = detail.getPosition(); j < Math.min(detail.getPosition() + detail.getNbRuleToDisplay(), detail.getAllRuleExecutionDetails().size()); j++) {
+                RuleExecutionDetails rule = detail.getAllRuleExecutionDetails().get(j);
+                newRFG.getAllRuleExecutionDetails().add(rule);
+            }
+        }
+        return result;
+    }
 }

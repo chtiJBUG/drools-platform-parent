@@ -47,5 +47,14 @@ public class ExecutionStats {
     public void setStatus(String status) {
         this.status = status;
     }
+
+
+    public ExecutionStats duplicate() {
+        ExecutionStats newElement = new ExecutionStats();
+        newElement.setDuration(this.duration);
+        newElement.setFiredRulesCount(this.firedRulesCount);
+        newElement.setStatus(this.status);
+        return newElement;
+    }
 }
 

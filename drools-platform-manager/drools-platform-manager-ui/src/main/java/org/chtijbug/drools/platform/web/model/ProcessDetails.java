@@ -64,4 +64,9 @@ public class ProcessDetails {
     public void setProcessType(String processType) {
         this.processType = processType;
     }
+
+
+    public ProcessDetails duplicate() {
+        return new ProcessDetails(this.processName, this.processExecutionStatus, this.processVersion, this.processType);
+    }
 }

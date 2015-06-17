@@ -67,6 +67,9 @@ public class RuntimeResource {
     @Autowired
     WebSocketSessionManager webSocketSessionManager;
 
+    @Autowired
+    RuntimeDisplayCache runtimeDisplayCache;
+
     @RequestMapping(method = RequestMethod.GET, value = "/all")
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
@@ -172,6 +175,19 @@ public class RuntimeResource {
         return platformRuntimeInstanceRepository.findByPackageNameAllRuntime(packageName);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/sessionbrowser/{Id}/{ruleFlowName}/{direction}")
+    @Consumes(value = MediaType.APPLICATION_JSON)
+    @Produces(value = MediaType.APPLICATION_JSON)
+    @ResponseBody
+    @Transactional
+    public SessionExecutionDetailsResource findSessionExecutionDetails(@PathVariable Long Id, @PathVariable String ruleFlowName, @PathVariable Long direction) {
+
+        SessionExecutionDetailsResource result = runtimeDisplayCache.updateView(Id, ruleFlowName, direction);
+
+
+        return result;
+    }
+
 
     @RequestMapping(method = RequestMethod.GET, value = "/session/{Id}")
     @Consumes(value = MediaType.APPLICATION_JSON)
@@ -234,9 +250,11 @@ public class RuntimeResource {
                     executionDetailsResource.addRuleFlowGroup(ruleFlowGroupDetails);
                 }
 
-                //logger.debug("Skipping this entry {}", sessionId);
+
             }
-            return executionDetailsResource;
+            runtimeDisplayCache.storeSession(Id, executionDetailsResource);
+            SessionExecutionDetailsResource viewExecution = runtimeDisplayCache.getView(Id);
+            return viewExecution;
         } catch (Exception e) {
             DroolsChtijbugException ee = new DroolsChtijbugException("", "", e);
             logger.error("   public SessionExecutionDetailsResource findSessionExecutionDetails(@PathVariable Long Id) {", ee);
