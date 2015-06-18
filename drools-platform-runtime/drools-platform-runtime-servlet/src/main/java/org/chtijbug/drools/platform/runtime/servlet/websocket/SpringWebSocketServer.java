@@ -77,7 +77,11 @@ public class SpringWebSocketServer extends TextWebSocketHandler implements WebSo
                     bean.setRequestStatus(RequestStatus.SUCCESS);
                     this.sendMessage(bean);
                     this.platformKnowledgeBaseJavaEE.setRuleBaseStatus(true);
-                    LOG.info("loadNewRuleVersion done");
+                    StringBuilder ss = new StringBuilder();
+                    for (DroolsResource dd : droolsResources) {
+                        ss.append(dd.toString());
+                    }
+                    LOG.info("loadNewRuleVersion done" + ss.toString());
                 } catch (Exception e) {
                     DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("RELOAD", "Could not reload Rule Package From Guvnor", e);
                     bean.setDroolsChtijbugException(droolsChtijbugException);

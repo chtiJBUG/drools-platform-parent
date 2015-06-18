@@ -31,8 +31,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.Semaphore;
 
 
 @Component
@@ -40,7 +41,6 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
 
     private static final Logger LOG = Logger.getLogger(ServletJmsStorageHistoryListener.class);
     final BlockingQueue<HistoryEvent> cachedHistoryEvents = new LinkedBlockingDeque<HistoryEvent>();
-    Semaphore jmsConnectedSemaphore = new Semaphore(1);
     DroolsPlatformKnowledgeBaseJavaEE platformKnowledgeBaseJavaEE;
     private String platformQueueName = "historyEventQueue";
     private Integer jmsPort = 61616;
@@ -51,67 +51,45 @@ public class ServletJmsStorageHistoryListener implements PlatformHistoryListener
     private String numberRetriesString;
     @Value(value = "${knowledge.timeToWaitBetweenTwoRetries}")
     private String timeToWaitBetweenTwoRetriesString;
-
+    private ExecutorService executorService = Executors.newFixedThreadPool(1);
     public void initJmsConnection() throws DroolsChtijbugException {
-
-
         String url = "tcp://" + this.jmsServer + ":" + this.jmsPort;
         ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(url);
         CachingConnectionFactory cacheFactory = new CachingConnectionFactory(factory);
         this.jmsTemplate = new JmsTemplate(cacheFactory);
-
     }
-
 
     @Override
     public void fireEvent(HistoryEvent historyEvent) throws DroolsChtijbugException {
-        try {
-            jmsConnectedSemaphore.acquire();
-        } catch (InterruptedException e) {
-            DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("ServletJmsStorageHistoryListener.fireEvent", "Acquire not possible", e);
-            throw droolsChtijbugException;
-        }
+
         try {
 
-
-            try {
-                /**
-                 * If some history events were cached before, send them first
-                 */
-                for (HistoryEvent cachedhistoryEvent : cachedHistoryEvents) {
-                    this.jmsTemplate.send(platformQueueName, new PlatformMessageCreator(cachedhistoryEvent));
-                    LOG.debug("Sending Cached Event" + cachedhistoryEvent.toString());
-                }
-                cachedHistoryEvents.clear();
-                this.jmsTemplate.send(platformQueueName, new PlatformMessageCreator(historyEvent));
-            } catch (Exception e) {
-                if (historyEvent instanceof PlatformKnowledgeBaseInitialConnectionEvent) {
-                    boolean isNotSent = true;
-                    while (isNotSent) {
-                        try {
-                            this.jmsTemplate.send(platformQueueName, new PlatformMessageCreator(historyEvent));
-                            isNotSent = false;
-                        } catch (Exception ee) {
-                            LOG.debug("Sending PlatformKnowledgeBaseInitialConnectionEvent Event failed" + ee.toString());
-                            try {
-                                Thread.sleep(3000);
-                            } catch (Exception eee) {
-                                LOG.debug("waiting to send  PlatformKnowledgeBaseInitialConnectionEvent Event failed" + eee.toString());
-                            }
-                        }
-                    }
-
-                }
-                cachedHistoryEvents.add(historyEvent);
-                LOG.debug("Sending JMS Event failed" + historyEvent.toString());
+            /**
+             * If some history events were cached before, send them first
+             */
+            for (HistoryEvent cachedhistoryEvent : cachedHistoryEvents) {
+                this.jmsTemplate.send(platformQueueName, new PlatformMessageCreator(cachedhistoryEvent));
+                LOG.debug("Sending Cached Event" + cachedhistoryEvent.toString());
             }
-            LOG.debug("Sending JMS Event" + historyEvent.toString());
-        } finally {
-            jmsConnectedSemaphore.release();
+
+            cachedHistoryEvents.clear();
+            this.jmsTemplate.send(platformQueueName, new PlatformMessageCreator(historyEvent));
+
+
+        } catch (Exception e) {
+            if (historyEvent instanceof PlatformKnowledgeBaseInitialConnectionEvent) {
+                PlatformKnowledgeBaseInitialConnectionEvent event = (PlatformKnowledgeBaseInitialConnectionEvent) historyEvent;
+                InitialPlatformJmsSend initialPlatformJmsSend = new InitialPlatformJmsSend(jmsTemplate, event, platformQueueName, this.cachedHistoryEvents);
+                executorService.execute(initialPlatformJmsSend);
+
+            } else {
+                cachedHistoryEvents.add(historyEvent);
+            }
+            LOG.debug("Sending JMS Event failed" + historyEvent.toString());
         }
-
-
+        LOG.debug("Sending JMS Event" + historyEvent.toString());
     }
+
 
     public void shutdown() {
         final PlatformKnowledgeBaseShutdownEvent platformKnowledgeBaseShutdownEvent = new PlatformKnowledgeBaseShutdownEvent(-1, new Date(), Integer.valueOf(this.ruleBaseID).intValue(), new Date());
