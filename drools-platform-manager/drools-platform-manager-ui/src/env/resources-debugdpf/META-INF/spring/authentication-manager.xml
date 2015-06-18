@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <security:authentication-manager alias="authenticationManager">
+        <security:authentication-provider>
+            <!-- To get a hash from a password : (sample user : sheldon, password: cooper)
+            - We are using the username as a salt. Salted password = cooper{sheldon}
+            - Hash the salted password with sha256 :
+               * Command line : echo -n cooper{sheldon} | sha256sum
+               * or use online tool : http://www.xorbin.com/tools/sha256-hash-calculator
+            -->
+            <security:user-service id="userDetailsService">
+                <!--Password : admin -->
+                <security:user name="admin" authorities="ROLE_USER"
+                               password="a4a88c0872bf652bb9ed803ece5fd6e82354838a9bf59ab4babb1dab322154e1"/>
+            </security:user-service>
+            <security:password-encoder hash="sha-256">
+                <security:salt-source user-property="username"/>
+            </security:password-encoder>
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+</beans>
