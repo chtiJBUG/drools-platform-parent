@@ -17,8 +17,8 @@ package org.chtijbug.drools.platform.backend.service.persistence;
 
 import org.chtijbug.drools.guvnor.rest.model.Asset;
 import org.chtijbug.drools.guvnor.rest.model.AssetCategory;
-import org.chtijbug.drools.platform.persistence.RuleAssetCategoryRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.RuleAssetRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.RuleAssetCategoryRepository;
+import org.chtijbug.drools.platform.persistence.RuleAssetRepository;
 import org.chtijbug.drools.platform.persistence.pojo.RuleAsset;
 import org.chtijbug.drools.platform.persistence.pojo.RuleAssetCategory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +33,10 @@ import java.util.List;
 public class RuleAssetManagementService {
 
     @Autowired
-    RuleAssetRepositoryCacheService ruleAssetRepository;
+    RuleAssetRepository ruleAssetRepository;
 
     @Autowired
-    RuleAssetCategoryRepositoryCacheService ruleAssetCategoryRepository;
+    RuleAssetCategoryRepository ruleAssetCategoryRepository;
 
     public RuleAsset getRuleAsset(String packageName, String assetName) {
         RuleAsset ruleAsset = null;

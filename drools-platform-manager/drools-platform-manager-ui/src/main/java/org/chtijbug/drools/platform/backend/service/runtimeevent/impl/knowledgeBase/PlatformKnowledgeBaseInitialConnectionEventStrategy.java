@@ -28,10 +28,10 @@ import org.chtijbug.drools.platform.entity.PlatformResourceFile;
 import org.chtijbug.drools.platform.entity.RequestRuntimePlarform;
 import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseInitialConnectionEvent;
-import org.chtijbug.drools.platform.persistence.DeploymentHostRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.PlatformServerRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.DeploymentHostRepository;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepository;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
+import org.chtijbug.drools.platform.persistence.PlatformServerRepository;
 import org.chtijbug.drools.platform.persistence.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,6 +44,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+;
+
 
 @Component
 public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends AbstractEventHandlerStrategy {
@@ -54,16 +56,16 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
 
 
     @Autowired
-    PlatformRuntimeInstanceRepositoryCacheService platformRuntimeInstanceRepository;
+    PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
     @Autowired
-    PlatformRuntimeDefinitionRepositoryCacheService platformRuntimeDefinitionRepository;
+    PlatformRuntimeDefinitionRepository platformRuntimeDefinitionRepository;
 
     @Autowired
-    PlatformServerRepositoryCacheService platformServerRepository;
+    PlatformServerRepository platformServerRepository;
 
     @Autowired
-    DeploymentHostRepositoryCacheService deploymentHostRepository;
+    DeploymentHostRepository deploymentHostRepository;
 
 
     @Value(value = "${runtimeSiteTopology.guvnorUserName}")

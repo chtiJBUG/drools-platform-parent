@@ -21,9 +21,9 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketClient;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRecordRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepository;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRecordRepository;
 import org.chtijbug.drools.platform.persistence.pojo.*;
 import org.chtijbug.drools.platform.persistence.utility.JSONHelper;
 import org.chtijbug.drools.platform.web.model.*;
@@ -58,11 +58,11 @@ public class RuntimeResource {
     private static Logger logger = LoggerFactory.getLogger(RuntimeResource.class);
 
     @Autowired
-    PlatformRuntimeInstanceRepositoryCacheService platformRuntimeInstanceRepository;
+    PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
     @Autowired
-    SessionExecutionRecordRepositoryCacheService sessionExecutionRepository;
+    SessionExecutionRecordRepository sessionExecutionRepository;
     @Autowired
-    PlatformRuntimeDefinitionRepositoryCacheService platformRuntimeDefinitionRepositoryCacheService;
+    PlatformRuntimeDefinitionRepository platformRuntimeDefinitionRepositoryCacheService;
 
     @Autowired
     WebSocketSessionManager webSocketSessionManager;
@@ -198,7 +198,7 @@ public class RuntimeResource {
         logger.debug(">> findSessionExecutionDetails(sessionId= {})", Id);
         try {
             //____ Data from Database
-            final SessionExecutionRecord sessionExecutionRecord = sessionExecutionRepository.findByIdForUI(Id);
+            final SessionExecutionRecord sessionExecutionRecord = sessionExecutionRepository.findOne(Id);
             SessionExecution sessionExecution = (SessionExecution) JSONHelper.getObjectFromJSONString(sessionExecutionRecord.getJsonSessionExecution(), SessionExecution.class);
             // final SessionExecution sessionExecution = sessionExecutionRepository.findDetailsBySessionId(sessionID);
             SessionExecutionDetailsResource executionDetailsResource = new SessionExecutionDetailsResource();

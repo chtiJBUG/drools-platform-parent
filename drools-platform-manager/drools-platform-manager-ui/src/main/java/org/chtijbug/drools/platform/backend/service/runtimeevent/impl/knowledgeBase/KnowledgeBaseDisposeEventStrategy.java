@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseDisposeEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class KnowledgeBaseDisposeEventStrategy extends AbstractEventHandlerStrat
 
 
     @Autowired
-    PlatformRuntimeInstanceRepositoryCacheService platformRuntimeInstanceRepository;
+    PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
     @Override
     @Transactional

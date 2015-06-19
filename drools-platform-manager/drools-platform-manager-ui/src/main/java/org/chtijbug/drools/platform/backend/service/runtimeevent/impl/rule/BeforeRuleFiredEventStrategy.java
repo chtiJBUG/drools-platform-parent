@@ -21,7 +21,7 @@ import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.rule.BeforeRuleFiredHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractMemoryEventHandlerStrategy;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.SessionContext;
-import org.chtijbug.drools.platform.persistence.RuleAssetRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.RuleAssetRepository;
 import org.chtijbug.drools.platform.persistence.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,7 +34,7 @@ public class BeforeRuleFiredEventStrategy extends AbstractMemoryEventHandlerStra
 
 
     @Autowired
-    private RuleAssetRepositoryCacheService ruleAssetRepository;
+    private RuleAssetRepository ruleAssetRepository;
 
     @Override
     @Transactional

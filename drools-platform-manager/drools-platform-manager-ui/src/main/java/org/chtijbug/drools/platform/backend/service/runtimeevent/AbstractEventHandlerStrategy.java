@@ -16,8 +16,8 @@
 package org.chtijbug.drools.platform.backend.service.runtimeevent;
 
 import org.chtijbug.drools.entity.history.HistoryEvent;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRecordRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepository;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRecordRepository;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeDefinition;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecutionRecord;
@@ -27,10 +27,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class AbstractEventHandlerStrategy {
 
     @Autowired
-    PlatformRuntimeDefinitionRepositoryCacheService platformRuntimeDefinitionRepositoryCacheService;
+    PlatformRuntimeDefinitionRepository platformRuntimeDefinitionRepositoryCacheService;
 
     @Autowired
-    SessionExecutionRecordRepositoryCacheService sessionExecutionRecordRepositoryCacheService;
+    SessionExecutionRecordRepository sessionExecutionRecordRepositoryCacheService;
 
     public void handleMessage(HistoryEvent historyEvent) {
         PlatformRuntimeMode platformRuntimeMode = PlatformRuntimeMode.Debug;

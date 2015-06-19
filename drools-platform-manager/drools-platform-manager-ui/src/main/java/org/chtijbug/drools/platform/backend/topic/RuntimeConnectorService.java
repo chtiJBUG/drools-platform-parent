@@ -24,8 +24,8 @@ import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.entity.PlatformResourceFile;
 import org.chtijbug.drools.platform.entity.RequestRuntimePlarform;
 import org.chtijbug.drools.platform.entity.RequestStatus;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepository;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeDefinition;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
@@ -52,10 +52,10 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
     private WebSocketSessionManager webSocketSessionManager;
 
     @Autowired
-    private PlatformRuntimeInstanceRepositoryCacheService platformRuntimeInstanceRepository;
+    private PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
     @Autowired
-    private PlatformRuntimeDefinitionRepositoryCacheService platformRuntimeDefinitionRepository;
+    private PlatformRuntimeDefinitionRepository platformRuntimeDefinitionRepository;
 
     private BaseTopicData baseTopicDataToSend;
 

@@ -6,8 +6,8 @@ import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractMemoryE
 import org.chtijbug.drools.platform.backend.service.runtimeevent.MessageHandlerResolver;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.SessionContext;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseDisposeSessionEvent;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRecordRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
+import org.chtijbug.drools.platform.persistence.SessionExecutionRecordRepository;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
@@ -31,10 +31,10 @@ public class PlatformKnowledgeBaseDisposeSessionEventStrategy extends AbstractEv
 
 
     @Autowired
-    PlatformRuntimeInstanceRepositoryCacheService platformRuntimeInstanceRepository;
+    PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
     @Autowired
-    SessionExecutionRecordRepositoryCacheService sessionExecutionRepository;
+    SessionExecutionRecordRepository sessionExecutionRepository;
 
     @Override
     @Transactional(value = "transactionManager")
@@ -74,7 +74,7 @@ public class PlatformKnowledgeBaseDisposeSessionEventStrategy extends AbstractEv
             } else {
                 sessionExecutionRecord.setPlatformRuntimeMode(PlatformRuntimeMode.Debug);
             }
-            sessionExecutionRepository.save(event.getRuleBaseID(), event.getSessionId(), sessionExecutionRecord);
+            sessionExecutionRepository.save(sessionExecutionRecord);
         }
 
 

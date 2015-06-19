@@ -20,7 +20,7 @@ import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
 import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseShutdownEvent;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepositoryCacheService;
+import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class PlatformKnowledgeBaseShutdownEventStrategy extends AbstractEventHan
     WebSocketSessionManager webSocketSessionManager;
 
     @Autowired
-    PlatformRuntimeInstanceRepositoryCacheService platformRuntimeInstanceRepository;
+    PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
 
     @Override
     @Transactional
