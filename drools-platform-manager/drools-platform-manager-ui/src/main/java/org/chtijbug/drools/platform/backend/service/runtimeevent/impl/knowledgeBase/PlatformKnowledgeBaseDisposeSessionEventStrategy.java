@@ -76,6 +76,10 @@ public class PlatformKnowledgeBaseDisposeSessionEventStrategy extends AbstractEv
             }
             sessionExecutionRepository.save(sessionExecutionRecord);
         }
+        toSaveSession = null;
+        jsonText = null;
+        sessionContext = null;
+
 
 
     }
