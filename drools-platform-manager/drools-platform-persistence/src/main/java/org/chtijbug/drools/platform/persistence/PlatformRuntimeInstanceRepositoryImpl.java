@@ -35,7 +35,7 @@ public class PlatformRuntimeInstanceRepositoryImpl implements PlatformRuntimeIns
     private static final String COUNT_QUERY_PART = "select count(execution) ";
     private static final String COMMON_QUERY_PART = "from SessionExecutionRecord execution , DroolsResource resource " +
             "where resource.guvnor_packageName = :packageName and " +
-            "resource member of execution.platformRuntimeInstance.platformRuntimeDefinition.droolsRessourcesDefinition and " +
+            "resource member of execution.platformRuntimeInstance.droolsRessources and " +
             "resource.endDate is null ";
     private static Logger logger = getLogger(PlatformRuntimeInstanceRepositoryImpl.class);
     @PersistenceContext

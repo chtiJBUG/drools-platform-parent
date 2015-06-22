@@ -288,9 +288,12 @@ public class RuntimeResource {
             final List<SessionExecutionRecord> allSessionExecutionsrecord = platformRuntimeInstanceRepository.findAllPlatformRuntimeInstanceByFilter(runtimeFilter);
             List<SessionExecution> lists = new ArrayList<>();
             for (SessionExecutionRecord record : allSessionExecutionsrecord) {
-                SessionExecution sessionExecution = (SessionExecution) JSONHelper.getObjectFromJSONString(record.getJsonSessionExecution(), SessionExecution.class);
+                //SessionExecution sessionExecution = (SessionExecution) JSONHelper.getObjectFromJSONString(record.getJsonSessionExecution(), SessionExecution.class);
+                SessionExecution sessionExecution = new SessionExecution();
                 sessionExecution.setPlatformRuntimeInstance(record.getPlatformRuntimeInstance());
                 sessionExecution.setId(record.getId());
+                sessionExecution.setStartDate(record.getStartDate());
+                sessionExecution.setEndDate(record.getEndDate());
                 lists.add(sessionExecution);
             }
             final List<SessionExecution> allSessionExecutions = lists;
