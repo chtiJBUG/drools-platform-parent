@@ -4,14 +4,14 @@
   <cache name="sampleCache1"
          maxElementsInMemory="10000"
          eternal="false"
-         overflowToDisk="true"
+         overflowToDisk="false"
          timeToIdleSeconds="300"
          timeToLiveSeconds="600"/>
 
   <defaultCache
           maxElementsInMemory="10000"
           eternal="false"
-          overflowToDisk="true"
+          overflowToDisk="false"
           timeToIdleSeconds="300"
           timeToLiveSeconds="600">
 
