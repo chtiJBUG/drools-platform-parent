@@ -29,8 +29,8 @@ import java.util.List;
  */
 public class PlatformKnowledgeBaseDisposeSessionEvent extends KnowledgeBaseEvent {
 
-    private Date startDate;
     List<HistoryEvent> sessionHistory;
+    private Date startDate;
 
     public PlatformKnowledgeBaseDisposeSessionEvent(int eventID, Date dateEvent, int ruleBaseID,List<HistoryEvent> sessionHistory) {
         super(eventID, dateEvent, ruleBaseID);
@@ -49,8 +49,9 @@ public class PlatformKnowledgeBaseDisposeSessionEvent extends KnowledgeBaseEvent
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("PlatformKnowledgeBaseDisposeSessionEvent{");
+        sb.append("ruleBaseID=").append(this.getRuleBaseID());
+        sb.append("eventID=").append(this.getEventID());
         sb.append("startDate=").append(startDate);
-        sb.append(", sessionHistory=").append(sessionHistory);
         sb.append('}');
         return sb.toString();
     }

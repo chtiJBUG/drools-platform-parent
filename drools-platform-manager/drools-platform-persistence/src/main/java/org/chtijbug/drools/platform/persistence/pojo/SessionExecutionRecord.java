@@ -21,7 +21,9 @@ import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -52,6 +54,8 @@ public class SessionExecutionRecord {
     @Type(type = "jsonb")
     private String jsonSessionExecution;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<RuleFlowExecutionRecord> ruleFlowExecutionRecords = new ArrayList<>();
 
     public SessionExecutionRecord() {
     }
@@ -136,5 +140,13 @@ public class SessionExecutionRecord {
 
     public void setPlatformRuntimeInstance(PlatformRuntimeInstance platformRuntimeInstance) {
         this.platformRuntimeInstance = platformRuntimeInstance;
+    }
+
+    public List<RuleFlowExecutionRecord> getRuleFlowExecutionRecords() {
+        return ruleFlowExecutionRecords;
+    }
+
+    public void setRuleFlowExecutionRecords(List<RuleFlowExecutionRecord> ruleFlowExecutionRecords) {
+        this.ruleFlowExecutionRecords = ruleFlowExecutionRecords;
     }
 }

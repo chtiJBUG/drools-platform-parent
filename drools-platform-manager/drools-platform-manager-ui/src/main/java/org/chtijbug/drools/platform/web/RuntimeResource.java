@@ -200,6 +200,15 @@ public class RuntimeResource {
             //____ Data from Database
             final SessionExecutionRecord sessionExecutionRecord = sessionExecutionRepository.findOne(Id);
             SessionExecution sessionExecution = (SessionExecution) JSONHelper.getObjectFromJSONString(sessionExecutionRecord.getJsonSessionExecution(), SessionExecution.class);
+            for (RuleFlowExecutionRecord ruleFlowExecutionRecord : sessionExecutionRecord.getRuleFlowExecutionRecords()) {
+
+                for (ProcessExecution processExecution : sessionExecution.getProcessExecutions()) {
+                    if (processExecution.getProcessInstanceId().equals(ruleFlowExecutionRecord.getProcessInstanceId())) {
+                        RuleflowGroup ruleflowGroup = (RuleflowGroup) JSONHelper.getObjectFromJSONString(ruleFlowExecutionRecord.getJsonRuleFlowExecution(), RuleflowGroup.class);
+                        processExecution.getRuleflowGroups().add(ruleflowGroup);
+                    }
+                }
+            }
             // final SessionExecution sessionExecution = sessionExecutionRepository.findDetailsBySessionId(sessionID);
             SessionExecutionDetailsResource executionDetailsResource = new SessionExecutionDetailsResource();
             ProcessExecution processExecution = null;
