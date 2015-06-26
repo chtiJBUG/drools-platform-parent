@@ -31,9 +31,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 
 public class PlatformRuntimeInstanceRepositoryImpl implements PlatformRuntimeInstanceCustomRepository {
-    private static final String SELECT_QUERY_PART = "select execution ";
+    private static final String SELECT_QUERY_PART = "select new org.chtijbug.drools.platform.persistence.pojo.SessionExecutionRecord(execution.id,execution.sessionId,execution.startDate,execution.endDate,execution.platformRuntimeMode,execution.processingStartDate,execution.processingStopDate,execution.platformRuntimeInstance) ";
     private static final String COUNT_QUERY_PART = "select count(execution) ";
-    private static final String COMMON_QUERY_PART = "from SessionExecutionRecord execution , DroolsResource resource " +
+    private static final String COMMON_QUERY_PART = "from SessionExecutionRecord as execution , DroolsResource resource " +
             "where resource.guvnor_packageName = :packageName and " +
             "resource member of execution.platformRuntimeInstance.droolsRessources and " +
             "resource.endDate is null ";

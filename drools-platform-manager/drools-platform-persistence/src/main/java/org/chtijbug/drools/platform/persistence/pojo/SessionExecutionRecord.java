@@ -54,10 +54,21 @@ public class SessionExecutionRecord {
     @Type(type = "jsonb")
     private String jsonSessionExecution;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<RuleFlowExecutionRecord> ruleFlowExecutionRecords = new ArrayList<>();
 
     public SessionExecutionRecord() {
+    }
+
+    public SessionExecutionRecord(Long id, Integer sessionId, Date startDate, Date endDate, PlatformRuntimeMode platformRuntimeMode, Date processingStartDate, Date processingStopDate, PlatformRuntimeInstance platformRuntimeInstance) {
+        this.id = id;
+        this.sessionId = sessionId;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.platformRuntimeMode = platformRuntimeMode;
+        this.processingStartDate = processingStartDate;
+        this.processingStopDate = processingStopDate;
+        this.platformRuntimeInstance = platformRuntimeInstance;
     }
 
     public Long getId() {
@@ -67,7 +78,6 @@ public class SessionExecutionRecord {
     public void setId(Long id) {
         this.id = id;
     }
-
 
     public Integer getSessionId() {
         return sessionId;
@@ -92,7 +102,6 @@ public class SessionExecutionRecord {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
-
 
     public SessionExecutionStatus getSessionExecutionStatus() {
         return sessionExecutionStatus;
