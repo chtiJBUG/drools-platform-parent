@@ -27,10 +27,16 @@
   <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory"
         p:brokerURL="tcp://${jms.server}:${jms.port}"/>
 
-  <!-- The Spring message listener container configuration -->
+    <bean id="jmsConnectionFactory"
+          class="org.springframework.jms.connection.CachingConnectionFactory">
+        <property name="targetConnectionFactory" ref="connectionFactory"/>
+        <property name="sessionCacheSize" value="50"/>
+    </bean>
+
+    <!-- The Spring message listener container configuration -->
   <jms:listener-container
       container-type="default"
-      connection-factory="connectionFactory"
+      connection-factory="jmsConnectionFactory"
       acknowledge="transacted">
     <jms:listener destination="historyEventQueue" ref="simpleMessageListener"/>
   </jms:listener-container>

@@ -199,13 +199,16 @@ public class RuntimeResource {
         try {
             //____ Data from Database
             final SessionExecutionRecord sessionExecutionRecord = sessionExecutionRepository.findOne(Id);
-            SessionExecution sessionExecution = (SessionExecution) JSONHelper.getObjectFromJSONString(sessionExecutionRecord.getJsonSessionExecution(), SessionExecution.class);
-            for (RuleFlowExecutionRecord ruleFlowExecutionRecord : sessionExecutionRecord.getRuleFlowExecutionRecords()) {
+            SessionExecution sessionExecution = null;
+            if (sessionExecutionRecord.getJsonSessionExecution() != null) {
+                sessionExecution = (SessionExecution) JSONHelper.getObjectFromJSONString(sessionExecutionRecord.getJsonSessionExecution(), SessionExecution.class);
+                for (RuleFlowExecutionRecord ruleFlowExecutionRecord : sessionExecutionRecord.getRuleFlowExecutionRecords()) {
 
-                for (ProcessExecution processExecution : sessionExecution.getProcessExecutions()) {
-                    if (processExecution.getProcessInstanceId().equals(ruleFlowExecutionRecord.getProcessInstanceId())) {
-                        RuleflowGroup ruleflowGroup = (RuleflowGroup) JSONHelper.getObjectFromJSONString(ruleFlowExecutionRecord.getJsonRuleFlowExecution(), RuleflowGroup.class);
-                        processExecution.getRuleflowGroups().add(ruleflowGroup);
+                    for (ProcessExecution processExecution : sessionExecution.getProcessExecutions()) {
+                        if (processExecution.getProcessInstanceId().equals(ruleFlowExecutionRecord.getProcessInstanceId())) {
+                            RuleflowGroup ruleflowGroup = (RuleflowGroup) JSONHelper.getObjectFromJSONString(ruleFlowExecutionRecord.getJsonRuleFlowExecution(), RuleflowGroup.class);
+                            processExecution.getRuleflowGroups().add(ruleflowGroup);
+                        }
                     }
                 }
             }
@@ -213,15 +216,18 @@ public class RuntimeResource {
             SessionExecutionDetailsResource executionDetailsResource = new SessionExecutionDetailsResource();
             ProcessExecution processExecution = null;
             ProcessDetails processDetails = new ProcessDetails();
-            List<Fact> inputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.INPUTDATA));
-            List<Fact> outputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.OUTPUTDATA));
-            for (Fact inputFact : inputFactList) {
-                executionDetailsResource.setInputObject(inputFact.getJsonFact());
+            if (sessionExecution != null) {
+                List<Fact> inputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.INPUTDATA));
+                List<Fact> outputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.OUTPUTDATA));
+                for (Fact inputFact : inputFactList) {
+                    executionDetailsResource.setInputObject(inputFact.getJsonFact());
+                }
+                for (Fact outputFact : outputFactList) {
+                    executionDetailsResource.setOutputObject(outputFact.getJsonFact());
+                }
             }
-            for (Fact outputFact : outputFactList) {
-                executionDetailsResource.setOutputObject(outputFact.getJsonFact());
-            }
-            if (sessionExecution.getProcessExecutions().size() != 0) {
+
+            if (sessionExecution != null && sessionExecution.getProcessExecutions().size() != 0) {
                 processExecution = sessionExecution.getProcessExecutions().get(0);
                 processDetails.setProcessName(processExecution.getProcessName());
 

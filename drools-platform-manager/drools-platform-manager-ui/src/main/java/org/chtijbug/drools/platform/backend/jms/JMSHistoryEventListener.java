@@ -21,7 +21,6 @@ import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.MessageHandlerResolver;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,8 +56,12 @@ public class JMSHistoryEventListener implements MessageListener {
             }
         } catch (Exception e) {
             LOG.error("Consumed message: " + e.toString() + " message content " + message.toString());
-            LOG.error("                  message  " + message.toString());
-            LOG.error("                  object content " + historyEvent.toString());
+            if (message != null) {
+                LOG.error("                  message  " + message.toString());
+            }
+            if (historyEvent != null) {
+                LOG.error("                  object content " + historyEvent.toString());
+            }
 
         }
     }

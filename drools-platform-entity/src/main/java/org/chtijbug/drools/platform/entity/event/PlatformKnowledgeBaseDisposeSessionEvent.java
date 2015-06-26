@@ -19,7 +19,7 @@ import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseEvent;
 
 import java.util.Date;
-import java.util.List;
+import java.util.LinkedList;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,10 +29,10 @@ import java.util.List;
  */
 public class PlatformKnowledgeBaseDisposeSessionEvent extends KnowledgeBaseEvent {
 
-    List<HistoryEvent> sessionHistory;
+    LinkedList<HistoryEvent> sessionHistory;
     private Date startDate;
 
-    public PlatformKnowledgeBaseDisposeSessionEvent(int eventID, Date dateEvent, int ruleBaseID,List<HistoryEvent> sessionHistory) {
+    public PlatformKnowledgeBaseDisposeSessionEvent(int eventID, Date dateEvent, int ruleBaseID, LinkedList<HistoryEvent> sessionHistory) {
         super(eventID, dateEvent, ruleBaseID);
         this.startDate = dateEvent;
         this.sessionHistory=sessionHistory;
@@ -42,7 +42,7 @@ public class PlatformKnowledgeBaseDisposeSessionEvent extends KnowledgeBaseEvent
         return startDate;
     }
 
-    public List<HistoryEvent> getSessionHistory() {
+    public LinkedList<HistoryEvent> getSessionHistory() {
         return sessionHistory;
     }
 

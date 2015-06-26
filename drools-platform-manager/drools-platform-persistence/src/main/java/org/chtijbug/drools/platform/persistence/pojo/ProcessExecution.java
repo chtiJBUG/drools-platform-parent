@@ -15,9 +15,8 @@
  */
 package org.chtijbug.drools.platform.persistence.pojo;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.LinkedList;
 
 
 
@@ -49,7 +48,7 @@ public class ProcessExecution {
     private String processId;
 
 
-    private List<RuleflowGroup> ruleflowGroups = new ArrayList<RuleflowGroup>();
+    private LinkedList<RuleflowGroup> ruleflowGroups = new LinkedList<RuleflowGroup>();
 
 
 
@@ -144,11 +143,11 @@ public class ProcessExecution {
         this.processId = processId;
     }
 
-    public List<RuleflowGroup> getRuleflowGroups() {
+    public LinkedList<RuleflowGroup> getRuleflowGroups() {
         return ruleflowGroups;
     }
 
-    public void setRuleflowGroups(List<RuleflowGroup> ruleflowGroups) {
+    public void setRuleflowGroups(LinkedList<RuleflowGroup> ruleflowGroups) {
         this.ruleflowGroups = ruleflowGroups;
     }
 

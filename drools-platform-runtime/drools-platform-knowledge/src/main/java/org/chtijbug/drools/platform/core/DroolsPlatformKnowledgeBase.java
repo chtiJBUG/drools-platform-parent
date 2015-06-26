@@ -18,6 +18,7 @@ package org.chtijbug.drools.platform.core;
 import org.chtijbug.drools.entity.history.DrlResourceFile;
 import org.chtijbug.drools.entity.history.GuvnorResourceFile;
 import org.chtijbug.drools.entity.history.HistoryContainer;
+import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.platform.core.droolslistener.PlatformHistoryListener;
 import org.chtijbug.drools.platform.core.droolslistener.RuleBaseReady;
 import org.chtijbug.drools.platform.core.droolslistener.SessionHistoryListener;
@@ -40,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -256,7 +258,9 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
     public void disposePlatformRuleBaseSession(RuleBaseSession session) throws DroolsChtijbugException {
         HistoryContainer historyContainer = session.getHistoryContainer();
         session.dispose();
-        PlatformKnowledgeBaseDisposeSessionEvent platformKnowledgeBaseDisposeSessionEvent = new PlatformKnowledgeBaseDisposeSessionEvent(-1, new Date(), this.ruleBaseID, historyContainer.getListHistoryEvent());
+        LinkedList<HistoryEvent> events = new LinkedList<>();
+        events.addAll(historyContainer.getListHistoryEvent());
+        PlatformKnowledgeBaseDisposeSessionEvent platformKnowledgeBaseDisposeSessionEvent = new PlatformKnowledgeBaseDisposeSessionEvent(-1, new Date(), this.ruleBaseID, events);
         //TODO optimize
         SendToJMSThread send = new SendToJMSThread(historyListener, platformKnowledgeBaseDisposeSessionEvent);
         executorService.submit(send);

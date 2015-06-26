@@ -25,7 +25,6 @@ import org.chtijbug.drools.platform.persistence.pojo.FactType;
 import org.chtijbug.drools.platform.persistence.pojo.RuleExecution;
 import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Component
@@ -34,7 +33,6 @@ public class UpdatedFactEventStrategy extends AbstractMemoryEventHandlerStrategy
 
 
     @Override
-    @Transactional
     public void handleMessageInternally(HistoryEvent historyEvent, SessionContext sessionContext) {
         UpdatedFactHistoryEvent updatedFactHistoryEvent = (UpdatedFactHistoryEvent) historyEvent;
         Fact factOldValue = new Fact();

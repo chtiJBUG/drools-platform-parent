@@ -35,8 +35,13 @@ public class RuleFlowExecutionRecord {
 
     private String processInstanceId;
 
+    @ManyToOne
+    @JoinColumn(name = "session_execution_record_id", referencedColumnName = "id")
+    private SessionExecutionRecord sessionExecutionRecord;
+
     @Type(type = "jsonb")
     private String jsonRuleFlowExecution;
+
     private String ruleFlowName;
 
     public RuleFlowExecutionRecord() {
@@ -73,5 +78,13 @@ public class RuleFlowExecutionRecord {
 
     public void setRuleFlowName(String ruleFlowName) {
         this.ruleFlowName = ruleFlowName;
+    }
+
+    public SessionExecutionRecord getSessionExecutionRecord() {
+        return sessionExecutionRecord;
+    }
+
+    public void setSessionExecutionRecord(SessionExecutionRecord sessionExecutionRecord) {
+        this.sessionExecutionRecord = sessionExecutionRecord;
     }
 }

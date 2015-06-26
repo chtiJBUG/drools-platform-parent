@@ -23,7 +23,6 @@ import org.chtijbug.drools.platform.backend.service.runtimeevent.SessionContext;
 import org.chtijbug.drools.platform.persistence.pojo.ProcessExecution;
 import org.chtijbug.drools.platform.persistence.pojo.ProcessExecutionStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Component
@@ -31,7 +30,6 @@ public class AfterProcessEndHistoryEventStrategy extends AbstractMemoryEventHand
     private static final Logger LOG = Logger.getLogger(AfterProcessEndHistoryEventStrategy.class);
 
     @Override
-    @Transactional
     public void handleMessageInternally(HistoryEvent historyEvent, SessionContext sessionContext) {
         AfterProcessEndHistoryEvent afterProcessEndHistoryEvent = (AfterProcessEndHistoryEvent) historyEvent;
 

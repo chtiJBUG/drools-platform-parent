@@ -15,11 +15,15 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class JSONHelper {
     private static Logger logger = getLogger(JSONHelper.class);
 
+    private static ObjectMapper mapper = null;
+
     public static String getJSONStringFromJavaObject(Object ojb) {
         String result = null;
         try {
             Writer strWriter = new StringWriter();
-            ObjectMapper mapper = new ObjectMapper();
+            if (mapper == null) {
+                mapper = new ObjectMapper();
+            }
             mapper.writeValue(strWriter, ojb);
             result = strWriter.toString();
         } catch (IOException e) {
@@ -33,7 +37,10 @@ public class JSONHelper {
         Object result = null;
         try {
             Writer strWriter = new StringWriter();
-            ObjectMapper mapper = new ObjectMapper();
+            if (mapper == null) {
+                mapper = new ObjectMapper();
+            }
+
             result = mapper.readValue(jsonObject.getBytes(), valueType);
         } catch (IOException e) {
             logger.error("private Object getObjectFromJSONString(String jsonObject,Class valueType)", e);

@@ -21,11 +21,8 @@ import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.rule.BeforeRuleFiredHistoryEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractMemoryEventHandlerStrategy;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.SessionContext;
-import org.chtijbug.drools.platform.persistence.RuleAssetRepository;
 import org.chtijbug.drools.platform.persistence.pojo.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Component
@@ -33,11 +30,9 @@ public class BeforeRuleFiredEventStrategy extends AbstractMemoryEventHandlerStra
     private static final Logger LOG = Logger.getLogger(BeforeRuleFiredEventStrategy.class);
 
 
-    @Autowired
-    private RuleAssetRepository ruleAssetRepository;
+
 
     @Override
-    @Transactional
     public void handleMessageInternally(HistoryEvent historyEvent, SessionContext sessionContext) {
         BeforeRuleFiredHistoryEvent beforeRuleFiredHistoryEvent = (BeforeRuleFiredHistoryEvent) historyEvent;
         RuleExecution ruleExecution = new RuleExecution();
@@ -60,15 +55,8 @@ public class BeforeRuleFiredEventStrategy extends AbstractMemoryEventHandlerStra
         ruleExecution.setStartDate(beforeRuleFiredHistoryEvent.getDateEvent());
         ruleExecution.setRuleName(beforeRuleFiredHistoryEvent.getRule().getRuleName());
         ruleExecution.setPackageName(beforeRuleFiredHistoryEvent.getRule().getRulePackageName());
-        RuleAsset ruleAsset = ruleAssetRepository.findByPackageNameAndAssetName(ruleExecution.getPackageName(), ruleExecution.getRuleName());
-        if (ruleAsset != null) {
-            ruleExecution.setRuleAsset(ruleAsset);
-        } else {
-            ruleAsset = new RuleAsset(ruleExecution.getPackageName(), ruleExecution.getRuleName());
-            ruleAssetRepository.save(ruleAsset);
-            ruleExecution.setRuleAsset(ruleAsset);
-        }
-
+        RuleAsset ruleAsset = new RuleAsset(ruleExecution.getPackageName(), ruleExecution.getRuleName());
+        ruleExecution.setRuleAsset(ruleAsset);
         ruleExecution.setStartEventID(beforeRuleFiredHistoryEvent.getEventID());
         for (DroolsFactObject droolsFactObject : beforeRuleFiredHistoryEvent.getWhenObjects()) {
             if (droolsFactObject != null) {
