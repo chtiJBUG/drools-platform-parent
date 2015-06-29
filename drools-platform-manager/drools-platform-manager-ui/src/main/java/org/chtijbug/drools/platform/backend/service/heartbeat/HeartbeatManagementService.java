@@ -20,7 +20,6 @@ import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.entity.RequestRuntimePlarform;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.EncodeException;
@@ -33,7 +32,7 @@ public class HeartbeatManagementService {
     @Autowired
     private WebSocketSessionManager webSocketSessionManager;
 
-    @Scheduled(cron = "0/20 * * * * *")
+    //@Scheduled(cron = "0/20 * * * * *")
     public void SynchronizeGuvnorCategories() {
 
 

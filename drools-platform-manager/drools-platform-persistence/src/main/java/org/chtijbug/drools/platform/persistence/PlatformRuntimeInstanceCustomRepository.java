@@ -17,11 +17,18 @@
 package org.chtijbug.drools.platform.persistence;
 
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeFilter;
+import org.chtijbug.drools.platform.persistence.pojo.RuleFlowExecutionRecord;
+import org.chtijbug.drools.platform.persistence.pojo.SessionExecutionRecord;
 
 import java.util.List;
 
 public interface PlatformRuntimeInstanceCustomRepository {
-    List findAllPlatformRuntimeInstanceByFilter(PlatformRuntimeFilter filter);
+    List<SessionExecutionRecord> findAllSessionExecutionByFilter(PlatformRuntimeFilter filter);
 
     Integer countAllPlatformRuntimeInstanceByFilter(PlatformRuntimeFilter filter);
+
+
+    List<Long> findAllRuleFlowGroupRecordId(long sessionDBid);
+
+    RuleFlowExecutionRecord findRuleFlowGroupRecordById(long ruleFlowgoudid);
 }

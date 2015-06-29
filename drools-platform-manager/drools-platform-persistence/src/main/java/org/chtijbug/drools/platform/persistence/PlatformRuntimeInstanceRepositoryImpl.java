@@ -16,10 +16,7 @@
 
 package org.chtijbug.drools.platform.persistence;
 
-import org.chtijbug.drools.platform.persistence.pojo.Page;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeFilter;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstanceStatus;
-import org.chtijbug.drools.platform.persistence.pojo.SessionExecution;
+import org.chtijbug.drools.platform.persistence.pojo.*;
 import org.slf4j.Logger;
 
 import javax.persistence.EntityManager;
@@ -42,8 +39,8 @@ public class PlatformRuntimeInstanceRepositoryImpl implements PlatformRuntimeIns
     private EntityManager entityManager;
 
     @Override
-    public List<SessionExecution> findAllPlatformRuntimeInstanceByFilter(PlatformRuntimeFilter filter) {
-        logger.debug(">> findAllPlatformRuntimeInstanceByFilter(filter={})", filter);
+    public List<SessionExecutionRecord> findAllSessionExecutionByFilter(PlatformRuntimeFilter filter) {
+        logger.debug(">> findAllSessionExecutionByFilter(filter={})", filter);
         try {
             String jpaQuery = SELECT_QUERY_PART + COMMON_QUERY_PART;
             //___ Append other filters
@@ -58,10 +55,39 @@ public class PlatformRuntimeInstanceRepositoryImpl implements PlatformRuntimeIns
             }
             return query.getResultList();
         } finally {
-            logger.debug("<< findAllPlatformRuntimeInstanceByFilter()");
+            logger.debug("<< findAllSessionExecutionByFilter()");
         }
     }
 
+
+    public List<Long> findAllRuleFlowGroupRecordId(long sessionDBid) {
+        logger.debug(">> findAllRuleFlowGroupRecordId(id={})", sessionDBid);
+        try {
+            String jpaQuery = "SELECT rfg.id from RuleFlowExecutionRecord rfg,SessionExecutionRecord r where rfg.sessionExecutionRecord = r and r.id= :sessionDBid";
+            //___ Append other filters
+            Query query = entityManager.createQuery(jpaQuery);
+            query.setParameter("sessionDBid", sessionDBid);
+
+            return query.getResultList();
+        } finally {
+            logger.debug("<< findAllRuleFlowGroupRecordId()");
+        }
+    }
+
+
+    public RuleFlowExecutionRecord findRuleFlowGroupRecordById(long ruleFlowGroudId) {
+        logger.debug(">> findRuleFlowGroupRecordById(id={})", ruleFlowGroudId);
+        try {
+            String jpaQuery = "SELECT rfg from RuleFlowExecutionRecord as rfg where rfg.id= :ruleFlowGroudId";
+            //___ Append other filters
+            Query query = entityManager.createQuery(jpaQuery);
+            query.setParameter("ruleFlowGroudId", ruleFlowGroudId);
+
+            return (RuleFlowExecutionRecord) query.getSingleResult();
+        } finally {
+            logger.debug("<< findRuleFlowGroupRecordById()");
+        }
+    }
 
     @Override
     public Integer countAllPlatformRuntimeInstanceByFilter(PlatformRuntimeFilter filter) {

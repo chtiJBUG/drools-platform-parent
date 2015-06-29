@@ -18,6 +18,11 @@ public class RuntimeDisplayCache {
 
 
     public void storeSession(Long id, SessionExecutionDetailsResource session) {
+        SessionExecutionDetailsResource existing = sessionsCache.get(id);
+        if (existing != null) {
+            sessionsCache.remove(id);
+            existing = null;
+        }
         sessionsCache.put(id, session);
     }
 

@@ -15,9 +15,8 @@
  */
 package org.chtijbug.drools.platform.persistence.pojo;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.LinkedList;
 
 
 
@@ -27,7 +26,7 @@ public class RuleflowGroup {
     private String ruleflowGroup;
 
 
-    private List<RuleExecution> ruleExecutionList = new ArrayList<RuleExecution>();
+    private LinkedList<RuleExecution> ruleExecutionList = new LinkedList<>();
 
 
     private Date startDate;
@@ -52,12 +51,11 @@ public class RuleflowGroup {
     }
 
 
-
-    public List<RuleExecution> getRuleExecutionList() {
+    public LinkedList<RuleExecution> getRuleExecutionList() {
         return ruleExecutionList;
     }
 
-    public void setRuleExecutionList(List<RuleExecution> ruleExecutionList) {
+    public void setRuleExecutionList(LinkedList<RuleExecution> ruleExecutionList) {
         this.ruleExecutionList = ruleExecutionList;
     }
 
