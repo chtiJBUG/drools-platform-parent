@@ -18,7 +18,6 @@ package org.chtijbug.drools.platform.core;
 import org.chtijbug.drools.entity.DroolsFactObject;
 import org.chtijbug.drools.entity.DroolsRuleObject;
 import org.chtijbug.drools.entity.history.HistoryContainer;
-import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServerInstance;
 import org.chtijbug.drools.platform.entity.JMXInfo;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
@@ -32,9 +31,7 @@ import org.drools.ObjectFilter;
 import org.drools.runtime.process.ProcessInstance;
 import org.drools.runtime.process.WorkItemHandler;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 
@@ -208,16 +205,6 @@ public class DroolsPlatformSession implements RuleBaseSession {
     @Override
     public ProcessInstance startProcess(String processName, Map<String, Object> vars) {
         return this.ruleBaseStatefulSession.startProcess(processName, vars);
-    }
-
-    @Override
-    public boolean isDisableJsonObjecttext() {
-        return this.ruleBaseStatefulSession.isDisableJsonObjecttext();
-    }
-
-    @Override
-    public void setDisableJsonObjecttext(boolean disableJsonObjecttext) {
-        this.ruleBaseStatefulSession.setDisableJsonObjecttext(disableJsonObjecttext);
     }
 
     @Override
