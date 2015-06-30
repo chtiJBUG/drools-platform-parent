@@ -18,6 +18,7 @@ package org.chtijbug.drools.platform.web;
 import com.carrotsearch.sizeof.RamUsageEstimator;
 import com.google.common.base.Function;
 import com.google.common.base.Predicates;
+import com.google.common.cache.CacheLoader;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketClient;
@@ -56,7 +57,7 @@ import java.util.Queue;
 
 @Controller
 @RequestMapping(value = "/runtime")
-public class RuntimeResource {
+public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsResource> {
     private static Logger logger = LoggerFactory.getLogger(RuntimeResource.class);
 
     @Autowired
@@ -200,94 +201,8 @@ public class RuntimeResource {
         logger.debug(">> findSessionExecutionDetails(sessionId= {})", Id);
         try {
             SessionExecutionDetailsResource executionDetailsResource = runtimeDisplayCache.getView(Id);
-            SessionExecutionDetailsResource viewExecution;
-            if (executionDetailsResource == null) {
-                //____ Data from Database
-                SessionExecutionRecord sessionExecutionRecord = sessionExecutionRepository.findOne(Id);
-                SessionExecution sessionExecution = null;
-                List<Long> listRuleFlows = platformRuntimeInstanceRepository.findAllRuleFlowGroupRecordId(Id);
 
-                if (sessionExecutionRecord.getJsonSessionExecution() != null) {
-                    sessionExecution = (SessionExecution) JSONHelper.getObjectFromJSONString(sessionExecutionRecord.getJsonSessionExecution(), SessionExecution.class);
-                    long sizeOf = RamUsageEstimator.sizeOf(sessionExecution);
-                    logger.info("sizeof sessionExecution:{}", sizeOf);
-                }
-                sessionExecutionRecord = null;
-                // final SessionExecution sessionExecution = sessionExecutionRepository.findDetailsBySessionId(sessionID);
-                executionDetailsResource = new SessionExecutionDetailsResource();
-                ProcessExecution processExecution = null;
-                ProcessDetails processDetails = new ProcessDetails();
-                if (sessionExecution != null) {
-                    List<Fact> inputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.INPUTDATA));
-                    List<Fact> outputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.OUTPUTDATA));
-                    for (Fact inputFact : inputFactList) {
-                        executionDetailsResource.setInputObject(inputFact.getJsonFact());
-                    }
-                    for (Fact outputFact : outputFactList) {
-                        executionDetailsResource.setOutputObject(outputFact.getJsonFact());
-                    }
-                }
-
-                if (sessionExecution != null && sessionExecution.getProcessExecutions().size() != 0) {
-                    processExecution = sessionExecution.getProcessExecutions().get(0);
-                    processDetails.setProcessName(processExecution.getProcessName());
-
-                    if (processExecution.getProcessVersion() != null) {
-                        processDetails.setProcessVersion(processExecution.getProcessVersion());
-                    } else {
-                        processDetails.setProcessVersion("");
-                    }
-
-                    processDetails.setProcessExecutionStatus(processExecution.getProcessExecutionStatus().toString());
-                    processDetails.setProcessType(processExecution.getProcessType());
-
-                    executionDetailsResource.setProcessDetails(processDetails);
-                    for (Long idrfg : listRuleFlows) {
-                        RuleFlowExecutionRecord ruleFlowExecutionRecord = platformRuntimeInstanceRepository.findRuleFlowGroupRecordById(idrfg);
-                        logger.info("lenghth jsonruleFlowExecutionRecord:{}", ruleFlowExecutionRecord.getJsonRuleFlowExecution().length());
-                        long sizeOf = RamUsageEstimator.sizeOf(ruleFlowExecutionRecord.getJsonRuleFlowExecution());
-                        logger.info("sizeof jsonruleFlowExecutionRecord:{}", sizeOf);
-                        RuleflowGroup ruleFlowGroup = (RuleflowGroup) JSONHelper.getObjectFromJSONString(ruleFlowExecutionRecord.getJsonRuleFlowExecution(), RuleflowGroup.class);
-                        ruleFlowExecutionRecord = null;
-                        sizeOf = RamUsageEstimator.sizeOf(ruleFlowGroup);
-                        logger.info("sizeof ruleFlowGroup:{}", sizeOf);
-                        RuleFlowGroupDetails ruleFlowGroupDetails = new RuleFlowGroupDetails();
-                        ruleFlowGroupDetails.setRuleflowGroup(ruleFlowGroup.getRuleflowGroup());
-                        //___ Add rule execution details list
-                        Queue<RuleExecution> executionQueue = ruleFlowGroup.getRuleExecutionList();
-                        while (!executionQueue.isEmpty()) {
-                            RuleExecution ruleExecution = executionQueue.poll();
-                            RuleExecutionDetails ruleExecutionDetails = new RuleExecutionDetails();
-                            ruleExecutionDetails.setPackageName(ruleExecution.getPackageName());
-                            ruleExecutionDetails.setRuleName(ruleExecution.getRuleName());
-                            ruleExecutionDetails.setWhenFacts(ruleExecution.getWhenFacts());
-                            ruleExecutionDetails.setThenFacts(ruleExecution.getThenFacts());
-
-                            RuleAssetDetails ruleAssetDetails = new RuleAssetDetails();
-                            ruleAssetDetails.setAssetName(ruleExecution.getRuleAsset().getAssetName());
-                            ruleAssetDetails.setVersionNumber(ruleExecution.getRuleAsset().getVersionNumber());
-                            ruleAssetDetails.setRuleAssetCategory(ruleExecution.getRuleAsset().getRuleAssetCategory());
-
-                            ruleExecutionDetails.setRuleAsset(ruleAssetDetails);
-
-                            ruleFlowGroupDetails.addRuleExecution(ruleExecutionDetails); //Ajout de la ruleExecutionDetails dans la liste
-                            ruleExecution = null;
-                        }
-                        sizeOf = RamUsageEstimator.sizeOf(ruleFlowGroupDetails);
-                        logger.info("sizeof ruleFlowGroupDetails:{}", sizeOf);
-                        executionDetailsResource.addRuleFlowGroup(ruleFlowGroupDetails);
-                    }
-
-
-                }
-                long sizeOf = RamUsageEstimator.sizeOf(executionDetailsResource);
-                logger.info("sizeof executionDetailsResource:{}", sizeOf);
-                runtimeDisplayCache.storeSession(Id, executionDetailsResource);
-                viewExecution = runtimeDisplayCache.getView(Id);
-            } else {
-                viewExecution = runtimeDisplayCache.getView(Id);
-            }
-            return viewExecution;
+            return executionDetailsResource;
         } catch (Exception e) {
             DroolsChtijbugException ee = new DroolsChtijbugException("", "", e);
             logger.error("   public SessionExecutionDetailsResource findSessionExecutionDetails(@PathVariable Long Id) {", ee);
@@ -461,4 +376,101 @@ public class RuntimeResource {
         }
     }
 
+    @Override
+    public SessionExecutionDetailsResource load(Long Id) {
+
+        logger.debug(">> SessionExecutionDetailsResource(sessionId= {})", Id);
+        try {
+            SessionExecutionDetailsResource executionDetailsResource;
+            //____ Data from Database
+            SessionExecutionRecord sessionExecutionRecord = sessionExecutionRepository.findOne(Id);
+            SessionExecution sessionExecution = null;
+            List<Long> listRuleFlows = platformRuntimeInstanceRepository.findAllRuleFlowGroupRecordId(Id);
+
+            if (sessionExecutionRecord.getJsonSessionExecution() != null) {
+                sessionExecution = (SessionExecution) JSONHelper.getObjectFromJSONString(sessionExecutionRecord.getJsonSessionExecution(), SessionExecution.class);
+                long sizeOf = RamUsageEstimator.sizeOf(sessionExecution);
+                logger.info("sizeof sessionExecution:{}", sizeOf);
+            }
+            sessionExecutionRecord = null;
+            // final SessionExecution sessionExecution = sessionExecutionRepository.findDetailsBySessionId(sessionID);
+            executionDetailsResource = new SessionExecutionDetailsResource();
+            ProcessExecution processExecution = null;
+            ProcessDetails processDetails = new ProcessDetails();
+            if (sessionExecution != null) {
+                List<Fact> inputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.INPUTDATA));
+                List<Fact> outputFactList = Lists.newArrayList(sessionExecution.getFactsByType(FactType.OUTPUTDATA));
+                for (Fact inputFact : inputFactList) {
+                    executionDetailsResource.setInputObject(inputFact.getJsonFact());
+                }
+                for (Fact outputFact : outputFactList) {
+                    executionDetailsResource.setOutputObject(outputFact.getJsonFact());
+                }
+            }
+
+            if (sessionExecution != null && sessionExecution.getProcessExecutions().size() != 0) {
+                processExecution = sessionExecution.getProcessExecutions().get(0);
+                processDetails.setProcessName(processExecution.getProcessName());
+
+                if (processExecution.getProcessVersion() != null) {
+                    processDetails.setProcessVersion(processExecution.getProcessVersion());
+                } else {
+                    processDetails.setProcessVersion("");
+                }
+
+                processDetails.setProcessExecutionStatus(processExecution.getProcessExecutionStatus().toString());
+                processDetails.setProcessType(processExecution.getProcessType());
+
+                executionDetailsResource.setProcessDetails(processDetails);
+                for (Long idrfg : listRuleFlows) {
+                    RuleFlowExecutionRecord ruleFlowExecutionRecord = platformRuntimeInstanceRepository.findRuleFlowGroupRecordById(idrfg);
+                    logger.info("lenghth jsonruleFlowExecutionRecord:{}", ruleFlowExecutionRecord.getJsonRuleFlowExecution().length());
+                    long sizeOf = RamUsageEstimator.sizeOf(ruleFlowExecutionRecord.getJsonRuleFlowExecution());
+                    logger.info("sizeof jsonruleFlowExecutionRecord:{}", sizeOf);
+                    RuleflowGroup ruleFlowGroup = (RuleflowGroup) JSONHelper.getObjectFromJSONString(ruleFlowExecutionRecord.getJsonRuleFlowExecution(), RuleflowGroup.class);
+                    ruleFlowExecutionRecord = null;
+                    sizeOf = RamUsageEstimator.sizeOf(ruleFlowGroup);
+                    logger.info("sizeof ruleFlowGroup:{}", sizeOf);
+                    RuleFlowGroupDetails ruleFlowGroupDetails = new RuleFlowGroupDetails();
+                    ruleFlowGroupDetails.setRuleflowGroup(ruleFlowGroup.getRuleflowGroup());
+                    //___ Add rule execution details list
+                    Queue<RuleExecution> executionQueue = ruleFlowGroup.getRuleExecutionList();
+                    while (!executionQueue.isEmpty()) {
+                        RuleExecution ruleExecution = executionQueue.poll();
+                        RuleExecutionDetails ruleExecutionDetails = new RuleExecutionDetails();
+                        ruleExecutionDetails.setPackageName(ruleExecution.getPackageName());
+                        ruleExecutionDetails.setRuleName(ruleExecution.getRuleName());
+                        ruleExecutionDetails.setWhenFacts(ruleExecution.getWhenFacts());
+                        ruleExecutionDetails.setThenFacts(ruleExecution.getThenFacts());
+
+                        RuleAssetDetails ruleAssetDetails = new RuleAssetDetails();
+                        ruleAssetDetails.setAssetName(ruleExecution.getRuleAsset().getAssetName());
+                        ruleAssetDetails.setVersionNumber(ruleExecution.getRuleAsset().getVersionNumber());
+                        ruleAssetDetails.setRuleAssetCategory(ruleExecution.getRuleAsset().getRuleAssetCategory());
+
+                        ruleExecutionDetails.setRuleAsset(ruleAssetDetails);
+
+                        ruleFlowGroupDetails.addRuleExecution(ruleExecutionDetails); //Ajout de la ruleExecutionDetails dans la liste
+                        ruleExecution = null;
+                    }
+                    sizeOf = RamUsageEstimator.sizeOf(ruleFlowGroupDetails);
+                    logger.info("sizeof ruleFlowGroupDetails:{}", sizeOf);
+                    executionDetailsResource.addRuleFlowGroup(ruleFlowGroupDetails);
+                }
+
+
+            }
+            long sizeOf = RamUsageEstimator.sizeOf(executionDetailsResource);
+            logger.info("sizeof executionDetailsResource:{}", sizeOf);
+
+
+            return executionDetailsResource;
+        } catch (Exception e) {
+            DroolsChtijbugException ee = new DroolsChtijbugException("", "", e);
+            logger.error("   public SessionExecutionDetailsResource findSessionExecutionDetails(@PathVariable Long Id) {", ee);
+        } finally {
+            logger.debug("<< SessionExecutionDetailsResource()");
+        }
+        return null;
+    }
 }
