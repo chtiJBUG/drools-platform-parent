@@ -18,7 +18,6 @@ package org.chtijbug.drools.platform.runtime.servlet;
 import com.google.common.base.Throwables;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBaseRuntime;
-import org.chtijbug.drools.platform.core.DroolsPlatformSession;
 import org.chtijbug.drools.platform.runtime.servlet.historylistener.ServletJmsStorageHistoryListener;
 import org.chtijbug.drools.platform.runtime.servlet.websocket.SpringWebSocketServer;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
@@ -213,6 +212,10 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
         return this.ruleBaseID;
     }
 
+    public void setRuleBaseID(Integer ruleBaseID) {
+        this.ruleBaseID = ruleBaseID;
+    }
+
     @Override
     public void dispose() {
         ruleBasePackage.dispose();
@@ -233,12 +236,18 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
         this.ruleBasePackage.disposePlatformRuleBaseSession(session);
     }
 
-
-
+    @Override
+    public void sendPlatformKnowledgeBaseInitialConnectionEventToServer() throws DroolsChtijbugException {
+        this.ruleBasePackage.sendPlatformKnowledgeBaseInitialConnectionEventToServer();
+    }
 
     @Override
     public List<DroolsResource> getDroolsResources() {
         return this.droolsResources;
+    }
+
+    public void setDroolsResources(List<DroolsResource> droolsResources) {
+        this.droolsResources = droolsResources;
     }
 
     @Override
@@ -251,38 +260,21 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
         return ruleBasePackage.getGuvnorUsername();
     }
 
-
     @Override
     public String getGuvnorPassword() {
         return ruleBasePackage.getGuvnorPassword();
-    }
-
-    public void setRuleBaseID(Integer ruleBaseID) {
-        this.ruleBaseID = ruleBaseID;
-    }
-
-    public void setWebSocketHostname(String webSocketHostname) {
-        this.webSocketHostname = webSocketHostname;
-    }
-
-    public void setWebSocketPort(int webSocketPort) {
-        this.webSocketPort = webSocketPort;
     }
 
     public void setEndPoint(String endPoint) {
         this.webSocketEndPoint = endPoint;
     }
 
-    public void setPlatformServer(String platformServer) {
-        this.platformServer = platformServer;
+    public Integer getJmsPort() {
+        return jmsPort;
     }
 
     public void setJmsPort(Integer jmsPort) {
         this.jmsPort = jmsPort;
-    }
-
-    public Integer getJmsPort() {
-        return jmsPort;
     }
 
     public String getJmsServer() {
@@ -293,16 +285,20 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
         this.jmsServer = jmsServer;
     }
 
-    public void setDroolsResources(List<DroolsResource> droolsResources) {
-        this.droolsResources = droolsResources;
-    }
-
     public String getWebSocketHostname() {
         return webSocketHostname;
     }
 
+    public void setWebSocketHostname(String webSocketHostname) {
+        this.webSocketHostname = webSocketHostname;
+    }
+
     public int getWebSocketPort() {
         return webSocketPort;
+    }
+
+    public void setWebSocketPort(int webSocketPort) {
+        this.webSocketPort = webSocketPort;
     }
 
     public String getWebSocketEndPoint() {
@@ -311,5 +307,9 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
 
     public String getPlatformServer() {
         return platformServer;
+    }
+
+    public void setPlatformServer(String platformServer) {
+        this.platformServer = platformServer;
     }
 }

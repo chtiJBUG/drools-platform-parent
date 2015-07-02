@@ -24,6 +24,7 @@ import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.platform.runtime.servlet.DroolsPlatformKnowledgeBaseJavaEE;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.resource.DroolsResource;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -42,6 +43,9 @@ public class SpringWebSocketServer extends TextWebSocketHandler implements WebSo
 
     private WebSocketSession serverSession;
 
+
+    private boolean initialConnection = false;
+
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
         super.handleTransportError(session, exception);
@@ -51,6 +55,15 @@ public class SpringWebSocketServer extends TextWebSocketHandler implements WebSo
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 
         this.serverSession = session;
+        initialConnection = true;
+
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        if (initialConnection = true) {
+            this.platformKnowledgeBaseJavaEE.sendPlatformKnowledgeBaseInitialConnectionEventToServer();
+        }
     }
 
     @Override

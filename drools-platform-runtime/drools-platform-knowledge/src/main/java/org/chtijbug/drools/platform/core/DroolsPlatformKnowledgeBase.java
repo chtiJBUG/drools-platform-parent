@@ -122,6 +122,12 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
         if (javaDialect != null) {
             ruleBasePackage.setJavaDialect(this.javaDialect);
         }
+        this.sendPlatformKnowledgeBaseInitialConnectionEventToServer();
+        isReady = false;
+        logger.debug("<<createPackageBasePackage", ruleBasePackage);
+    }
+
+    public void sendPlatformKnowledgeBaseInitialConnectionEventToServer() throws DroolsChtijbugException {
         PlatformKnowledgeBaseInitialConnectionEvent platformKnowledgeBaseInitialConnectionEvent = new PlatformKnowledgeBaseInitialConnectionEvent(-1, new Date(), this.ruleBaseID);
         platformKnowledgeBaseInitialConnectionEvent.setRuleBaseID(this.ruleBaseID);
         platformKnowledgeBaseInitialConnectionEvent.setSessionId(-1);
@@ -154,8 +160,6 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
         }
 
         historyListener.fireEvent(platformKnowledgeBaseInitialConnectionEvent);
-        isReady = false;
-        logger.debug("<<createPackageBasePackage", ruleBasePackage);
     }
 
 

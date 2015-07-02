@@ -18,7 +18,6 @@ package org.chtijbug.drools.platform.runtime.javase;
 import com.google.common.base.Throwables;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBaseRuntime;
-import org.chtijbug.drools.platform.core.DroolsPlatformSession;
 import org.chtijbug.drools.platform.core.websocket.WebSocketServerInstance;
 import org.chtijbug.drools.platform.runtime.javase.historylistener.JmsStorageHistoryListener;
 import org.chtijbug.drools.platform.runtime.javase.websocket.WebSocketServer;
@@ -178,6 +177,10 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
         return this.ruleBaseID;
     }
 
+    public void setRuleBaseID(Integer ruleBaseID) {
+        this.ruleBaseID = ruleBaseID;
+    }
+
     @Override
     public void dispose() {
         ruleBasePackage.dispose();
@@ -198,10 +201,18 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
         this.ruleBasePackage.disposePlatformRuleBaseSession(session);
     }
 
+    @Override
+    public void sendPlatformKnowledgeBaseInitialConnectionEventToServer() throws DroolsChtijbugException {
+        this.ruleBasePackage.sendPlatformKnowledgeBaseInitialConnectionEventToServer();
+    }
 
     @Override
     public List<DroolsResource> getDroolsResources() {
         return this.droolsResources;
+    }
+
+    public void setDroolsResources(List<DroolsResource> droolsResources) {
+        this.droolsResources = droolsResources;
     }
 
     @Override
@@ -214,14 +225,9 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
         return ruleBasePackage.getGuvnorUsername();
     }
 
-
     @Override
     public String getGuvnorPassword() {
         return ruleBasePackage.getGuvnorPassword();
-    }
-
-    public void setRuleBaseID(Integer ruleBaseID) {
-        this.ruleBaseID = ruleBaseID;
     }
 
     public void setWebSocketHostname(String webSocketHostname) {
@@ -238,10 +244,6 @@ public class DroolsPlatformKnowledgeBaseJavaSE implements DroolsPlatformKnowledg
 
     public void setPlatformPort(Integer platformPort) {
         this.platformPort = platformPort;
-    }
-
-    public void setDroolsResources(List<DroolsResource> droolsResources) {
-        this.droolsResources = droolsResources;
     }
 
     public ClassLoader getProjectClassLoader() {
