@@ -80,13 +80,13 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
         PlatformKnowledgeBaseInitialConnectionEvent platformKnowledgeBaseInitialConnectionEvent = (PlatformKnowledgeBaseInitialConnectionEvent) historyEvent;
         int ruleBaseId = platformKnowledgeBaseInitialConnectionEvent.getRuleBaseID();
         WebSocketClient existingWebSocketClient1 = webSocketSessionManager.getWebSocketClient(ruleBaseId);
-        if (existingWebSocketClient1 == null || webSocketSessionManager.isAlive(ruleBaseId) == false) {
-            if (existingWebSocketClient1 != null) {
+
+        if (existingWebSocketClient1 == null || existingWebSocketClient1.getSession().isOpen() == false) {
+            if (existingWebSocketClient1 != null && existingWebSocketClient1.getSession() != null && existingWebSocketClient1.getSession().isOpen() == false) {
                 try {
-                    existingWebSocketClient1.closeSession();
                     webSocketSessionManager.removeClient(ruleBaseId);
                 } catch (IOException e) {
-                    LOG.debug("could not close session", e);
+                    LOG.error(" handleMessage(PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent) removeClient", e);
                 }
             }
             WebSocketClient webSocketClient = null;
