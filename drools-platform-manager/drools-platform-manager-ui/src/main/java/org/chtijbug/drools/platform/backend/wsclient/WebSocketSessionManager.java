@@ -59,10 +59,6 @@ public class WebSocketSessionManager {
     }
 
     public void removeClient(Integer ruleBaseID) throws IOException {
-        WebSocketClient webSocketClient = this.webSocketClientList.get(ruleBaseID);
-        if (webSocketClient != null) {
-            webSocketClient.closeSession();
-        }
         this.webSocketClientList.remove(ruleBaseID);
     }
 
