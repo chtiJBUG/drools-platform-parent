@@ -212,7 +212,7 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
         return this.ruleBaseID;
     }
 
-    public void setRuleBaseID(Integer ruleBaseID) {
+    public void setRuleBaseID(int ruleBaseID) {
         this.ruleBaseID = ruleBaseID;
     }
 
