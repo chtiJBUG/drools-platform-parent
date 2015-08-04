@@ -16,6 +16,7 @@
 package org.chtijbug.drools.platform.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.platform.entity.coder.JSONCoder;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 
@@ -31,19 +32,14 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlatformManagementKnowledgeBean {
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class PlatformManagementKnowledgeBeanCode extends JSONCoder<PlatformManagementKnowledgeBean> {
-
-        public PlatformManagementKnowledgeBeanCode() {
-            set_type(PlatformManagementKnowledgeBean.class);
-        }
-    }
-
     private Heartbeat heartbeat;
-
-
+    private HistoryEvent historyEvent;
     private boolean isAlive = false;
-
+    private RequestRuntimePlarform requestRuntimePlarform;
+    private RequestStatus requestStatus;
+    private JMXInfo jmxInfo;
+    private ArrayList<PlatformResourceFile> resourceFileList = new ArrayList<>();
+    private DroolsChtijbugException droolsChtijbugException;
 
     public boolean isAlive() {
         return isAlive;
@@ -53,23 +49,20 @@ public class PlatformManagementKnowledgeBean {
         this.isAlive = isAlive;
     }
 
-    private RequestRuntimePlarform requestRuntimePlarform;
-
-
-    private RequestStatus requestStatus;
-
-    private JMXInfo jmxInfo;
-
-    private ArrayList<PlatformResourceFile> resourceFileList = new ArrayList<>();
-
-    private DroolsChtijbugException droolsChtijbugException;
-
     public RequestRuntimePlarform getRequestRuntimePlarform() {
         return requestRuntimePlarform;
     }
 
     public void setRequestRuntimePlarform(RequestRuntimePlarform requestRuntimePlarform) {
         this.requestRuntimePlarform = requestRuntimePlarform;
+    }
+
+    public HistoryEvent getHistoryEvent() {
+        return historyEvent;
+    }
+
+    public void setHistoryEvent(HistoryEvent historyEvent) {
+        this.historyEvent = historyEvent;
     }
 
     public RequestStatus getRequestStatus() {
@@ -87,7 +80,6 @@ public class PlatformManagementKnowledgeBean {
     public void setJmxInfo(JMXInfo jmxInfo) {
         this.jmxInfo = jmxInfo;
     }
-
 
     public DroolsChtijbugException getDroolsChtijbugException() {
         return droolsChtijbugException;
@@ -131,5 +123,13 @@ public class PlatformManagementKnowledgeBean {
         sb.append(", droolsChtijbugException=").append(droolsChtijbugException);
         sb.append('}');
         return sb.toString();
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class PlatformManagementKnowledgeBeanCode extends JSONCoder<PlatformManagementKnowledgeBean> {
+
+        public PlatformManagementKnowledgeBeanCode() {
+            set_type(PlatformManagementKnowledgeBean.class);
+        }
     }
 }

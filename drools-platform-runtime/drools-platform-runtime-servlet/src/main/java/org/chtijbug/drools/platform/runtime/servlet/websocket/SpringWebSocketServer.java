@@ -40,9 +40,7 @@ public class SpringWebSocketServer extends TextWebSocketHandler implements WebSo
     private static final Logger LOG = Logger.getLogger(SpringWebSocketServer.class);
 
     DroolsPlatformKnowledgeBaseJavaEE platformKnowledgeBaseJavaEE;
-
     private WebSocketSession serverSession;
-
 
     private boolean initialConnection = false;
 
