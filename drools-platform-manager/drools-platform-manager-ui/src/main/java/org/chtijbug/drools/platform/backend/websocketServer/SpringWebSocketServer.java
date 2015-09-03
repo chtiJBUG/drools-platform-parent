@@ -21,10 +21,12 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.platform.backend.AppContext;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.MessageHandlerResolver;
+import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
 import org.chtijbug.drools.platform.backend.wsclient.listener.*;
 import org.chtijbug.drools.platform.entity.Heartbeat;
 import org.chtijbug.drools.platform.entity.JMXInfo;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
+import org.chtijbug.drools.platform.entity.event.PlatformKnowledgeBaseInitialConnectionEvent;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepository;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.RealTimeParametersRepository;
@@ -32,7 +34,6 @@ import org.chtijbug.drools.platform.persistence.SessionExecutionRecordRepository
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeDefinition;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.RealTimeParameters;
-import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -43,23 +44,23 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import javax.websocket.EncodeException;
 import javax.websocket.Session;
-import java.io.IOException;
 import java.io.StringReader;
-import java.io.StringWriter;
 
 public class SpringWebSocketServer extends TextWebSocketHandler {
 
 
     private final static org.slf4j.Logger logger = LoggerFactory.getLogger(SpringWebSocketServer.class);
     private static final Logger LOG = Logger.getLogger(SpringWebSocketServer.class);
+
     final private Heartbeat heartbeat = new Heartbeat();
-    private WebSocketSession serverSession;
+
+
     @Value(value = "${knowledge.numberRetriesConnectionToRuntime}")
     private int numberRetries;
 
     private PlatformRuntimeInstance platformRuntimeInstance;
+
     private int timeToWaitBetweenTwoRetries;
     private Session session;
     private PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
@@ -72,6 +73,7 @@ public class SpringWebSocketServer extends TextWebSocketHandler {
     private LoadNewRuleVersionListener loadNewRuleVersionListener;
     private VersionInfosListener versionInfosListener;
     private MessageHandlerResolver messageHandlerResolver;
+    private WebSocketSessionManager webSocketSessionManager;
     @Value(value = "${jms.port}")
     private Integer jmsPort = 61616;
     @Value(value = "${jms.server}")
@@ -92,7 +94,7 @@ public class SpringWebSocketServer extends TextWebSocketHandler {
         this.versionInfosListener = applicationContext.getBean(VersionInfosListener.class);
         this.platformRuntimeDefinitionRepository = applicationContext.getBean(PlatformRuntimeDefinitionRepository.class);
         this.messageHandlerResolver = applicationContext.getBean(MessageHandlerResolver.class);
-
+        this.webSocketSessionManager = applicationContext.getBean(WebSocketSessionManager.class);
     }
 
     @Override
@@ -103,7 +105,6 @@ public class SpringWebSocketServer extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 
-        this.serverSession = session;
         String url = "tcp://" + this.jmsServer + ":" + this.jmsPort;
         ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(url);
         CachingConnectionFactory cacheFactory = new CachingConnectionFactory(factory);
@@ -114,7 +115,7 @@ public class SpringWebSocketServer extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-
+        webSocketSessionManager.closeSession(session);
     }
 
     @Override
@@ -125,6 +126,9 @@ public class SpringWebSocketServer extends TextWebSocketHandler {
         switch (bean.getRequestRuntimePlarform()) {
             case historyEvent:
                 HistoryEvent historyEvent = bean.getHistoryEvent();
+                if (historyEvent instanceof PlatformKnowledgeBaseInitialConnectionEvent) {
+                    webSocketSessionManager.AddClient(historyEvent.getRuleBaseID(), session);
+                }
                 this.jmsTemplate.send(platformQueueName, new PlatformMessageCreator(historyEvent));
                 break;
             case jmxInfos:
@@ -163,31 +167,7 @@ public class SpringWebSocketServer extends TextWebSocketHandler {
                 platformRuntimeDefinitionRepository.save(platformRuntimeDefinitionloadNewRuleVersion);
                 loadNewRuleVersionListener.messageReceived(platformRuntimeInstance.getRuleBaseID(), bean.getRequestStatus(), bean.getResourceFileList());
                 break;
-
-
-        }
-
-
-    }
-
-
-    public void sendMessage(final PlatformManagementKnowledgeBean platformManagementKnowledgeBean) throws DroolsChtijbugException {
-        PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode stream = new PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode();
-        if (serverSession != null && serverSession.isOpen()) {
-            StringWriter writer = new StringWriter();
-            try {
-                stream.encode(platformManagementKnowledgeBean, writer);
-                TextMessage response = new TextMessage(writer.toString());
-                LOG.info(">> Server : " + response);
-                serverSession.sendMessage(response);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (EncodeException e) {
-                e.printStackTrace();
-            }
-
         }
     }
-
 
 }

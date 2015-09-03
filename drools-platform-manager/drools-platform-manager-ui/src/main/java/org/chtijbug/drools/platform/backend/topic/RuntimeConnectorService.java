@@ -17,7 +17,6 @@ package org.chtijbug.drools.platform.backend.topic;
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.platform.backend.topic.pojo.*;
-import org.chtijbug.drools.platform.backend.wsclient.WebSocketClient;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
 import org.chtijbug.drools.platform.backend.wsclient.listener.*;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
@@ -46,7 +45,7 @@ import java.util.concurrent.Semaphore;
 @Controller
 public class RuntimeConnectorService implements HeartBeatListner, IsAliveListener, JMXInfosListener, LoadNewRuleVersionListener, VersionInfosListener {
 
-    private static final Logger LOG = Logger.getLogger(WebSocketClient.class);
+    private static final Logger LOG = Logger.getLogger(RuntimeConnectorService.class);
 
     @Autowired
     private WebSocketSessionManager webSocketSessionManager;
@@ -66,9 +65,9 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
 
         Integer ruleBaseID = deploymentRequest.getRuleBaseID();
         String packageVersion = deploymentRequest.getPackageVersion();
-        WebSocketClient clientSocket = webSocketSessionManager.getWebSocketClient(ruleBaseID);
+        Boolean clientSocket = webSocketSessionManager.exists(ruleBaseID);
 
-        if (clientSocket == null) {
+        if (clientSocket == false) {
             LOG.info("Could Not Connect to ruleBaseID=" + ruleBaseID + " no socket available");
             throw new DroolsChtijbugException("updateRulePackage-unknowrulebaseid", ruleBaseID.toString(), null);
         }
@@ -95,7 +94,7 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
 
         try {
 
-            clientSocket.sendMessage(platformManagementKnowledgeBean);
+            webSocketSessionManager.sendMessage(ruleBaseID, platformManagementKnowledgeBean);
             guvnorRessource.setGuvnor_packageVersion(packageVersion);
             platformRuntimeDefinitionRepository.save(instance);
         } catch (IOException | EncodeException e) {

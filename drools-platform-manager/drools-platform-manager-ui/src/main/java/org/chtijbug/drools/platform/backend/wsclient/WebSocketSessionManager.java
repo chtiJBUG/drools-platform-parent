@@ -16,14 +16,15 @@
 package org.chtijbug.drools.platform.backend.wsclient;
 
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.platform.entity.Heartbeat;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
-import org.springframework.beans.factory.annotation.Value;
+import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
 import javax.websocket.DeploymentException;
+import javax.websocket.EncodeException;
 import java.io.IOException;
-import java.util.Date;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -34,24 +35,30 @@ public class WebSocketSessionManager {
 
     private static final Logger LOG = Logger.getLogger(WebSocketSessionManager.class);
 
-    private Map<Integer, WebSocketClient> webSocketClientList = new HashMap<>();
-
-    @Value(value = "${knowledge.numberRetriesConnectionToRuntime}")
-    private int numberRetries;
+    private Map<Integer, WebSocketSession> webSocketClientList = new HashMap<>();
 
 
-    @Value(value = "${knowledge.timeToWaitBetweenTwoRetries}")
-    private int timeToWaitBetweenTwoRetries;
+    public void AddClient(Integer ruleBaseID, WebSocketSession session) throws DeploymentException, IOException {
 
-    public WebSocketClient AddClient(PlatformRuntimeInstance platformRuntimeInstance) throws DeploymentException, IOException {
+        this.webSocketClientList.put(ruleBaseID, session);
 
-        Heartbeat heartbeat = new Heartbeat();
-        heartbeat.setLastAlive(new Date());
-        WebSocketClient webSocketClient = new WebSocketClient(platformRuntimeInstance, numberRetries, timeToWaitBetweenTwoRetries);
-        this.webSocketClientList.put(platformRuntimeInstance.getRuleBaseID(), webSocketClient);
 
-        return webSocketClient;
+    }
 
+    public void closeSession(WebSocketSession webSocketSessionClosed) {
+        Set<Integer> listSessions = webSocketClientList.keySet();
+
+        Integer ruleBaseIdToRemove = null;
+        for (Integer ruleBaseId : listSessions) {
+            WebSocketSession webSocketSession = webSocketClientList.get(ruleBaseId);
+            if (webSocketSession != null && webSocketSession.equals(webSocketSessionClosed)) {
+                ruleBaseIdToRemove = ruleBaseId;
+            }
+            break;
+        }
+        if (ruleBaseIdToRemove != null) {
+            webSocketClientList.remove(ruleBaseIdToRemove);
+        }
     }
 
     public Set<Integer> getAllRuleBaseID() {
@@ -72,28 +79,26 @@ public class WebSocketSessionManager {
 
     }
 
-
-    public Boolean isAlive(Integer ruleBaseID) {
-        boolean result = false;
-        if (this.webSocketClientList != null && this.webSocketClientList.get(ruleBaseID) != null) {
-            Heartbeat heartbeat = this.webSocketClientList.get(ruleBaseID).getHeartbeat();
-            Date dateLastHearBeat = heartbeat.getLastAlive();
-            if (heartbeat != null && heartbeat.getLastAlive() != null) {
-                Date currentDate = new Date();
-                long diff = currentDate.getTime() - dateLastHearBeat.getTime();
-                if (diff < 60000) {
-                    result = true;
+    public void sendMessage(Integer ruleBaseID, PlatformManagementKnowledgeBean bean) throws IOException, EncodeException {
+        if (ruleBaseID != null) {
+            WebSocketSession serverSession = this.webSocketClientList.get(ruleBaseID);
+            PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode stream = new PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode();
+            if (serverSession != null && serverSession.isOpen()) {
+                StringWriter writer = new StringWriter();
+                try {
+                    stream.encode(bean, writer);
+                    TextMessage response = new TextMessage(writer.toString());
+                    LOG.info(">> Server : " + response);
+                    serverSession.sendMessage(response);
+                } catch (IOException e) {
+                    LOG.error("websocketSessionManager.sendMessage.IOException", e);
+                } catch (EncodeException e) {
+                    LOG.error("websocketSessionManager.sendMessage.EncodeException", e);
                 }
+
             }
         }
-        return result;
     }
 
-    public WebSocketClient getWebSocketClient(Integer ruleBaseID) {
-        WebSocketClient webSocketClient = null;
-        if (webSocketClientList.containsKey(ruleBaseID)) {
-            webSocketClient = webSocketClientList.get(ruleBaseID);
-        }
-        return webSocketClient;
-    }
+
 }

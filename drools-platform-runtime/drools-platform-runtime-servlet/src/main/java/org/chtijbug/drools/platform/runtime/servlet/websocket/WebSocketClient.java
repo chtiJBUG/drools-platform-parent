@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.chtijbug.drools.platform.backend.wsclient;
+package org.chtijbug.drools.platform.runtime.servlet.websocket;
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.platform.backend.AppContext;
-import org.chtijbug.drools.platform.backend.wsclient.listener.*;
 import org.chtijbug.drools.platform.entity.Heartbeat;
 import org.chtijbug.drools.platform.entity.JMXInfo;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
