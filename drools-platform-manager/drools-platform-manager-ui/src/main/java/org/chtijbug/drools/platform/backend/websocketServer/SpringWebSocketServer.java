@@ -57,7 +57,7 @@ public class SpringWebSocketServer extends TextWebSocketHandler {
 
 
     @Value(value = "${knowledge.numberRetriesConnectionToRuntime}")
-    private int numberRetries;
+    private String numberRetries;
 
     private PlatformRuntimeInstance platformRuntimeInstance;
 
@@ -74,8 +74,9 @@ public class SpringWebSocketServer extends TextWebSocketHandler {
     private VersionInfosListener versionInfosListener;
     private MessageHandlerResolver messageHandlerResolver;
     private WebSocketSessionManager webSocketSessionManager;
+
     @Value(value = "${jms.port}")
-    private Integer jmsPort = 61616;
+    private String jmsPort = "61616";
     @Value(value = "${jms.server}")
     private String jmsServer = "localhost";
     private JmsTemplate jmsTemplate;

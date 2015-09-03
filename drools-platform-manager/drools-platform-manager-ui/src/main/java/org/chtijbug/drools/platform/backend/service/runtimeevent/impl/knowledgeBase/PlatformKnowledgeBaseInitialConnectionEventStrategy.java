@@ -21,7 +21,6 @@ import org.chtijbug.drools.entity.history.GuvnorResourceFile;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.ResourceFile;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
-import org.chtijbug.drools.platform.backend.wsclient.WebSocketClient;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.entity.PlatformResourceFile;
@@ -38,7 +37,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.websocket.DeploymentException;
 import javax.websocket.EncodeException;
 import java.io.IOException;
 import java.util.Date;
@@ -79,116 +77,104 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         PlatformKnowledgeBaseInitialConnectionEvent platformKnowledgeBaseInitialConnectionEvent = (PlatformKnowledgeBaseInitialConnectionEvent) historyEvent;
         int ruleBaseId = platformKnowledgeBaseInitialConnectionEvent.getRuleBaseID();
-        WebSocketClient existingWebSocketClient1 = webSocketSessionManager.getWebSocketClient(ruleBaseId);
-
-        if (existingWebSocketClient1 == null || existingWebSocketClient1.getSession().isOpen() == false) {
-            if (existingWebSocketClient1 != null && existingWebSocketClient1.getSession() != null && existingWebSocketClient1.getSession().isOpen() == false) {
-                try {
-                    webSocketSessionManager.removeClient(ruleBaseId);
-                } catch (IOException e) {
-                    LOG.error(" handleMessage(PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent) removeClient", e);
+        PlatformRuntimeDefinition platformRuntimeDefinition = null;
+        PlatformRuntimeInstance platformRuntimeInstance = null;
+        platformRuntimeDefinition = platformRuntimeDefinitionRepository.findByRuleBaseID(ruleBaseId);
+        if (platformRuntimeDefinition != null) {
+            List<PlatformRuntimeInstance> instances = platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(ruleBaseId);
+            for (PlatformRuntimeInstance existingPlatformRuntimeInstance : instances) {
+                if (existingPlatformRuntimeInstance != null && existingPlatformRuntimeInstance.getEndDate() == null) {
+                    existingPlatformRuntimeInstance.setEndDate(new Date());
+                    existingPlatformRuntimeInstance.setShutdowDate(new Date());
+                    existingPlatformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.CRASHED);
+                    /**
+                     * In case a runtime instance is started without having beeing stop correctly
+                     * So we have to set the previous drools ressources as ended
+                     */
+                    for (DroolsResource existingResource : existingPlatformRuntimeInstance.getDroolsRessources()) {
+                        existingResource.setEndDate(platformKnowledgeBaseInitialConnectionEvent.getDateEvent());
+                        existingResource.setStopEventID(platformKnowledgeBaseInitialConnectionEvent.getEventID());
+                    }
+                    //TODO : save platformRuntimeInstanceRepository.save(existingPlatformRuntimeInstance);
                 }
             }
-            WebSocketClient webSocketClient = null;
-            PlatformRuntimeDefinition platformRuntimeDefinition = null;
-            PlatformRuntimeInstance platformRuntimeInstance = null;
-            platformRuntimeDefinition = platformRuntimeDefinitionRepository.findByRuleBaseID(ruleBaseId);
-            if (platformRuntimeDefinition != null) {
-                List<PlatformRuntimeInstance> instances = platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(ruleBaseId);
-                for (PlatformRuntimeInstance existingPlatformRuntimeInstance : instances) {
-                    if (existingPlatformRuntimeInstance != null && existingPlatformRuntimeInstance.getEndDate() == null) {
-                        existingPlatformRuntimeInstance.setEndDate(new Date());
-                        existingPlatformRuntimeInstance.setShutdowDate(new Date());
-                        existingPlatformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.CRASHED);
-                        /**
-                         * In case a runtime instance is started without having beeing stop correctly
-                         * So we have to set the previous drools ressources as ended
-                         */
-                        for (DroolsResource existingResource : existingPlatformRuntimeInstance.getDroolsRessources()) {
-                            existingResource.setEndDate(platformKnowledgeBaseInitialConnectionEvent.getDateEvent());
-                            existingResource.setStopEventID(platformKnowledgeBaseInitialConnectionEvent.getEventID());
-                        }
-                        //TODO : save platformRuntimeInstanceRepository.save(existingPlatformRuntimeInstance);
-                    }
-                }
-                //TODO : if saving the instance, do not save next.
-                if (platformRuntimeDefinition.getDeploymentHost()!=null) {
-                    platformRuntimeDefinition.getDeploymentHost().setHostname(platformKnowledgeBaseInitialConnectionEvent.getHostname());
-                }
-                platformRuntimeDefinitionRepository.save(platformRuntimeDefinition);
-            } else {
-                platformRuntimeDefinition = new PlatformRuntimeDefinition();
-                platformRuntimeDefinition.setRuleBaseID(ruleBaseId);
-                for (ResourceFile resourceFile : platformKnowledgeBaseInitialConnectionEvent.getResourceFiles()) {
-                    DroolsResource droolsResource = new DroolsResource();
-                    if (resourceFile instanceof DrlResourceFile) {
-                        DrlResourceFile drlResourceFile = (DrlResourceFile) resourceFile;
-                        droolsResource = new DroolsResource(drlResourceFile.getFileName(), drlResourceFile.getContent());
-                        droolsResource.setStartEventID(platformKnowledgeBaseInitialConnectionEvent.getEventID());
-                        platformRuntimeDefinition.getDroolsRessourcesDefinition().add(droolsResource);
-                    } else if (resourceFile instanceof GuvnorResourceFile) {
-                        GuvnorResourceFile guvnorResourceFile = (GuvnorResourceFile) resourceFile;
-                        List<PlatformServer> platformServers = platformServerRepository.findAll();
-                        if (platformServers.size() == 0) {
-                            PlatformServer platformServer = new PlatformServer(guvnorResourceFile.getGuvnor_url(), guvnorResourceFile.getGuvnor_appName(), guvnorUserName, guvnorPassword);
-                            platformRuntimeDefinition.setPlatformServer(platformServer);
-                        }
-                        if (platformServers.size() == 1) {
-                            platformRuntimeDefinition.setPlatformServer(platformServers.get(0));
-                        }
-                        DeploymentHost deploymentHost = deploymentHostRepository.findByHostnameAndPort(platformKnowledgeBaseInitialConnectionEvent.getHostname(), platformKnowledgeBaseInitialConnectionEvent.getPort());
-                        if (deploymentHost == null) {
-                            deploymentHost = new DeploymentHost(platformKnowledgeBaseInitialConnectionEvent.getHostname(), platformKnowledgeBaseInitialConnectionEvent.getPort(), "tomcat", "tomcat");
-                        }
-                        platformRuntimeDefinition.setDeploymentHost(deploymentHost);
-                        platformRuntimeDefinition.setWebsocketEndpoint(platformKnowledgeBaseInitialConnectionEvent.getEndPoint());
-                        platformRuntimeDefinition.setWebsocketPort(platformKnowledgeBaseInitialConnectionEvent.getPort());
-                        droolsResource = new DroolsResource(guvnorResourceFile.getGuvnor_url(), guvnorResourceFile.getGuvnor_appName(), guvnorResourceFile.getGuvnor_packageName(), guvnorResourceFile.getGuvnor_packageVersion());
-                        droolsResource.setStartEventID(platformKnowledgeBaseInitialConnectionEvent.getEventID());
-                        platformRuntimeDefinition.getDroolsRessourcesDefinition().add(droolsResource);
-                    }
-                }
-
-
+            //TODO : if saving the instance, do not save next.
+            if (platformRuntimeDefinition.getDeploymentHost() != null) {
+                platformRuntimeDefinition.getDeploymentHost().setHostname(platformKnowledgeBaseInitialConnectionEvent.getHostname());
             }
-            platformRuntimeInstance = new PlatformRuntimeInstance();
-            platformRuntimeInstance.setRuleBaseID(platformKnowledgeBaseInitialConnectionEvent.getRuleBaseID());
-            platformRuntimeInstance.setStartEventID(platformKnowledgeBaseInitialConnectionEvent.getEventID());
-            platformRuntimeInstance.setStartDate(platformKnowledgeBaseInitialConnectionEvent.getStartDate());
-            platformRuntimeInstance.setPlatformRuntimeDefinition(platformRuntimeDefinition);
-            platformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.INITMODE);
-            platformRuntimeInstance.setPlatformRuntimeDefinition(platformRuntimeDefinition);
-
-
-            try {
-                webSocketClient = webSocketSessionManager.AddClient(platformRuntimeInstance);
-                PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
-                for (DroolsResource droolsResource : platformRuntimeDefinition.getDroolsRessourcesDefinition()) {
-                    if (droolsResource.getGuvnor_url() != null) {
-                        PlatformResourceFile platformResourceFile = new PlatformResourceFile(droolsResource.getGuvnor_url(), droolsResource.getGuvnor_appName(), droolsResource.getGuvnor_packageName(), droolsResource.getGuvnor_packageVersion(), null, null);
-                        platformManagementKnowledgeBean.getResourceFileList().add(platformResourceFile);
-                    } else {
-                        PlatformResourceFile platformResourceFile = new PlatformResourceFile(droolsResource.getFileName(), droolsResource.getFileContent());
-                        platformManagementKnowledgeBean.getResourceFileList().add(platformResourceFile);
-
+            platformRuntimeDefinitionRepository.save(platformRuntimeDefinition);
+        } else {
+            platformRuntimeDefinition = new PlatformRuntimeDefinition();
+            platformRuntimeDefinition.setRuleBaseID(ruleBaseId);
+            for (ResourceFile resourceFile : platformKnowledgeBaseInitialConnectionEvent.getResourceFiles()) {
+                DroolsResource droolsResource = new DroolsResource();
+                if (resourceFile instanceof DrlResourceFile) {
+                    DrlResourceFile drlResourceFile = (DrlResourceFile) resourceFile;
+                    droolsResource = new DroolsResource(drlResourceFile.getFileName(), drlResourceFile.getContent());
+                    droolsResource.setStartEventID(platformKnowledgeBaseInitialConnectionEvent.getEventID());
+                    platformRuntimeDefinition.getDroolsRessourcesDefinition().add(droolsResource);
+                } else if (resourceFile instanceof GuvnorResourceFile) {
+                    GuvnorResourceFile guvnorResourceFile = (GuvnorResourceFile) resourceFile;
+                    List<PlatformServer> platformServers = platformServerRepository.findAll();
+                    if (platformServers.size() == 0) {
+                        PlatformServer platformServer = new PlatformServer(guvnorResourceFile.getGuvnor_url(), guvnorResourceFile.getGuvnor_appName(), guvnorUserName, guvnorPassword);
+                        platformRuntimeDefinition.setPlatformServer(platformServer);
                     }
+                    if (platformServers.size() == 1) {
+                        platformRuntimeDefinition.setPlatformServer(platformServers.get(0));
+                    }
+                    DeploymentHost deploymentHost = deploymentHostRepository.findByHostnameAndPort(platformKnowledgeBaseInitialConnectionEvent.getHostname(), platformKnowledgeBaseInitialConnectionEvent.getPort());
+                    if (deploymentHost == null) {
+                        deploymentHost = new DeploymentHost(platformKnowledgeBaseInitialConnectionEvent.getHostname(), platformKnowledgeBaseInitialConnectionEvent.getPort(), "tomcat", "tomcat");
+                    }
+                    platformRuntimeDefinition.setDeploymentHost(deploymentHost);
+                    platformRuntimeDefinition.setWebsocketEndpoint(platformKnowledgeBaseInitialConnectionEvent.getEndPoint());
+                    platformRuntimeDefinition.setWebsocketPort(platformKnowledgeBaseInitialConnectionEvent.getPort());
+                    droolsResource = new DroolsResource(guvnorResourceFile.getGuvnor_url(), guvnorResourceFile.getGuvnor_appName(), guvnorResourceFile.getGuvnor_packageName(), guvnorResourceFile.getGuvnor_packageVersion());
+                    droolsResource.setStartEventID(platformKnowledgeBaseInitialConnectionEvent.getEventID());
+                    platformRuntimeDefinition.getDroolsRessourcesDefinition().add(droolsResource);
                 }
-                platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.loadNewRuleVersion);
-                platformManagementKnowledgeBean.setRequestStatus(RequestStatus.SUCCESS);
-                webSocketClient.sendMessage(platformManagementKnowledgeBean);
-                platformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.STARTED);
-            } catch (DeploymentException | IOException e) {
-                platformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.NOT_JOINGNABLE);
-                LOG.error(" handleMessage(PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent) ", e);
-            } catch (EncodeException e) {
-                platformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.CRASHED);
-                LOG.error(" handleMessage(PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent) ", e);
-                e.printStackTrace();
-            } finally {
-                platformRuntimeInstanceRepository.save(platformRuntimeInstance);
             }
+
+
+        }
+        platformRuntimeInstance = new PlatformRuntimeInstance();
+        platformRuntimeInstance.setRuleBaseID(platformKnowledgeBaseInitialConnectionEvent.getRuleBaseID());
+        platformRuntimeInstance.setStartEventID(platformKnowledgeBaseInitialConnectionEvent.getEventID());
+        platformRuntimeInstance.setStartDate(platformKnowledgeBaseInitialConnectionEvent.getStartDate());
+        platformRuntimeInstance.setPlatformRuntimeDefinition(platformRuntimeDefinition);
+        platformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.INITMODE);
+        platformRuntimeInstance.setPlatformRuntimeDefinition(platformRuntimeDefinition);
+
+
+        try {
+            PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
+            for (DroolsResource droolsResource : platformRuntimeDefinition.getDroolsRessourcesDefinition()) {
+                if (droolsResource.getGuvnor_url() != null) {
+                    PlatformResourceFile platformResourceFile = new PlatformResourceFile(droolsResource.getGuvnor_url(), droolsResource.getGuvnor_appName(), droolsResource.getGuvnor_packageName(), droolsResource.getGuvnor_packageVersion(), null, null);
+                    platformManagementKnowledgeBean.getResourceFileList().add(platformResourceFile);
+                } else {
+                    PlatformResourceFile platformResourceFile = new PlatformResourceFile(droolsResource.getFileName(), droolsResource.getFileContent());
+                    platformManagementKnowledgeBean.getResourceFileList().add(platformResourceFile);
+
+                }
+            }
+            platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.loadNewRuleVersion);
+            platformManagementKnowledgeBean.setRequestStatus(RequestStatus.SUCCESS);
+            webSocketSessionManager.sendMessage(platformRuntimeInstance.getRuleBaseID(), platformManagementKnowledgeBean);
+            platformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.STARTED);
+        } catch (IOException e) {
+            platformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.NOT_JOINGNABLE);
+            LOG.error(" handleMessage(PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent) ", e);
+        } catch (EncodeException e) {
+            platformRuntimeInstance.setStatus(PlatformRuntimeInstanceStatus.CRASHED);
+            LOG.error(" handleMessage(PlatformKnowledgeBaseCreatedEvent platformKnowledgeBaseCreatedEvent) ", e);
+            e.printStackTrace();
+        } finally {
+            platformRuntimeInstanceRepository.save(platformRuntimeInstance);
         }
     }
+
 
     @Override
     public boolean isEventSupported(HistoryEvent historyEvent) {

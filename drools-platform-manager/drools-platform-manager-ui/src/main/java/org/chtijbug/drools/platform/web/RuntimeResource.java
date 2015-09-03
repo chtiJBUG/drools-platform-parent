@@ -21,7 +21,6 @@ import com.google.common.base.Predicates;
 import com.google.common.cache.CacheLoader;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import org.chtijbug.drools.platform.backend.wsclient.WebSocketClient;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepository;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
@@ -109,8 +108,8 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
                         } else {
                             mode = PlatformRuntimeMode.Debug.name();
                         }
-                        WebSocketClient webSocketSession = webSocketSessionManager.getWebSocketClient(platformRuntimeDefinition.getRuleBaseID());
-                        if (webSocketSession != null) {
+                        Boolean webSocketSession = webSocketSessionManager.exists(platformRuntimeDefinition.getRuleBaseID());
+                        if (webSocketSession) {
                             status = "Alive";
                         } else {
                             status = "Not Running/Not Reachable";
@@ -157,8 +156,8 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
                         } else {
                             mode = PlatformRuntimeMode.Debug.name();
                         }
-                        WebSocketClient webSocketSession = webSocketSessionManager.getWebSocketClient(platformRuntimeInstance.getRuleBaseID());
-                        if (webSocketSession != null) {
+                        Boolean webSocketSessionExist = webSocketSessionManager.exists(platformRuntimeInstance.getRuleBaseID());
+                        if (webSocketSessionExist) {
                             status = "Alive";
                         } else {
                             status = "Not Running/Not Reachable";

@@ -16,26 +16,23 @@
 package org.chtijbug.drools.platform.runtime.servlet.websocket;
 
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.platform.backend.AppContext;
+import org.chtijbug.drools.platform.core.PlatformManagementKnowledgeBeanServiceFactory;
 import org.chtijbug.drools.platform.entity.Heartbeat;
-import org.chtijbug.drools.platform.entity.JMXInfo;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepository;
-import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
-import org.chtijbug.drools.platform.persistence.RealTimeParametersRepository;
-import org.chtijbug.drools.platform.persistence.SessionExecutionRecordRepository;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeDefinition;
-import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
-import org.chtijbug.drools.platform.persistence.pojo.RealTimeParameters;
+import org.chtijbug.drools.platform.entity.RequestStatus;
+import org.chtijbug.drools.platform.runtime.servlet.AppContext;
+import org.chtijbug.drools.platform.runtime.servlet.DroolsPlatformKnowledgeBaseJavaEE;
+import org.chtijbug.drools.runtime.DroolsChtijbugException;
+import org.chtijbug.drools.runtime.resource.DroolsResource;
 import org.glassfish.tyrus.client.ClientManager;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 
 import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.List;
 
 @ClientEndpoint(encoders = {PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class},
         decoders = {PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class})
@@ -44,33 +41,18 @@ public class WebSocketClient
     private final static org.slf4j.Logger logger = LoggerFactory.getLogger(WebSocketClient.class);
     private static final Logger LOG = Logger.getLogger(WebSocketClient.class);
     final private Heartbeat heartbeat = new Heartbeat();
-    @Value(value = "${knowledge.numberRetriesConnectionToRuntime}")
+    @Value(value = "${knowledge.timeToWaitBetweenTwoRetries}")
+    private final int timeToWaitBetweenTwoRetries;
+    String hostname;
+    Integer portNumber;
+    String endPointName;
     private int numberRetries;
-    private PlatformRuntimeInstance platformRuntimeInstance;
-    private int timeToWaitBetweenTwoRetries;
+    private DroolsPlatformKnowledgeBaseJavaEE platformKnowledgeBaseJavaEE;
     private Session session;
-    private PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
-    private PlatformRuntimeDefinitionRepository platformRuntimeDefinitionRepository;
-    private SessionExecutionRecordRepository sessionExecutionRecordRepository;
-    private RealTimeParametersRepository realTimeParametersRepository;
-    private JMXInfosListener jmxInfosListeners;
-    private HeartBeatListner heartBeatListner;
-    private IsAliveListener isAliveListener;
-    private LoadNewRuleVersionListener loadNewRuleVersionListener;
-    private VersionInfosListener versionInfosListener;
 
-    public WebSocketClient(PlatformRuntimeInstance platformRuntimeInstance, int numberRetries, int timeToWaitBetweenTwoRetries) throws DeploymentException, IOException {
-        ApplicationContext applicationContext = AppContext.getApplicationContext();
-        this.platformRuntimeInstanceRepository = applicationContext.getBean(PlatformRuntimeInstanceRepository.class);
-        this.sessionExecutionRecordRepository = applicationContext.getBean(SessionExecutionRecordRepository.class);
-        this.realTimeParametersRepository = applicationContext.getBean(RealTimeParametersRepository.class);
-        this.jmxInfosListeners = applicationContext.getBean(JMXInfosListener.class);
-        this.heartBeatListner = applicationContext.getBean(HeartBeatListner.class);
-        this.isAliveListener = applicationContext.getBean(IsAliveListener.class);
-        this.loadNewRuleVersionListener = applicationContext.getBean(LoadNewRuleVersionListener.class);
-        this.versionInfosListener = applicationContext.getBean(VersionInfosListener.class);
-        this.platformRuntimeDefinitionRepository = applicationContext.getBean(PlatformRuntimeDefinitionRepository.class);
-        this.platformRuntimeInstance = platformRuntimeInstance;
+
+    public WebSocketClient(String hostname, Integer portNumber, String endPointName, int numberRetries, int timeToWaitBetweenTwoRetries) throws DeploymentException, IOException {
+        this.platformKnowledgeBaseJavaEE = AppContext.getApplicationContext().getBean(DroolsPlatformKnowledgeBaseJavaEE.class);
         this.numberRetries = numberRetries;
         this.timeToWaitBetweenTwoRetries = timeToWaitBetweenTwoRetries;
 
@@ -83,9 +65,6 @@ public class WebSocketClient
         while (retryNumber < this.numberRetries && connected == false) {
             try {
                 ClientManager client = ClientManager.createClient();
-                String hostname = platformRuntimeInstance.getPlatformRuntimeDefinition().getDeploymentHost().getHostname();
-                Integer portNumber = platformRuntimeInstance.getPlatformRuntimeDefinition().getWebsocketPort();
-                String endPointName = platformRuntimeInstance.getPlatformRuntimeDefinition().getWebsocketEndpoint();
                 this.session = client.connectToServer(
                         this,
                         ClientEndpointConfig.Builder.create()
@@ -96,13 +75,13 @@ public class WebSocketClient
                         URI.create("ws://" + hostname + ":" + portNumber + endPointName)
                 );
                 connected = true;
-                LOG.info("Successfully Connected to " + platformRuntimeInstance.toString());
+                LOG.info("Successfully Connected to" + "ws://" + hostname + ":" + portNumber + endPointName);
             } catch (Exception e) {
                 lastException = e;
                 try {
                     Thread.sleep(this.timeToWaitBetweenTwoRetries);
                 } catch (InterruptedException e1) {
-                    LOG.error("Could not  wait  " + platformRuntimeInstance.toString() + " Try number=" + retryNumber, e1);
+                    LOG.error("Could not  wait  " + "ws://" + hostname + ":" + portNumber + endPointName + " Try number=" + retryNumber, e1);
                 }
             } finally {
                 retryNumber++;
@@ -110,7 +89,7 @@ public class WebSocketClient
         }
         if (connected == false && retryNumber >= this.numberRetries) {
             if (lastException != null) {
-                LOG.error("Could not Connect to " + platformRuntimeInstance.toString() + " after =" + retryNumber, lastException);
+                LOG.error("Could not Connect to " + "ws://" + hostname + ":" + portNumber + endPointName + " after =" + retryNumber, lastException);
 
                 if (lastException instanceof IOException) {
                     throw (IOException) lastException;
@@ -140,51 +119,68 @@ public class WebSocketClient
     @Override
     public void onOpen(final Session session, EndpointConfig endpointConfig) {
         this.session = session;
-
+        final DroolsPlatformKnowledgeBaseJavaEE platformKnowledgeBaseJavaEE2 = this.platformKnowledgeBaseJavaEE;
+        final WebSocketClient webclient = this;
         session.addMessageHandler(new MessageHandler.Whole<PlatformManagementKnowledgeBean>() {
             @Override
             public void onMessage(PlatformManagementKnowledgeBean bean) {
 
                 switch (bean.getRequestRuntimePlarform()) {
-                    case jmxInfos:
-                        RealTimeParameters realTimeParameters = new RealTimeParameters();
-                        PlatformRuntimeInstance targetplatformRuntimeInstance = platformRuntimeInstanceRepository.findByRuleBaseID(platformRuntimeInstance.getRuleBaseID());
-                        realTimeParameters.setPlatformRuntimeInstance(targetplatformRuntimeInstance);
-                        JMXInfo jmxInfo = bean.getJmxInfo();
-                        realTimeParameters.setAverageTimeExecution(jmxInfo.getAverageTimeExecution());
-                        realTimeParameters.setMinTimeExecution(jmxInfo.getMinTimeExecution());
-                        realTimeParameters.setMaxTimeExecution(jmxInfo.getMaxTimeExecution());
-                        realTimeParameters.setTotalTimeExecution(jmxInfo.getTotalTimeExecution());
-                        realTimeParameters.setTotalNumberRulesExecuted(jmxInfo.getTotalNumberRulesExecuted());
-                        realTimeParameters.setAverageRulesExecuted(jmxInfo.getAverageRulesExecuted());
-                        realTimeParameters.setMinRulesExecuted(jmxInfo.getMinRulesExecuted());
-                        realTimeParameters.setMaxRulesExecuted(jmxInfo.getMaxRulesExecuted());
-                        realTimeParameters.setNumberFireAllRulesExecuted(jmxInfo.getNumberFireAllRulesExecuted());
-                        realTimeParameters.setAverageRuleThroughout(jmxInfo.getAverageRuleThroughout());
-                        realTimeParameters.setMinRuleThroughout(jmxInfo.getMinRuleThroughout());
-                        realTimeParameters.setMaxRuleThroughout(jmxInfo.getMaxRuleThroughout());
-                        realTimeParametersRepository.save(realTimeParameters);
-                        jmxInfosListeners.messageReceived(platformRuntimeInstance.getRuleBaseID(), realTimeParameters);
-                        break;
-                    case versionInfos:
-                        versionInfosListener.messageReceived(platformRuntimeInstance.getRuleBaseID(), bean.getResourceFileList());
-                        break;
                     case isAlive:
-                        isAliveListener.messageReceived(platformRuntimeInstance.getRuleBaseID());
 
-                        heartBeatListner.messageReceived(platformRuntimeInstance.getRuleBaseID(), bean.getHeartbeat().getLastAlive());
-                        heartbeat.setLastAlive(bean.getHeartbeat().getLastAlive());
+                        try {
+                            webclient.sendMessage(PlatformManagementKnowledgeBeanServiceFactory.isAlive(bean));
+                        } catch (IOException e) {
+                            LOG.debug("WebSocketCLientOnMessage.isAlice", e);
+                        } catch (EncodeException e) {
+                            LOG.debug("WebSocketCLientOnMessage.isAlice", e);
+                        }
+
                         break;
-
+                    case duplicateRuleBaseID:
+                        platformKnowledgeBaseJavaEE2.dispose();
+                        LOG.error("duplicated ruleBaseID " + bean.toString());
+                        break;
+                    case ruleVersionInfos:
+                        bean = PlatformManagementKnowledgeBeanServiceFactory.generateRuleVersionsInfo(bean, platformKnowledgeBaseJavaEE.getDroolsResources());
+                        try {
+                            webclient.sendMessage(bean);
+                        } catch (IOException e) {
+                            LOG.debug("WebSocketCLientOnMessage.ruleVersionsInfos", e);
+                        } catch (EncodeException e) {
+                            LOG.debug("WebSocketCLientOnMessage.ruleVersionsInfos", e);
+                        }
+                        break;
                     case loadNewRuleVersion:
-                        PlatformRuntimeDefinition platformRuntimeDefinitionloadNewRuleVersion = platformRuntimeDefinitionRepository.findByRuleBaseID(platformRuntimeInstance.getRuleBaseID());
-                        platformRuntimeDefinitionloadNewRuleVersion.setCouldInstanceStartWithNewRuleVersion(bean.getRequestStatus().toString());
-                        platformRuntimeDefinitionRepository.save(platformRuntimeDefinitionloadNewRuleVersion);
-                        loadNewRuleVersionListener.messageReceived(platformRuntimeInstance.getRuleBaseID(), bean.getRequestStatus(), bean.getResourceFileList());
+                        List<DroolsResource> droolsResources = PlatformManagementKnowledgeBeanServiceFactory.extract(bean.getResourceFileList(), platformKnowledgeBaseJavaEE.getGuvnorUsername(), platformKnowledgeBaseJavaEE.getGuvnorPassword());
+                        try {
+                            platformKnowledgeBaseJavaEE.RecreateKBaseWithNewRessources(droolsResources);
+                            bean.setRequestStatus(RequestStatus.SUCCESS);
+                            webclient.sendMessage(bean);
+                            platformKnowledgeBaseJavaEE2.setRuleBaseStatus(true);
+                            StringBuilder ss = new StringBuilder();
+                            for (DroolsResource dd : droolsResources) {
+                                ss.append(dd.toString());
+                            }
+                            LOG.info("loadNewRuleVersion done" + ss.toString());
+                        } catch (Exception e) {
+                            DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("RELOAD", "Could not reload Rule Package From Guvnor", e);
+                            bean.setDroolsChtijbugException(droolsChtijbugException);
+                            bean.setRequestStatus(RequestStatus.FAILURE);
+                            LOG.error("Could not reload new rule version" + bean.toString(), e);
+                            try {
+                                webclient.sendMessage(bean);
+                            } catch (IOException e1) {
+                                LOG.debug("WebSocketCLientOnMessage.loadnewRuleVersion", e);
+                            } catch (EncodeException e1) {
+                                LOG.debug("WebSocketCLientOnMessage.loadnewRuleVersion", e);
+                            }
+                        }
                         break;
                 }
             }
         });
+
 
     }
 

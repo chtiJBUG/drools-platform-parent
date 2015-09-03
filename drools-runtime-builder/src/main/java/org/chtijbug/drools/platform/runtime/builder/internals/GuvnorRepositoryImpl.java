@@ -20,10 +20,6 @@ import java.util.Arrays;
 @Component
 public class GuvnorRepositoryImpl implements GuvnorRepository {
     /**
-     * Class logger
-     */
-    private static Logger logger = LoggerFactory.getLogger(GuvnorRepositoryImpl.class);
-    /**
      * Package Asset Template file
      */
     private static final String PACKAGE_ASSET_TEMPLATE = "/package.xml";
@@ -32,17 +28,19 @@ public class GuvnorRepositoryImpl implements GuvnorRepository {
      */
     private static final String PROCESS_ASSET_TEMPLATE = "/process.xml";
     /**
+     * Class logger
+     */
+    private static Logger logger = LoggerFactory.getLogger(GuvnorRepositoryImpl.class);
+    /**
+     * Base 64 encoded guvnor account for using REST API
+     */
+    private final String auth;
+    /**
      * URL to the remote Guvnor instance
      */
     private String baseUrl = "http://localhost:8080";
     /** */
     private String appName = "/drools-guvnor";
-    /**
-     * Base 64 encoded guvnor account for using REST API
-     */
-    private final String auth;
-
-
     private String packageName;
     private String packageVersion;
     private String packageUsername;
@@ -53,6 +51,12 @@ public class GuvnorRepositoryImpl implements GuvnorRepository {
     private String wsHost = "localhost";
     private String jmsServer = "localhost";
     private Integer jmsPort = 61616;
+
+
+    public GuvnorRepositoryImpl() {
+        this.auth = "Basic " + Base64Utility.encode((packageUsername + ":" + packagePassword).getBytes());
+
+    }
 
     public GuvnorRepositoryImpl(String packageName, String packageVersion, String packageUsername, String packagePassword, String ruleBaseid) {
         this.packageName = packageName;
@@ -68,8 +72,16 @@ public class GuvnorRepositoryImpl implements GuvnorRepository {
         return baseUrl;
     }
 
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+
     public String getAppName() {
         return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
     }
 
     public String getAuth() {
@@ -96,6 +108,10 @@ public class GuvnorRepositoryImpl implements GuvnorRepository {
         return platformServer;
     }
 
+    public void setPlatformServer(String platformServer) {
+        this.platformServer = platformServer;
+    }
+
     public String getRuleBaseid() {
         return ruleBaseid;
     }
@@ -104,44 +120,32 @@ public class GuvnorRepositoryImpl implements GuvnorRepository {
         return wsPort;
     }
 
-    public String getWsHost() {
-        return wsHost;
-    }
-
-    public String getJmsServer() {
-        return jmsServer;
-    }
-
-    public Integer getJmsPort() {
-        return jmsPort;
-    }
-
-    public void setPlatformServer(String platformServer) {
-        this.platformServer = platformServer;
-    }
-
     public void setWsPort(Integer wsPort) {
         this.wsPort = wsPort;
+    }
+
+    public String getWsHost() {
+        return wsHost;
     }
 
     public void setWsHost(String wsHost) {
         this.wsHost = wsHost;
     }
 
+    public String getJmsServer() {
+        return jmsServer;
+    }
+
     public void setJmsServer(String jmsServer) {
         this.jmsServer = jmsServer;
     }
 
+    public Integer getJmsPort() {
+        return jmsPort;
+    }
+
     public void setJmsPort(Integer jmsPort) {
         this.jmsPort = jmsPort;
-    }
-
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
-
-    public void setAppName(String appName) {
-        this.appName = appName;
     }
 
     @Override
