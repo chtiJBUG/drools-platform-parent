@@ -22,14 +22,12 @@
         <ref bean="guvnorResource"/>
     </util:list>
 
-    <bean id="platformRunner" class="org.chtijbug.drools.platform.runtime.servlet.DroolsPlatformKnowledgeBaseJavaEE"
+    <bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase"
           init-method="initPlatformRuntime">
         <property name="webSocketHostname" value="${ws.hostname}"/>
-        <property name="endPoint" value="${ws.endpoint}"/>
+        <property name="webSocketEndPoint" value="${ws.endpoint}"/>
         <property name="webSocketPort" value="${ws.port}"/>
         <property name="platformServer" value="${knowledge.platformServer}"/>
-        <property name="jmsServer" value="${jms.server}"/>
-        <property name="jmsPort" value="${jms.port}"/>
         <property name="ruleBaseID" value="${knowledge.rulebaseid}"/>
 
 
@@ -42,13 +40,6 @@
     </bean>
 
 
-    <bean id="jmsclient"
-          class="org.chtijbug.drools.platform.runtime.servlet.historylistener.ServletJmsStorageHistoryListener"
-          init-method="initJMSConnection">
-        <property name="platformKnowledgeBaseJavaEE" ref="platformRunner"/>
 
-    </bean>
-    <bean id="contextApplicationContextProvider"
-          class="org.chtijbug.drools.platform.runtime.servlet.ApplicationContextProvider"></bean>
 
 </beans>

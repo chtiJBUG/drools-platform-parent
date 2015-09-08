@@ -7,7 +7,7 @@
 
     <context:property-placeholder location="classpath:spring/platform-knowledge.properties"/>
 
-    <import resource="classpath*:META-INF.spring/drools-platform-runtime-servlet-application-context.xml"/>
+    <import resource="classpath*:META-INF.spring/drools-platform-runtime-application-context.xml"/>
 
 
 </beans>

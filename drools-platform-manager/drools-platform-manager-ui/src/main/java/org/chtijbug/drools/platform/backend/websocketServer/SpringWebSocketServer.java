@@ -40,6 +40,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.PongMessage;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -97,6 +98,13 @@ public class SpringWebSocketServer extends TextWebSocketHandler {
         this.messageHandlerResolver = applicationContext.getBean(MessageHandlerResolver.class);
         this.webSocketSessionManager = applicationContext.getBean(WebSocketSessionManager.class);
     }
+
+    @Override
+    protected void handlePongMessage(WebSocketSession session, PongMessage message) throws Exception {
+        super.handlePongMessage(session, message);
+    }
+
+
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {

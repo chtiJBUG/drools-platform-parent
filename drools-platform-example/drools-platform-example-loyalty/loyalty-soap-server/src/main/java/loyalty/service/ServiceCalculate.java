@@ -16,8 +16,7 @@
 package loyalty.service;
 
 import loyalty.domains.Ticket;
-import org.chtijbug.drools.platform.core.DroolsPlatformSession;
-import org.chtijbug.drools.platform.runtime.servlet.DroolsPlatformKnowledgeBaseJavaEE;
+import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.RuleBaseSession;
 import org.slf4j.Logger;
@@ -30,9 +29,9 @@ import javax.jws.WebService;
 public class ServiceCalculate implements IServiceCalculate {
     private static Logger logger = LoggerFactory.getLogger(ServiceCalculate.class);
 
-    private DroolsPlatformKnowledgeBaseJavaEE platformKnowledgeBaseJavaEE;
+    private DroolsPlatformKnowledgeBase platformKnowledgeBaseJavaEE;
 
-    public void setRuleBasePackage(DroolsPlatformKnowledgeBaseJavaEE ruleBasePackage) {
+    public void setRuleBasePackage(DroolsPlatformKnowledgeBase ruleBasePackage) {
         this.platformKnowledgeBaseJavaEE = ruleBasePackage;
     }
 

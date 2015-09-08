@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.chtijbug.drools.platform.runtime.servlet.websocket;
+package org.chtijbug.drools.platform.core.wssocket;
 
 import org.apache.log4j.Logger;
+import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
 import org.chtijbug.drools.platform.core.PlatformManagementKnowledgeBeanServiceFactory;
 import org.chtijbug.drools.platform.entity.Heartbeat;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.entity.RequestStatus;
-import org.chtijbug.drools.platform.runtime.servlet.AppContext;
-import org.chtijbug.drools.platform.runtime.servlet.DroolsPlatformKnowledgeBaseJavaEE;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.resource.DroolsResource;
 import org.glassfish.tyrus.client.ClientManager;
+import org.glassfish.tyrus.client.ClientProperties;
+import org.glassfish.tyrus.client.auth.AuthConfig;
+import org.glassfish.tyrus.client.auth.AuthenticationException;
+import org.glassfish.tyrus.client.auth.Authenticator;
+import org.glassfish.tyrus.client.auth.Credentials;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -41,18 +44,17 @@ public class WebSocketClient
     private final static org.slf4j.Logger logger = LoggerFactory.getLogger(WebSocketClient.class);
     private static final Logger LOG = Logger.getLogger(WebSocketClient.class);
     final private Heartbeat heartbeat = new Heartbeat();
-    @Value(value = "${knowledge.timeToWaitBetweenTwoRetries}")
     private final int timeToWaitBetweenTwoRetries;
     String hostname;
     Integer portNumber;
     String endPointName;
     private int numberRetries;
-    private DroolsPlatformKnowledgeBaseJavaEE platformKnowledgeBaseJavaEE;
+    private DroolsPlatformKnowledgeBase platformKnowledgeBase;
     private Session session;
 
 
-    public WebSocketClient(String hostname, Integer portNumber, String endPointName, int numberRetries, int timeToWaitBetweenTwoRetries) throws DeploymentException, IOException {
-        this.platformKnowledgeBaseJavaEE = AppContext.getApplicationContext().getBean(DroolsPlatformKnowledgeBaseJavaEE.class);
+    public WebSocketClient(String hostname, Integer portNumber, String endPointName, int numberRetries, int timeToWaitBetweenTwoRetries,DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase) throws DeploymentException, IOException {
+        this.platformKnowledgeBase = droolsPlatformKnowledgeBase;
         this.numberRetries = numberRetries;
         this.timeToWaitBetweenTwoRetries = timeToWaitBetweenTwoRetries;
 
@@ -64,7 +66,16 @@ public class WebSocketClient
         Exception lastException = null;
         while (retryNumber < this.numberRetries && connected == false) {
             try {
+                Authenticator authenticator =new Authenticator() {
+                    @Override
+                    public String generateAuthorizationHeader(URI uri, String s, Credentials credentials) throws AuthenticationException {
+                        return null;
+                    }
+                };
+                AuthConfig authConfig = AuthConfig.Builder.create().build();
                 ClientManager client = ClientManager.createClient();
+               // client.getProperties().put(ClientProperties.AUTH_CONFIG, authConfig);
+               client.getProperties().put(ClientProperties.CREDENTIALS, new Credentials("admin", "admin"));
                 this.session = client.connectToServer(
                         this,
                         ClientEndpointConfig.Builder.create()
@@ -119,7 +130,7 @@ public class WebSocketClient
     @Override
     public void onOpen(final Session session, EndpointConfig endpointConfig) {
         this.session = session;
-        final DroolsPlatformKnowledgeBaseJavaEE platformKnowledgeBaseJavaEE2 = this.platformKnowledgeBaseJavaEE;
+        final DroolsPlatformKnowledgeBase platformKnowledgeBaseJavaEE2 = this.platformKnowledgeBase;
         final WebSocketClient webclient = this;
         session.addMessageHandler(new MessageHandler.Whole<PlatformManagementKnowledgeBean>() {
             @Override
@@ -142,7 +153,7 @@ public class WebSocketClient
                         LOG.error("duplicated ruleBaseID " + bean.toString());
                         break;
                     case ruleVersionInfos:
-                        bean = PlatformManagementKnowledgeBeanServiceFactory.generateRuleVersionsInfo(bean, platformKnowledgeBaseJavaEE.getDroolsResources());
+                        bean = PlatformManagementKnowledgeBeanServiceFactory.generateRuleVersionsInfo(bean, platformKnowledgeBase.getDroolsResources());
                         try {
                             webclient.sendMessage(bean);
                         } catch (IOException e) {
@@ -152,9 +163,9 @@ public class WebSocketClient
                         }
                         break;
                     case loadNewRuleVersion:
-                        List<DroolsResource> droolsResources = PlatformManagementKnowledgeBeanServiceFactory.extract(bean.getResourceFileList(), platformKnowledgeBaseJavaEE.getGuvnorUsername(), platformKnowledgeBaseJavaEE.getGuvnorPassword());
+                        List<DroolsResource> droolsResources = PlatformManagementKnowledgeBeanServiceFactory.extract(bean.getResourceFileList(), platformKnowledgeBase.getGuvnorUsername(), platformKnowledgeBase.getGuvnorPassword());
                         try {
-                            platformKnowledgeBaseJavaEE.RecreateKBaseWithNewRessources(droolsResources);
+                            platformKnowledgeBase.RecreateKBaseWithNewRessources(droolsResources);
                             bean.setRequestStatus(RequestStatus.SUCCESS);
                             webclient.sendMessage(bean);
                             platformKnowledgeBaseJavaEE2.setRuleBaseStatus(true);
