@@ -82,6 +82,7 @@ public class DroolsPlatformSession implements RuleBaseSession {
         PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
         platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.jmxInfos);
         platformManagementKnowledgeBean.setAlive(true);
+        platformManagementKnowledgeBean.setRuleBaseId(this.getRuleBaseID());
         platformManagementKnowledgeBean.setRequestStatus(RequestStatus.SUCCESS);
         JMXInfo jmxInfo = new JMXInfo();
         platformManagementKnowledgeBean.setJmxInfo(jmxInfo);

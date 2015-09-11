@@ -34,13 +34,14 @@ import org.slf4j.LoggerFactory;
 import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 
 @ClientEndpoint(encoders = {PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class},
         decoders = {PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class})
 public class WebSocketClient
-        extends Endpoint {
+        extends Endpoint implements MessageHandler.Whole<PlatformManagementKnowledgeBean> {
     private final static org.slf4j.Logger logger = LoggerFactory.getLogger(WebSocketClient.class);
     private static final Logger LOG = Logger.getLogger(WebSocketClient.class);
     final private Heartbeat heartbeat = new Heartbeat();
@@ -51,9 +52,9 @@ public class WebSocketClient
     private int numberRetries;
     private DroolsPlatformKnowledgeBase platformKnowledgeBase;
     private Session session;
+    private ClientManager client;
 
-
-    public WebSocketClient(String hostname, Integer portNumber, String endPointName, int numberRetries, int timeToWaitBetweenTwoRetries,DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase) throws DeploymentException, IOException {
+    public WebSocketClient(String hostname, Integer portNumber, String endPointName, int numberRetries, int timeToWaitBetweenTwoRetries, DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase) throws DeploymentException, IOException {
         this.platformKnowledgeBase = droolsPlatformKnowledgeBase;
         this.numberRetries = numberRetries;
         this.timeToWaitBetweenTwoRetries = timeToWaitBetweenTwoRetries;
@@ -66,16 +67,16 @@ public class WebSocketClient
         Exception lastException = null;
         while (retryNumber < this.numberRetries && connected == false) {
             try {
-                Authenticator authenticator =new Authenticator() {
+                Authenticator authenticator = new Authenticator() {
                     @Override
                     public String generateAuthorizationHeader(URI uri, String s, Credentials credentials) throws AuthenticationException {
                         return null;
                     }
                 };
                 AuthConfig authConfig = AuthConfig.Builder.create().build();
-                ClientManager client = ClientManager.createClient();
-               // client.getProperties().put(ClientProperties.AUTH_CONFIG, authConfig);
-               client.getProperties().put(ClientProperties.CREDENTIALS, new Credentials("admin", "admin"));
+                client = ClientManager.createClient();
+                // client.getProperties().put(ClientProperties.AUTH_CONFIG, authConfig);
+                client.getProperties().put(ClientProperties.CREDENTIALS, new Credentials("admin", "admin"));
                 this.session = client.connectToServer(
                         this,
                         ClientEndpointConfig.Builder.create()
@@ -113,7 +114,7 @@ public class WebSocketClient
     @Override
     public void onClose(Session session, CloseReason closeReason) {
 
-        super.onClose(session, closeReason);
+        // super.onClose(session, closeReason);
     }
 
     @Override
@@ -123,76 +124,21 @@ public class WebSocketClient
     }
 
     public void sendMessage(PlatformManagementKnowledgeBean bean) throws IOException, EncodeException {
-        this.session.getBasicRemote().sendObject(bean);
+        if (bean != null && bean.getHistoryEvent() != null) {
+            this.session.getBasicRemote().sendBinary(this.getBuffer(bean));
+        } else {
+
+            this.session.getBasicRemote().sendObject(bean);
+        }
     }
 
 
     @Override
     public void onOpen(final Session session, EndpointConfig endpointConfig) {
-        this.session = session;
+        //      this.session = session;
         final DroolsPlatformKnowledgeBase platformKnowledgeBaseJavaEE2 = this.platformKnowledgeBase;
         final WebSocketClient webclient = this;
-        session.addMessageHandler(new MessageHandler.Whole<PlatformManagementKnowledgeBean>() {
-            @Override
-            public void onMessage(PlatformManagementKnowledgeBean bean) {
-
-                switch (bean.getRequestRuntimePlarform()) {
-                    case isAlive:
-
-                        try {
-                            webclient.sendMessage(PlatformManagementKnowledgeBeanServiceFactory.isAlive(bean));
-                        } catch (IOException e) {
-                            LOG.debug("WebSocketCLientOnMessage.isAlice", e);
-                        } catch (EncodeException e) {
-                            LOG.debug("WebSocketCLientOnMessage.isAlice", e);
-                        }
-
-                        break;
-                    case duplicateRuleBaseID:
-                        platformKnowledgeBaseJavaEE2.dispose();
-                        LOG.error("duplicated ruleBaseID " + bean.toString());
-                        break;
-                    case ruleVersionInfos:
-                        bean = PlatformManagementKnowledgeBeanServiceFactory.generateRuleVersionsInfo(bean, platformKnowledgeBase.getDroolsResources());
-                        try {
-                            webclient.sendMessage(bean);
-                        } catch (IOException e) {
-                            LOG.debug("WebSocketCLientOnMessage.ruleVersionsInfos", e);
-                        } catch (EncodeException e) {
-                            LOG.debug("WebSocketCLientOnMessage.ruleVersionsInfos", e);
-                        }
-                        break;
-                    case loadNewRuleVersion:
-                        List<DroolsResource> droolsResources = PlatformManagementKnowledgeBeanServiceFactory.extract(bean.getResourceFileList(), platformKnowledgeBase.getGuvnorUsername(), platformKnowledgeBase.getGuvnorPassword());
-                        try {
-                            platformKnowledgeBase.RecreateKBaseWithNewRessources(droolsResources);
-                            bean.setRequestStatus(RequestStatus.SUCCESS);
-                            webclient.sendMessage(bean);
-                            platformKnowledgeBaseJavaEE2.setRuleBaseStatus(true);
-                            StringBuilder ss = new StringBuilder();
-                            for (DroolsResource dd : droolsResources) {
-                                ss.append(dd.toString());
-                            }
-                            LOG.info("loadNewRuleVersion done" + ss.toString());
-                        } catch (Exception e) {
-                            DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("RELOAD", "Could not reload Rule Package From Guvnor", e);
-                            bean.setDroolsChtijbugException(droolsChtijbugException);
-                            bean.setRequestStatus(RequestStatus.FAILURE);
-                            LOG.error("Could not reload new rule version" + bean.toString(), e);
-                            try {
-                                webclient.sendMessage(bean);
-                            } catch (IOException e1) {
-                                LOG.debug("WebSocketCLientOnMessage.loadnewRuleVersion", e);
-                            } catch (EncodeException e1) {
-                                LOG.debug("WebSocketCLientOnMessage.loadnewRuleVersion", e);
-                            }
-                        }
-                        break;
-                }
-            }
-        });
-
-
+        session.addMessageHandler(this);
     }
 
 
@@ -216,6 +162,78 @@ public class WebSocketClient
             }
 
 
+        }
+    }
+
+    public ByteBuffer getBuffer(PlatformManagementKnowledgeBean bean) {
+
+
+        try {
+            byte[] bytes = ByteUtil.toByteArray(bean);
+            ByteBuffer buffer = ByteBuffer.wrap(bytes);
+
+            return buffer;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    @Override
+    public void onMessage(PlatformManagementKnowledgeBean bean) {
+        switch (bean.getRequestRuntimePlarform()) {
+            case isAlive:
+
+                try {
+                    this.sendMessage(PlatformManagementKnowledgeBeanServiceFactory.isAlive(bean));
+                } catch (IOException e) {
+                    LOG.debug("WebSocketCLientOnMessage.isAlice", e);
+                } catch (EncodeException e) {
+                    LOG.debug("WebSocketCLientOnMessage.isAlice", e);
+                }
+
+                break;
+            case duplicateRuleBaseID:
+                this.platformKnowledgeBase.dispose();
+                LOG.error("duplicated ruleBaseID " + bean.toString());
+                break;
+            case ruleVersionInfos:
+                bean = PlatformManagementKnowledgeBeanServiceFactory.generateRuleVersionsInfo(bean, platformKnowledgeBase.getDroolsResources());
+                try {
+                    this.sendMessage(bean);
+                } catch (IOException e) {
+                    LOG.debug("WebSocketCLientOnMessage.ruleVersionsInfos", e);
+                } catch (EncodeException e) {
+                    LOG.debug("WebSocketCLientOnMessage.ruleVersionsInfos", e);
+                }
+                break;
+            case loadNewRuleVersion:
+                List<DroolsResource> droolsResources = PlatformManagementKnowledgeBeanServiceFactory.extract(bean.getResourceFileList(), platformKnowledgeBase.getGuvnorUsername(), platformKnowledgeBase.getGuvnorPassword());
+                try {
+                    platformKnowledgeBase.RecreateKBaseWithNewRessources(droolsResources);
+                    bean.setRequestStatus(RequestStatus.SUCCESS);
+                    this.sendMessage(bean);
+                    platformKnowledgeBase.setRuleBaseStatus(true);
+                    StringBuilder ss = new StringBuilder();
+                    for (DroolsResource dd : droolsResources) {
+                        ss.append(dd.toString());
+                    }
+                    LOG.info("loadNewRuleVersion done" + ss.toString());
+                } catch (Exception e) {
+                    DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("RELOAD", "Could not reload Rule Package From Guvnor", e);
+                    bean.setDroolsChtijbugException(droolsChtijbugException);
+                    bean.setRequestStatus(RequestStatus.FAILURE);
+                    LOG.error("Could not reload new rule version" + bean.toString(), e);
+                    try {
+                        this.sendMessage(bean);
+                    } catch (IOException e1) {
+                        LOG.debug("WebSocketCLientOnMessage.loadnewRuleVersion", e);
+                    } catch (EncodeException e1) {
+                        LOG.debug("WebSocketCLientOnMessage.loadnewRuleVersion", e);
+                    }
+                }
+                break;
         }
     }
 

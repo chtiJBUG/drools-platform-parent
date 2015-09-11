@@ -289,7 +289,7 @@ public class DroolsPlatformKnowledgeBaseJavaEE implements DroolsPlatformKnowledg
     @Override
     public void fireEvent(HistoryEvent newHistoryEvent)  {
         PlatformManagementKnowledgeBean bean = new PlatformManagementKnowledgeBean();
-        bean.setHistoryEvent(newHistoryEvent);
+        bean.setHistoryEventObject(newHistoryEvent);
         bean.setRequestRuntimePlarform(RequestRuntimePlarform.historyEvent);
         try {
             this.webSocketClient.sendMessage(bean);

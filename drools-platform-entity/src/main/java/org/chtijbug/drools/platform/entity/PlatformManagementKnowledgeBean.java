@@ -20,6 +20,7 @@ import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.platform.entity.coder.JSONCoder;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,17 +31,17 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PlatformManagementKnowledgeBean {
+public class PlatformManagementKnowledgeBean implements Serializable {
 
     private Heartbeat heartbeat;
     private HistoryEvent historyEvent;
     private boolean isAlive = false;
     private RequestRuntimePlarform requestRuntimePlarform;
     private RequestStatus requestStatus;
+    private Integer ruleBaseId;
     private JMXInfo jmxInfo;
     private ArrayList<PlatformResourceFile> resourceFileList = new ArrayList<>();
     private DroolsChtijbugException droolsChtijbugException;
-
     public boolean isAlive() {
         return isAlive;
     }
@@ -61,6 +62,7 @@ public class PlatformManagementKnowledgeBean {
         return historyEvent;
     }
 
+
     public void setHistoryEvent(HistoryEvent historyEvent) {
         this.historyEvent = historyEvent;
     }
@@ -79,6 +81,14 @@ public class PlatformManagementKnowledgeBean {
 
     public void setJmxInfo(JMXInfo jmxInfo) {
         this.jmxInfo = jmxInfo;
+    }
+
+    public Integer getRuleBaseId() {
+        return ruleBaseId;
+    }
+
+    public void setRuleBaseId(Integer ruleBaseId) {
+        this.ruleBaseId = ruleBaseId;
     }
 
     public DroolsChtijbugException getDroolsChtijbugException() {

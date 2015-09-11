@@ -57,7 +57,7 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
      * Class Logger
      */
     private static Logger logger = LoggerFactory.getLogger(DroolsPlatformKnowledgeBase.class);
-
+    public boolean connectionToServerEstablished = false;
     /**
      * Rule base ID (UID for the runtime
      */
@@ -66,8 +66,6 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
      * Rule base singleton (Knwledge session factory)
      */
     private RuleBaseSingleton ruleBasePackage;
-
-
     private List<DroolsResource> droolsResources = new ArrayList<>();
     /**
      * Instant messaging channel *
@@ -93,12 +91,11 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
     private String endPoint;
     public DroolsPlatformKnowledgeBase() {/* nop*/}
 
-
     public DroolsPlatformKnowledgeBase(Integer ruleBaseID, List<DroolsResource> droolsResources, JavaDialect javaDialect) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
         this.ruleBaseID = ruleBaseID;
         this.droolsResources = droolsResources;
         this.javaDialect=javaDialect;
-        initPlatformRuntime();
+
 
     }
 
@@ -179,6 +176,7 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
 
     @Override
     public RuleBaseSession createRuleBaseSession(int maxNumberRulesToExecute) throws DroolsChtijbugException {
+
         SessionHistoryListener sessionHistoryListener = new SessionHistoryListener();
         return this.createRuleBaseSession(maxNumberRulesToExecute, sessionHistoryListener);
     }

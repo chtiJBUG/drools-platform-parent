@@ -17,6 +17,7 @@ package org.chtijbug.drools.platform.backend.wsclient;
 
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -37,7 +38,12 @@ public class WebSocketSessionManager {
 
     private Map<Integer, WebSocketSession> webSocketClientList = new HashMap<>();
 
-
+    @Value(value = "${jms.port}")
+    private String jmsPort = "61616";
+    @Value(value = "${jms.server}")
+    private String jmsServer = "localhost";
+    @Value(value = "${jms.queue}")
+    private String platformQueueName;
     public void AddClient(Integer ruleBaseID, WebSocketSession session) throws DeploymentException, IOException {
 
         this.webSocketClientList.put(ruleBaseID, session);
@@ -61,6 +67,18 @@ public class WebSocketSessionManager {
         }
     }
 
+    public String getJmsPort() {
+        return jmsPort;
+    }
+
+    public String getJmsServer() {
+        return jmsServer;
+    }
+
+    public String getPlatformQueueName() {
+        return platformQueueName;
+    }
+
     public Set<Integer> getAllRuleBaseID() {
         return webSocketClientList.keySet();
     }
@@ -81,6 +99,7 @@ public class WebSocketSessionManager {
 
     public void sendMessage(Integer ruleBaseID, PlatformManagementKnowledgeBean bean) throws IOException, EncodeException {
         if (ruleBaseID != null) {
+            bean.setRuleBaseId(ruleBaseID);
             WebSocketSession serverSession = this.webSocketClientList.get(ruleBaseID);
             PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode stream = new PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode();
             if (serverSession != null && serverSession.isOpen()) {
