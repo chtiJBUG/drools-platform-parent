@@ -27,7 +27,6 @@
         <property name="webSocketHostname" value="${ws.hostname}"/>
         <property name="webSocketEndPoint" value="${ws.endpoint}"/>
         <property name="webSocketPort" value="${ws.port}"/>
-        <property name="platformServer" value="${knowledge.platformServer}"/>
         <property name="ruleBaseID" value="${knowledge.rulebaseid}"/>
 
 

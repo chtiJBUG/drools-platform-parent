@@ -74,12 +74,7 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
     private int webSocketPort = 8025;
     private String webSocketEndPoint ;
     private WebSocketClient webSocketClient;
-    /**
-     * Event Messaging channel settings
-     */
-    private String platformServer;
-    private Integer platformPort = 61616;
-    private String platformQueueName = "historyEventQueue";
+
     /**
      * Runtime internal Status
      */
@@ -295,29 +290,9 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
         this.webSocketPort = webSocketPort;
     }
 
-    public String getPlatformServer() {
-        return platformServer;
-    }
 
-    public void setPlatformServer(String platformServer) {
-        this.platformServer = platformServer;
-    }
 
-    public Integer getPlatformPort() {
-        return platformPort;
-    }
 
-    public void setPlatformPort(Integer platformPort) {
-        this.platformPort = platformPort;
-    }
-
-    public String getPlatformQueueName() {
-        return platformQueueName;
-    }
-
-    public void setPlatformQueueName(String platformQueueName) {
-        this.platformQueueName = platformQueueName;
-    }
 
     public List<DroolsResource> getDroolsResources() {
         return droolsResources;

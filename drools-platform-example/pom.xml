@@ -11,8 +11,8 @@
   <packaging>pom</packaging>
   <modules>
     <module>drools-platform-example-loyalty</module>
-    <!--module>drools-platform-example-SimpleBPMN</module>
-    <module>drools-platform-example-swimming-pool</module-->
+
+    <module>drools-platform-example-swimming-pool</module>
   </modules>
 
 
