@@ -22,5 +22,5 @@ package org.chtijbug.drools.platform.entity;
  * To change this template use File | Settings | File Templates.
  */
 public enum RequestRuntimePlarform {
-    isAlive, ruleVersionInfos, loadNewRuleVersion, jmxInfos, versionInfos, duplicateRuleBaseID, heartbeat;
+    isAlive, ruleVersionInfos, loadNewRuleVersion, jmxInfos, versionInfos, duplicateRuleBaseID, heartbeat, historyEvent;
 }

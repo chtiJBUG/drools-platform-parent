@@ -18,7 +18,7 @@ package org.chtijbug.drools.platform.core;
 import org.chtijbug.drools.entity.DroolsFactObject;
 import org.chtijbug.drools.entity.DroolsRuleObject;
 import org.chtijbug.drools.entity.history.HistoryContainer;
-import org.chtijbug.drools.platform.core.websocket.WebSocketServerInstance;
+import org.chtijbug.drools.platform.core.wssocket.WebSocketClient;
 import org.chtijbug.drools.platform.entity.JMXInfo;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.entity.RequestRuntimePlarform;
@@ -39,7 +39,11 @@ public class DroolsPlatformSession implements RuleBaseSession {
 
     private RuleBaseStatefulSession ruleBaseStatefulSession;
 
-    private WebSocketServerInstance runtimeWebSocketServerService;
+    private WebSocketClient webSocketClient;
+
+    public DroolsPlatformSession(WebSocketClient webSocketClient) {
+        this.webSocketClient = webSocketClient;
+    }
 
     public RuleBaseStatefulSession getRuleBaseStatefulSession() {
         return ruleBaseStatefulSession;
@@ -47,14 +51,6 @@ public class DroolsPlatformSession implements RuleBaseSession {
 
     public void setRuleBaseStatefulSession(RuleBaseStatefulSession ruleBaseStatefulSession) {
         this.ruleBaseStatefulSession = ruleBaseStatefulSession;
-    }
-
-    public WebSocketServerInstance getRuntimeWebSocketServerService() {
-        return runtimeWebSocketServerService;
-    }
-
-    public void setRuntimeWebSocketServerService(WebSocketServerInstance runtimeWebSocketServerService) {
-        this.runtimeWebSocketServerService = runtimeWebSocketServerService;
     }
 
     @Override
@@ -86,6 +82,7 @@ public class DroolsPlatformSession implements RuleBaseSession {
         PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
         platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.jmxInfos);
         platformManagementKnowledgeBean.setAlive(true);
+        platformManagementKnowledgeBean.setRuleBaseId(this.getRuleBaseID());
         platformManagementKnowledgeBean.setRequestStatus(RequestStatus.SUCCESS);
         JMXInfo jmxInfo = new JMXInfo();
         platformManagementKnowledgeBean.setJmxInfo(jmxInfo);
@@ -104,7 +101,7 @@ public class DroolsPlatformSession implements RuleBaseSession {
         jmxInfo.setMinRuleThroughout(mbeanStatefulSessionSupervision.getMinRuleThroughout());
         jmxInfo.setMaxRuleThroughout(mbeanStatefulSessionSupervision.getMaxRuleThroughout());
         try {
-            this.runtimeWebSocketServerService.sendMessage(platformManagementKnowledgeBean);
+            this.webSocketClient.sendMessage(platformManagementKnowledgeBean);
         } catch (Exception e) {
 
             DroolsChtijbugException ee = new DroolsChtijbugException("JMXInfo", "Not Possible to send Infos", e);

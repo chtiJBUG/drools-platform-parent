@@ -15,7 +15,6 @@
  */
 package org.chtijbug.drools.platform.backend.service.heartbeat;
 
-import org.chtijbug.drools.platform.backend.wsclient.WebSocketClient;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.entity.RequestRuntimePlarform;
@@ -37,13 +36,12 @@ public class HeartbeatManagementService {
 
 
         for (Integer ruleBaseID : webSocketSessionManager.getAllRuleBaseID()) {
-            WebSocketClient webSocketClient = webSocketSessionManager.getWebSocketClient(ruleBaseID);
             try {
-                if (webSocketClient.getSession().isOpen()) {
                     PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
                     platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.isAlive);
-                    webSocketClient.sendMessage(platformManagementKnowledgeBean);
-                }
+                webSocketSessionManager.sendMessage(ruleBaseID, platformManagementKnowledgeBean);
+
+
             } catch (EncodeException e) {
                 //Do NOTHING
             } catch (IOException e) {

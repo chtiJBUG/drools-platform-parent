@@ -26,7 +26,6 @@ import static org.chtijbug.drools.platform.runtime.builder.ClassSourceCodeInject
 
 @Service
 public class BusinessPackageAuthoringManager {
-    private static Logger logger = LoggerFactory.getLogger(BusinessPackageAuthoringManager.class);
     protected static final String EXECUTION_SERVICE_CLASS_NAME = "ServiceCalculate";
     protected static final String EXECUTION_SERVICE_INTERFACE_NAME = "IServiceCalculate";
     protected static final String XPATH_PACKAGE_NAME = "//wsdl:definitions/@name";
@@ -34,8 +33,8 @@ public class BusinessPackageAuthoringManager {
     protected static final String XPATH_XSD_NAME = "//wsdl:types/xsd:schema/xsd:import/@schemaLocation";
     protected static final String XPATH_TARGET_NAMESPACE = "//wsdl:definitions/@targetNamespace";
     protected static final String XPATH_EXECUTION_SERVICE = "//wsdl:service/@name";
-
     protected static final String METHOD_SIGNATURE_REGEX = "(public).* [a-zA-Z]+ [a-zA-Z, 0-9]+\\([a-zA-Z ,\\t\\n, @,(,=,',\",0-9,:,/,\\.,)]*";
+    private static Logger logger = LoggerFactory.getLogger(BusinessPackageAuthoringManager.class);
     /**
      * Guvnor Repository which is responsible of the Business Assets authoring, versioning etc...
      */
@@ -48,6 +47,9 @@ public class BusinessPackageAuthoringManager {
 
     private String mavenPath;
     private String baseGeneratedPath;
+
+    public BusinessPackageAuthoringManager() {
+    }
 
     public BusinessPackageAuthoringManager(GuvnorRepositoryImpl guvnorRepository) {
         this.guvnorRepository = guvnorRepository;

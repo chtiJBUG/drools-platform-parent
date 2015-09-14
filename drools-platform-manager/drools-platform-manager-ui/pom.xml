@@ -53,12 +53,6 @@
       <artifactId>urlrewritefilter</artifactId>
       <version>4.0.3</version>
     </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.5</version>
-      <scope>provided</scope>
-    </dependency>
 
     <!-- Rest auth -->
     <dependency>
@@ -75,10 +69,7 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-messaging</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-websocket</artifactId>
-    </dependency>
+
 
     <!-- Test libs -->
 
@@ -131,7 +122,7 @@
     </dependency-->
 
     <!-- INCLUDE THIS IF YOU'RE CONNECTING TO THE SERVER THROUGH THE REMOTE ENGINE -->
-    <dependency>
+    <!--dependency>
       <groupId>org.glassfish.tyrus</groupId>
       <artifactId>tyrus-client</artifactId>
     </dependency>
@@ -139,8 +130,11 @@
       <groupId>org.glassfish.tyrus</groupId>
       <artifactId>tyrus-container-grizzly-client</artifactId>
       <version>${tyrus.version}</version>
+    </dependency-->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-websocket</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.glassfish.tyrus</groupId>
       <artifactId>tyrus-container-grizzly-server</artifactId>
@@ -162,10 +156,19 @@
       <artifactId>commons-dbcp</artifactId>
     </dependency>
     <dependency>
-      <groupId>javax.websocket</groupId>
-      <artifactId>javax.websocket-api</artifactId>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat7-websocket</artifactId>
+      <version>7.0.53</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-websocket-api</artifactId>
+      <version>7.0.53</version>
+      <scope>provided</scope>
+    </dependency>
+
+
     <!-- Projectreactor for stomp over activemq-->
     <dependency>
       <groupId>org.projectreactor</groupId>

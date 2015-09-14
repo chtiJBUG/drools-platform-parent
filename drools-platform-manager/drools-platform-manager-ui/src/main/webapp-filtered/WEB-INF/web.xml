@@ -1,107 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
-  <display-name>Drools Platform - Administration UI</display-name>
+    <display-name>Drools Platform - Administration UI</display-name>
 
-  <!--Spring root context -->
-  <context-param>
-    <param-name>contextConfigLocation</param-name>
-    <param-value>classpath*:META-INF/spring/spring-application-context.xml</param-value>
-  </context-param>
-  <listener>
-    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-  </listener>
+    <!--Spring root context -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath*:META-INF/spring/spring-application-context.xml</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
 
-  <!-- Reads request input using UTF-8 encoding -->
-  <filter>
-    <filter-name>characterEncodingFilter</filter-name>
-    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
-    <async-supported>true</async-supported>
-    <init-param>
-      <param-name>encoding</param-name>
-      <param-value>UTF-8</param-value>
-    </init-param>
-    <init-param>
-      <param-name>forceEncoding</param-name>
-      <param-value>true</param-value>
-    </init-param>
-  </filter>
-  <filter-mapping>
-    <filter-name>characterEncodingFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
+    <!-- Reads request input using UTF-8 encoding -->
+    <filter-mapping>
+        <filter-name>characterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>characterEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <async-supported>true</async-supported>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
 
 
-  <!-- Spring security -->
-  <filter>
-    <filter-name>springSecurityFilterChain</filter-name>
-    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-    <async-supported>true</async-supported>
-  </filter>
-  <filter-mapping>
-    <filter-name>springSecurityFilterChain</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
 
-  <!-- Compress the HTTP response -->
-  <!--filter>
-      <filter-name>GZIPFilter</filter-name>
-      <filter-class>org.chtijbug.drools.platform.web.filter.GZIPFilter</filter-class>
-  </filter>
-  <filter-mapping>
-      <filter-name>GZIPFilter</filter-name>
-      <url-pattern>/*</url-pattern>
-  </filter-mapping-->
+    <!-- Spring security -->
+    <!--filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <async-supported>true</async-supported>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping-->
 
-  <!-- Rewrite for Angular HTML5 mode -->
-  <filter>
-    <filter-name>UrlRewriteFilter</filter-name>
-    <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
-    <async-supported>true</async-supported>
-    <init-param>
-      <param-name>logLevel</param-name>
-      <param-value>slf4j</param-value>
-    </init-param>
-  </filter>
-  <filter-mapping>
-    <filter-name>UrlRewriteFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-    <dispatcher>REQUEST</dispatcher>
-  </filter-mapping>
+    <!-- Compress the HTTP response -->
+    <!--filter>
+        <filter-name>GZIPFilter</filter-name>
+        <filter-class>org.chtijbug.drools.platform.web.filter.GZIPFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>GZIPFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping-->
 
-  <!-- Replace the <base> element with the context endPoint-->
-  <filter>
-    <filter-name>DynamicBaseFilter</filter-name>
-    <filter-class>org.chtijbug.drools.platform.web.filter.DynamicBaseFilter</filter-class>
-    <async-supported>true</async-supported>
-  </filter>
-  <filter-mapping>
-    <filter-name>DynamicBaseFilter</filter-name>
-    <url-pattern>/index.html</url-pattern>
-    <dispatcher>REQUEST</dispatcher>
-    <dispatcher>FORWARD</dispatcher>
-  </filter-mapping>
+    <!-- Rewrite for Angular HTML5 mode -->
+    <filter>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+        <async-supported>true</async-supported>
+        <init-param>
+            <param-name>logLevel</param-name>
+            <param-value>slf4j</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
 
-  <!-- Spring MVC Servlet -->
-  <servlet>
-    <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
-    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-    <init-param>
-      <param-name>contextConfigLocation</param-name>
-      <param-value>classpath*:META-INF/spring/servlet-context.xml</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-    <async-supported>true</async-supported>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
-    <url-pattern>/server/*</url-pattern>
-  </servlet-mapping>
+    <!-- Replace the <base> element with the context endPoint-->
+    <filter>
+        <filter-name>DynamicBaseFilter</filter-name>
+        <filter-class>org.chtijbug.drools.platform.web.filter.DynamicBaseFilter</filter-class>
+        <async-supported>true</async-supported>
+    </filter>
+    <filter-mapping>
+        <filter-name>DynamicBaseFilter</filter-name>
+        <url-pattern>/index.html</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
 
-  <mime-mapping>
-    <extension>woff</extension>
-    <mime-type>application/x-font-woff</mime-type>
-  </mime-mapping>
+
+    <!-- Spring MVC Servlet -->
+    <servlet>
+        <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath*:META-INF/spring/servlet-context.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+        <async-supported>true</async-supported>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+        <url-pattern>/server/*</url-pattern>
+    </servlet-mapping>
+
+    <mime-mapping>
+        <extension>woff</extension>
+        <mime-type>application/x-font-woff</mime-type>
+    </mime-mapping>
 
 
 </web-app>

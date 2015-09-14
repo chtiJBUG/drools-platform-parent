@@ -17,6 +17,8 @@ package org.chtijbug.drools.platform.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.io.Serializable;
+
 /**
  * Created by IntelliJ IDEA.
  * Date: 05/05/14
@@ -24,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * To change this template use File | Settings | File Templates.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PlatformResourceFile {
+public class PlatformResourceFile implements Serializable {
     private String fileName;
     private String content;
     private String guvnor_url = null;

@@ -51,7 +51,7 @@
     </dependency>
     <dependency>
       <groupId>org.chtijbug.drools</groupId>
-      <artifactId>drools-platform-runtime-servlet</artifactId>
+      <artifactId>drools-platform-knowledge</artifactId>
       <version>${project.version}</version>
     </dependency>
     <!-- Apache CXF dependencies -->
@@ -72,10 +72,6 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-jms</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.tomcat</groupId>
