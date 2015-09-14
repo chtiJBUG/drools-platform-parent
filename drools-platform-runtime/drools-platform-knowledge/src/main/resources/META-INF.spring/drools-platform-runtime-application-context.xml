@@ -22,8 +22,8 @@
         <ref bean="guvnorResource"/>
     </util:list>
 
-    <bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsWaitForServerPlatformKnowledgeBase"
-          init-method="initPlatformRuntime">
+    <bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase"
+          init-method="initPlatformRunTimeAsync">
         <property name="webSocketHostname" value="${ws.hostname}"/>
         <property name="webSocketEndPoint" value="${ws.endpoint}"/>
         <property name="webSocketPort" value="${ws.port}"/>

@@ -30,6 +30,8 @@ import org.chtijbug.drools.runtime.mbeans.StatefulSessionSupervision;
 import org.drools.ObjectFilter;
 import org.drools.runtime.process.ProcessInstance;
 import org.drools.runtime.process.WorkItemHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Map;
@@ -37,6 +39,8 @@ import java.util.Map;
 
 public class DroolsPlatformSession implements RuleBaseSession {
 
+
+    private static Logger logger = LoggerFactory.getLogger(DroolsPlatformSession.class);
     private RuleBaseStatefulSession ruleBaseStatefulSession;
 
     private WebSocketClient webSocketClient;
@@ -103,9 +107,8 @@ public class DroolsPlatformSession implements RuleBaseSession {
         try {
             this.webSocketClient.sendMessage(platformManagementKnowledgeBean);
         } catch (Exception e) {
+            logger.error("DroolsPlatformSession.sentJMXInfo", e);
 
-            DroolsChtijbugException ee = new DroolsChtijbugException("JMXInfo", "Not Possible to send Infos", e);
-            throw ee;
         }
     }
 

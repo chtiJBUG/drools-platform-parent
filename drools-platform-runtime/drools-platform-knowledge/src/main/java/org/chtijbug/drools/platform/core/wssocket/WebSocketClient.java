@@ -18,6 +18,7 @@ package org.chtijbug.drools.platform.core.wssocket;
 import org.apache.log4j.Logger;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
 import org.chtijbug.drools.platform.core.PlatformManagementKnowledgeBeanServiceFactory;
+import org.chtijbug.drools.platform.core.ReconnectToServerThread;
 import org.chtijbug.drools.platform.entity.Heartbeat;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.entity.RequestStatus;
@@ -37,6 +38,8 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @ClientEndpoint(encoders = {PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class},
         decoders = {PlatformManagementKnowledgeBean.PlatformManagementKnowledgeBeanCode.class})
@@ -53,19 +56,31 @@ public class WebSocketClient
     private DroolsPlatformKnowledgeBase platformKnowledgeBase;
     private Session session;
     private ClientManager client;
+    private ReconnectToServerThread reconnectToServerThread;
+    private ExecutorService executorService = Executors.newFixedThreadPool(1);
 
     public WebSocketClient(String hostname, Integer portNumber, String endPointName, int numberRetries, int timeToWaitBetweenTwoRetries, DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase) throws DeploymentException, IOException {
         this.platformKnowledgeBase = droolsPlatformKnowledgeBase;
         this.numberRetries = numberRetries;
         this.timeToWaitBetweenTwoRetries = timeToWaitBetweenTwoRetries;
+        this.hostname = hostname;
+        this.portNumber = portNumber;
+        this.endPointName = endPointName;
 
+        /**
+         * Let us start n times teh connection + wait between timeout
+         */
+        this.connectToServer();
+    }
+
+    public void connectToServer() throws IOException {
         /**
          * Let us start n times teh connection + wait between timeout
          */
         boolean connected = false;
         int retryNumber = 0;
         Exception lastException = null;
-        while (retryNumber < this.numberRetries && connected == false) {
+        while (connected == false) {
             try {
                 Authenticator authenticator = new Authenticator() {
                     @Override
@@ -87,7 +102,7 @@ public class WebSocketClient
                         URI.create("ws://" + hostname + ":" + portNumber + endPointName)
                 );
                 connected = true;
-                LOG.info("Successfully Connected to" + "ws://" + hostname + ":" + portNumber + endPointName);
+                LOG.info("Successfully Connected to " + "ws://" + hostname + ":" + portNumber + endPointName);
             } catch (Exception e) {
                 lastException = e;
                 try {
@@ -123,7 +138,7 @@ public class WebSocketClient
         logger.error("WebSocketClient.onClose", thr);
     }
 
-    public void sendMessage(PlatformManagementKnowledgeBean bean) throws IOException, EncodeException {
+    public void sendMessage(PlatformManagementKnowledgeBean bean) throws IOException, EncodeException, DroolsChtijbugException {
         try {
             if (this.session != null && this.session.isOpen()) {
                 if (bean != null && bean.getHistoryEvent() != null) {
@@ -133,6 +148,9 @@ public class WebSocketClient
 
                     this.session.getBasicRemote().sendObject(bean);
                 }
+            } else {
+                DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("WebSocketClient", "noConnectionToServer", null);
+                throw droolsChtijbugException;
             }
         } catch (Exception e) {
             logger.error("WebSocketClient.sendMessage", e);
@@ -201,6 +219,8 @@ public class WebSocketClient
                     LOG.debug("WebSocketCLientOnMessage.isAlice", e);
                 } catch (EncodeException e) {
                     LOG.debug("WebSocketCLientOnMessage.isAlice", e);
+                } catch (DroolsChtijbugException e) {
+                    LOG.debug("WebSocketCLientOnMessage.isAlice", e);
                 }
 
                 break;
@@ -215,6 +235,8 @@ public class WebSocketClient
                 } catch (IOException e) {
                     LOG.debug("WebSocketCLientOnMessage.ruleVersionsInfos", e);
                 } catch (EncodeException e) {
+                    LOG.debug("WebSocketCLientOnMessage.ruleVersionsInfos", e);
+                } catch (DroolsChtijbugException e) {
                     LOG.debug("WebSocketCLientOnMessage.ruleVersionsInfos", e);
                 }
                 break;
@@ -241,10 +263,18 @@ public class WebSocketClient
                         LOG.debug("WebSocketCLientOnMessage.loadnewRuleVersion", e);
                     } catch (EncodeException e1) {
                         LOG.debug("WebSocketCLientOnMessage.loadnewRuleVersion", e);
+                    } catch (DroolsChtijbugException e1) {
+                        LOG.debug("WebSocketCLientOnMessage.loadnewRuleVersion", e);
                     }
                 }
                 break;
         }
     }
 
+    public void reconnectToServer() {
+        reconnectToServerThread = new ReconnectToServerThread(this);
+        executorService.submit(reconnectToServerThread);
+
+
+    }
 }

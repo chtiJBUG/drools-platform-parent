@@ -16,18 +16,18 @@ public class WaitForServerThread implements Runnable {
 
     private HistoryListener historyListener;
 
-    private DroolsWaitForServerPlatformKnowledgeBase droolsWaitForServerPlatformKnowledgeBase;
+    private DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase;
 
-    public WaitForServerThread(DroolsWaitForServerPlatformKnowledgeBase droolsWaitForServerPlatformKnowledgeBase) {
+    public WaitForServerThread(DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase) {
 
-        this.droolsWaitForServerPlatformKnowledgeBase = droolsWaitForServerPlatformKnowledgeBase;
+        this.droolsPlatformKnowledgeBase = droolsPlatformKnowledgeBase;
     }
 
     @Override
     public void run() {
-        if (droolsWaitForServerPlatformKnowledgeBase != null) {
+        if (droolsPlatformKnowledgeBase != null) {
             try {
-                droolsWaitForServerPlatformKnowledgeBase.initFatherPlatformRuntime();
+                droolsPlatformKnowledgeBase.initPlatformRuntime();
             } catch (InterruptedException e) {
                 logger.error("WaitForServerThread", e);
 

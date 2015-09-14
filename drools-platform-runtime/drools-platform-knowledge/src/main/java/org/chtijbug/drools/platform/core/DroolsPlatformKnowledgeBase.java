@@ -52,7 +52,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseRuntime, RuleBaseReady,PlatformHistoryListener {
+public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseRuntime, RuleBaseReady, PlatformHistoryListener {
     /**
      * Class Logger
      */
@@ -72,7 +72,7 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
      */
     private String webSocketHostname;
     private int webSocketPort = 8025;
-    private String webSocketEndPoint ;
+    private String webSocketEndPoint;
     private WebSocketClient webSocketClient;
 
     /**
@@ -82,14 +82,17 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
     private String guvnorUsername;
     private String guvnorPassword;
     private JavaDialect javaDialect = null;
-    private ExecutorService executorService = Executors.newFixedThreadPool(5);
+    private ExecutorService executorService = Executors.newFixedThreadPool(1);
     private String endPoint;
+
+    private List<HistoryEvent> notYetTransmittedEvents = new LinkedList<>();
+
     public DroolsPlatformKnowledgeBase() {/* nop*/}
 
     public DroolsPlatformKnowledgeBase(Integer ruleBaseID, List<DroolsResource> droolsResources, JavaDialect javaDialect) throws InterruptedException, DroolsChtijbugException, UnknownHostException {
         this.ruleBaseID = ruleBaseID;
         this.droolsResources = droolsResources;
-        this.javaDialect=javaDialect;
+        this.javaDialect = javaDialect;
 
 
     }
@@ -98,13 +101,18 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
         this.webSocketEndPoint = webSocketEndPoint;
     }
 
+    public void initPlatformRunTimeAsync() {
+        WaitForServerThread waitForServerThread = new WaitForServerThread(this);
+        executorService.submit(waitForServerThread);
+    }
+
     public void initPlatformRuntime() throws InterruptedException, DroolsChtijbugException, UnknownHostException {
         logger.debug(">>initPlatformRuntime");
 
         try {
-            this.webSocketClient=new WebSocketClient(this.webSocketHostname,this.webSocketPort,this.webSocketEndPoint,5,1000,this);
+            this.webSocketClient = new WebSocketClient(this.webSocketHostname, this.webSocketPort, this.webSocketEndPoint, 5, 2000, this);
         } catch (DeploymentException e) {
-            logger.debug("DroolsPlatformKnowledgeBaseJavaEE.initPlatformRuntime",e);
+            logger.debug("DroolsPlatformKnowledgeBaseJavaEE.initPlatformRuntime", e);
         } catch (IOException e) {
             logger.debug("DroolsPlatformKnowledgeBaseJavaEE.initPlatformRuntime", e);
         }
@@ -115,7 +123,6 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
         this.sendPlatformKnowledgeBaseInitialConnectionEventToServer();
         logger.debug("<<<initPlatformRuntime");
     }
-
 
 
     public void sendPlatformKnowledgeBaseInitialConnectionEventToServer() throws DroolsChtijbugException {
@@ -232,6 +239,7 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
     public void dispose() {
         this.ruleBasePackage.dispose();
         this.shutdown();
+        this.executorService.shutdown();
     }
 
     @Override
@@ -291,9 +299,6 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
     }
 
 
-
-
-
     public List<DroolsResource> getDroolsResources() {
         return droolsResources;
     }
@@ -328,16 +333,35 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
     }
 
     @Override
-    public void fireEvent(HistoryEvent newHistoryEvent)  {
+    public void fireEvent(HistoryEvent newHistoryEvent) {
         PlatformManagementKnowledgeBean bean = new PlatformManagementKnowledgeBean();
         bean.setHistoryEvent(newHistoryEvent);
         bean.setRequestRuntimePlarform(RequestRuntimePlarform.historyEvent);
+        boolean transmitted = false;
         try {
-            this.webSocketClient.sendMessage(bean);
+            for (HistoryEvent toTransmitBefore : notYetTransmittedEvents) {
+                this.webSocketClient.sendMessage(createBeanForHistoryEvent(toTransmitBefore));
+            }
+            this.webSocketClient.sendMessage(createBeanForHistoryEvent(newHistoryEvent));
+            transmitted = true;
         } catch (IOException e) {
-            logger.debug("DroolsPlatformKnowledgeBaseJavaEE",e);
+            logger.debug("DroolsPlatformKnowledgeBase", e);
         } catch (EncodeException e) {
-            logger.debug("DroolsPlatformKnowledgeBaseJavaEE",e);
+            logger.debug("DroolsPlatformKnowledgeBase", e);
+        } catch (DroolsChtijbugException e) {
+            logger.debug("DroolsPlatformKnowledgeBase", e);
         }
+        if (transmitted == false) {
+            this.notYetTransmittedEvents.add(newHistoryEvent);
+            this.webSocketClient.reconnectToServer();
+        }
+    }
+
+    private PlatformManagementKnowledgeBean createBeanForHistoryEvent(HistoryEvent newHistoryEvent) {
+        PlatformManagementKnowledgeBean bean = new PlatformManagementKnowledgeBean();
+        bean.setHistoryEvent(newHistoryEvent);
+        bean.setRequestRuntimePlarform(RequestRuntimePlarform.historyEvent);
+        return bean;
+
     }
 }
