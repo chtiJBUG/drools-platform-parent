@@ -113,23 +113,33 @@ public class WebSocketClient
 
     @Override
     public void onClose(Session session, CloseReason closeReason) {
-
+        logger.debug("WebSocketClient.onClose", closeReason);
         // super.onClose(session, closeReason);
     }
 
     @Override
     public void onError(Session session, Throwable thr) {
 
-        super.onError(session, thr);
+        logger.error("WebSocketClient.onClose", thr);
     }
 
     public void sendMessage(PlatformManagementKnowledgeBean bean) throws IOException, EncodeException {
-        if (bean != null && bean.getHistoryEvent() != null) {
-            this.session.getBasicRemote().sendBinary(this.getBuffer(bean));
-        } else {
+        try {
+            if (this.session != null && this.session.isOpen()) {
+                if (bean != null && bean.getHistoryEvent() != null) {
 
-            this.session.getBasicRemote().sendObject(bean);
+                    this.session.getBasicRemote().sendBinary(this.getBuffer(bean));
+                } else {
+
+                    this.session.getBasicRemote().sendObject(bean);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("WebSocketClient.sendMessage", e);
+            throw e;
         }
+
+
     }
 
 

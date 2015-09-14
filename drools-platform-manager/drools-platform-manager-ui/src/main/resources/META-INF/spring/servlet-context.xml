@@ -55,8 +55,8 @@
 
     </bean>
   <bean id="serverFactory" class="org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean">
-    <property name="maxTextMessageBufferSize" value="8192"/>
-    <property name="maxBinaryMessageBufferSize" value="8192"/>
+      <property name="maxTextMessageBufferSize" value="8192000"/>
+      <property name="maxBinaryMessageBufferSize" value="300192000"/>
   </bean>
 
 </beans>
