@@ -22,7 +22,7 @@
         <ref bean="guvnorResource"/>
     </util:list>
 
-    <bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase"
+    <bean id="platformRunner" class="org.chtijbug.drools.platform.core.DroolsWaitForServerPlatformKnowledgeBase"
           init-method="initPlatformRuntime">
         <property name="webSocketHostname" value="${ws.hostname}"/>
         <property name="webSocketEndPoint" value="${ws.endpoint}"/>
