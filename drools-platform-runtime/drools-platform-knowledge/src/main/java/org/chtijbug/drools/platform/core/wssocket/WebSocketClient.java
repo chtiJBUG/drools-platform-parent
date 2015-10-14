@@ -82,6 +82,7 @@ public class WebSocketClient
         Exception lastException = null;
         while (connected == false) {
             try {
+                /**
                 Authenticator authenticator = new Authenticator() {
                     @Override
                     public String generateAuthorizationHeader(URI uri, String s, Credentials credentials) throws AuthenticationException {
@@ -89,6 +90,7 @@ public class WebSocketClient
                     }
                 };
                 AuthConfig authConfig = AuthConfig.Builder.create().build();
+                 **/
                 client = ClientManager.createClient();
                 // client.getProperties().put(ClientProperties.AUTH_CONFIG, authConfig);
                 client.getProperties().put(ClientProperties.CREDENTIALS, new Credentials("admin", "admin"));
