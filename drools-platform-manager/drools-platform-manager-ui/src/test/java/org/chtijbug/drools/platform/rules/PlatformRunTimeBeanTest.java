@@ -1,5 +1,6 @@
 package org.chtijbug.drools.platform.rules;
 
+import com.google.common.collect.Lists;
 import org.chtijbug.drools.entity.DroolsRuleObject;
 import org.chtijbug.drools.entity.history.HistoryEvent;
 import org.chtijbug.drools.entity.history.rule.AfterRuleFiredHistoryEvent;
@@ -90,7 +91,8 @@ public class PlatformRunTimeBeanTest {
         Assert.assertTrue(platforRuntime.getEndDate() == null);
         Assert.assertTrue(platforRuntime.getStatus() == PlatformRuntimeInstanceStatus.STARTED);
         Assert.assertTrue(platforRuntime.getRuleBaseID() == 1l);
-        List<DroolsResource> listResources = platforRuntime.getDroolsRessources();
+
+        List<DroolsResource> listResources = Lists.newArrayList(platforRuntime.getDroolsRessources());
         Assert.assertTrue(listResources.size() == 2);
         DroolsResource resource1 = listResources.get(0);
         Assert.assertTrue(resource1.getId() != null);

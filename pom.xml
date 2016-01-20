@@ -45,7 +45,6 @@
         <tomcat.version>7.0.52</tomcat.version>
         <jackson.version>2.3.1</jackson.version>
         <projectreactor.version>1.0.0.RELEASE</projectreactor.version>
-        <gridgain.version>6.6.5</gridgain.version>
     </properties>
 
     <licenses>
@@ -578,13 +577,6 @@
                 <groupId>org.projectreactor</groupId>
                 <artifactId>reactor-tcp</artifactId>
                 <version>${projectreactor.version}</version>
-            </dependency>
-            <!-- GridGain -->
-            <dependency>
-                <groupId>org.gridgain</groupId>
-                <artifactId>gridgain-datagrid</artifactId>
-                <version>${gridgain.version}</version>
-                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>org.jdal</groupId>

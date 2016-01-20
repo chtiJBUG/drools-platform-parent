@@ -19,6 +19,7 @@ import com.carrotsearch.sizeof.RamUsageEstimator;
 import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import com.google.common.cache.CacheLoader;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
@@ -42,10 +43,7 @@ import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -177,16 +175,39 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
         return platformRuntimeInstanceRepository.findByPackageNameAllRuntime(packageName);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/{packageName:.+}/{status}")
+    @Consumes(value = MediaType.APPLICATION_JSON)
+    @Produces(value = MediaType.APPLICATION_JSON)
+    @ResponseBody
+    @Transactional
+    public Collection<PlatformRuntimeInstanceData> findAllPlatformRuntimeInstance(@PathVariable final String packageName, @PathVariable PlatformRuntimeEnvironment status) {
+        Collection<PlatformRuntimeInstanceData> result = Collections2
+                .transform(
+                        platformRuntimeInstanceRepository.findByPackageNameAndStatus(packageName, status),
+                        new Function<PlatformRuntimeInstance, PlatformRuntimeInstanceData>() {
+                            @Nullable
+                            @Override
+                            public PlatformRuntimeInstanceData apply(@Nullable PlatformRuntimeInstance input) {
+                                return new PlatformRuntimeInstanceData(
+                                        input.getId(), input.getStartDate(),
+                                        input.getStatus().name(),
+                                        packageName,
+                                        input.getPlatformRuntimeDefinition().getPlatformRuntimeEnvironment().name()
+                                );
+                            }
+                        }
+                );
+        return result;
+
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/sessionbrowser/{Id}/{ruleFlowName}/{direction}")
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
     @Transactional
     public SessionExecutionDetailsResource findSessionExecutionDetails(@PathVariable Long Id, @PathVariable String ruleFlowName, @PathVariable Long direction) {
-
         SessionExecutionDetailsResource result = runtimeDisplayCache.updateView(Id, ruleFlowName, direction);
-
-
         return result;
     }
 
@@ -221,7 +242,6 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
         } finally {
             logger.debug("<< countPlatformRuntimeInstanceByFilters()");
         }
-
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/filter")
