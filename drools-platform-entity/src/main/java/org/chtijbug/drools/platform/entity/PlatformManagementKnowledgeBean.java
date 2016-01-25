@@ -42,6 +42,10 @@ public class PlatformManagementKnowledgeBean implements Serializable {
     private JMXInfo jmxInfo;
     private ArrayList<PlatformResourceFile> resourceFileList = new ArrayList<>();
     private DroolsChtijbugException droolsChtijbugException;
+    private String genericMessageID;
+    private String genericMessagecontent;
+
+
     public boolean isAlive() {
         return isAlive;
     }
@@ -141,5 +145,21 @@ public class PlatformManagementKnowledgeBean implements Serializable {
         public PlatformManagementKnowledgeBeanCode() {
             set_type(PlatformManagementKnowledgeBean.class);
         }
+    }
+
+    public String getGenericMessageID() {
+        return genericMessageID;
+    }
+
+    public void setGenericMessageID(String genericMessageID) {
+        this.genericMessageID = genericMessageID;
+    }
+
+    public String getGenericMessagecontent() {
+        return genericMessagecontent;
+    }
+
+    public void setGenericMessagecontent(String genericMessagecontent) {
+        this.genericMessagecontent = genericMessagecontent;
     }
 }
