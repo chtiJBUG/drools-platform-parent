@@ -17,9 +17,7 @@ package org.chtijbug.drools.platform.persistence.pojo;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 @Entity
@@ -41,12 +39,11 @@ public class PlatformRuntimeInstance implements Serializable {
     private Integer stopEventID;
     private Integer ruleBaseID;
 
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<DroolsResource> droolsRessources = new ArrayList<>();
+    private Set<DroolsResource> droolsRessources = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "platformRuntimeInstance")
-    private List<SessionExecutionRecord> sessionExecutions = new ArrayList<>();
+    private Set<SessionExecutionRecord> sessionExecutions = new HashSet<>();
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "platform_runtime_instance_id_fk", referencedColumnName = "id")
@@ -124,19 +121,19 @@ public class PlatformRuntimeInstance implements Serializable {
 
 
 
-    public List<DroolsResource> getDroolsRessources() {
+    public Set<DroolsResource> getDroolsRessources() {
         return droolsRessources;
     }
 
-    public void setDroolsRessources(List<DroolsResource> droolsResources) {
+    public void setDroolsRessources(Set<DroolsResource> droolsResources) {
         this.droolsRessources = droolsResources;
     }
 
-    public List<SessionExecutionRecord> getSessionExecutions() {
+    public Set<SessionExecutionRecord> getSessionExecutions() {
         return sessionExecutions;
     }
 
-    public void setSessionExecutions(List<SessionExecutionRecord> sessionExecutions) {
+    public void setSessionExecutions(Set<SessionExecutionRecord> sessionExecutions) {
         this.sessionExecutions = sessionExecutions;
     }
 

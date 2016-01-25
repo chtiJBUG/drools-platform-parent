@@ -16,6 +16,7 @@
 package org.chtijbug.drools.platform.persistence;
 
 
+import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeEnvironment;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -49,7 +50,7 @@ public interface PlatformRuntimeInstanceRepository extends JpaRepository<Platfor
             "and drs member of prd.droolsRessourcesDefinition " +
             "and pri.endDate is null " +
             "and drs.guvnor_packageName=:packageName")
-    public List<PlatformRuntimeInstance> findByPackageNameActiveRuntime(@Param("packageName") String packageName);
+    List<PlatformRuntimeInstance> findByPackageNameActiveRuntime(@Param("packageName") String packageName);
 
 
     @Query(value = "select pri " +
@@ -57,6 +58,16 @@ public interface PlatformRuntimeInstanceRepository extends JpaRepository<Platfor
             "where pri.platformRuntimeDefinition = prd " +
             "and drs member of prd.droolsRessourcesDefinition " +
             "and drs.guvnor_packageName=:packageName")
-    public List<PlatformRuntimeInstance> findByPackageNameAllRuntime(@Param("packageName") String packageName);
+    List<PlatformRuntimeInstance> findByPackageNameAllRuntime(@Param("packageName") String packageName);
+
+    @Query(value = "select pri " +
+            "from PlatformRuntimeInstance pri " +
+            "join fetch pri.droolsRessources drs " +
+            "join fetch pri.platformRuntimeDefinition prd " +
+            "where  " +
+            "   pri.status =\'STARTED\' " +
+            "and drs.guvnor_packageName=:packageName " +
+            "and prd.platformRuntimeEnvironment=:status")
+    List<PlatformRuntimeInstance> findByPackageNameAndStatus(@Param("packageName") String packageName, @Param("status") PlatformRuntimeEnvironment status);
 
 }
