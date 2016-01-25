@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
 import org.chtijbug.drools.platform.core.PlatformManagementKnowledgeBeanServiceFactory;
 import org.chtijbug.drools.platform.core.ReconnectToServerThread;
+import org.chtijbug.drools.platform.core.callback.SpecificMessageCallback;
 import org.chtijbug.drools.platform.entity.Heartbeat;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.entity.RequestStatus;
@@ -26,9 +27,6 @@ import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.resource.DroolsResource;
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
-import org.glassfish.tyrus.client.auth.AuthConfig;
-import org.glassfish.tyrus.client.auth.AuthenticationException;
-import org.glassfish.tyrus.client.auth.Authenticator;
 import org.glassfish.tyrus.client.auth.Credentials;
 import org.slf4j.LoggerFactory;
 
@@ -58,6 +56,14 @@ public class WebSocketClient
     private ClientManager client;
     private ReconnectToServerThread reconnectToServerThread;
     private ExecutorService executorService = Executors.newFixedThreadPool(1);
+    private SpecificMessageCallback specificMessageCallback = null;
+
+    public WebSocketClient(String hostname, Integer portNumber, String endPointName, int numberRetries, int timeToWaitBetweenTwoRetries, DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase, SpecificMessageCallback specificMessageCallback) throws DeploymentException, IOException {
+        this(hostname, portNumber, endPointName, numberRetries, timeToWaitBetweenTwoRetries, droolsPlatformKnowledgeBase);
+        this.specificMessageCallback = specificMessageCallback;
+
+    }
+
 
     public WebSocketClient(String hostname, Integer portNumber, String endPointName, int numberRetries, int timeToWaitBetweenTwoRetries, DroolsPlatformKnowledgeBase droolsPlatformKnowledgeBase) throws DeploymentException, IOException {
         this.platformKnowledgeBase = droolsPlatformKnowledgeBase;
@@ -73,6 +79,7 @@ public class WebSocketClient
         this.connectToServer();
     }
 
+
     public void connectToServer() throws IOException {
         /**
          * Let us start n times teh connection + wait between timeout
@@ -83,13 +90,12 @@ public class WebSocketClient
         while (connected == false) {
             try {
                 /**
-                Authenticator authenticator = new Authenticator() {
-                    @Override
-                    public String generateAuthorizationHeader(URI uri, String s, Credentials credentials) throws AuthenticationException {
-                        return null;
-                    }
+                 Authenticator authenticator = new Authenticator() {
+                @Override public String generateAuthorizationHeader(URI uri, String s, Credentials credentials) throws AuthenticationException {
+                return null;
+                }
                 };
-                AuthConfig authConfig = AuthConfig.Builder.create().build();
+                 AuthConfig authConfig = AuthConfig.Builder.create().build();
                  **/
                 client = ClientManager.createClient();
                 // client.getProperties().put(ClientProperties.AUTH_CONFIG, authConfig);
@@ -213,6 +219,11 @@ public class WebSocketClient
     @Override
     public void onMessage(PlatformManagementKnowledgeBean bean) {
         switch (bean.getRequestRuntimePlarform()) {
+            case genericMessage:
+                if (specificMessageCallback!= null){
+                    specificMessageCallback.handleMessage(bean.getGenericMessageID(),bean.getGenericMessagecontent());
+                }
+                break;
             case isAlive:
 
                 try {
