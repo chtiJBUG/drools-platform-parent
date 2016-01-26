@@ -290,4 +290,8 @@ public class WebSocketClient
 
 
     }
+
+    public void setSpecificMessageCallback(SpecificMessageCallback specificMessageCallback) {
+        this.specificMessageCallback = specificMessageCallback;
+    }
 }

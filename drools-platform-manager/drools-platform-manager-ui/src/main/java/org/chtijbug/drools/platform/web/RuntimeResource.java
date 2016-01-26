@@ -23,6 +23,8 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
+import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
+import org.chtijbug.drools.platform.entity.RequestRuntimePlarform;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepository;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRecordRepository;
@@ -40,9 +42,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Nullable;
+import javax.websocket.EncodeException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -69,6 +75,8 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
 
     @Autowired
     RuntimeDisplayCache runtimeDisplayCache;
+
+
 
     @RequestMapping(method = RequestMethod.GET, value = "/all")
     @Consumes(value = MediaType.APPLICATION_JSON)
@@ -194,9 +202,10 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
                                         && droolsResources.size()==1){
                                    packageVersion =  droolsResources.iterator().next().getGuvnor_packageVersion();
                                 }
-
+                                DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                                String date = formatter.format(input.getStartDate());
                                 PlatformRuntimeInstanceData elt = new PlatformRuntimeInstanceData(
-                                        input.getId(), input.getStartDate(),
+                                        input.getId(),date,
                                         input.getStatus().name(),
                                         packageName,
                                         input.getPlatformRuntimeDefinition().getPlatformRuntimeEnvironment().name(),
@@ -210,6 +219,31 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
         return result;
 
     }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/{packageName:.+}/{environment:.+}//{messageId:.+}//{messageContent:.+}")
+    @Consumes(value = MediaType.APPLICATION_JSON)
+    @Produces(value = MediaType.APPLICATION_JSON)
+    @ResponseBody
+    @Transactional
+    public String sendMessageToRuntime(@PathVariable final String packageName, @PathVariable PlatformRuntimeEnvironment environment, @PathVariable String messageId, @PathVariable String messageContent) {
+        List<PlatformRuntimeInstance> lists = platformRuntimeInstanceRepository.findByPackageNameAndStatus(packageName, environment);
+        for (PlatformRuntimeInstance elt : lists){
+            PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
+            platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.genericMessage);
+            platformManagementKnowledgeBean.setGenericMessageID(messageId);
+            platformManagementKnowledgeBean.setGenericMessagecontent(messageContent);
+            try {
+                webSocketSessionManager.sendMessage(elt.getRuleBaseID(),platformManagementKnowledgeBean);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (EncodeException e) {
+                e.printStackTrace();
+            }
+        }
+        return "OK";
+    }
+
+
 
     @RequestMapping(method = RequestMethod.GET, value = "/sessionbrowser/{Id}/{ruleFlowName}/{direction}")
     @Consumes(value = MediaType.APPLICATION_JSON)

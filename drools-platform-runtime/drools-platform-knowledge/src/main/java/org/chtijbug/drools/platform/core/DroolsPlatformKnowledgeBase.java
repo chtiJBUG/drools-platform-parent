@@ -106,6 +106,9 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
 
     public void setSpecificMessageCallback(SpecificMessageCallback specificMessageCallback) {
         this.specificMessageCallback = specificMessageCallback;
+        if (this.webSocketClient!=null){
+            this.webSocketClient.setSpecificMessageCallback(specificMessageCallback);
+        }
     }
 
     public void setWebSocketEndPoint(String webSocketEndPoint) {
