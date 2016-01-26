@@ -13,4 +13,6 @@ public class PlatformRuntimeInstanceData {
     String status;
     String rulePackage;
     String environment;
+    String runtimeId;
+    String rulePackageVersion;
 }

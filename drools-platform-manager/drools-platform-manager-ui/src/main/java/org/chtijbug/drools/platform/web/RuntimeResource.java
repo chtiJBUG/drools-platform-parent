@@ -188,12 +188,22 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
                             @Nullable
                             @Override
                             public PlatformRuntimeInstanceData apply(@Nullable PlatformRuntimeInstance input) {
-                                return new PlatformRuntimeInstanceData(
+                                String packageVersion="";
+                                Set<DroolsResource> droolsResources = input.getDroolsRessources();
+                                if (droolsResources!= null
+                                        && droolsResources.size()==1){
+                                   packageVersion =  droolsResources.iterator().next().getGuvnor_packageVersion();
+                                }
+
+                                PlatformRuntimeInstanceData elt = new PlatformRuntimeInstanceData(
                                         input.getId(), input.getStartDate(),
                                         input.getStatus().name(),
                                         packageName,
-                                        input.getPlatformRuntimeDefinition().getPlatformRuntimeEnvironment().name()
+                                        input.getPlatformRuntimeDefinition().getPlatformRuntimeEnvironment().name(),
+                                        input.getRuleBaseID().toString(),
+                                        packageVersion
                                 );
+                                return elt;
                             }
                         }
                 );
