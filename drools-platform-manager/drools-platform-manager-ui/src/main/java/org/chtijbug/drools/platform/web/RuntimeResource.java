@@ -22,7 +22,12 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import org.chtijbug.drools.platform.backend.AppContext;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
+import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
+import org.chtijbug.drools.platform.entity.PlatformResourceFile;
+import org.chtijbug.drools.platform.entity.RequestRuntimePlarform;
+import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionRepository;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.SessionExecutionRecordRepository;
@@ -33,6 +38,7 @@ import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -40,9 +46,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Nullable;
+import javax.websocket.EncodeException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -69,6 +79,9 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
 
     @Autowired
     RuntimeDisplayCache runtimeDisplayCache;
+
+
+
 
     @RequestMapping(method = RequestMethod.GET, value = "/all")
     @Consumes(value = MediaType.APPLICATION_JSON)
@@ -188,18 +201,87 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
                             @Nullable
                             @Override
                             public PlatformRuntimeInstanceData apply(@Nullable PlatformRuntimeInstance input) {
-                                return new PlatformRuntimeInstanceData(
-                                        input.getId(), input.getStartDate(),
+                                String packageVersion="";
+                                Set<DroolsResource> droolsResources = input.getDroolsRessources();
+                                if (droolsResources!= null
+                                        && droolsResources.size()==1){
+                                   packageVersion =  droolsResources.iterator().next().getGuvnor_packageVersion();
+                                }
+                                DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                                String date = formatter.format(input.getStartDate());
+                                PlatformRuntimeInstanceData elt = new PlatformRuntimeInstanceData(
+                                        input.getId(),date,
                                         input.getStatus().name(),
                                         packageName,
-                                        input.getPlatformRuntimeDefinition().getPlatformRuntimeEnvironment().name()
+                                        input.getPlatformRuntimeDefinition().getPlatformRuntimeEnvironment().name(),
+                                        input.getRuleBaseID().toString(),
+                                        packageVersion
                                 );
+                                return elt;
                             }
                         }
                 );
         return result;
 
     }
+
+
+    @RequestMapping(method = RequestMethod.POST, value = "/{packageName:.+}/{environment:.+}//{packageVersion:.+}")
+    @Consumes(value = MediaType.APPLICATION_JSON)
+    @Produces(value = MediaType.APPLICATION_JSON)
+    @ResponseBody
+    @Transactional
+    public String reloadVersionOfPackageInRuntime(@PathVariable final String packageName, @PathVariable PlatformRuntimeEnvironment environment, @PathVariable String packageVersion) {
+        List<PlatformRuntimeInstance> lists = platformRuntimeInstanceRepository.findByPackageNameAndStatus(packageName, environment);
+        for (PlatformRuntimeInstance elt : lists){
+            PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
+            platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.loadNewRuleVersion);
+            GuvnorData guvnorData= AppContext.getApplicationContext().getBean(GuvnorData.class);
+            String guvnorUrl = guvnorData.getGuvnorUrl();
+            String guvnorApp = guvnorData.getGuvnorApp();
+            String guvnorUsername = guvnorData.getGuvnorUserName();
+            String guvnorPassword = guvnorData.getGuvnorPassword();
+            PlatformResourceFile platformResourceFile = new PlatformResourceFile(guvnorUrl, guvnorApp, packageName, packageVersion, guvnorUsername, guvnorPassword);
+            platformManagementKnowledgeBean.getResourceFileList().add(platformResourceFile);
+
+            platformManagementKnowledgeBean.setRequestStatus(RequestStatus.SUCCESS);
+
+            try {
+                webSocketSessionManager.sendMessage(elt.getRuleBaseID(),platformManagementKnowledgeBean);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (EncodeException e) {
+                e.printStackTrace();
+            }
+        }
+        return "OK";
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/{packageName:.+}/{environment:.+}//{messageId:.+}//{messageContent:.+}")
+    @Consumes(value = MediaType.APPLICATION_JSON)
+    @Produces(value = MediaType.APPLICATION_JSON)
+    @ResponseBody
+    @Transactional
+    public String sendMessageToRuntime(@PathVariable final String packageName, @PathVariable PlatformRuntimeEnvironment environment, @PathVariable String messageId, @PathVariable String messageContent) {
+        List<PlatformRuntimeInstance> lists = platformRuntimeInstanceRepository.findByPackageNameAndStatus(packageName, environment);
+        for (PlatformRuntimeInstance elt : lists){
+            PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
+            platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.genericMessage);
+            platformManagementKnowledgeBean.setGenericMessageID(messageId);
+            platformManagementKnowledgeBean.setGenericMessagecontent(messageContent);
+            platformManagementKnowledgeBean.setRequestStatus(RequestStatus.SUCCESS);
+            try {
+                webSocketSessionManager.sendMessage(elt.getRuleBaseID(),platformManagementKnowledgeBean);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (EncodeException e) {
+                e.printStackTrace();
+            }
+        }
+        return "OK";
+    }
+
+
 
     @RequestMapping(method = RequestMethod.GET, value = "/sessionbrowser/{Id}/{ruleFlowName}/{direction}")
     @Consumes(value = MediaType.APPLICATION_JSON)

@@ -19,6 +19,7 @@ import org.chtijbug.drools.entity.history.DrlResourceFile;
 import org.chtijbug.drools.entity.history.GuvnorResourceFile;
 import org.chtijbug.drools.entity.history.HistoryContainer;
 import org.chtijbug.drools.entity.history.HistoryEvent;
+import org.chtijbug.drools.platform.core.callback.SpecificMessageCallback;
 import org.chtijbug.drools.platform.core.droolslistener.PlatformHistoryListener;
 import org.chtijbug.drools.platform.core.droolslistener.RuleBaseReady;
 import org.chtijbug.drools.platform.core.droolslistener.SessionHistoryListener;
@@ -63,6 +64,12 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
      */
     private Integer ruleBaseID;
     /**
+     * Generic Message Callback
+     */
+    private SpecificMessageCallback specificMessageCallback;
+
+
+    /**
      * Rule base singleton (Knwledge session factory)
      */
     private RuleBaseSingleton ruleBasePackage;
@@ -97,6 +104,13 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
 
     }
 
+    public void setSpecificMessageCallback(SpecificMessageCallback specificMessageCallback) {
+        this.specificMessageCallback = specificMessageCallback;
+        if (this.webSocketClient!=null){
+            this.webSocketClient.setSpecificMessageCallback(specificMessageCallback);
+        }
+    }
+
     public void setWebSocketEndPoint(String webSocketEndPoint) {
         this.webSocketEndPoint = webSocketEndPoint;
     }
@@ -110,7 +124,12 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
         logger.debug(">>initPlatformRuntime");
 
         try {
-            this.webSocketClient = new WebSocketClient(this.webSocketHostname, this.webSocketPort, this.webSocketEndPoint, 5, 2000, this);
+            if (specificMessageCallback == null) {
+                this.webSocketClient = new WebSocketClient(this.webSocketHostname, this.webSocketPort, this.webSocketEndPoint, 5, 2000, this);
+            } else {
+                this.webSocketClient = new WebSocketClient(this.webSocketHostname, this.webSocketPort, this.webSocketEndPoint, 5, 2000, this, specificMessageCallback);
+
+            }
         } catch (DeploymentException e) {
             logger.debug("DroolsPlatformKnowledgeBaseJavaEE.initPlatformRuntime", e);
         } catch (IOException e) {

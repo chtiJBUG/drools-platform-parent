@@ -16,6 +16,10 @@
     <context:component-scan
             base-package="org.chtijbug.drools.platform.rules,org.chtijbug.drools.platform.backend"/>
 
+
+    <bean id="guvnorData"
+          class="org.chtijbug.drools.platform.web.GuvnorData"/>
+
     <bean id="contextApplicationContextProvider"
           class="org.chtijbug.drools.platform.backend.ApplicationContextProvider"/>
 
