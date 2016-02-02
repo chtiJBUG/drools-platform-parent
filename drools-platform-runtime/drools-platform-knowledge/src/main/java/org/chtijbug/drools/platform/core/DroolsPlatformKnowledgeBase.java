@@ -148,7 +148,7 @@ public class DroolsPlatformKnowledgeBase implements DroolsPlatformKnowledgeBaseR
         PlatformKnowledgeBaseInitialConnectionEvent platformKnowledgeBaseInitialConnectionEvent = new PlatformKnowledgeBaseInitialConnectionEvent(-1, new Date(), this.ruleBaseID);
         platformKnowledgeBaseInitialConnectionEvent.setRuleBaseID(this.ruleBaseID);
         platformKnowledgeBaseInitialConnectionEvent.setSessionId(-1);
-        platformKnowledgeBaseInitialConnectionEvent.setHostname(this.webSocketHostname);
+        platformKnowledgeBaseInitialConnectionEvent.setHostname("http://"+this.webSocketHostname);
         platformKnowledgeBaseInitialConnectionEvent.setPort(this.webSocketPort);
         platformKnowledgeBaseInitialConnectionEvent.setEndPoint(this.webSocketEndPoint);
         if (droolsResources.size() == 1 && droolsResources.get(0) instanceof GuvnorDroolsResource) {
