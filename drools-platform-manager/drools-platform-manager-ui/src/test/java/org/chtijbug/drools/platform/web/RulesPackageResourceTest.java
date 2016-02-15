@@ -1,6 +1,7 @@
 package org.chtijbug.drools.platform.web;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class RulesPackageResourceTest {
     }
 
     @Test
+    @Ignore
     public void should_get_snapshots() throws Exception {
         this.mockMvc.perform(get("/rules_package/snapshots")
                 .accept(APPLICATION_JSON))
@@ -44,6 +46,7 @@ public class RulesPackageResourceTest {
     }
 
     @Test
+    @Ignore
     public void should_get_envs() throws Exception {
         this.mockMvc.perform(get("/rules_package/envs")
                 .accept(APPLICATION_JSON))
