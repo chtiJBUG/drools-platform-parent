@@ -242,7 +242,7 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
     @Transactional
     public String reloadVersionOfPackageInRuntime(@PathVariable final String packageName, @PathVariable PlatformRuntimeEnvironment environment, @PathVariable String packageVersion) {
         List<PlatformRuntimeInstance> lists = platformRuntimeInstanceRepository.findByPackageNameAndStatus(packageName, environment);
-        platformRuntimeDefinitionRepositoryCacheService.deleteAll();
+        //platformRuntimeDefinitionRepositoryCacheService.deleteAll();
         for (PlatformRuntimeInstance elt : lists){
             PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
             platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.loadNewRuleVersion);
