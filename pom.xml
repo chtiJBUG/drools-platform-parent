@@ -5,7 +5,7 @@
     <groupId>org.chtijbug.drools</groupId>
     <artifactId>drools-platform-parent</artifactId>
     <name>drools-platform-parent</name>
-    <version>0.5.2</version>
+    <version>0.5.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -70,7 +70,7 @@
         <connection>scm:git:git@github.com:chtiJBUG/drools-platform-parent.git</connection>
         <url>scm:git:git@github.com:chtiJBUG/drools-platform-parent.git</url>
         <developerConnection>scm:git:git@github.com:chtiJBUG/drools-platform-parent.git</developerConnection>
-        <tag>drools-platform-parent-0.5.2</tag>
+        <tag>HEAD</tag>
     </scm>
     <issueManagement>
         <system>Jira</system>
