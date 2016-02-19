@@ -3,14 +3,7 @@
  */
 package org.chtijbug.drools.platform.rules;
 
-/**
- * @author Bertrand Gressier
- * @date 12 déc. 2011
- * 
- * 
- *       Source: http://legacy.drools.codehaus.org/Fibonacci+Example
- * 
- */
+
 public class Fibonacci {
 	private final int sequence;
 	private long value;

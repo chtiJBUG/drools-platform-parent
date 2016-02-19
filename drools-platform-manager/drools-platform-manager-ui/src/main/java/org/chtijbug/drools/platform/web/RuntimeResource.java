@@ -69,6 +69,8 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
 
     @Autowired
     PlatformRuntimeInstanceRepository platformRuntimeInstanceRepository;
+
+
     @Autowired
     SessionExecutionRecordRepository sessionExecutionRepository;
     @Autowired
@@ -194,9 +196,16 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
     @ResponseBody
     @Transactional
     public Collection<PlatformRuntimeInstanceData> findAllPlatformRuntimeInstance(@PathVariable final String packageName, @PathVariable PlatformRuntimeEnvironment status) {
+        List<PlatformRuntimeInstance> allInstances = platformRuntimeInstanceRepository.findByPackageNameAndStatus(packageName, status);
+        List<PlatformRuntimeInstance> keepInstances= new ArrayList<>();
+        for (PlatformRuntimeInstance elt : allInstances){
+            if (webSocketSessionManager.exists(elt.getRuleBaseID())){
+                keepInstances.add(elt);
+            }
+        }
         Collection<PlatformRuntimeInstanceData> result = Collections2
                 .transform(
-                        platformRuntimeInstanceRepository.findByPackageNameAndStatus(packageName, status),
+                        keepInstances,
                         new Function<PlatformRuntimeInstance, PlatformRuntimeInstanceData>() {
                             @Nullable
                             @Override
@@ -233,6 +242,7 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
     @Transactional
     public String reloadVersionOfPackageInRuntime(@PathVariable final String packageName, @PathVariable PlatformRuntimeEnvironment environment, @PathVariable String packageVersion) {
         List<PlatformRuntimeInstance> lists = platformRuntimeInstanceRepository.findByPackageNameAndStatus(packageName, environment);
+        //platformRuntimeDefinitionRepositoryCacheService.deleteAll();
         for (PlatformRuntimeInstance elt : lists){
             PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
             platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.loadNewRuleVersion);
@@ -247,6 +257,19 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
             platformManagementKnowledgeBean.setRequestStatus(RequestStatus.SUCCESS);
 
             try {
+                if (elt.getDroolsRessources().size()==1){
+                    PlatformRuntimeDefinition platformRuntimeDefinition = elt.getPlatformRuntimeDefinition();
+                    if (platformRuntimeDefinition.getDroolsRessourcesDefinition().size()==1){
+                        DroolsResource droolsResource = platformRuntimeDefinition.getDroolsRessourcesDefinition().get(0);
+                        droolsResource.setGuvnor_packageVersion(packageVersion);
+                        platformRuntimeDefinition = platformRuntimeDefinitionRepositoryCacheService.save(platformRuntimeDefinition);
+                    }
+
+                    DroolsResource toSave = elt.getDroolsRessources().iterator().next();
+                    toSave.setGuvnor_packageVersion(packageVersion);
+                    elt= platformRuntimeInstanceRepository.save(elt);
+
+                }
                 webSocketSessionManager.sendMessage(elt.getRuleBaseID(),platformManagementKnowledgeBean);
             } catch (IOException e) {
                 e.printStackTrace();

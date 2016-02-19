@@ -34,14 +34,7 @@ public class SessionExecutionRecordRepositoryImpl implements SessionExecutionRec
     @PersistenceContext
     private EntityManager entityManager;
 
-    /**
-     * @param ruleBaseID
-     * @param sessionId
-     * @return
-     * @Query("select s from SessionExecution s " +
-     * "where s.platformRuntimeInstance.ruleBaseID= :ruleBaseID and s.sessionId = :sessionId  "+
-     * "and s.platformRuntimeInstance.endDate is null  ")
-     */
+
 
     @Override
     public SessionExecutionRecord findByRuleBaseIDAndSessionIdAndEndDateIsNull(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionId") Integer sessionId) {
