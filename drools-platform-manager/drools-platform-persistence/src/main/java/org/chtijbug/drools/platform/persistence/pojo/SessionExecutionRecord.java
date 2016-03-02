@@ -40,7 +40,7 @@ public class SessionExecutionRecord {
     @Column(nullable = false)
     private Date startDate;
     private Date endDate;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "platform_runtime_instance_id", referencedColumnName = "id")
     private PlatformRuntimeInstance platformRuntimeInstance;
     @Enumerated(EnumType.STRING)
