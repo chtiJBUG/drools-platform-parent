@@ -26,6 +26,16 @@
     <dependency>
       <groupId>org.chtijbug.drools</groupId>
       <artifactId>drools-framework-rest-guvnor</artifactId>
+     <exclusions>
+       <exclusion>
+         <groupId>org.javassist</groupId>
+         <artifactId>javassist</artifactId>
+       </exclusion>
+       <exclusion>
+         <groupId>javassist</groupId>
+         <artifactId>javassist</artifactId>
+       </exclusion>
+     </exclusions>
     </dependency>
 
     <dependency>
