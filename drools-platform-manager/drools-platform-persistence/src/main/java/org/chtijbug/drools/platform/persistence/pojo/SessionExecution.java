@@ -30,11 +30,11 @@ public class SessionExecution {
 
     private PlatformRuntimeInstance platformRuntimeInstance;
     private Long id;
-    private Integer sessionId;
+    private Long sessionId;
     private Date startDate;
     private Date endDate;
-    private Integer startEventID;
-    private Integer stopEventID;
+    private Long startEventID;
+    private Long stopEventID;
 
     private PlatformRuntimeMode platformRuntimeMode = PlatformRuntimeMode.Debug;
 
@@ -70,11 +70,11 @@ public class SessionExecution {
         this.platformRuntimeInstance = platformRuntimeInstance;
     }
 
-    public Integer getSessionId() {
+    public Long getSessionId() {
         return sessionId;
     }
 
-    public void setSessionId(Integer sessionId) {
+    public void setSessionId(Long sessionId) {
         this.sessionId = sessionId;
     }
 
@@ -94,19 +94,19 @@ public class SessionExecution {
         this.endDate = endDate;
     }
 
-    public Integer getStartEventID() {
+    public Long getStartEventID() {
         return startEventID;
     }
 
-    public void setStartEventID(Integer startEventID) {
+    public void setStartEventID(Long startEventID) {
         this.startEventID = startEventID;
     }
 
-    public Integer getStopEventID() {
+    public Long getStopEventID() {
         return stopEventID;
     }
 
-    public void setStopEventID(Integer stopEventID) {
+    public void setStopEventID(Long stopEventID) {
         this.stopEventID = stopEventID;
     }
 

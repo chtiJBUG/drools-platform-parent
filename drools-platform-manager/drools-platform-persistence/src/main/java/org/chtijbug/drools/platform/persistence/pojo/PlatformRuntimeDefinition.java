@@ -31,7 +31,7 @@ public class PlatformRuntimeDefinition implements Serializable {
     private Long id;
 
     @Column(nullable = false)
-    private Integer ruleBaseID;
+    private Long ruleBaseID;
 
     @Enumerated(EnumType.STRING)
     private PlatformRuntimeMode platformRuntimeMode = PlatformRuntimeMode.Debug;
@@ -73,11 +73,11 @@ public class PlatformRuntimeDefinition implements Serializable {
     }
 
 
-    public Integer getRuleBaseID() {
+    public Long getRuleBaseID() {
         return ruleBaseID;
     }
 
-    public void setRuleBaseID(Integer ruleBaseID) {
+    public void setRuleBaseID(Long ruleBaseID) {
         this.ruleBaseID = ruleBaseID;
     }
 

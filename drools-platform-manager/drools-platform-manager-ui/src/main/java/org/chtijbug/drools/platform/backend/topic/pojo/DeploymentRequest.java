@@ -4,14 +4,14 @@ package org.chtijbug.drools.platform.backend.topic.pojo;
  * Created by alexandre on 19/06/2014.
  */
 public class DeploymentRequest {
-    private Integer ruleBaseID;
+    private Long ruleBaseID;
     private String packageVersion;
 
-    public Integer getRuleBaseID() {
+    public Long getRuleBaseID() {
         return ruleBaseID;
     }
 
-    public void setRuleBaseID(Integer ruleBaseID) {
+    public void setRuleBaseID(Long ruleBaseID) {
         this.ruleBaseID = ruleBaseID;
     }
 

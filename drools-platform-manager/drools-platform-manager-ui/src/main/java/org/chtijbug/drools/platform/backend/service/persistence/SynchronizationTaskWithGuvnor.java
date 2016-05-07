@@ -45,14 +45,16 @@ public class SynchronizationTaskWithGuvnor {
 
     @Scheduled(cron = "* */20 9-18 *  * MON-FRI ")
     public void SynchronizeGuvnorCategories() {
+        /**
         try {
-            List<Asset> listPackages = guvnorRepositoryConnector.getAllPackagesInGuvnorRepo();
-            for (Asset packageAsset : listPackages) {
+
+            List<Package> listPackages = guvnorRepositoryConnector.getAllPackagesInGuvnorRepo();
+            for (Package packageAsset : listPackages) {
                 String packageName = packageAsset.getName();
                 List<Asset> assetList = guvnorRepositoryConnector.getAllBusinessAssets(packageName);
                 for (Asset asset : assetList) {
                     ruleAssetManagementService.synchronizeInDBGuvnorCategories(packageName, asset);
-                    /**
+
                      if (asset.getType().equals("gdst")) {
                      try {
                      DecisionTable decisionTableGuvnorFormat = guvnorRepositoryConnector.getGuidedDecisionTable(packageName, asset.getName());
@@ -63,12 +65,13 @@ public class SynchronizationTaskWithGuvnor {
 
                      }
 
-                     **/
+
                 }
             }
         } catch (ChtijbugDroolsRestException e) {
             throw Throwables.propagate(e);
         }
+                **/
     }
 
 }

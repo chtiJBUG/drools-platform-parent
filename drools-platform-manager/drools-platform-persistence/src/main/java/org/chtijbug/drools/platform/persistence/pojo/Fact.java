@@ -33,7 +33,7 @@ public class Fact {
     private FactType factType;
 
 
-    private Integer eventid;
+    private Long eventid;
 
     public Fact() {
     }
@@ -80,11 +80,11 @@ public class Fact {
         this.modificationDate = modificationDate;
     }
 
-    public Integer getEventid() {
+    public Long getEventid() {
         return eventid;
     }
 
-    public void setEventid(Integer eventid) {
+    public void setEventid(Long eventid) {
         this.eventid = eventid;
     }
 

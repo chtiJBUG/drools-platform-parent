@@ -19,5 +19,5 @@ import java.util.Date;
 
 
 public interface HeartBeatListner {
-    public void messageReceived(Integer ruleBaseID, Date date);
+    public void messageReceived(Long ruleBaseID, Date date);
 }

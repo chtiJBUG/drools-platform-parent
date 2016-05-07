@@ -16,10 +16,9 @@
 package org.chtijbug.drools.platform.backend.service.runtimeevent.impl.knowledgeBase;
 
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.entity.history.DrlResourceFile;
-import org.chtijbug.drools.entity.history.GuvnorResourceFile;
+
 import org.chtijbug.drools.entity.history.HistoryEvent;
-import org.chtijbug.drools.entity.history.ResourceFile;
+import org.chtijbug.drools.entity.history.KnowledgeResource;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.backend.wsclient.WebSocketSessionManager;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
@@ -32,6 +31,8 @@ import org.chtijbug.drools.platform.persistence.PlatformRuntimeDefinitionReposit
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.PlatformServerRepository;
 import org.chtijbug.drools.platform.persistence.pojo.*;
+import org.chtijbug.drools.runtime.resource.FileKnowledgeResource;
+import org.chtijbug.drools.runtime.resource.WorkbenchKnowledgeResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -39,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.websocket.EncodeException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -76,7 +78,7 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
     @Transactional(value = "transactionManager")
     protected void handleMessageInternally(HistoryEvent historyEvent) {
         PlatformKnowledgeBaseInitialConnectionEvent platformKnowledgeBaseInitialConnectionEvent = (PlatformKnowledgeBaseInitialConnectionEvent) historyEvent;
-        int ruleBaseId = platformKnowledgeBaseInitialConnectionEvent.getRuleBaseID();
+        Long ruleBaseId = platformKnowledgeBaseInitialConnectionEvent.getRuleBaseID();
         PlatformRuntimeDefinition platformRuntimeDefinition = null;
         PlatformRuntimeInstance platformRuntimeInstance = null;
         platformRuntimeDefinition = platformRuntimeDefinitionRepository.findByRuleBaseID(ruleBaseId);
@@ -106,18 +108,18 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
         } else {
             platformRuntimeDefinition = new PlatformRuntimeDefinition();
             platformRuntimeDefinition.setRuleBaseID(ruleBaseId);
-            for (ResourceFile resourceFile : platformKnowledgeBaseInitialConnectionEvent.getResourceFiles()) {
+             for (KnowledgeResource knowledgeResource : platformKnowledgeBaseInitialConnectionEvent.getKnowledgeResources()) {
                 DroolsResource droolsResource = new DroolsResource();
-                if (resourceFile instanceof DrlResourceFile) {
-                    DrlResourceFile drlResourceFile = (DrlResourceFile) resourceFile;
-                    droolsResource = new DroolsResource(drlResourceFile.getFileName(), drlResourceFile.getContent());
+                if (knowledgeResource instanceof FileKnowledgeResource) {
+                    FileKnowledgeResource drlResourceFile = (FileKnowledgeResource) knowledgeResource;
+                    droolsResource = new DroolsResource(drlResourceFile.getPath(), drlResourceFile.getContent());
                     droolsResource.setStartEventID(platformKnowledgeBaseInitialConnectionEvent.getEventID());
                     platformRuntimeDefinition.getDroolsRessourcesDefinition().add(droolsResource);
-                } else if (resourceFile instanceof GuvnorResourceFile) {
-                    GuvnorResourceFile guvnorResourceFile = (GuvnorResourceFile) resourceFile;
+                } else if (knowledgeResource instanceof WorkbenchKnowledgeResource) {
+                    WorkbenchKnowledgeResource guvnorResourceFile = (WorkbenchKnowledgeResource) knowledgeResource;
                     List<PlatformServer> platformServers = platformServerRepository.findAll();
                     if (platformServers.size() == 0) {
-                        PlatformServer platformServer = new PlatformServer(guvnorResourceFile.getGuvnor_url(), guvnorResourceFile.getGuvnor_appName(), guvnorUserName, guvnorPassword);
+                        PlatformServer platformServer = new PlatformServer(guvnorResourceFile.getGuvnor_url(), guvnorUserName, guvnorPassword);
                         platformRuntimeDefinition.setPlatformServer(platformServer);
                     }
                     if (platformServers.size() == 1) {
@@ -130,7 +132,7 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
                     platformRuntimeDefinition.setDeploymentHost(deploymentHost);
                     platformRuntimeDefinition.setWebsocketEndpoint(platformKnowledgeBaseInitialConnectionEvent.getEndPoint());
                     platformRuntimeDefinition.setWebsocketPort(platformKnowledgeBaseInitialConnectionEvent.getPort());
-                    droolsResource = new DroolsResource(guvnorResourceFile.getGuvnor_url(), guvnorResourceFile.getGuvnor_appName(), guvnorResourceFile.getGuvnor_packageName(), guvnorResourceFile.getGuvnor_packageVersion());
+                    droolsResource = new DroolsResource(guvnorResourceFile.getGuvnor_url(), guvnorResourceFile.getGroupId(), guvnorResourceFile.getArtifactID(), guvnorResourceFile.getVersion());
                     droolsResource.setStartEventID(platformKnowledgeBaseInitialConnectionEvent.getEventID());
                     platformRuntimeDefinition.getDroolsRessourcesDefinition().add(droolsResource);
                 }
@@ -151,7 +153,7 @@ public class PlatformKnowledgeBaseInitialConnectionEventStrategy extends Abstrac
             PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
             for (DroolsResource droolsResource : platformRuntimeDefinition.getDroolsRessourcesDefinition()) {
                 if (droolsResource.getGuvnor_url() != null) {
-                    PlatformResourceFile platformResourceFile = new PlatformResourceFile(droolsResource.getGuvnor_url(), droolsResource.getGuvnor_appName(), droolsResource.getGuvnor_packageName(), droolsResource.getGuvnor_packageVersion(), null, null);
+                    PlatformResourceFile platformResourceFile = new PlatformResourceFile(droolsResource.getGuvnor_url(), droolsResource.getGroupId(), droolsResource.getArtifactID(),droolsResource.getVersion(),  null, null);
                     platformManagementKnowledgeBean.getResourceFileList().add(platformResourceFile);
                 } else {
                     PlatformResourceFile platformResourceFile = new PlatformResourceFile(droolsResource.getFileName(), droolsResource.getFileContent());

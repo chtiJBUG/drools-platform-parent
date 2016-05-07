@@ -32,7 +32,7 @@ public class PlatformKnowledgeBaseDisposeSessionEvent extends KnowledgeBaseEvent
     LinkedList<HistoryEvent> sessionHistory;
     private Date startDate;
 
-    public PlatformKnowledgeBaseDisposeSessionEvent(int eventID, Date dateEvent, int ruleBaseID, LinkedList<HistoryEvent> sessionHistory) {
+    public PlatformKnowledgeBaseDisposeSessionEvent(Long eventID, Date dateEvent, Long ruleBaseID, LinkedList<HistoryEvent> sessionHistory) {
         super(eventID, dateEvent, ruleBaseID);
         this.startDate = dateEvent;
         this.sessionHistory=sessionHistory;

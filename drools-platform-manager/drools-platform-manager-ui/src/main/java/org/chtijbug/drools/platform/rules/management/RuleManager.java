@@ -24,6 +24,7 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.chtijbug.drools.guvnor.rest.ChtijbugDroolsRestException;
 import org.chtijbug.drools.guvnor.rest.GuvnorRepositoryConnector;
+
 import org.chtijbug.drools.guvnor.rest.model.Asset;
 import org.chtijbug.drools.guvnor.rest.model.AssetPropertyType;
 import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
@@ -56,9 +57,9 @@ public class RuleManager {
         guvnorRepositoryConnector = new GuvnorRepositoryConnector(runtimeSiteTopology.buildGuvnorConfiguration());
     }
 
-    public List<Asset> findAllAssetsByStatus(String packageName, List<AssetStatus> assetStatuses) throws ChtijbugDroolsRestException {
+    public List<org.drools.guvnor.server.jaxrs.jaxb.Asset> findAllAssetsByStatus(String packageName, List<AssetStatus> assetStatuses) throws ChtijbugDroolsRestException {
         //___ Fetch all assets metadata
-        List<Asset> assets = guvnorRepositoryConnector.getAllBusinessAssets(packageName);
+        List<org.drools.guvnor.server.jaxrs.jaxb.Asset> assets = guvnorRepositoryConnector.getAllBusinessAssets(packageName);
         //___ If no filter provided, then return the whole list
         if (assetStatuses == null || assetStatuses.isEmpty())
             return assets;
@@ -103,11 +104,11 @@ public class RuleManager {
 
 
     public List<String> findAllPackages() {
-        return transform(this.guvnorRepositoryConnector.getAllPackagesInGuvnorRepo(), new Function<Asset, String>() {
+        return transform(this.guvnorRepositoryConnector.getAllPackagesInGuvnorRepo(), new Function<Package, String>() {
             @Nullable
             @Override
-            public String apply(@Nullable Asset asset) {
-                return asset.getName();
+            public String apply(@Nullable Package aPackage) {
+                return aPackage.getName();
             }
         });
     }

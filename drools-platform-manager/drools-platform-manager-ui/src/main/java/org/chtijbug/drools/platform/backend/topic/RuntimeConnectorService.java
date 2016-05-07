@@ -63,7 +63,7 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
     @MessageMapping("/update")
     public void updateRulePackage(DeploymentRequest deploymentRequest) throws DroolsChtijbugException {
 
-        Integer ruleBaseID = deploymentRequest.getRuleBaseID();
+        Long ruleBaseID = deploymentRequest.getRuleBaseID();
         String packageVersion = deploymentRequest.getPackageVersion();
         Boolean clientSocket = webSocketSessionManager.exists(ruleBaseID);
 
@@ -88,14 +88,14 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
             throw new DroolsChtijbugException("updateRulePackage-NotAguvnorRessource", ruleBaseID.toString(), null);
         }
         DroolsResource guvnorRessource = droolsRessourceList.get(0);
-        PlatformResourceFile platformResourceFile = new PlatformResourceFile(guvnorRessource.getGuvnor_url(), guvnorRessource.getGuvnor_appName(), guvnorRessource.getGuvnor_packageName(), packageVersion, null, null);
+        PlatformResourceFile platformResourceFile = new PlatformResourceFile(guvnorRessource.getGuvnor_url(), guvnorRessource.getGroupId(), guvnorRessource.getArtifactID(),packageVersion, null, null);
         platformManagementKnowledgeBean.getResourceFileList().add(platformResourceFile);
         platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.loadNewRuleVersion);
 
         try {
 
             webSocketSessionManager.sendMessage(ruleBaseID, platformManagementKnowledgeBean);
-            guvnorRessource.setGuvnor_packageVersion(packageVersion);
+            guvnorRessource.setVersion(packageVersion);
             platformRuntimeDefinitionRepository.save(instance);
         } catch (IOException | EncodeException e) {
             LOG.error("updateRulePackage(ruleBaseID=" + ruleBaseID + ",packageVersion)=" + packageVersion, e);
@@ -109,7 +109,7 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
     }
 
     @Override
-    public void messageReceived(Integer ruleBaseID, Date date) {
+    public void messageReceived(Long ruleBaseID, Date date) {
         try {
             sendSemaphore.acquire();
             HeartBeatData heartBeatData = (HeartBeatData) baseTopicDataToSend;
@@ -131,7 +131,7 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
     }
 
     @Override
-    public void messageReceived(Integer ruleBaseID) {
+    public void messageReceived(Long ruleBaseID) {
         try {
             sendSemaphore.acquire();
             this.baseTopicDataToSend = new BaseTopicData();
@@ -150,7 +150,7 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
     }
 
     @Override
-    public void messageReceived(Integer ruleBaseID, RealTimeParameters realTimeParameters) {
+    public void messageReceived(Long ruleBaseID, RealTimeParameters realTimeParameters) {
         try {
             sendSemaphore.acquire();
             RealTimeParametersData realTimeParametersData = new RealTimeParametersData();
@@ -171,7 +171,7 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
     }
 
     @Override
-    public void messageReceived(Integer ruleBaseID, RequestStatus state, List<PlatformResourceFile> platformResourceFiles) {
+    public void messageReceived(Long ruleBaseID, RequestStatus state, List<PlatformResourceFile> platformResourceFiles) {
 
         try {
             sendSemaphore.acquire();
@@ -194,7 +194,7 @@ public class RuntimeConnectorService implements HeartBeatListner, IsAliveListene
     }
 
     @Override
-    public void messageReceived(Integer ruleBaseID, List<PlatformResourceFile> platformResourceFiles) {
+    public void messageReceived(Long ruleBaseID, List<PlatformResourceFile> platformResourceFiles) {
         try {
             sendSemaphore.acquire();
             PackageVersionInfosDeployedData packageVersionInfosDeployedData = new PackageVersionInfosDeployedData();

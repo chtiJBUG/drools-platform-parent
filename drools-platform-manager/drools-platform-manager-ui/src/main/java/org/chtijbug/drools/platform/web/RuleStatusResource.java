@@ -63,10 +63,21 @@ public class RuleStatusResource {
     public List<AssetObject> searchAllAssetsWithStatus(@PathVariable String packageName, @RequestBody List<AssetStatus> assetStatuses) {
         logger.debug(">> searchAllAssetsWithStatus(packageName={}, assetStatuses={})", packageName, assetStatuses);
         try {
-            List<Asset> allAssets = ruleManager.findAllAssetsByStatus(packageName, assetStatuses);
-            return Lists.transform(allAssets, new Function<Asset, AssetObject>() {
+            List<org.drools.guvnor.server.jaxrs.jaxb.Asset> allAssets = ruleManager.findAllAssetsByStatus(packageName, assetStatuses);
+            return Lists.transform(allAssets, new Function<Object, AssetObject>() {
+
+
                 @Nullable
                 @Override
+                public AssetObject apply(@Nullable Object o) {
+                    if (o instanceof Asset ){
+                        Asset a = (Asset)o;
+                        this.apply(a);
+                    }
+                    return null;
+                }
+
+
                 public AssetObject apply(@Nullable Asset input) {
                     AssetObject output = new AssetObject();
                     assert input != null;

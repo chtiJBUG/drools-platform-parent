@@ -35,13 +35,13 @@ public interface PlatformRuntimeInstanceRepository extends JpaRepository<Platfor
 
     List<PlatformRuntimeInstance> findAll();
 
-    List<PlatformRuntimeInstance> findByRuleBaseIDAndEndDateNull(Integer ruleBaseId);
+    List<PlatformRuntimeInstance> findByRuleBaseIDAndEndDateNull(Long ruleBaseId);
 
-    List<PlatformRuntimeInstance> findByRuleBaseIDAndShutdowDateNull(Integer ruleBaseId);
+    List<PlatformRuntimeInstance> findByRuleBaseIDAndShutdowDateNull(Long ruleBaseId);
 
-    PlatformRuntimeInstance findByRuleBaseID(Integer ruleBaseId);
+    PlatformRuntimeInstance findByRuleBaseID(Long ruleBaseId);
 
-    PlatformRuntimeInstance findByRuleBaseIDAndStartDateAndEndDateNull(Integer ruleBaseId, Date startDate);
+    PlatformRuntimeInstance findByRuleBaseIDAndStartDateAndEndDateNull(Long ruleBaseId, Date startDate);
 
 
     @Query(value = "select pri " +

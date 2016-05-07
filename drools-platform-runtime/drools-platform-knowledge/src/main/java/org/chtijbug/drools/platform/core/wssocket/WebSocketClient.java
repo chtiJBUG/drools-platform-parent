@@ -16,15 +16,17 @@
 package org.chtijbug.drools.platform.core.wssocket;
 
 import org.apache.log4j.Logger;
+import org.chtijbug.drools.entity.history.KnowledgeResource;
 import org.chtijbug.drools.platform.core.DroolsPlatformKnowledgeBase;
 import org.chtijbug.drools.platform.core.PlatformManagementKnowledgeBeanServiceFactory;
 import org.chtijbug.drools.platform.core.ReconnectToServerThread;
+import org.chtijbug.drools.platform.core.WaitForServerThread;
 import org.chtijbug.drools.platform.core.callback.SpecificMessageCallback;
 import org.chtijbug.drools.platform.entity.Heartbeat;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
-import org.chtijbug.drools.runtime.resource.DroolsResource;
+import org.chtijbug.drools.runtime.resource.WorkbenchKnowledgeResource;
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
 import org.glassfish.tyrus.client.auth.Credentials;
@@ -254,17 +256,22 @@ public class WebSocketClient
                 }
                 break;
             case loadNewRuleVersion:
-                List<DroolsResource> droolsResources = PlatformManagementKnowledgeBeanServiceFactory.extract(bean.getResourceFileList(), platformKnowledgeBase.getGuvnorUsername(), platformKnowledgeBase.getGuvnorPassword());
+                List<KnowledgeResource> droolsResources = PlatformManagementKnowledgeBeanServiceFactory.extract(bean.getResourceFileList(), platformKnowledgeBase.getGuvnorUsername(), platformKnowledgeBase.getGuvnorPassword());
                 try {
-                    platformKnowledgeBase.RecreateKBaseWithNewRessources(droolsResources);
-                    bean.setRequestStatus(RequestStatus.SUCCESS);
-                    this.sendMessage(bean);
-                    platformKnowledgeBase.setRuleBaseStatus(true);
-                    StringBuilder ss = new StringBuilder();
-                    for (DroolsResource dd : droolsResources) {
-                        ss.append(dd.toString());
+                    if (droolsResources.size()==1 && droolsResources.get(0) instanceof WorkbenchKnowledgeResource){
+                        WorkbenchKnowledgeResource workbenchKnowledgeResource = (WorkbenchKnowledgeResource)droolsResources.get(0);
+                        platformKnowledgeBase.loadKBase(workbenchKnowledgeResource.getVersion());
+                        bean.setRequestStatus(RequestStatus.SUCCESS);
+                        this.sendMessage(bean);
+                        platformKnowledgeBase.setRuleBaseStatus(true);
+                        StringBuilder ss = new StringBuilder();
+                        for (KnowledgeResource dd : droolsResources) {
+                            ss.append(dd.toString());
+                        }
+                        LOG.info("loadNewRuleVersion done" + ss.toString());
                     }
-                    LOG.info("loadNewRuleVersion done" + ss.toString());
+
+
                 } catch (Exception e) {
                     DroolsChtijbugException droolsChtijbugException = new DroolsChtijbugException("RELOAD", "Could not reload Rule Package From Guvnor", e);
                     bean.setDroolsChtijbugException(droolsChtijbugException);

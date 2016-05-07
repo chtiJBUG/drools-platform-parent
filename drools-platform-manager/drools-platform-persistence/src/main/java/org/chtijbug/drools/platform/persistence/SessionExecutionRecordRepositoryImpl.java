@@ -37,7 +37,7 @@ public class SessionExecutionRecordRepositoryImpl implements SessionExecutionRec
 
 
     @Override
-    public SessionExecutionRecord findByRuleBaseIDAndSessionIdAndEndDateIsNull(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionId") Integer sessionId) {
+    public SessionExecutionRecord findByRuleBaseIDAndSessionIdAndEndDateIsNull(@Param("ruleBaseID") Long ruleBaseID, @Param("sessionId") Long sessionId) {
         logger.debug(">> findByRuleBaseIDAndSessionIdAndEndDateIsNull");
         SessionExecutionRecord sessionExecutionFound = null;
         try {

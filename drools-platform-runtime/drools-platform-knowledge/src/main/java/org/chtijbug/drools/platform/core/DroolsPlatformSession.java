@@ -26,10 +26,9 @@ import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.RuleBaseSession;
 import org.chtijbug.drools.runtime.impl.RuleBaseStatefulSession;
-import org.chtijbug.drools.runtime.mbeans.StatefulSessionSupervision;
-import org.drools.ObjectFilter;
-import org.drools.runtime.process.ProcessInstance;
-import org.drools.runtime.process.WorkItemHandler;
+import org.kie.api.runtime.ObjectFilter;
+import org.kie.api.runtime.process.ProcessInstance;
+import org.kie.api.runtime.process.WorkItemHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,6 +89,7 @@ public class DroolsPlatformSession implements RuleBaseSession {
         platformManagementKnowledgeBean.setRequestStatus(RequestStatus.SUCCESS);
         JMXInfo jmxInfo = new JMXInfo();
         platformManagementKnowledgeBean.setJmxInfo(jmxInfo);
+        /**
         StatefulSessionSupervision mbeanStatefulSessionSupervision = ruleBaseStatefulSession.getMbeanStatefulSessionSupervision();
         jmxInfo.setAverageTimeExecution(mbeanStatefulSessionSupervision.getAverageTimeExecution());
         jmxInfo.setMinTimeExecution(mbeanStatefulSessionSupervision.getMinTimeExecution());
@@ -110,6 +110,7 @@ public class DroolsPlatformSession implements RuleBaseSession {
             logger.error("DroolsPlatformSession.sentJMXInfo", e);
 
         }
+         **/
     }
 
     @Override
@@ -173,17 +174,17 @@ public class DroolsPlatformSession implements RuleBaseSession {
     }
 
     @Override
-    public int getSessionId() {
+    public Long getSessionId() {
         return this.ruleBaseStatefulSession.getSessionId();
     }
 
     @Override
-    public int getRuleBaseID() {
+    public Long getRuleBaseID() {
         return this.ruleBaseStatefulSession.getRuleBaseID();
     }
 
     @Override
-    public Collection<Object> getObjects(ObjectFilter objectFilter) {
+    public Collection<?> getObjects(ObjectFilter objectFilter) {
         return this.ruleBaseStatefulSession.getObjects(objectFilter);
     }
 
@@ -207,15 +208,7 @@ public class DroolsPlatformSession implements RuleBaseSession {
         return this.ruleBaseStatefulSession.startProcess(processName, vars);
     }
 
-    @Override
-    public boolean isDisableFactHandlerListener() {
-        return this.ruleBaseStatefulSession.isDisableFactHandlerListener();
-    }
 
-    @Override
-    public void setDisableFactHandlerListener(boolean disableFactHandlerListener) {
-        this.ruleBaseStatefulSession.setDisableFactHandlerListener(disableFactHandlerListener);
-    }
 
 
 

@@ -22,5 +22,5 @@ import java.util.List;
 
 
 public interface LoadNewRuleVersionListener {
-    public void messageReceived(Integer ruleBaseID, RequestStatus state, List<PlatformResourceFile> platformResourceFiles);
+    public void messageReceived(Long ruleBaseID, RequestStatus state, List<PlatformResourceFile> platformResourceFiles);
 }

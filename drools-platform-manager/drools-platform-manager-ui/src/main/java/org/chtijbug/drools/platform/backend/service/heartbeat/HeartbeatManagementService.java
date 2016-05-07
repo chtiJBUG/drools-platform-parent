@@ -35,7 +35,7 @@ public class HeartbeatManagementService {
     public void SynchronizeGuvnorCategories() {
 
 
-        for (Integer ruleBaseID : webSocketSessionManager.getAllRuleBaseID()) {
+        for (Long ruleBaseID : webSocketSessionManager.getAllRuleBaseID()) {
             try {
                     PlatformManagementKnowledgeBean platformManagementKnowledgeBean = new PlatformManagementKnowledgeBean();
                     platformManagementKnowledgeBean.setRequestRuntimePlarform(RequestRuntimePlarform.isAlive);

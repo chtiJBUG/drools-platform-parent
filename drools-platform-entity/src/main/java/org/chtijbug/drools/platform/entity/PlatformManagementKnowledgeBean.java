@@ -38,7 +38,7 @@ public class PlatformManagementKnowledgeBean implements Serializable {
     private boolean isAlive = false;
     private RequestRuntimePlarform requestRuntimePlarform;
     private RequestStatus requestStatus;
-    private Integer ruleBaseId;
+    private Long ruleBaseId;
     private JMXInfo jmxInfo;
     private ArrayList<PlatformResourceFile> resourceFileList = new ArrayList<>();
     private DroolsChtijbugException droolsChtijbugException;
@@ -87,11 +87,11 @@ public class PlatformManagementKnowledgeBean implements Serializable {
         this.jmxInfo = jmxInfo;
     }
 
-    public Integer getRuleBaseId() {
+    public Long getRuleBaseId() {
         return ruleBaseId;
     }
 
-    public void setRuleBaseId(Integer ruleBaseId) {
+    public void setRuleBaseId(Long ruleBaseId) {
         this.ruleBaseId = ruleBaseId;
     }
 

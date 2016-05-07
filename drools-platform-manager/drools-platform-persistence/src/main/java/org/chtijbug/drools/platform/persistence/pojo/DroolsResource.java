@@ -31,11 +31,12 @@ public class DroolsResource {
     @Column
     private String guvnor_url;
     @Column
-    private String guvnor_appName;
+    private String groupId;
     @Column
-    private String guvnor_packageName;
+    private String artifactID;
     @Column
-    private String guvnor_packageVersion;
+    private String version;
+
     @Column
     private String fileName;
     @Lob
@@ -45,19 +46,19 @@ public class DroolsResource {
     private Date startDate;
     @Column
     private Date endDate;
-    private Integer startEventID;
+    private Long startEventID;
 
-    private Integer stopEventID;
+    private Long stopEventID;
 
 
     public DroolsResource() {
     }
 
-    public DroolsResource(String guvnor_url, String guvnor_appName, String guvnor_packageName, String guvnor_packageVersion) {
+    public DroolsResource(String guvnor_url, String groupId, String artifactID, String version) {
         this.guvnor_url = guvnor_url;
-        this.guvnor_appName = guvnor_appName;
-        this.guvnor_packageName = guvnor_packageName;
-        this.guvnor_packageVersion = guvnor_packageVersion;
+        this.groupId = groupId;
+        this.artifactID = artifactID;
+        this.version = version;
     }
 
     public DroolsResource(String fileName, String fileContent) {
@@ -77,16 +78,16 @@ public class DroolsResource {
         return guvnor_url;
     }
 
-    public String getGuvnor_appName() {
-        return guvnor_appName;
+    public String getGroupId() {
+        return groupId;
     }
 
-    public String getGuvnor_packageName() {
-        return guvnor_packageName;
+    public String getArtifactID() {
+        return artifactID;
     }
 
-    public String getGuvnor_packageVersion() {
-        return guvnor_packageVersion;
+    public String getVersion() {
+        return version;
     }
 
     public String getFileName() {
@@ -113,23 +114,23 @@ public class DroolsResource {
         this.endDate = endDate;
     }
 
-    public void setGuvnor_packageVersion(String guvnor_packageVersion) {
-        this.guvnor_packageVersion = guvnor_packageVersion;
+    public void setVersion(String version) {
+        this.version = version;
     }
 
-    public Integer getStartEventID() {
+    public Long getStartEventID() {
         return startEventID;
     }
 
-    public void setStartEventID(Integer startEventID) {
+    public void setStartEventID(Long startEventID) {
         this.startEventID = startEventID;
     }
 
-    public Integer getStopEventID() {
+    public Long getStopEventID() {
         return stopEventID;
     }
 
-    public void setStopEventID(Integer stopEventID) {
+    public void setStopEventID(Long stopEventID) {
         this.stopEventID = stopEventID;
     }
 
@@ -140,32 +141,38 @@ public class DroolsResource {
 
         DroolsResource that = (DroolsResource) o;
 
-        if (!guvnor_appName.equals(that.guvnor_appName)) return false;
-        if (!guvnor_packageName.equals(that.guvnor_packageName)) return false;
-        if (!guvnor_packageVersion.equals(that.guvnor_packageVersion)) return false;
-        if (!guvnor_url.equals(that.guvnor_url)) return false;
+        if (guvnor_url != null ? !guvnor_url.equals(that.guvnor_url) : that.guvnor_url != null) return false;
+        if (groupId != null ? !groupId.equals(that.groupId) : that.groupId != null) return false;
+        if (artifactID != null ? !artifactID.equals(that.artifactID) : that.artifactID != null) return false;
+        if (version != null ? !version.equals(that.version) : that.version != null) return false;
+        return fileName != null ? fileName.equals(that.fileName) : that.fileName == null;
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = guvnor_url.hashCode();
-        result = 31 * result + guvnor_appName.hashCode();
-        result = 31 * result + guvnor_packageName.hashCode();
-        result = 31 * result + guvnor_packageVersion.hashCode();
+        int result = guvnor_url != null ? guvnor_url.hashCode() : 0;
+        result = 31 * result + (groupId != null ? groupId.hashCode() : 0);
+        result = 31 * result + (artifactID != null ? artifactID.hashCode() : 0);
+        result = 31 * result + (version != null ? version.hashCode() : 0);
+        result = 31 * result + (fileName != null ? fileName.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("DroolsResource{");
-        sb.append("guvnor_url='").append(guvnor_url).append('\'');
-        sb.append(", guvnor_appName='").append(guvnor_appName).append('\'');
-        sb.append(", guvnor_packageName='").append(guvnor_packageName).append('\'');
-        sb.append(", guvnor_packageVersion='").append(guvnor_packageVersion).append('\'');
+        sb.append("id=").append(id);
+        sb.append(", guvnor_url='").append(guvnor_url).append('\'');
+        sb.append(", groupId='").append(groupId).append('\'');
+        sb.append(", artifactID='").append(artifactID).append('\'');
+        sb.append(", version='").append(version).append('\'');
         sb.append(", fileName='").append(fileName).append('\'');
         sb.append(", fileContent='").append(fileContent).append('\'');
+        sb.append(", startDate=").append(startDate);
+        sb.append(", endDate=").append(endDate);
+        sb.append(", startEventID=").append(startEventID);
+        sb.append(", stopEventID=").append(stopEventID);
         sb.append('}');
         return sb.toString();
     }

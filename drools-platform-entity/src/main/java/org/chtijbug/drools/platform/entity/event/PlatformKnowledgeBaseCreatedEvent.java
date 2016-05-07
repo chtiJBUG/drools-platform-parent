@@ -31,7 +31,7 @@ public class PlatformKnowledgeBaseCreatedEvent extends KnowledgeBaseCreatedEvent
     private Date startDate;
 
 
-    public PlatformKnowledgeBaseCreatedEvent(int eventID, Date dateEvent, int ruleBaseID, String ws_hostname, int ws_port, Date date) {
+    public PlatformKnowledgeBaseCreatedEvent(Long eventID, Date dateEvent, Long ruleBaseID, String ws_hostname, int ws_port, Date date) {
         super(eventID, dateEvent, ruleBaseID);
         this.hostname = ws_hostname;
         this.port = ws_port;

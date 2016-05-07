@@ -35,9 +35,9 @@ public class PlatformRuntimeInstance implements Serializable {
     private Date shutdowDate;
     @Enumerated(EnumType.STRING)
     private PlatformRuntimeInstanceStatus status;
-    private Integer startEventID;
-    private Integer stopEventID;
-    private Integer ruleBaseID;
+    private Long startEventID;
+    private Long stopEventID;
+    private Long ruleBaseID;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<DroolsResource> droolsRessources = new HashSet<>();
@@ -95,27 +95,27 @@ public class PlatformRuntimeInstance implements Serializable {
         this.status = status;
     }
 
-    public Integer getStartEventID() {
+    public Long getStartEventID() {
         return startEventID;
     }
 
-    public void setStartEventID(Integer startEventID) {
+    public void setStartEventID(Long startEventID) {
         this.startEventID = startEventID;
     }
 
-    public Integer getStopEventID() {
+    public Long getStopEventID() {
         return stopEventID;
     }
 
-    public void setStopEventID(Integer stopEventID) {
+    public void setStopEventID(Long stopEventID) {
         this.stopEventID = stopEventID;
     }
 
-    public Integer getRuleBaseID() {
+    public Long getRuleBaseID() {
         return ruleBaseID;
     }
 
-    public void setRuleBaseID(Integer ruleBaseID) {
+    public void setRuleBaseID(Long ruleBaseID) {
         this.ruleBaseID = ruleBaseID;
     }
 

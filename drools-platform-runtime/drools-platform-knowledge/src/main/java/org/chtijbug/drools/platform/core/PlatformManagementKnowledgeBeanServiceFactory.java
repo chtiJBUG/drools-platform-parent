@@ -15,14 +15,15 @@
  */
 package org.chtijbug.drools.platform.core;
 
+import org.chtijbug.drools.entity.history.KnowledgeResource;
 import org.chtijbug.drools.platform.entity.Heartbeat;
 import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.entity.PlatformResourceFile;
 import org.chtijbug.drools.platform.entity.RequestStatus;
-import org.chtijbug.drools.runtime.resource.Bpmn2DroolsResource;
-import org.chtijbug.drools.runtime.resource.DrlDroolsResource;
-import org.chtijbug.drools.runtime.resource.DroolsResource;
-import org.chtijbug.drools.runtime.resource.GuvnorDroolsResource;
+
+import org.chtijbug.drools.runtime.resource.FileKnowledgeResource;
+
+import org.chtijbug.drools.runtime.resource.WorkbenchKnowledgeResource;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,15 +41,15 @@ public class PlatformManagementKnowledgeBeanServiceFactory {
         return bean;
     }
 
-    public static PlatformManagementKnowledgeBean generateRuleVersionsInfo(PlatformManagementKnowledgeBean bean, List<DroolsResource> droolsResources) {
-        for (DroolsResource droolsResource : droolsResources) {
-            if (droolsResource instanceof GuvnorDroolsResource) {
-                GuvnorDroolsResource guvnorDroolsResource = (GuvnorDroolsResource) droolsResource;
-                PlatformResourceFile platformResourceFile = new PlatformResourceFile(guvnorDroolsResource.getBaseUrl(), guvnorDroolsResource.getWebappName(), guvnorDroolsResource.getPackageName(), guvnorDroolsResource.getPackageVersion(), null, null);
+    public static PlatformManagementKnowledgeBean generateRuleVersionsInfo(PlatformManagementKnowledgeBean bean, List<KnowledgeResource> droolsResources) {
+        for (KnowledgeResource droolsResource : droolsResources) {
+            if (droolsResource instanceof WorkbenchKnowledgeResource) {
+                WorkbenchKnowledgeResource guvnorDroolsResource = (WorkbenchKnowledgeResource) droolsResource;
+                PlatformResourceFile platformResourceFile = new PlatformResourceFile(guvnorDroolsResource.getGuvnor_url(),  guvnorDroolsResource.getGroupId(), guvnorDroolsResource.getArtifactID(),guvnorDroolsResource.getVersion(), null, null);
                 bean.getResourceFileList().add(platformResourceFile);
-            } else if (droolsResource instanceof DrlDroolsResource) {
-                DrlDroolsResource drlDroolsResource = (DrlDroolsResource) droolsResource;
-                PlatformResourceFile platformResourceFile = new PlatformResourceFile(drlDroolsResource.getFileName(), drlDroolsResource.getFileContent());
+            } else if (droolsResource instanceof FileKnowledgeResource) {
+                FileKnowledgeResource drlDroolsResource = (FileKnowledgeResource) droolsResource;
+                PlatformResourceFile platformResourceFile = new PlatformResourceFile(drlDroolsResource.getPath(), drlDroolsResource.getContent());
                 bean.getResourceFileList().add(platformResourceFile);
             }
         }
@@ -56,19 +57,20 @@ public class PlatformManagementKnowledgeBeanServiceFactory {
         return bean;
     }
 
-    public static List<DroolsResource> extract(List<PlatformResourceFile> resourceFiles, String guvnorUsername, String guvnorPassword) {
-        List<DroolsResource> droolsResources = new ArrayList<>();
+    public static List<KnowledgeResource> extract(List<PlatformResourceFile> resourceFiles, String guvnorUsername, String guvnorPassword) {
+        List<KnowledgeResource> droolsResources = new ArrayList<>();
         for (PlatformResourceFile resourceFile : resourceFiles) {
             if (!"empty".equals(resourceFile.getGuvnor_url())) {
-                DroolsResource droolsResource = GuvnorDroolsResource.createGuvnorRessource(resourceFile.getGuvnor_url(), resourceFile.getGuvnor_appName(), resourceFile.getGuvnor_packageName(), resourceFile.getGuvnor_packageVersion(), guvnorUsername, guvnorPassword);
+                KnowledgeResource droolsResource = WorkbenchKnowledgeResource.createGuvnorRessource(resourceFile.getGuvnor_url(), resourceFile.getGroupId(), resourceFile.getArtifactId(), resourceFile.getVersion(), guvnorUsername, guvnorPassword);
                 droolsResources.add(droolsResource);
             } else {
                 String extension = getFileExtension(resourceFile.getFileName());
+
                 if ("bpmn2".equals(extension)) {
-                    Bpmn2DroolsResource bpmn2DroolsResource = Bpmn2DroolsResource.createClassPathResource(resourceFile.getFileName());
+                    KnowledgeResource bpmn2DroolsResource = FileKnowledgeResource.createBPMN2ClassPathResource(resourceFile.getFileName());
                     droolsResources.add(bpmn2DroolsResource);
                 } else if ("drl".equals(extension)) {
-                    DroolsResource droolsResource = DrlDroolsResource.createClassPathResource(resourceFile.getFileName());
+                    KnowledgeResource droolsResource = FileKnowledgeResource.createDRLClassPathResource(resourceFile.getFileName());
                     droolsResources.add(droolsResource);
                 }
             }

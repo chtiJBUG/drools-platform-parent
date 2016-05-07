@@ -84,7 +84,7 @@ public class PlatformRunTimeBeanTest {
     public void testKnowledgeBaseCreate() throws DroolsChtijbugException {
 
 
-        RuleBasePackage ruleBasePackage = RuleBaseBuilder.createPackageBasePackageWithListener(historyListener, "ruleflow2.drl", "RuleFlowProcess2.bpmn2");
+        RuleBasePackage ruleBasePackage = RuleBaseBuilder.createRuleBasePackage(new Long(1),historyListener,"test","test","1.0.0", "ruleflow2.drl", "RuleFlowProcess2.bpmn2");
         List<PlatformRuntimeInstance> platform1 = null; //platformRuntimeInstanceRepository.findByHostnameAndEndDateNull("localhost");
         Assert.assertTrue(platform1.size() == 1);
         PlatformRuntimeInstance platforRuntime = platform1.get(0);
@@ -113,8 +113,8 @@ public class PlatformRunTimeBeanTest {
     public void testBPMN2WorkFlowGroup() throws DroolsChtijbugException {
 
         final List<HistoryEvent> historyEvents = historyListener.getHistoryEvents();
-        RuleBasePackage ruleBasePackage = RuleBaseBuilder.createPackageBasePackageWithListener(historyListener, "ruleflow2.drl", "RuleFlowProcess2.bpmn2");
-        int rulePackageID = ruleBasePackage.getRuleBaseID();
+        RuleBasePackage ruleBasePackage = RuleBaseBuilder.createRuleBasePackage(new Long(1),historyListener,"test","test","1.0.0", "ruleflow2.drl", "RuleFlowProcess2.bpmn2");
+        Long rulePackageID = ruleBasePackage.getRuleBaseID();
 
         RuleBaseSession ruleBaseSession1 = ruleBasePackage.createRuleBaseSession();
         Fibonacci fibonacci = new Fibonacci(0);
@@ -130,16 +130,16 @@ public class PlatformRunTimeBeanTest {
         Assert.assertTrue(historyEvents.get(12) instanceof AfterRuleFlowActivatedHistoryEvent);
         AfterRuleFlowActivatedHistoryEvent afterRuleFlowActivatedHistoryEvent = (AfterRuleFlowActivatedHistoryEvent) historyEvents.get(12);
         Assert.assertEquals(afterRuleFlowActivatedHistoryEvent.getRuleBaseID(), rulePackageID);
-        Assert.assertEquals(afterRuleFlowActivatedHistoryEvent.getEventID(), 8l);
-        Assert.assertEquals(afterRuleFlowActivatedHistoryEvent.getSessionId(), 1l);
+        Assert.assertEquals(afterRuleFlowActivatedHistoryEvent.getEventID(), new Long(8l));
+        Assert.assertEquals(afterRuleFlowActivatedHistoryEvent.getSessionId(), new Long(1l));
         Assert.assertEquals(afterRuleFlowActivatedHistoryEvent.getTypeEvent(), HistoryEvent.TypeEvent.RuleFlowGroup);
         Assert.assertEquals(afterRuleFlowActivatedHistoryEvent.getDroolsRuleFlowGroupObject().getName(), "Group1");
 
         Assert.assertTrue(historyEvents.get(21) instanceof AfterRuleFiredHistoryEvent);
         AfterRuleFiredHistoryEvent afterRuleFiredHistoryEvent = (AfterRuleFiredHistoryEvent) historyEvents.get(21);
         Assert.assertEquals(afterRuleFiredHistoryEvent.getRuleBaseID(), rulePackageID);
-        Assert.assertEquals(afterRuleFiredHistoryEvent.getEventID(), 17l);
-        Assert.assertEquals(afterRuleFiredHistoryEvent.getSessionId(), 1l);
+        Assert.assertEquals(afterRuleFiredHistoryEvent.getEventID(), new Long(17l));
+        Assert.assertEquals(afterRuleFiredHistoryEvent.getSessionId(),new Long( 1l));
         Assert.assertEquals(afterRuleFiredHistoryEvent.getTypeEvent(), HistoryEvent.TypeEvent.Rule);
         DroolsRuleObject droolsRuleObject2 = afterRuleFiredHistoryEvent.getRule();
         Assert.assertEquals(droolsRuleObject2.getRuleName(), "Account group1");
@@ -150,8 +150,8 @@ public class PlatformRunTimeBeanTest {
         Assert.assertTrue(historyEvents.get(22) instanceof AfterRuleFlowDeactivatedHistoryEvent);
         AfterRuleFlowDeactivatedHistoryEvent afterRuleFlowDeactivatedHistoryEvent = (AfterRuleFlowDeactivatedHistoryEvent) historyEvents.get(22);
         Assert.assertEquals(afterRuleFlowDeactivatedHistoryEvent.getRuleBaseID(), rulePackageID);
-        Assert.assertEquals(afterRuleFlowDeactivatedHistoryEvent.getEventID(), 18l);
-        Assert.assertEquals(afterRuleFlowDeactivatedHistoryEvent.getSessionId(), 1l);
+        Assert.assertEquals(afterRuleFlowDeactivatedHistoryEvent.getEventID(), new Long(18l));
+        Assert.assertEquals(afterRuleFlowDeactivatedHistoryEvent.getSessionId(), new Long(1l));
         Assert.assertEquals(afterRuleFlowDeactivatedHistoryEvent.getTypeEvent(), HistoryEvent.TypeEvent.RuleFlowGroup);
         Assert.assertEquals(afterRuleFlowDeactivatedHistoryEvent.getDroolsRuleFlowGroupObject().getName(), "Group1");
 

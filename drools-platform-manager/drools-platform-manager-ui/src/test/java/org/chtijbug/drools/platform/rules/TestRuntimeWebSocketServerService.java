@@ -5,8 +5,7 @@ import org.chtijbug.drools.platform.entity.PlatformManagementKnowledgeBean;
 import org.chtijbug.drools.platform.entity.PlatformResourceFile;
 import org.chtijbug.drools.platform.entity.RequestStatus;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
-import org.chtijbug.drools.runtime.resource.DroolsResource;
-import org.chtijbug.drools.runtime.resource.GuvnorDroolsResource;
+import org.chtijbug.drools.runtime.resource.WorkbenchKnowledgeResource;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.websocket.*;
@@ -51,7 +50,7 @@ public class TestRuntimeWebSocketServerService {
                 LOG.info("Runtime Guvnor Version " + platformResourceFile);
             case loadNewRuleVersion:
                 PlatformResourceFile guvnorResourceFile2 = (PlatformResourceFile)bean.getResourceFileList().get(0);
-                DroolsResource droolsResource = new GuvnorDroolsResource(guvnorResourceFile2.getGuvnor_url(), guvnorResourceFile2.getGuvnor_appName(), guvnorResourceFile2.getGuvnor_packageName(), guvnorResourceFile2.getGuvnor_packageVersion(), guvnor_username, guvnor_password);
+                WorkbenchKnowledgeResource droolsResource = new WorkbenchKnowledgeResource(guvnorResourceFile2.getGuvnor_url(), guvnorResourceFile2.getArtifactId(), guvnorResourceFile2.getArtifactId(), guvnorResourceFile2.getVersion(), guvnor_username, guvnor_password);
                 try {
 
                     bean.setRequestStatus(RequestStatus.SUCCESS);

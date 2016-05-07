@@ -20,6 +20,6 @@ import org.springframework.data.repository.query.Param;
 
 
 public interface SessionExecutionRecordCustomRepository {
-    SessionExecutionRecord findByRuleBaseIDAndSessionIdAndEndDateIsNull(@Param("ruleBaseID") Integer ruleBaseID, @Param("sessionId") Integer sessionId);
+    SessionExecutionRecord findByRuleBaseIDAndSessionIdAndEndDateIsNull(@Param("ruleBaseID") Long ruleBaseID, @Param("sessionId") Long sessionId);
 
 }

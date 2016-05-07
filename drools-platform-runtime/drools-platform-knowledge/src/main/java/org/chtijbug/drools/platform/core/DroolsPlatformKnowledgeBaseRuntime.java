@@ -15,14 +15,15 @@
  */
 package org.chtijbug.drools.platform.core;
 
+import org.chtijbug.drools.entity.history.KnowledgeResource;
 import org.chtijbug.drools.runtime.DroolsChtijbugException;
 import org.chtijbug.drools.runtime.RuleBasePackage;
 import org.chtijbug.drools.runtime.RuleBaseSession;
-import org.chtijbug.drools.runtime.resource.DroolsResource;
+import org.chtijbug.drools.runtime.listener.HistoryListener;
 
 
 public interface DroolsPlatformKnowledgeBaseRuntime extends RuleBasePackage {
-    java.util.List<DroolsResource> getDroolsResources();
+    java.util.List<KnowledgeResource> getDroolsResources();
 
     void setRuleBaseStatus(boolean b);
 
@@ -36,5 +37,7 @@ public interface DroolsPlatformKnowledgeBaseRuntime extends RuleBasePackage {
 
     void disposePlatformRuleBaseSession(RuleBaseSession session) throws DroolsChtijbugException;
 
-    public void sendPlatformKnowledgeBaseInitialConnectionEventToServer() throws DroolsChtijbugException;
+    void sendPlatformKnowledgeBaseInitialConnectionEventToServer() throws DroolsChtijbugException;
+
+
 }

@@ -7,16 +7,16 @@ package org.chtijbug.drools.platform.backend.topic.pojo;
  * To change this template use File | Settings | File Templates.
  */
 public class BaseTopicData {
-    private Integer ruleBaseID;
+    private Long ruleBaseID;
 
     public BaseTopicData() {
     }
 
-    public Integer getRuleBaseID() {
+    public Long getRuleBaseID() {
         return ruleBaseID;
     }
 
-    public void setRuleBaseID(Integer ruleBaseID) {
+    public void setRuleBaseID(Long ruleBaseID) {
         this.ruleBaseID = ruleBaseID;
     }
 }

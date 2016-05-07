@@ -16,10 +16,11 @@
 package org.chtijbug.drools.platform.web.model;
 
 public class SessionExecutionResource {
-    private Integer ruleBaseID;
-    private String rulePackage;
+    private Long ruleBaseID;
+    private String groupId;
+    private String artifactId;
     private String version;
-    private Integer sessionId;
+    private Long sessionId;
     private String runtimeURL;
     private String guvnorUrl;
     private String hostname;
@@ -31,9 +32,10 @@ public class SessionExecutionResource {
 
     public SessionExecutionResource() { /*nop*/ }
 
-    public SessionExecutionResource(Integer ruleBaseID, String rulePackage, String version, Integer sessionId, String runtimeURL, String guvnorUrl, String hostname, String status, String startDate, String endDate) {
+    public SessionExecutionResource(Long ruleBaseID, String groupId,String artifactId, String version, Long sessionId, String runtimeURL, String guvnorUrl, String hostname, String status, String startDate, String endDate) {
         this.ruleBaseID = ruleBaseID;
-        this.rulePackage = rulePackage;
+        this.groupId = groupId;
+        this.artifactId=artifactId;
         this.version = version;
         this.sessionId = sessionId;
         this.runtimeURL = runtimeURL;
@@ -44,20 +46,28 @@ public class SessionExecutionResource {
         EndDate = endDate;
     }
 
-    public Integer getRuleBaseID() {
+    public Long getRuleBaseID() {
         return ruleBaseID;
     }
 
-    public void setRuleBaseID(Integer ruleBaseID) {
+    public void setRuleBaseID(Long ruleBaseID) {
         this.ruleBaseID = ruleBaseID;
     }
 
-    public String getRulePackage() {
-        return rulePackage;
+    public String getGroupId() {
+        return groupId;
     }
 
-    public void setRulePackage(String rulePackage) {
-        this.rulePackage = rulePackage;
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getArtifactId() {
+        return artifactId;
+    }
+
+    public void setArtifactId(String artifactId) {
+        this.artifactId = artifactId;
     }
 
     public String getVersion() {
@@ -68,11 +78,11 @@ public class SessionExecutionResource {
         this.version = version;
     }
 
-    public Integer getSessionId() {
+    public Long getSessionId() {
         return sessionId;
     }
 
-    public void setSessionId(Integer sessionId) {
+    public void setSessionId(Long sessionId) {
         this.sessionId = sessionId;
     }
 

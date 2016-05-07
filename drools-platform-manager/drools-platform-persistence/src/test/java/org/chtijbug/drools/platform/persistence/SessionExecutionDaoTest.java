@@ -50,9 +50,9 @@ public class SessionExecutionDaoTest {
     @Test
     @Ignore
     public void should_get_platform_runtime_object_persisted() {
-        PlatformRuntimeInstance platformRuntimeInstance = platformRuntimeInstanceRepository.findByRuleBaseID(5);
+        PlatformRuntimeInstance platformRuntimeInstance = platformRuntimeInstanceRepository.findByRuleBaseID(new Long(5));
         SessionExecutionRecord sessionExecution = new SessionExecutionRecord();
-        sessionExecution.setSessionId(12);
+        sessionExecution.setSessionId(new Long(12));
         sessionExecution.setStartDate(new Date());
         // sessionExecution.setPlatformRuntimeInstance(platformRuntimeInstance);
         sessionExecutionRecordRepository.save(sessionExecution);

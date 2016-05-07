@@ -100,7 +100,8 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
                         Integer portNumber = platformRuntimeDefinition.getWebsocketPort();
                         String endPointName = platformRuntimeDefinition.getWebsocketEndpoint();
                         String url = "http://" + hostname + ":" + portNumber + endPointName;
-                        String rulePackage = null;
+                        String groupId = null;
+                        String artifactId=null;
                         String version = null;
                         String environment = null;
                         String mode = null;
@@ -108,8 +109,9 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
 
                         if (!platformRuntimeDefinition.getDroolsRessourcesDefinition().isEmpty()) {
                             DroolsResource guvnorResource = platformRuntimeDefinition.getDroolsRessourcesDefinition().get(0);
-                            rulePackage = guvnorResource.getGuvnor_packageName();
-                            version = guvnorResource.getGuvnor_packageVersion();
+                            groupId = guvnorResource.getGroupId();
+                            artifactId=guvnorResource.getArtifactID();
+                            version = guvnorResource.getVersion();
                         }
                         if (platformRuntimeDefinition.getPlatformRuntimeEnvironment() != null) {
                             environment = platformRuntimeDefinition.getPlatformRuntimeEnvironment().name();
@@ -127,7 +129,7 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
                         } else {
                             status = "Not Running/Not Reachable";
                         }
-                        return new RuntimeInstance(platformRuntimeDefinition.getId(), platformRuntimeDefinition.getRuleBaseID(), url, rulePackage, version, environment, mode, status);
+                        return new RuntimeInstance(platformRuntimeDefinition.getId(), platformRuntimeDefinition.getRuleBaseID(), url, groupId,artifactId, version, environment, mode, status);
                     }
                 }
         );
@@ -148,7 +150,8 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
                         Integer portNumber = platformRuntimeInstance.getPlatformRuntimeDefinition().getWebsocketPort();
                         String endPointName = platformRuntimeInstance.getPlatformRuntimeDefinition().getWebsocketEndpoint();
                         String url = "http://" + hostname + ":" + portNumber + endPointName;
-                        String rulePackage = null;
+                        String groupId = null;
+                        String artifactd=null;
                         String version = null;
                         String environment = null;
                         String mode = null;
@@ -156,8 +159,9 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
                         PlatformRuntimeDefinition platformRuntimeDefinition = platformRuntimeInstance.getPlatformRuntimeDefinition();
                         if (!platformRuntimeDefinition.getDroolsRessourcesDefinition().isEmpty()) {
                             DroolsResource guvnorResource = platformRuntimeDefinition.getDroolsRessourcesDefinition().get(0);
-                            rulePackage = guvnorResource.getGuvnor_packageName();
-                            version = guvnorResource.getGuvnor_packageVersion();
+                            groupId = guvnorResource.getGroupId();
+                            artifactd=guvnorResource.getArtifactID();
+                            version = guvnorResource.getVersion();
                         }
                         if (platformRuntimeDefinition.getPlatformRuntimeEnvironment() != null) {
                             environment = platformRuntimeDefinition.getPlatformRuntimeEnvironment().name();
@@ -175,7 +179,7 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
                         } else {
                             status = "Not Running/Not Reachable";
                         }
-                        return new RuntimeInstance(platformRuntimeInstance.getId(), platformRuntimeInstance.getRuleBaseID(), url, rulePackage, version, environment, mode, status);
+                        return new RuntimeInstance(platformRuntimeInstance.getId(), platformRuntimeInstance.getRuleBaseID(), url, groupId,artifactd, version, environment, mode, status);
                     }
                 }
         );
@@ -214,7 +218,7 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
                                 Set<DroolsResource> droolsResources = input.getDroolsRessources();
                                 if (droolsResources!= null
                                         && droolsResources.size()==1){
-                                   packageVersion =  droolsResources.iterator().next().getGuvnor_packageVersion();
+                                   packageVersion =  droolsResources.iterator().next().getVersion();
                                 }
                                 DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                                 String date = formatter.format(input.getStartDate());
@@ -261,12 +265,12 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
                     PlatformRuntimeDefinition platformRuntimeDefinition = elt.getPlatformRuntimeDefinition();
                     if (platformRuntimeDefinition.getDroolsRessourcesDefinition().size()==1){
                         DroolsResource droolsResource = platformRuntimeDefinition.getDroolsRessourcesDefinition().get(0);
-                        droolsResource.setGuvnor_packageVersion(packageVersion);
+                        droolsResource.setVersion(packageVersion);
                         platformRuntimeDefinition = platformRuntimeDefinitionRepositoryCacheService.save(platformRuntimeDefinition);
                     }
 
                     DroolsResource toSave = elt.getDroolsRessources().iterator().next();
-                    toSave.setGuvnor_packageVersion(packageVersion);
+                    toSave.setVersion(packageVersion);
                     elt= platformRuntimeInstanceRepository.save(elt);
 
                 }
@@ -385,10 +389,11 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
 
                     if (guvnorResource.getEndDate() == null) {
 
-                        String guvnorUrl = guvnorResource.getGuvnor_url() + guvnorResource.getGuvnor_appName();
+                        String guvnorUrl = guvnorResource.getGuvnor_url() ;
                         output.setGuvnorUrl(guvnorUrl);
-                        output.setRulePackage(guvnorResource.getGuvnor_packageName());
-                        output.setVersion(guvnorResource.getGuvnor_packageVersion());
+                        output.setGroupId(guvnorResource.getGroupId());
+                        output.setArtifactId(guvnorResource.getArtifactID());
+                        output.setVersion(guvnorResource.getVersion());
 
                     }
                     String hostname = runtimeInstance.getPlatformRuntimeDefinition().getDeploymentHost().getHostname();
@@ -458,7 +463,7 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
-    public void changeRuntimeMode(@PathVariable Integer ruleBaseId, @PathVariable String newMode) {
+    public void changeRuntimeMode(@PathVariable Long ruleBaseId, @PathVariable String newMode) {
         logger.debug(">> changeRuntimeMode(ruleBaseId={}, newMode={})", ruleBaseId, newMode);
         try {
             PlatformRuntimeDefinition targetInstance = platformRuntimeDefinitionRepositoryCacheService.findByRuleBaseID(ruleBaseId);
@@ -481,7 +486,7 @@ public class RuntimeResource extends CacheLoader<Long, SessionExecutionDetailsRe
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     @ResponseBody
-    public void changeRuntimeEnv(@PathVariable Integer ruleBaseId, @PathVariable String newEnv) {
+    public void changeRuntimeEnv(@PathVariable Long ruleBaseId, @PathVariable String newEnv) {
         logger.debug(">> changeRuntimeEnv(ruleBaseId={}, newMode={})", ruleBaseId, newEnv);
         try {
             PlatformRuntimeDefinition targetInstance = platformRuntimeDefinitionRepositoryCacheService.findByRuleBaseID(ruleBaseId);

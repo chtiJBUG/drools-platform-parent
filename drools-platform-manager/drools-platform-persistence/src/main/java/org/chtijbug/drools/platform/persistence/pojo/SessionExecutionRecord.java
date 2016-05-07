@@ -36,7 +36,7 @@ public class SessionExecutionRecord {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "session_execution_record_id_seq")
     private Long id;
 
-    private Integer sessionId;
+    private Long sessionId;
     @Column(nullable = false)
     private Date startDate;
     private Date endDate;
@@ -60,7 +60,7 @@ public class SessionExecutionRecord {
     public SessionExecutionRecord() {
     }
 
-    public SessionExecutionRecord(Long id, Integer sessionId, Date startDate, Date endDate, PlatformRuntimeMode platformRuntimeMode, Date processingStartDate, Date processingStopDate, PlatformRuntimeInstance platformRuntimeInstance) {
+    public SessionExecutionRecord(Long id, Long sessionId, Date startDate, Date endDate, PlatformRuntimeMode platformRuntimeMode, Date processingStartDate, Date processingStopDate, PlatformRuntimeInstance platformRuntimeInstance) {
         this.id = id;
         this.sessionId = sessionId;
         this.startDate = startDate;
@@ -79,11 +79,11 @@ public class SessionExecutionRecord {
         this.id = id;
     }
 
-    public Integer getSessionId() {
+    public Long getSessionId() {
         return sessionId;
     }
 
-    public void setSessionId(Integer sessionId) {
+    public void setSessionId(Long sessionId) {
         this.sessionId = sessionId;
     }
 

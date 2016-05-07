@@ -16,15 +16,16 @@
 package org.chtijbug.drools.platform.backend.service.runtimeevent.impl.knowledgeBase;
 
 import org.apache.log4j.Logger;
-import org.chtijbug.drools.entity.history.DrlResourceFile;
-import org.chtijbug.drools.entity.history.GuvnorResourceFile;
+
 import org.chtijbug.drools.entity.history.HistoryEvent;
-import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseAddRessourceEvent;
+import org.chtijbug.drools.entity.history.knowledge.KnowledgeBaseAddResourceEvent;
 import org.chtijbug.drools.platform.backend.service.runtimeevent.AbstractEventHandlerStrategy;
 import org.chtijbug.drools.platform.persistence.PlatformRuntimeInstanceRepository;
 import org.chtijbug.drools.platform.persistence.pojo.DroolsResource;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeInstance;
 import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
+import org.chtijbug.drools.runtime.resource.FileKnowledgeResource;
+import org.chtijbug.drools.runtime.resource.WorkbenchKnowledgeResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +43,7 @@ public class KnowledgeBaseAddRessourceEventStrategy extends AbstractEventHandler
     @Override
     @Transactional
     protected void handleMessageInternally(HistoryEvent historyEvent) {
-        KnowledgeBaseAddRessourceEvent knowledgeBaseAddRessourceEvent = (KnowledgeBaseAddRessourceEvent) historyEvent;
+        KnowledgeBaseAddResourceEvent knowledgeBaseAddRessourceEvent = (KnowledgeBaseAddResourceEvent) historyEvent;
         List<PlatformRuntimeInstance> existingPlatformRuntimeInstances = platformRuntimeInstanceRepository.findByRuleBaseIDAndEndDateNull(knowledgeBaseAddRessourceEvent.getRuleBaseID());
         if (existingPlatformRuntimeInstances.size() == 1) {
             PlatformRuntimeInstance existingPlatformRuntimeInstance = existingPlatformRuntimeInstances.get(0);
@@ -51,12 +52,12 @@ public class KnowledgeBaseAddRessourceEventStrategy extends AbstractEventHandler
             /**
              *  KnowledgeBaseAddRessourceEvent sends only one droolsressources
              */
-            if (knowledgeBaseAddRessourceEvent.getResourceFiles().size() == 1 && knowledgeBaseAddRessourceEvent.getResourceFiles().get(0) instanceof GuvnorResourceFile) {
-                GuvnorResourceFile guvnorResourceFile = (GuvnorResourceFile) knowledgeBaseAddRessourceEvent.getResourceFiles().get(0);
-                droolsResource = new DroolsResource(guvnorResourceFile.getGuvnor_url(), guvnorResourceFile.getGuvnor_appName(), guvnorResourceFile.getGuvnor_packageName(), guvnorResourceFile.getGuvnor_packageVersion());
+            if (knowledgeBaseAddRessourceEvent.getKnowledgeResources().size() == 1 && knowledgeBaseAddRessourceEvent.getKnowledgeResources().get(0) instanceof WorkbenchKnowledgeResource) {
+                WorkbenchKnowledgeResource workbenchKnowledgeResource = (WorkbenchKnowledgeResource) knowledgeBaseAddRessourceEvent.getKnowledgeResources().get(0);
+                droolsResource = new DroolsResource(workbenchKnowledgeResource.getGuvnor_url(), workbenchKnowledgeResource.getGroupId(), workbenchKnowledgeResource.getArtifactID(), workbenchKnowledgeResource.getVersion());
             } else {
-                DrlResourceFile drlResourceFile = (DrlResourceFile) knowledgeBaseAddRessourceEvent.getResourceFiles().get(0);
-                droolsResource = new DroolsResource(drlResourceFile.getFileName(), drlResourceFile.getContent());
+                FileKnowledgeResource fileKnowledgeResource = (FileKnowledgeResource) knowledgeBaseAddRessourceEvent.getKnowledgeResources().get(0);
+                droolsResource = new DroolsResource(fileKnowledgeResource.getPath(), fileKnowledgeResource.getContent());
             }
             droolsResource.setStartDate(knowledgeBaseAddRessourceEvent.getDateEvent());
             droolsResource.setStartEventID(knowledgeBaseAddRessourceEvent.getEventID());
@@ -67,7 +68,7 @@ public class KnowledgeBaseAddRessourceEventStrategy extends AbstractEventHandler
 
     @Override
     public boolean isEventSupported(HistoryEvent historyEvent) {
-        return historyEvent instanceof KnowledgeBaseAddRessourceEvent;
+        return historyEvent instanceof KnowledgeBaseAddResourceEvent;
     }
 
     @Override

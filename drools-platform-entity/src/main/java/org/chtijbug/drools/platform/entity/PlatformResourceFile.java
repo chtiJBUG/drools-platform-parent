@@ -30,9 +30,10 @@ public class PlatformResourceFile implements Serializable {
     private String fileName;
     private String content;
     private String guvnor_url = null;
-    private String guvnor_appName;
-    private String guvnor_packageName;
-    private String guvnor_packageVersion;
+
+    private String groupId = "default";
+    private String artifactId="default";
+    private String version;
     private String guvnor_userName;
     private String guvnor_password;
 
@@ -44,11 +45,14 @@ public class PlatformResourceFile implements Serializable {
         this.content = content;
     }
 
-    public PlatformResourceFile(String guvnor_url, String guvnor_appName, String guvnor_packageName, String guvnor_packageVersion, String guvnor_userName, String guvnor_password) {
+    public PlatformResourceFile(String guvnor_url,String groupId,String artifactId,String version, String guvnor_userName, String guvnor_password) {
         this.guvnor_url = guvnor_url;
-        this.guvnor_appName = guvnor_appName;
-        this.guvnor_packageName = guvnor_packageName;
-        this.guvnor_packageVersion = guvnor_packageVersion;
+
+
+        this.groupId=groupId;
+        this.artifactId=artifactId;
+        this.version=version;
+
         this.guvnor_userName = guvnor_userName;
         this.guvnor_password = guvnor_password;
     }
@@ -65,17 +69,7 @@ public class PlatformResourceFile implements Serializable {
         return guvnor_url;
     }
 
-    public String getGuvnor_appName() {
-        return guvnor_appName;
-    }
 
-    public String getGuvnor_packageName() {
-        return guvnor_packageName;
-    }
-
-    public String getGuvnor_packageVersion() {
-        return guvnor_packageVersion;
-    }
 
     public String getGuvnor_userName() {
         return guvnor_userName;
@@ -85,15 +79,64 @@ public class PlatformResourceFile implements Serializable {
         return guvnor_password;
     }
 
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setGuvnor_url(String guvnor_url) {
+        this.guvnor_url = guvnor_url;
+    }
+
+
+
+
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getArtifactId() {
+        return artifactId;
+    }
+
+    public void setArtifactId(String artifactId) {
+        this.artifactId = artifactId;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public void setGuvnor_userName(String guvnor_userName) {
+        this.guvnor_userName = guvnor_userName;
+    }
+
+    public void setGuvnor_password(String guvnor_password) {
+        this.guvnor_password = guvnor_password;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("PlatformResourceFile{");
         sb.append("fileName='").append(fileName).append('\'');
         sb.append(", content='").append(content).append('\'');
         sb.append(", guvnor_url='").append(guvnor_url).append('\'');
-        sb.append(", guvnor_appName='").append(guvnor_appName).append('\'');
-        sb.append(", guvnor_packageName='").append(guvnor_packageName).append('\'');
-        sb.append(", guvnor_packageVersion='").append(guvnor_packageVersion).append('\'');
+
+        sb.append(", groupId='").append(groupId).append('\'');
+        sb.append(", artifactId='").append(artifactId).append('\'');
+        sb.append(", version='").append(version).append('\'');
         sb.append(", guvnor_userName='").append(guvnor_userName).append('\'');
         sb.append(", guvnor_password='").append(guvnor_password).append('\'');
         sb.append('}');

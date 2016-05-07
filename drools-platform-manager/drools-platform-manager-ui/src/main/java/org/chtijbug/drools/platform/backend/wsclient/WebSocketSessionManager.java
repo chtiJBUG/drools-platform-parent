@@ -36,7 +36,7 @@ public class WebSocketSessionManager {
 
     private static final Logger LOG = Logger.getLogger(WebSocketSessionManager.class);
 
-    private Map<Integer, WebSocketSession> webSocketClientList = new HashMap<>();
+    private Map<Long, WebSocketSession> webSocketClientList = new HashMap<>();
 
     @Value(value = "${jms.port}")
     private String jmsPort = "61616";
@@ -44,7 +44,7 @@ public class WebSocketSessionManager {
     private String jmsServer = "localhost";
     @Value(value = "${jms.queue}")
     private String platformQueueName;
-    public void AddClient(Integer ruleBaseID, WebSocketSession session) throws DeploymentException, IOException {
+    public void AddClient(Long ruleBaseID, WebSocketSession session) throws DeploymentException, IOException {
 
         this.webSocketClientList.put(ruleBaseID, session);
 
@@ -52,10 +52,10 @@ public class WebSocketSessionManager {
     }
 
     public void closeSession(WebSocketSession webSocketSessionClosed) {
-        Set<Integer> listSessions = webSocketClientList.keySet();
+        Set<Long> listSessions = webSocketClientList.keySet();
 
-        Integer ruleBaseIdToRemove = null;
-        for (Integer ruleBaseId : listSessions) {
+        Long ruleBaseIdToRemove = null;
+        for (Long ruleBaseId : listSessions) {
             WebSocketSession webSocketSession = webSocketClientList.get(ruleBaseId);
             if (webSocketSession != null && webSocketSession.equals(webSocketSessionClosed)) {
                 ruleBaseIdToRemove = ruleBaseId;
@@ -79,15 +79,15 @@ public class WebSocketSessionManager {
         return platformQueueName;
     }
 
-    public Set<Integer> getAllRuleBaseID() {
+    public Set<Long> getAllRuleBaseID() {
         return webSocketClientList.keySet();
     }
 
-    public void removeClient(Integer ruleBaseID) throws IOException {
+    public void removeClient(Long ruleBaseID) throws IOException {
         this.webSocketClientList.remove(ruleBaseID);
     }
 
-    public Boolean exists(Integer ruleBaseID) {
+    public Boolean exists(Long ruleBaseID) {
         boolean result = false;
         if (webSocketClientList.containsKey(ruleBaseID)) {
             result = true;
@@ -97,7 +97,7 @@ public class WebSocketSessionManager {
 
     }
 
-    public void sendMessage(Integer ruleBaseID, PlatformManagementKnowledgeBean bean) throws IOException, EncodeException {
+    public void sendMessage(Long ruleBaseID, PlatformManagementKnowledgeBean bean) throws IOException, EncodeException {
         if (ruleBaseID != null) {
             bean.setRuleBaseId(ruleBaseID);
             WebSocketSession serverSession = this.webSocketClientList.get(ruleBaseID);

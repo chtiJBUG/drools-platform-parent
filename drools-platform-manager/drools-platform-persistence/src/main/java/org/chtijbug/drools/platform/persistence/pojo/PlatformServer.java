@@ -30,7 +30,6 @@ public class PlatformServer {
 
     private String guvnorUrl;
 
-    private String guvnorAppName;
 
     private String adminUsername;
 
@@ -39,9 +38,8 @@ public class PlatformServer {
     public PlatformServer() {
     }
 
-    public PlatformServer(String guvnorUrl, String guvnorAppName, String adminUsername, String adminPassword) {
+    public PlatformServer(String guvnorUrl, String adminUsername, String adminPassword) {
         this.guvnorUrl = guvnorUrl;
-        this.guvnorAppName = guvnorAppName;
         this.adminUsername = adminUsername;
         this.adminPassword = adminPassword;
     }
@@ -62,13 +60,7 @@ public class PlatformServer {
         this.guvnorUrl = guvnorUrl;
     }
 
-    public String getGuvnorAppName() {
-        return guvnorAppName;
-    }
 
-    public void setGuvnorAppName(String guvnorAppName) {
-        this.guvnorAppName = guvnorAppName;
-    }
 
     public String getAdminUsername() {
         return adminUsername;
@@ -91,7 +83,6 @@ public class PlatformServer {
         final StringBuffer sb = new StringBuffer("PlatformServer{");
         sb.append("id=").append(id);
         sb.append(", guvnorUrl='").append(guvnorUrl).append('\'');
-        sb.append(", guvnorAppName='").append(guvnorAppName).append('\'');
         sb.append(", adminUsername='").append(adminUsername).append('\'');
         sb.append(", adminPassword='").append(adminPassword).append('\'');
         sb.append('}');

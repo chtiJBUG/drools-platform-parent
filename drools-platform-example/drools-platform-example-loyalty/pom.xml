@@ -3,7 +3,7 @@
   <parent>
     <artifactId>drools-platform-example</artifactId>
     <groupId>org.chtijbug.drools</groupId>
-    <version>0.5.5-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -11,7 +11,7 @@
 
   <packaging>pom</packaging>
   <modules>
-    <module>loyalty-model</module>
+
     <module>loyalty-soap-server</module>
   </modules>
 

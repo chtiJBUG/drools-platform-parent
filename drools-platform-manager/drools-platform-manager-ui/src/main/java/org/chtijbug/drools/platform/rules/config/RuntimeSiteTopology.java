@@ -42,7 +42,12 @@ public class RuntimeSiteTopology {
      */
     private String guvnorUrl = "http://localhost:8080";
     private String guvnorApplicationName = "drools-guvnor";
-    private String guvnorPackageName = "default";
+    private String organizationalUnitName;
+
+    private String repositoryName;
+    private String packageName;
+    private String groupID = "default";
+    private String artifactId="default";
     private String guvnorUserName = "admin";
     private String guvnorPassword = "admin";
 
@@ -101,12 +106,44 @@ public class RuntimeSiteTopology {
         this.guvnorApplicationName = guvnorApplicationName;
     }
 
-    public String getGuvnorPackageName() {
-        return guvnorPackageName;
+    public String getOrganizationalUnitName() {
+        return organizationalUnitName;
     }
 
-    public void setGuvnorPackageName(String guvnorPackageName) {
-        this.guvnorPackageName = guvnorPackageName;
+    public void setOrganizationalUnitName(String organizationalUnitName) {
+        this.organizationalUnitName = organizationalUnitName;
+    }
+
+    public String getRepositoryName() {
+        return repositoryName;
+    }
+
+    public void setRepositoryName(String repositoryName) {
+        this.repositoryName = repositoryName;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public String getGroupID() {
+        return groupID;
+    }
+
+    public void setGroupID(String groupID) {
+        this.groupID = groupID;
+    }
+
+    public String getArtifactId() {
+        return artifactId;
+    }
+
+    public void setArtifactId(String artifactId) {
+        this.artifactId = artifactId;
     }
 
     public String getGuvnorUserName() {
@@ -133,11 +170,15 @@ public class RuntimeSiteTopology {
         return allEnvironments;
     }
 
+
+
     public GuvnorConnexionConfiguration buildGuvnorConfiguration() {
         return new GuvnorConnexionConfiguration(
                 getGuvnorUrl(),
                 getGuvnorApplicationName(),
-                getGuvnorPackageName(),
+                getOrganizationalUnitName(),
+                getRepositoryName(),
+                getPackageName(),
                 getGuvnorUserName(),
                 getGuvnorPassword());
 

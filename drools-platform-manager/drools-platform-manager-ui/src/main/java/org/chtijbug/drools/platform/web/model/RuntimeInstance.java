@@ -25,9 +25,10 @@ import org.chtijbug.drools.platform.persistence.pojo.PlatformRuntimeMode;
 public class RuntimeInstance {
 
     private Long id;
-    private Integer ruleBaseId;
+    private Long ruleBaseId;
     private String url;
-    private String rulePackage;
+    private String groupId;
+    private String artifactId;
     private String version;
     private String environment;
     private String mode;
@@ -36,11 +37,12 @@ public class RuntimeInstance {
 
 
 
-    public RuntimeInstance(Long id, Integer ruleBaseId, String url, String rulePackage, String version, String environment, String mode, String status) {
+    public RuntimeInstance(Long id, Long ruleBaseId, String url, String groupId,String artifactId, String version, String environment, String mode, String status) {
         this.id = id;
         this.ruleBaseId = ruleBaseId;
         this.url = url;
-        this.rulePackage = rulePackage;
+        this.groupId = groupId;
+        this.artifactId=artifactId;
         this.version = version;
         this.environment=environment;
         this.mode=mode;
@@ -57,11 +59,11 @@ public class RuntimeInstance {
         this.id = id;
     }
 
-    public Integer getRuleBaseId() {
+    public Long getRuleBaseId() {
         return ruleBaseId;
     }
 
-    public void setRuleBaseId(Integer ruleBaseId) {
+    public void setRuleBaseId(Long ruleBaseId) {
         this.ruleBaseId = ruleBaseId;
     }
 
@@ -73,12 +75,21 @@ public class RuntimeInstance {
         this.url = url;
     }
 
-    public String getRulePackage() {
-        return rulePackage;
+
+    public String getGroupId() {
+        return groupId;
     }
 
-    public void setRulePackage(String rulePackage) {
-        this.rulePackage = rulePackage;
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getArtifactId() {
+        return artifactId;
+    }
+
+    public void setArtifactId(String artifactId) {
+        this.artifactId = artifactId;
     }
 
     public String getVersion() {
