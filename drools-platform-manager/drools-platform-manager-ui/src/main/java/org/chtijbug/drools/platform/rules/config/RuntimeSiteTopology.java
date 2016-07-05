@@ -19,7 +19,7 @@ import org.apache.cxf.jaxrs.client.ClientConfiguration;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
-import org.chtijbug.drools.guvnor.GuvnorConnexionConfiguration;
+import org.chtijbug.drools.swimmingpool.restclient.GuvnorConnexionConfiguration;
 import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
 import org.springframework.stereotype.Component;
 
@@ -162,15 +162,13 @@ public class RuntimeSiteTopology {
         this.guvnorPassword = guvnorPassword;
     }
 
-    public void setAllEnvironments(Properties allEnvironments) {
-        this.allEnvironments = allEnvironments;
-    }
-
     public Properties getAllEnvironments() {
         return allEnvironments;
     }
 
-
+    public void setAllEnvironments(Properties allEnvironments) {
+        this.allEnvironments = allEnvironments;
+    }
 
     public GuvnorConnexionConfiguration buildGuvnorConfiguration() {
         return new GuvnorConnexionConfiguration(

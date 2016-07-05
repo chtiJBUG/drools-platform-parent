@@ -15,12 +15,12 @@
  */
 package org.chtijbug.drools.platform.backend.service.persistence;
 
-import org.chtijbug.drools.guvnor.rest.model.Asset;
-import org.chtijbug.drools.guvnor.rest.model.AssetCategory;
 import org.chtijbug.drools.platform.persistence.RuleAssetCategoryRepository;
 import org.chtijbug.drools.platform.persistence.RuleAssetRepository;
 import org.chtijbug.drools.platform.persistence.pojo.RuleAsset;
 import org.chtijbug.drools.platform.persistence.pojo.RuleAssetCategory;
+import org.chtijbug.drools.swimmingpool.restclient.rest.model.Asset;
+import org.chtijbug.drools.swimmingpool.restclient.rest.model.AssetCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

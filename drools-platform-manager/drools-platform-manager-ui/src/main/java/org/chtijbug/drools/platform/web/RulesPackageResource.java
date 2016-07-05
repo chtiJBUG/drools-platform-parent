@@ -17,13 +17,13 @@ package org.chtijbug.drools.platform.web;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import org.chtijbug.drools.guvnor.rest.ChtijbugDroolsRestException;
 import org.chtijbug.drools.platform.rules.config.Environment;
 import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
 import org.chtijbug.drools.platform.rules.management.AssetStatus;
 import org.chtijbug.drools.platform.rules.management.RuleManager;
 import org.chtijbug.drools.platform.rules.management.RuntimeManager;
 import org.chtijbug.drools.platform.web.model.PackageSnapshot;
+import org.chtijbug.drools.swimmingpool.restclient.rest.ChtijbugDroolsRestException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 

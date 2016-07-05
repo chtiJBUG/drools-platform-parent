@@ -17,13 +17,13 @@ package org.chtijbug.drools.platform.web;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import org.chtijbug.drools.guvnor.rest.ChtijbugDroolsRestException;
-import org.chtijbug.drools.guvnor.rest.model.Asset;
 import org.chtijbug.drools.platform.rules.management.AssetStatus;
 import org.chtijbug.drools.platform.rules.management.RuleManager;
 import org.chtijbug.drools.platform.web.annotation.JsonArg;
 import org.chtijbug.drools.platform.web.model.AssetObject;
 import org.chtijbug.drools.platform.web.model.AssetStatusObject;
+import org.chtijbug.drools.swimmingpool.restclient.rest.ChtijbugDroolsRestException;
+import org.chtijbug.drools.swimmingpool.restclient.rest.model.Asset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;

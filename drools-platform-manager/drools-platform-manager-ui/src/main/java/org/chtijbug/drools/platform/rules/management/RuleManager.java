@@ -22,12 +22,11 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
-import org.chtijbug.drools.guvnor.rest.ChtijbugDroolsRestException;
-import org.chtijbug.drools.guvnor.rest.GuvnorRepositoryConnector;
-
-import org.chtijbug.drools.guvnor.rest.model.Asset;
-import org.chtijbug.drools.guvnor.rest.model.AssetPropertyType;
 import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
+import org.chtijbug.drools.swimmingpool.restclient.rest.ChtijbugDroolsRestException;
+import org.chtijbug.drools.swimmingpool.restclient.rest.GuvnorRepositoryConnector;
+import org.chtijbug.drools.swimmingpool.restclient.rest.model.Asset;
+import org.chtijbug.drools.swimmingpool.restclient.rest.model.AssetPropertyType;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.slf4j.Logger;

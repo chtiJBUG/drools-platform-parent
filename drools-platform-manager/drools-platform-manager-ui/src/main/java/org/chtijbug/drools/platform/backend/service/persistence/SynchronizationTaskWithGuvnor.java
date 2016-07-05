@@ -15,27 +15,20 @@
  */
 package org.chtijbug.drools.platform.backend.service.persistence;
 
-import com.google.common.base.Throwables;
-import org.chtijbug.drools.guvnor.rest.ChtijbugDroolsRestException;
-import org.chtijbug.drools.guvnor.rest.GuvnorRepositoryConnector;
-import org.chtijbug.drools.guvnor.rest.model.Asset;
 import org.chtijbug.drools.platform.rules.config.RuntimeSiteTopology;
+import org.chtijbug.drools.swimmingpool.restclient.rest.GuvnorRepositoryConnector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 public class SynchronizationTaskWithGuvnor {
 
+    GuvnorRepositoryConnector guvnorRepositoryConnector;
     @Autowired
     private DecisionTableAssetManagementService decisionTableAssetManagementService;
-
     @Autowired
     private RuleAssetManagementService ruleAssetManagementService;
-
-    GuvnorRepositoryConnector guvnorRepositoryConnector;
 
     @Autowired
     public SynchronizationTaskWithGuvnor(RuntimeSiteTopology runtimeSiteTopology) {
