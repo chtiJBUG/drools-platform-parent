@@ -37,8 +37,8 @@
   <jms:listener-container
       container-type="default"
       connection-factory="jmsConnectionFactory"
-      acknowledge="transacted">
-    <jms:listener destination="historyEventQueue" ref="simpleMessageListener"/>
+      acknowledge="transacted" concurrency="1">
+    <jms:listener destination="historyEventQueue" ref="simpleMessageListener"  />
   </jms:listener-container>
 
 
