@@ -34,10 +34,12 @@ public class AfterProcessEndHistoryEventStrategy extends AbstractMemoryEventHand
         AfterProcessEndHistoryEvent afterProcessEndHistoryEvent = (AfterProcessEndHistoryEvent) historyEvent;
 
         ProcessExecution processExecution = sessionContext.getProcessExecution();
-        processExecution.setEndDate(afterProcessEndHistoryEvent.getDateEvent());
-        processExecution.setStopEventID(afterProcessEndHistoryEvent.getEventID());
-        processExecution.setProcessExecutionStatus(ProcessExecutionStatus.JBPMSTOPPED);
-        sessionContext.setProcessExecution(null);
+        if (processExecution != null) {
+            processExecution.setEndDate(afterProcessEndHistoryEvent.getDateEvent());
+            processExecution.setStopEventID(afterProcessEndHistoryEvent.getEventID());
+            processExecution.setProcessExecutionStatus(ProcessExecutionStatus.JBPMSTOPPED);
+            sessionContext.setProcessExecution(null);
+        }
         LOG.debug("AfterProcessEndHistoryEvent " + historyEvent.toString());
     }
 

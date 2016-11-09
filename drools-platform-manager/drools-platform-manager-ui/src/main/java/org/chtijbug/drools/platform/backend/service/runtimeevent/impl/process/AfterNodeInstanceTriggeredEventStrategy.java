@@ -38,7 +38,7 @@ public class AfterNodeInstanceTriggeredEventStrategy extends AbstractMemoryEvent
             String ruleFLowName = afterNodeInstanceTriggeredHistoryEvent.getNodeInstance().getNode().getRuleflowGroupName();
             ProcessExecution processExecution = sessionContext.getProcessExecution();
             RuleflowGroup ruleflowGroup = sessionContext.findRuleFlowGroup(ruleFLowName);
-            if (ruleflowGroup == null) {
+            if (ruleflowGroup == null && processExecution!= null) {
                 ruleflowGroup = new RuleflowGroup();
                 ruleflowGroup.setRuleflowGroup(ruleFLowName);
                 sessionContext.getRuleflowGroups().add(ruleflowGroup);

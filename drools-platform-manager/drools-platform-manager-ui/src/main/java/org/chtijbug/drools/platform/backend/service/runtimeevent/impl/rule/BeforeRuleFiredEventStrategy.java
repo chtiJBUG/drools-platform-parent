@@ -44,7 +44,9 @@ public class BeforeRuleFiredEventStrategy extends AbstractMemoryEventHandlerStra
                 ruleflowGroup = new RuleflowGroup();
                 ruleflowGroup.setRuleflowGroup(beforeRuleFiredHistoryEvent.getRule().getRuleFlowGroup());
                 sessionContext.getRuleflowGroups().add(ruleflowGroup);
-                sessionContext.getProcessExecution().getRuleflowGroups().add(ruleflowGroup);
+                if (sessionContext.getProcessExecution()!=null) {
+                    sessionContext.getProcessExecution().getRuleflowGroups().add(ruleflowGroup);
+                }
             }
 
             ruleflowGroup.getRuleExecutionList().add(ruleExecution);
