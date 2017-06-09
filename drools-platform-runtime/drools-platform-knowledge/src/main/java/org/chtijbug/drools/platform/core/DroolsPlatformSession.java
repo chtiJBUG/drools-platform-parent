@@ -91,19 +91,21 @@ public class DroolsPlatformSession implements RuleBaseSession {
         JMXInfo jmxInfo = new JMXInfo();
         platformManagementKnowledgeBean.setJmxInfo(jmxInfo);
         StatefulSessionSupervision mbeanStatefulSessionSupervision = ruleBaseStatefulSession.getMbeanStatefulSessionSupervision();
-        jmxInfo.setAverageTimeExecution(mbeanStatefulSessionSupervision.getAverageTimeExecution());
-        jmxInfo.setMinTimeExecution(mbeanStatefulSessionSupervision.getMinTimeExecution());
-        jmxInfo.setMaxTimeExecution(mbeanStatefulSessionSupervision.getMaxTimeExecution());
-        jmxInfo.setTotalTimeExecution(mbeanStatefulSessionSupervision.getTotalTimeExecution());
-        jmxInfo.setTotalNumberRulesExecuted(mbeanStatefulSessionSupervision.getTotalNumberRulesExecuted());
-        jmxInfo.setTotalNumberRulesExecuted(mbeanStatefulSessionSupervision.getAverageRulesExecuted());
-        jmxInfo.setAverageRulesExecuted(mbeanStatefulSessionSupervision.getAverageRulesExecuted());
-        jmxInfo.setMinRulesExecuted(mbeanStatefulSessionSupervision.getMinRulesExecuted());
-        jmxInfo.setMaxRulesExecuted(mbeanStatefulSessionSupervision.getMaxRulesExecuted());
-        jmxInfo.setNumberFireAllRulesExecuted(mbeanStatefulSessionSupervision.getNumberFireAllRulesExecuted());
-        jmxInfo.setAverageRuleThroughout(mbeanStatefulSessionSupervision.getAverageRuleThroughout());
-        jmxInfo.setMinRuleThroughout(mbeanStatefulSessionSupervision.getMinRuleThroughout());
-        jmxInfo.setMaxRuleThroughout(mbeanStatefulSessionSupervision.getMaxRuleThroughout());
+        if (mbeanStatefulSessionSupervision!= null) {
+            jmxInfo.setAverageTimeExecution(mbeanStatefulSessionSupervision.getAverageTimeExecution());
+            jmxInfo.setMinTimeExecution(mbeanStatefulSessionSupervision.getMinTimeExecution());
+            jmxInfo.setMaxTimeExecution(mbeanStatefulSessionSupervision.getMaxTimeExecution());
+            jmxInfo.setTotalTimeExecution(mbeanStatefulSessionSupervision.getTotalTimeExecution());
+            jmxInfo.setTotalNumberRulesExecuted(mbeanStatefulSessionSupervision.getTotalNumberRulesExecuted());
+            jmxInfo.setTotalNumberRulesExecuted(mbeanStatefulSessionSupervision.getAverageRulesExecuted());
+            jmxInfo.setAverageRulesExecuted(mbeanStatefulSessionSupervision.getAverageRulesExecuted());
+            jmxInfo.setMinRulesExecuted(mbeanStatefulSessionSupervision.getMinRulesExecuted());
+            jmxInfo.setMaxRulesExecuted(mbeanStatefulSessionSupervision.getMaxRulesExecuted());
+            jmxInfo.setNumberFireAllRulesExecuted(mbeanStatefulSessionSupervision.getNumberFireAllRulesExecuted());
+            jmxInfo.setAverageRuleThroughout(mbeanStatefulSessionSupervision.getAverageRuleThroughout());
+            jmxInfo.setMinRuleThroughout(mbeanStatefulSessionSupervision.getMinRuleThroughout());
+            jmxInfo.setMaxRuleThroughout(mbeanStatefulSessionSupervision.getMaxRuleThroughout());
+        }
         try {
             this.webSocketClient.sendMessage(platformManagementKnowledgeBean);
         } catch (Exception e) {
