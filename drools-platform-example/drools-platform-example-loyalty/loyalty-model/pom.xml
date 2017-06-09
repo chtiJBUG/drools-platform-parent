@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.chtijbug.drools</groupId>
         <artifactId>drools-platform-example-loyalty</artifactId>
-        <version>0.5.6-SNAPSHOT</version>
+        <version>0.5.5</version>
     </parent>
     <artifactId>loyalty-model</artifactId>
     <name>demopojo</name>
