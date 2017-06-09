@@ -9,12 +9,17 @@
     <version>0.5.5-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
+    <description>
+        Our first work is to create a set of tools to help in the adoption drools in our local companies. Those tools are here to make drools "enterprise ready "by adopting an industrial approach :
 
+        we want to put in common a standard library that we shall all use in our drools project. This tools are of course open source and we use a friendly apache licence.
+
+        Indeed, drools like any other jboss framework is a swiss knife that offers all possibilities. Our framework implements the best practices that we implemented in real projects that goes from how to monitor, report and supervise the use of drools.
+
+        We hope you will enjoy our work and invite you to contact us in case of trouble. But do not forget we are a community !
+
+    </description>
+    <url>http://www.chtijbug.org/</url>
 
     <properties>
         <jdkVersion>1.7</jdkVersion>
@@ -36,7 +41,7 @@
 
         <drools.version>5.6.0.Final</drools.version>
         <guvnor.verion>5.6.2.chtijbug</guvnor.verion>
-        <chtijbug.framework.version>1.5.3-SNAPSHOT</chtijbug.framework.version>
+        <chtijbug.framework.version>1.5.3</chtijbug.framework.version>
         <tomcat.deployment.path>/</tomcat.deployment.path>
         <tomcat.deployment.warFile>axins.war</tomcat.deployment.warFile>
         <tomcat.deployment.url>http://localhost:8080/manager/text</tomcat.deployment.url>
@@ -102,19 +107,23 @@
                     <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>2.5.2</version>
                 <configuration>
-                    <useReleaseProfile>false</useReleaseProfile>
-                    <releaseProfiles>release</releaseProfiles>
-                    <goals>deploy</goals>
-                    <!-- Manually push changes (including git tags) after nexus staged repo is successfully closed -->
-
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <arguments>-DskipTests</arguments>
+                    <pushChanges>true</pushChanges>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.scm</groupId>
+                        <artifactId>maven-scm-provider-gitexe</artifactId>
+                        <version>1.9</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -621,5 +630,14 @@
 
     </profiles>
 
-
+    <distributionManagement>
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 </project>
